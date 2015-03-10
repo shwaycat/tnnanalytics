@@ -24,7 +24,8 @@ keystone.set('500', function(err, req, res, next) {
 
 // Import Route Controllers
 var routes = {
-	views: importRoutes('./views')
+	views: importRoutes('./views'),
+	auth: importRoutes('./auth')
 }
 
 // Setup Route Bindings

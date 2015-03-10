@@ -1,10 +1,12 @@
 extends ../../layouts/default
 
 block content
-	h1='Sign into ' + page.title
-	+flash-messages(messages)
-
-	+auth-forms({ modal: false, initial: 'signin' })
+	.container-xs
+		.page-intro
+			h1='Sign into ' + page.title
+			+flash-messages(messages)
+		.page-content
+			+signin({ modal: false })
 
 block js
 	script.
