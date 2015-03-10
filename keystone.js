@@ -8,22 +8,24 @@ var keystone = require('keystone');
 keystone.init({
 
 	'name': 'Cadence',
-	'brand': 'Cadence',
-	
+	'brand': 'MxM Cadence',
+	'brand email': 'cadence@maxmedia.com',
+
 	'less': 'public',
 	'static': 'public',
 	'favicon': 'public/favicon.ico',
 	'views': 'templates/views',
 	'view engine': 'jade',
-	
+
 	'emails': 'templates/emails',
-	
+
 	'auto update': true,
 	'session': true,
 	'auth': true,
 	'user model': 'User',
-	'cookie secret': 'E]ltoJ_R@SwDxa6X,Z>6![Nl>&!1R"%Kw/8LA+r{~tJ5o(z=/.bcIlO(oFq*8_a2'
+	'cookie secret': 'E]ltoJ_R@SwDxa6X,Z>6![Nl>&!1R"%Kw/8LA+r{~tJ5o(z=/.bcIlO(oFq*8_a2',
 
+	'basedir': __dirname
 });
 
 keystone.import('models');
