@@ -16,9 +16,12 @@ exports.initLocals = function(req, res, next) {
 
 	locals.user = req.user
 
-	locals.page = {
-		title: keystone.get('brand'),
+	locals.site = {
+		brand: keystone.get('brand'),
 		email: keystone.get('brand email'),
+	}
+
+	locals.page = {
 		path: req.url.split("?")[0]
 	}
 

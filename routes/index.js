@@ -34,6 +34,11 @@ exports = module.exports = function(app) {
 	// Views
 	app.get('/', routes.views.index)
 
+	// Auth
+	app.all('/auth/confirm', routes.auth.confirm)
+	app.all('/auth/app', routes.auth.app)
+	app.all('/auth/:service', routes.auth.service)
+
 	// Session
 	app.all('/join', routes.views.session.join)
 	app.all('/signin', routes.views.session.signin)

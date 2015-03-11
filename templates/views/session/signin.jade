@@ -3,10 +3,10 @@ extends ../../layouts/default
 block content
 	.container-xs
 		.page-intro
-			h1='Sign into ' + page.title
+			h1='Sign into ' + site.brand
 			+flash-messages(messages)
 		.page-content
-			+signin({ modal: false })
+			+auth-forms({ modal: false, initial: 'signin' })
 
 block js
 	script.

@@ -1,7 +1,7 @@
 extends ../../layouts/default
 
 block content
-	h1='Join ' + page.title
+	h1='Join ' + site.brand
 
 	+flash-messages(messages)
 	+auth-forms({ modal: false, initial: 'join' })

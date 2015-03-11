@@ -1,5 +1,5 @@
 include ../mixins/flash-messages
-include ../mixins/signin
+include ../mixins/auth/auth-forms
 
 doctype html
 html
@@ -8,7 +8,7 @@ html
 		meta(name="viewport", content="width=device-width, initial-scale=1.0")
 		meta(http-equiv="X-UA-Compatible" content="IE=edge")
 
-		title= title || page.title
+		title= title || site.brand
 
 		link(rel="shortcut icon", href="/favicon.ico", type="image/x-icon")
 		link(href="/styles/site.min.css", rel="stylesheet")
