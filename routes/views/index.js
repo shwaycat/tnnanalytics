@@ -7,5 +7,5 @@ exports = module.exports = function(req, res) {
 
 	locals.section = 'home';
 
-	view.render('index');
+	view.render('site/index');
 };

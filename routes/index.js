@@ -34,6 +34,9 @@ exports = module.exports = function(app) {
 	// Views
 	app.get('/', routes.views.index)
 
+	app.all('/me*', middleware.requireUser);
+	app.all('/me', routes.views.me);
+
 	// Auth
 	app.all('/auth/confirm', routes.auth.confirm)
 	app.all('/auth/app', routes.auth.app)
