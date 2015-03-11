@@ -27,6 +27,8 @@ exports.initLocals = function(req, res, next) {
 
 	locals.basedir = keystone.get('basedir')
 
+	if (req.cookies.target && req.cookies.target == locals.page.path) res.clearCookie('target'); 
+
 	next()
 
 }

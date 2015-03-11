@@ -34,9 +34,15 @@ html
 							if user
 								if user.canAccessKeystone
 									li: a(href='/keystone') Open Keystone
-								li: a(href='/keystone/signout') Sign Out
+								li: a(href='/me').user.hidden-xs
+									img(src=(user.avatarUrl || '/images/avatar.png'), width=27).img-circle
+									=' ' +user.name.first
+								li: a(href='/signout')
+									span.visible-xs Sign out
+									span.entypo.entypo-large.entypo-logout.hidden-xs
 							else
-								li: a(href='/keystone/signin') Sign In
+								li: a(href='/signin', data-from=page.path, data-initial='signin').js-auth-trigger Sign in
+								li: a(href='/join', data-from=page.path).js-auth-trigger Join
 
 		block intro
 
@@ -51,10 +57,14 @@ html
 			#modal-auth(tabindex="-1", role="dialog", aria-labelledby="signin", aria-hidden="true").modal.fade
 				.modal-dialog
 					.modal-content
-						+signin({ modal: true })
+						+auth-forms({ modal: true, initial: 'signin' })
 
 		script(src='/js/lib/jquery/jquery-2.1.1.min.js')
+		script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js')
 		script(src='/js/lib/bootstrap/bootstrap-3.2.0.min.js')
+		//script(src='/js/lib/bootstrap/collapse.js')
+		//script(src='/js/lib/bootstrap/dropdown.js')
+		script(src='/js/lib/bootstrap/modal.js')
 		script(src='/js/ui.js')
 
 		include shared/analytics

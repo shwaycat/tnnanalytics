@@ -121,7 +121,6 @@ User.schema.virtual('canAccessKeystone').get(function() {
 
 // Pull out avatar image
 User.schema.virtual('avatarUrl').get(function() {
-	if (this.services.github.isConfigured && this.services.github.avatar) return this.services.github.avatar;
 	if (this.services.facebook.isConfigured && this.services.facebook.avatar) return this.services.facebook.avatar;
 	if (this.services.google.isConfigured && this.services.google.avatar) return this.services.google.avatar;
 	if (this.services.twitter.isConfigured && this.services.twitter.avatar) return this.services.twitter.avatar;
