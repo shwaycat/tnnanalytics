@@ -1,9 +1,5 @@
 extends ../../layouts/default
 
-block intro
-
-block flash-messages
-
 block content
 	.container-sm
 		.page-intro
@@ -17,20 +13,11 @@ block content
 				.form-group
 					label.col-sm-2.control-label Name
 					.col-sm-10: .form-row
-						.col-xs-6: input(type='text', name='name.first' value=user.name.first).form-control
-						.col-xs-6: input(type='text', name='name.last' value=user.name.last).form-control
+						.col-xs-5: input(type='text', name='name.first' value=user.name.first).form-control
+						.col-xs-5: input(type='text', name='name.last' value=user.name.last).form-control
 				.form-group
 					label.col-sm-2.control-label Email
 					.col-sm-10: input(type='email', name='email' value=user.email).form-control
-				.form-group
-					strong.col-sm-2.control-label Notify me
-					.col-sm-10
-						.checkbox: label
-							input(type='checkbox', name='notifications.meetups' value='true' checked=user.notifications.meetups)
-							|  When there is a new meetup
-						.checkbox: label
-							input(type='checkbox', name='notifications.posts' value='true' checked=user.notifications.posts)
-							|  When there is a new post
 				hr.mv-2
 				h3 Your Services
 				p.help-block.mb-2 You can authenticate yourself on the SydJS website with any of the services you connect. When connected, links to your Twitter and Github will be displayed on your profile.
@@ -78,18 +65,6 @@ block content
 							span.entypo-social.entypo-facebook
 							|  Your account is connected.
 							a(href='?disconnect=facebook', title='Revoke authorization of your Facebook account') Disconnect
-				hr.mv-2
-				h3 Public Info
-				.form-group
-					label.col-sm-2 Public
-					.col-sm-10
-						label.checkbox-inline
-							input(type='checkbox', name='isPublic', value='true', checked=user.isPublic ? 'true' : null)
-							|  Show my profile on the SydJS website
-				.form-group
-					label.col-sm-2.control-label Website
-					.col-sm-10: input(type='text', name='website' value=user.website).form-control
-
 				hr.mv-2
 				button(type='submit', data-loading-text="Saving...").btn.btn-primary Save profile
 		.ui-reveal
