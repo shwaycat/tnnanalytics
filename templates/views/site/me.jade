@@ -3,8 +3,7 @@ extends ../../layouts/default
 block content
 	.container-sm
 		.page-intro
-			p.lead Hi #{user.name.first}, these are your settings and &nbsp;
-				a(href=user.url) profile details
+			p.lead Hi #{user.name.first}, these are your settings
 		.page-content.tile.ph-2.pv-2.mb-2
 			+flash-messages(messages)
 			form(method='post', enctype='multipart/form-data', autocomplete='off', novalidate).form-horizontal
