@@ -8,7 +8,7 @@ var keystone = require('keystone');
 keystone.init({
 
 	'name': 'Cadence',
-	'brand': 'MxM Cadence',
+	'brand': 'MaxMedia Cadence',
 	'brand email': 'cadence@maxmedia.com',
 
 	'less': 'public',

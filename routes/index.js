@@ -32,10 +32,10 @@ var routes = {
 exports = module.exports = function(app) {
 
 	// Views
-	app.get('/', routes.views.index)
+	app.get('/', routes.views.site.index)
 
 	app.all('/me*', middleware.requireUser);
-	app.all('/me', routes.views.me);
+	app.all('/me', routes.views.site.me);
 
 	// Auth
 	app.all('/auth/confirm', routes.auth.confirm)
