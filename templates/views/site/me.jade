@@ -1,84 +1,84 @@
 extends ../../layouts/default
 
 block content
-	.container-sm
-		.page-intro
-			p.lead Hi #{user.name.first}, these are your settings
-		.page-content.tile.ph-2.pv-2.mb-2
-			+flash-messages(messages)
-			form(method='post', enctype='multipart/form-data', autocomplete='off', novalidate).form-horizontal
-				input(type='hidden', name='action', value='profile.details')
-				h3 Private Info
-				.form-group
-					label.col-sm-2.control-label Name
-					.col-sm-10: .form-row
-						.col-xs-5: input(type='text', name='name.first' value=user.name.first).form-control
-						.col-xs-5: input(type='text', name='name.last' value=user.name.last).form-control
-				.form-group
-					label.col-sm-2.control-label Email
-					.col-sm-10: input(type='email', name='email' value=user.email).form-control
-				hr.mv-2
-				h3 Your Services
-				p.help-block.mb-2='You can authenticate yourself on the '+site.brand+' website with any of the services you connect.'
-				if !user.services.twitter.isConfigured
-					.form-group
-						label.col-sm-2.control-label Twitter
-						.col-sm-10
-							a(href='/auth/twitter', title='Connect your Twitter account').btn.btn-twitter
-								span.entypo-social.entypo-twitter
-								|  Connect your Twitter account
-				//if !user.services.google.isConfigured
-				//	.form-group
-				//		label.col-sm-2.control-label Google
-				//		.col-sm-10
-				//			a(href='/auth/google', title='Connect your Google account').btn.btn-google
-				//				span.entypo-social.entypo-google-circles
-				//				|  Connect your Google account
-				if !user.services.facebook.isConfigured
-					.form-group
-						label.col-sm-2.control-label Facebook
-						.col-sm-10
-							a(href='/auth/facebook', title='Connect your Google account').btn.btn-facebook
-								span.entypo-social.entypo-facebook
-								|  Connect your Facebook account
-				// user.services.google.isConfigured
-				// if user.services.twitter.isConfigured || user.services.facebook.isConfigured
-				// 	hr.line-dashed
-				if user.services.twitter.isConfigured
-					.form-group
-						label.col-sm-2.control-label Twitter
-						.col-sm-10.text-muted.faux-label
-							span.entypo-social.entypo-twitter
-							|  Your account is connected.
-							a(href='?disconnect=twitter', title='Revoke authorization of your Twitter account')  Disconnect
-				//if user.services.google.isConfigured
-				//	.form-group
-				//		label.col-sm-2.control-label Google
-				//		.col-sm-10.text-muted.faux-label
-				//			span.entypo-social.entypo-google-circles
-				//			|  Your account is connected.
-				//			a(href='?disconnect=google', title='Revoke authorization of your Google account')  Disconnect
-				if user.services.facebook.isConfigured
-					.form-group
-						label.col-sm-2.control-label Facebook
-						.col-sm-10.text-muted.faux-label
-							span.entypo-social.entypo-facebook
-							|  Your account is connected.
-							a(href='?disconnect=facebook', title='Revoke authorization of your Facebook account')  Disconnect
-				hr.mv-2
-				button(type='submit', data-loading-text="Saving...").btn.btn-primary Save profile
-		.ui-reveal
-			.ui-reveal__initial
-				button(type='button').btn.btn-link.ui-reveal__trigger Change Password
-			.ui-reveal__hidden
-				form(method='post', autocomplete='off')
-					input(type='hidden', name='action', value='profile.password')
-					h3 Change password
-					.form-group
-						label(for='change-passwordNew').sr-only New Password
-						input(type='password', name='password', placeholder='New Password', id='change-passwordNew').form-control
-					.form-group
-						label(for='change-passwordConfirm').sr-only Confirm Password
-						input(type='password', name='password_confirm', placeholder='Confirm Password', id='signin-passwordConfirm').form-control
-					.form-group
-						button(type='submit', data-loading-text="Changing...").btn.btn-primary Change
+  .container-sm
+    .page-intro
+      p.lead Hi #{user.name.first}, these are your settings
+    .page-content.tile.ph-2.pv-2.mb-2
+      +flash-messages(messages)
+      form(method='post', enctype='multipart/form-data', autocomplete='off', novalidate).form-horizontal
+        input(type='hidden', name='action', value='profile.details')
+        h3 Private Info
+        .form-group
+          label.col-sm-2.control-label Name
+          .col-sm-10: .form-row
+            .col-xs-5: input(type='text', name='name.first' value=user.name.first).form-control
+            .col-xs-5: input(type='text', name='name.last' value=user.name.last).form-control
+        .form-group
+          label.col-sm-2.control-label Email
+          .col-sm-10: input(type='email', name='email' value=user.email).form-control
+        hr.mv-2
+        h3 Your Services
+        p.help-block.mb-2='You can authenticate yourself on the '+site.brand+' website with any of the services you connect.'
+        if !user.services.twitter.isConfigured
+          .form-group
+            label.col-sm-2.control-label Twitter
+            .col-sm-10
+              a(href='/auth/twitter', title='Connect your Twitter account').btn.btn-twitter
+                span.entypo-social.entypo-twitter
+                |  Connect your Twitter account
+        //if !user.services.google.isConfigured
+        //  .form-group
+        //    label.col-sm-2.control-label Google
+        //    .col-sm-10
+        //      a(href='/auth/google', title='Connect your Google account').btn.btn-google
+        //        span.entypo-social.entypo-google-circles
+        //        |  Connect your Google account
+        if !user.services.facebook.isConfigured
+          .form-group
+            label.col-sm-2.control-label Facebook
+            .col-sm-10
+              a(href='/auth/facebook', title='Connect your Google account').btn.btn-facebook
+                span.entypo-social.entypo-facebook
+                |  Connect your Facebook account
+        // user.services.google.isConfigured
+        // if user.services.twitter.isConfigured || user.services.facebook.isConfigured
+        //   hr.line-dashed
+        if user.services.twitter.isConfigured
+          .form-group
+            label.col-sm-2.control-label Twitter
+            .col-sm-10.text-muted.faux-label
+              span.entypo-social.entypo-twitter
+              |  Your account is connected.
+              a(href='?disconnect=twitter', title='Revoke authorization of your Twitter account')  Disconnect
+        //if user.services.google.isConfigured
+        //  .form-group
+        //    label.col-sm-2.control-label Google
+        //    .col-sm-10.text-muted.faux-label
+        //      span.entypo-social.entypo-google-circles
+        //      |  Your account is connected.
+        //      a(href='?disconnect=google', title='Revoke authorization of your Google account')  Disconnect
+        if user.services.facebook.isConfigured
+          .form-group
+            label.col-sm-2.control-label Facebook
+            .col-sm-10.text-muted.faux-label
+              span.entypo-social.entypo-facebook
+              |  Your account is connected.
+              a(href='?disconnect=facebook', title='Revoke authorization of your Facebook account')  Disconnect
+        hr.mv-2
+        button(type='submit', data-loading-text="Saving...").btn.btn-primary Save profile
+    .ui-reveal
+      .ui-reveal__initial
+        button(type='button').btn.btn-link.ui-reveal__trigger Change Password
+      .ui-reveal__hidden
+        form(method='post', autocomplete='off')
+          input(type='hidden', name='action', value='profile.password')
+          h3 Change password
+          .form-group
+            label(for='change-passwordNew').sr-only New Password
+            input(type='password', name='password', placeholder='New Password', id='change-passwordNew').form-control
+          .form-group
+            label(for='change-passwordConfirm').sr-only Confirm Password
+            input(type='password', name='password_confirm', placeholder='Confirm Password', id='signin-passwordConfirm').form-control
+          .form-group
+            button(type='submit', data-loading-text="Changing...").btn.btn-primary Change
