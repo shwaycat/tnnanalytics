@@ -33,6 +33,7 @@ exports = module.exports = function(app) {
 
 	// Views
 	app.get('/', routes.views.site.index)
+	app.get('/privacy', routes.views.site.privacy)
 
 	app.all('/me*', middleware.requireUser);
 	app.all('/me', routes.views.site.me);
