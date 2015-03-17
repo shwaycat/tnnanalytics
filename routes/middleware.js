@@ -12,7 +12,7 @@ exports.initLocals = function(req, res, next) {
 
 	locals.navLinks = [
 		{ label: 'Home',		key: 'home',		href: '/' },
-		{ label: 'Terms of Use/Privacy',		key: 'home',		href: '/privacy' },
+		{ label: 'Terms/Privacy',		key: 'privacy',		href: '/privacy' },
 	]
 
 	locals.user = req.user
