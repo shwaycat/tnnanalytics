@@ -34,7 +34,7 @@ if (keystone.get('env') == 'production'){
 
   keystone.set('session store', 'connect-redis');
   keystone.set('session store options',
-    'url': 'redis://redistogo:f6b87ba0335d42e1f413ac1fd4c0f3c3@cobia.redistogo.com:9124/'
+    'url': 'redis://redistogo:f6b87ba0335d42e1f413ac1fd4c0f3c3@cobia.redistogo.com:9124/')
   });
 }
 
