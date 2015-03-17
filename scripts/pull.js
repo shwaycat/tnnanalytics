@@ -9,7 +9,7 @@ var async = require('async')
   , tw = require('twitter')
 
 var esClient = new elasticsearch.Client({
-  host: process.env.ELASTICSEARCH_HOST
+  host: process.env.ELASTICSEARCH_HOST || process.env.BONSAI_URL
 })
 
 
