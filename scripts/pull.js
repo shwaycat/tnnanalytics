@@ -84,7 +84,7 @@ function findTweets(users, callback){
 
     // We've made a query already, let's not get anything before that tweet
     if (user.services.twitter.sinceId ) {
-      // params = {since_id: user.services.twitter.sinceId}
+      params = {since_id: user.services.twitter.sinceId}
     }
 
     client.get('statuses/user_timeline', params, function(err, tweets, response){
