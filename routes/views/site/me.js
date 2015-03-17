@@ -24,7 +24,7 @@ exports = module.exports = function(req, res) {
 		return next()
 		FB.setAccessToken(req.user.services.facebook.accessToken)
 
-		FB.api('nookwit/feed',function (results) {
+		FB.api('TeamNovoNordisk/feed',function (results) {
 			if(!results || results.error) {
 				console.log(!results ? 'error occurred' : results.error);
 				return;
