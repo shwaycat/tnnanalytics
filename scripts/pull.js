@@ -1,11 +1,11 @@
 require('dotenv').load()
 
 var async = require('async')
+  , request = require('request')
   , mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , elasticsearch = require('elasticsearch')
   , _ = require('underscore')
-  , fb = require('fb')
   , tw = require('twitter')
 
 var esClient = new elasticsearch.Client({
@@ -46,20 +46,6 @@ userSchema.statics.findConnectedTwitter = function (cb) {
 
 var User = mongoose.model('User', userSchema)
 
-
-function getAppAccessToken(callback){
-  fb.api('oauth/access_token', {
-    client_id: process.env.FACEBOOK_APP_ID,
-    client_secret:  process.env.FACEBOOK_APP_SECRET,
-    grant_type: 'client_credentials'
-  }, function (res) {
-    if(!res || res.error) {
-      callback(res.error)
-    }else {
-      callback()
-    }
-  })
-}
 
 function findTwitterUsers(callback){
   User.findConnectedTwitter(function(err, users){
@@ -134,8 +120,12 @@ function findFacebookUsers(callback){
 //fields=id,message,updated_time,commments{id,message},likes{id,name},shares{id,name}
 function findFacebookPosts(users, callback){
   async.each(users, function(user, nextUser){
-    fb.setAccessToken(user.services.facebook.accessToken)
-    fb.api('TeamNovoNordisk/feed',function (results) {
+    var qp = 'fields=id,message,updated_time,comments{id,message},likes{id,name},shares'
+    request({
+      url: 'https://graph.facebook.com/v2.2/TeamNovoNordisk/feed?'+qp+'&access_token='+user.services.facebook.accessToken,
+      json: true
+    },function (error, response, body){
+      console.log(body)
       nextUser()
     })
   },function(err){
@@ -144,11 +134,10 @@ function findFacebookPosts(users, callback){
 }
 
 async.waterfall([
-    // getAppAccessToken,
     findTwitterUsers,
-    findTweets
-    // findFacebookUsers,
-    // findFacebookPosts
+    findTweets,
+    findFacebookUsers,
+    findFacebookPosts
 ],function(err){
   if (err){
     console.log(err)
