@@ -12,6 +12,7 @@
     "passport-facebook": "^2.0.0",
     "passport-google-oauth": "^0.2.0",
     "passport-twitter": "^1.0.3",
+    "request": "^2.53.0",
     "twitter": "^1.2.3",
     "underscore": "~1.7.0"
   },
