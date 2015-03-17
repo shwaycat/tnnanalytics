@@ -10,6 +10,7 @@ keystone.init({
 	'name': 'Cadence',
 	'brand': 'MaxMedia Cadence',
 	'brand email': 'cadence@maxmedia.com',
+  'host': 'http://dev.cadence.maxmedia.com',
 
 	'less': 'public',
 	'static': 'public',
@@ -28,6 +29,15 @@ keystone.init({
 	'basedir': __dirname
 });
 
+if (keystone.get('env') == 'production'){
+  keystone.set('host', 'http://cadence.maxmedia.com');
+
+  keystone.set('session store', 'connect-redis');
+  keystone.set('session store options',
+    'url': 'redis://redistogo:f6b87ba0335d42e1f413ac1fd4c0f3c3@cobia.redistogo.com:9124/'
+  });
+}
+
 keystone.import('models');
 
 keystone.set('locals', {
@@ -40,27 +50,22 @@ keystone.set('locals', {
 keystone.set('routes', require('./routes'));
 
 keystone.set('email locals', {
-	logo_src: '/images/logo-email.gif',
-	logo_width: 194,
-	logo_height: 76,
-	theme: {
-		email_bg: '#f9f9f9',
-		link_color: '#2697de',
-		buttons: {
-			color: '#fff',
-			background_color: '#2697de',
-			border_color: '#1a7cb7'
-		}
-	}
+  utils: keystone.utils,
+  host: keystone.get('host'),
+  brand: keystone.get('brand'),
+  logo_src: '/images/logo-email.gif',
+  logo_width: 194,
+  logo_height: 76,
+  theme: {
+    email_bg: '#f9f9f9',
+    link_color: '#2697de',
+    buttons: {
+      color: '#fff',
+      background_color: '#2697de',
+      border_color: '#1a7cb7'
+    }
+  }
 });
-
-keystone.set('email rules', [{
-	find: '/images/',
-	replace: (keystone.get('env') == 'production') ? 'http://www.your-server.com/images/' : 'http://localhost:3000/images/'
-}, {
-	find: '/keystone/',
-	replace: (keystone.get('env') == 'production') ? 'http://www.your-server.com/keystone/' : 'http://localhost:3000/keystone/'
-}]);
 
 keystone.set('email tests', require('./routes/emails'));
 
