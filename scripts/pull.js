@@ -8,6 +8,11 @@ var async = require('async')
   , fb = require('fb')
   , tw = require('twitter')
 
+var esClient = new elasticsearch.Client({
+  host: process.env.ELASTICSEARCH_HOST
+})
+
+
 mongoose.connect('mongodb://localhost/cadence')
 
 var userSchema = new Schema({
@@ -41,6 +46,7 @@ userSchema.statics.findConnectedTwitter = function (cb) {
 
 var User = mongoose.model('User', userSchema)
 
+
 function getAppAccessToken(callback){
   fb.api('oauth/access_token', {
     client_id: process.env.FACEBOOK_APP_ID,
@@ -50,7 +56,6 @@ function getAppAccessToken(callback){
     if(!res || res.error) {
       callback(res.error)
     }else {
-      console.log(res.access_token)
       callback()
     }
   })
@@ -67,7 +72,7 @@ function findTwitterUsers(callback){
 }
 
 function findTweets(users, callback){
-  async.each(users, function(user, done){
+  async.each(users, function(user, nextUser){
     var client = new tw({
       consumer_key: process.env.TWITTER_API_KEY,
       consumer_secret: process.env.TWITTER_API_SECRET,
@@ -79,25 +84,34 @@ function findTweets(users, callback){
 
     // We've made a query already, let's not get anything before that tweet
     if (user.services.twitter.sinceId ) {
-      params = {since_id: user.services.twitter.sinceId}
+      // params = {since_id: user.services.twitter.sinceId}
     }
 
     client.get('statuses/user_timeline', params, function(err, tweets, response){
       if (err) {
-        done(err)
+        nextUser(err)
       }
       if (tweets.length > 0) {
         // Update User with most recent tweet
         User.update({ _id: user.id },{ $set: {'services.twitter.sinceId': tweets[0].id_str} }, function (err, numberAffected, raw){
           if (err){
-            done(err)
+            nextUser(err)
           } else {
-            console.log(tweets)
-            done()
+            async.each(tweets, function(tweet, nextTweet){
+              esClient.create({
+                index: 'cadence',
+                type: 'twitter',
+                body: tweet
+              }, function(err, response){
+                nextTweet(err)
+              })
+            }, function (err){
+              nextUser(err)
+            })
           }
         })
       } else {
-        done()
+        nextUser()
       }
     })
 
@@ -119,10 +133,10 @@ function findFacebookUsers(callback){
 
 //fields=id,message,updated_time,commments{id,message},likes{id,name},shares{id,name}
 function findFacebookPosts(users, callback){
-  async.each(users, function(user, done){
+  async.each(users, function(user, nextUser){
     fb.setAccessToken(user.services.facebook.accessToken)
     fb.api('TeamNovoNordisk/feed',function (results) {
-      done()
+      nextUser()
     })
   },function(err){
     callback(err)
