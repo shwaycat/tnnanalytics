@@ -25,6 +25,10 @@ exports.initLocals = function(req, res, next) {
 		path: req.url.split("?")[0]
 	}
 
+  locals.formData = req.body || {}
+  locals.validationErrors = {}
+  locals.enquirySubmitted = false
+
 	locals.basedir = keystone.get('basedir')
 
 	if (req.cookies.target && req.cookies.target == locals.page.path) res.clearCookie('target'); 

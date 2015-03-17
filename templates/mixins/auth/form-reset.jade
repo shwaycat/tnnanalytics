@@ -1,11 +1,3 @@
-//-
-	Reset Password
-	------------------------------
-
-	Args
-	* modal  - boolean
-	* initial [default "join"] - accepts "signin" | "join" | "password"
-
 mixin form-reset(args)
 	.auth-box.modal-pane-signin(class=args.modal && args.initial != 'signin' ? 'hidden' : null)
 		if args.modal

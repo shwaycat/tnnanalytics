@@ -21,7 +21,7 @@ exports = module.exports = function(req, res) {
 		}
 
 		var onSuccess = function() {
-			if (req.body.target && !/join|signin/.test(req.body.target)) {
+			if (req.body.target && !/signin/.test(req.body.target)) {
 				console.log('[signin] - Set target as [' + req.body.target + '].');
 				res.redirect(req.body.target);
 			} else {

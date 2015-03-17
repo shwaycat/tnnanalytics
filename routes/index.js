@@ -43,7 +43,6 @@ exports = module.exports = function(app) {
 	app.all('/auth/:service', routes.auth.service)
 
 	// Session
-	app.all('/join', routes.views.session.join)
 	app.all('/signin', routes.views.session.signin)
 	app.get('/signout', routes.views.session.signout)
 	app.all('/forgot-password', routes.views.session['forgot-password'])
