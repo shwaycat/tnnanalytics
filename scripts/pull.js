@@ -50,6 +50,7 @@ var User = mongoose.model('User', userSchema)
 function findTwitterUsers(callback){
   User.findConnectedTwitter(function(err, users){
     if (err){
+      console.log(err)
       callback(err)
     } else {
       callback(null, users)
@@ -75,12 +76,14 @@ function findTweets(users, callback){
 
     client.get('statuses/mentions_timeline', params, function(err, tweets, response){
       if (err) {
+        console.log(err)
         nextUser(err)
       }
       if (tweets.length > 0) {
         // Update User with most recent tweet
         User.update({ _id: user.id },{ $set: {'services.twitter.sinceId': tweets[0].id_str} }, function (err, numberAffected, raw){
           if (err){
+            console.log(err)
             nextUser(err)
           } else {
             async.each(tweets, function(tweet, nextTweet){
@@ -98,10 +101,20 @@ function findTweets(users, callback){
                   cadence_user_id: user.id
                 }
               }, function(err, response){
-                nextTweet(err)
+                if (err){
+                  console.log(err)
+                  nextTweet(err)
+                } else {
+                  nextTweet()
+                }
               })
             }, function (err){
-              nextUser(err)
+                if (err){
+                  console.log(err)
+                  nextUser(err)
+                } else {
+                  nextUser()
+                }
             })
           }
         })
@@ -111,13 +124,19 @@ function findTweets(users, callback){
     })
 
   },function(err){
-    callback(err)
+    if (err){
+      console.log(err)
+      callback(err)
+    } else {
+      callback()
+    }
   })
 }
 
 function findFacebookUsers(callback){
   User.findConnectedFacebook(function(err, users){
     if (err){
+      console.log(err)
       callback(err)
     } else {
       callback(null, users)
@@ -148,6 +167,7 @@ async.waterfall([
     findFacebookPosts
 ],function(err){
   if (err){
+    console.log(err)
     process.exit(1)
   }else {
     process.exit(0)

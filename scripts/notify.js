@@ -56,6 +56,7 @@ var User = mongoose.model('User', userSchema)
 function findTwitterUsers(callback){
   User.findConnectedTwitter(function(err, users){
     if (err){
+      console.log(err)
       callback(err)
     } else {
       callback(null, users)
@@ -94,6 +95,7 @@ function findDocuments(users, callback){
       }
     }, function (error, response) {
         if (error){
+          console.log(error)
           nextUser(error)
         }
 
@@ -120,7 +122,12 @@ function findDocuments(users, callback){
         }
     })
   },function(err){
-    callback(err)
+    if (err) {
+      console.log(err)
+      callback(err)
+    } else {
+      callback()
+    }
   })
 }
 
