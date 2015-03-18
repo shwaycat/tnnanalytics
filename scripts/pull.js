@@ -99,8 +99,6 @@ function findTweets(users, callback){
                 }
               }, function(err, response){
                 if ( (typeof err == 'undefined') && (response.count == 0) ){
-                  console.log('in condintional')
-                    console.log(err)
                     esClient.create({
                       index: 'cadence',
                       type: user.domain,
