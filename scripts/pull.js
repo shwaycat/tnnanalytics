@@ -5,7 +5,6 @@ var async = require('async')
   , mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , elasticsearch = require('elasticsearch')
-  , _ = require('underscore')
   , tw = require('twitter')
 
 var esClient = new elasticsearch.Client({
@@ -66,14 +65,14 @@ function findTweets(users, callback){
       access_token_secret: user.services.twitter.refreshToken,
     })
 
-    var params = {}
+    var params = {count: 200, include_rts: 1}
 
     // We've made a query already, let's not get anything before that tweet
     if (user.services.twitter.sinceId ) {
-      params = {since_id: user.services.twitter.sinceId}
+      //params.since_id = user.services.twitter.sinceId
     }
 
-    client.get('statuses/user_timeline', params, function(err, tweets, response){
+    client.get('statuses/mentions_timeline', params, function(err, tweets, response){
       if (err) {
         nextUser(err)
       }
@@ -84,6 +83,7 @@ function findTweets(users, callback){
             nextUser(err)
           } else {
             async.each(tweets, function(tweet, nextTweet){
+              tweet.cadence_user_id = user.id
               esClient.create({
                 index: 'cadence',
                 type: 'twitter',
@@ -125,7 +125,6 @@ function findFacebookPosts(users, callback){
       url: 'https://graph.facebook.com/v2.2/nookwit/feed?'+qp+'&access_token='+user.services.facebook.accessToken,
       json: true
     },function (error, response, body){
-      console.log(body)
       nextUser(error)
     })
   },function(err){
@@ -140,7 +139,6 @@ async.waterfall([
     findFacebookPosts
 ],function(err){
   if (err){
-    console.log(err)
     process.exit(1)
   }else {
     process.exit(0)
