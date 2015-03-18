@@ -21,7 +21,8 @@ var deps = {
 
 User.add({
   name: { type: Types.Name, required: true, index: true },
-  email: { type: Types.Email, initial: true, index: true },
+  email: { type: Types.Email, required: true, initial: true, index: true },
+  domain: { type: String, hidden: true },
   password: { type: Types.Password, initial: true },
   resetPasswordKey: { type: String, hidden: true }
 }, 'Profile', {
@@ -89,9 +90,11 @@ User.schema.pre('save', function(next) {
 
     function(done) {
 
-      if (!member.email) return done();
+      var str = member.email.toLowerCase().trim()
 
-      member.gravatar = crypto.createHash('md5').update(member.email.toLowerCase().trim()).digest('hex');
+      member.domain = str.substring(str.lastIndexOf("@") + 1, str.length)
+
+      member.gravatar = crypto.createHash('md5').update(str).digest('hex');
 
       return done();
 
