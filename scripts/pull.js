@@ -50,6 +50,7 @@ var User = mongoose.model('User', userSchema)
 function findTwitterUsers(callback){
   User.findConnectedTwitter(function(err, users){
     if (err){
+      console.log('Error in findTwitterUsers')
       console.log(err)
       callback(err)
     } else {
@@ -76,6 +77,7 @@ function findTweets(users, callback){
 
     client.get('statuses/mentions_timeline', params, function(err, tweets, response){
       if (err) {
+        console.log('Error statuses/mentions_timeline')
         console.log(err)
         nextUser(err)
       }
@@ -83,6 +85,7 @@ function findTweets(users, callback){
         // Update User with most recent tweet
         User.update({ _id: user.id },{ $set: {'services.twitter.sinceId': tweets[0].id_str} }, function (err, numberAffected, raw){
           if (err){
+            console.log('Error User.update')
             console.log(err)
             nextUser(err)
           } else {
@@ -102,6 +105,7 @@ function findTweets(users, callback){
                 }
               }, function(err, response){
                 if (err){
+                  console.log('Error async.each esClient.create')
                   console.log(err)
                   nextTweet(err)
                 } else {
@@ -110,6 +114,7 @@ function findTweets(users, callback){
               })
             }, function (err){
                 if (err){
+                  console.log('Error async.each tweets complete')
                   console.log(err)
                   nextUser(err)
                 } else {
@@ -125,6 +130,7 @@ function findTweets(users, callback){
 
   },function(err){
     if (err){
+      console.log('Error async.each users complete')
       console.log(err)
       callback(err)
     } else {
@@ -136,6 +142,7 @@ function findTweets(users, callback){
 function findFacebookUsers(callback){
   User.findConnectedFacebook(function(err, users){
     if (err){
+      console.log('Error findConnectedFacebook')
       console.log(err)
       callback(err)
     } else {
@@ -167,6 +174,7 @@ async.waterfall([
     findFacebookPosts
 ],function(err){
   if (err){
+    console.log('Error async.waterfall complete')
     console.log(err)
     process.exit(1)
   }else {

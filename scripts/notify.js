@@ -56,6 +56,7 @@ var User = mongoose.model('User', userSchema)
 function findTwitterUsers(callback){
   User.findConnectedTwitter(function(err, users){
     if (err){
+      console.log('Error findConnectTwitter')
       console.log(err)
       callback(err)
     } else {
@@ -95,6 +96,7 @@ function findDocuments(users, callback){
       }
     }, function (error, response) {
         if (error){
+          console.log('Error esClient.search')
           console.log(error)
           nextUser(error)
         }
@@ -123,6 +125,7 @@ function findDocuments(users, callback){
     })
   },function(err){
     if (err) {
+      console.log('Error async.each users complete')
       console.log(err)
       callback(err)
     } else {
@@ -136,6 +139,7 @@ async.waterfall([
     findDocuments,
 ],function(err){
   if (err){
+    console.log('Error async.waterfall complete')
     console.log(err)
     process.exit(1)
   }else {
