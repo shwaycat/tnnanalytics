@@ -1,20 +1,23 @@
 require('dotenv').load()
 
-var async = require('async')
+var keystone = require('keystone')
+  , async = require('async')
   , request = require('request')
   , mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , elasticsearch = require('elasticsearch')
   , _ = require('underscore')
 
+keystone.set('emails', '../templates/emails')
+
 var esClient = new elasticsearch.Client({
   host: process.env.BONSAI_URL
 })
 
-
 mongoose.connect(process.env.MONGOLAB_URI)
 
 var userSchema = new Schema({
+    email: String,
     notifications: {
       keywords: String
     },
@@ -62,7 +65,6 @@ function findTwitterUsers(callback){
 function findDocuments(users, callback){
   async.each(users, function(user, nextUser){
     var keywords = user.notifications.keywords.split(',')
-    console.log(keywords)
 
     if (keywords.length == 0){
       nextUser()
@@ -71,7 +73,6 @@ function findDocuments(users, callback){
     var orQueries = _.map(keywords, function(keyword){
       return { query: { match_phrase: {text: keyword} } }
     })
-
 
     esClient.search({
       index: 'cadence',
@@ -90,8 +91,31 @@ function findDocuments(users, callback){
         }
       }
     }, function (error, response) {
-      console.log(response.hits.hits)
-      nextUser()
+        if (error){
+          nextUser(error)
+        }
+
+        var links = []
+        if (response.hits.total > 0){
+          links = _.map(response.hits.hits, function(hit){
+            return {
+              text: hit._source.text,
+              href: 'https://twitter.com/'+hit._source.user.screen_name+'/status/'+hit._source.id_str
+            }
+          })
+
+          new keystone.Email('notification').send({
+            subject: 'Cadence Notification',
+            to: user.email,
+            from: {
+              name: 'Cadence',
+              email: 'no-reply@maxmedia.com'
+            },
+            links: links
+          }, nextUser);
+        } else {
+          nextUser()
+        }
     })
   },function(err){
     callback(err)

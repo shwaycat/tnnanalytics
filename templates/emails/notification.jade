@@ -1,0 +1,10 @@
+extends layouts/base
+
+block content
+  h1 We identified the following keyword instances:
+
+  each link in links
+    a(href=link.href)=link.text
+    br
+    br
+
