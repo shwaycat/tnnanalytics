@@ -31,8 +31,7 @@ User.add({
   gravatar: { type: String, noedit: true }
 }, 'Notifications', {
   notifications: {
-    posts: { type: Boolean },
-    meetups: { type: Boolean, default: true }
+    keywords: { type: Types.Textarea, label: 'Keywords'},
   }
 }, 'Permissions', {
   isAdmin: { type: Boolean, label: 'Can Admin ' + keystone.get('brand') },
