@@ -15,6 +15,7 @@ var esClient = new elasticsearch.Client({
 mongoose.connect(process.env.MONGOLAB_URI)
 
 var userSchema = new Schema({
+    domain: String,
     services: {
       twitter: {
         isConfigured: Boolean,
@@ -86,8 +87,16 @@ function findTweets(users, callback){
               tweet.cadence_user_id = user.id
               esClient.create({
                 index: 'cadence',
-                type: 'twitter',
-                body: tweet
+                type: user.domain,
+                id: tweet.id_str,
+                body: {
+                  doc_source: 'twitter',
+                  doc_type: 'mention',
+                  doc_text: tweet.text,
+                  user_id: tweet.user.id_str,
+                  user_handle: tweet.user.screen_name,
+                  user_lang: tweet.user.lang
+                }
               }, function(err, response){
                 nextTweet(err)
               })
