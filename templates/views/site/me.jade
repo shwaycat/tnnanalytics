@@ -17,6 +17,8 @@ block content
                 input(type='text', name='name.last', value=user.name.last, placeholder='Last Name').form-control
               .form-group(class=validationErrors.email ? 'has-error' : null)
                 input(type='email', name='email', value=user.email, placeholder='Email').form-control
+              .form-group
+                textarea(name='notifications.keywords', rows=3, placeholder='comma, separated, list, of, keywords').form-control=user.notifications.keywords
               if !user.services.twitter.isConfigured
                 .form-group
                   label.col-sm-2.control-label Twitter

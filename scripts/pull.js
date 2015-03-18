@@ -8,11 +8,11 @@ var async = require('async')
   , tw = require('twitter')
 
 var esClient = new elasticsearch.Client({
-  host: process.env.ELASTICSEARCH_HOST || process.env.BONSAI_URL
+  host: process.env.BONSAI_URL
 })
 
 
-mongoose.connect('mongodb://localhost/cadence')
+mongoose.connect(process.env.MONGOLAB_URI)
 
 var userSchema = new Schema({
     services: {
