@@ -90,28 +90,50 @@ function findTweets(users, callback){
             nextUser(err)
           } else {
             async.each(tweets, function(tweet, nextTweet){
-              esClient.create({
+              esClient.count({
                 index: 'cadence',
-                type: user.domain,
-                id: tweet.id_str,
                 body: {
-                  doc_source: 'twitter',
-                  doc_type: 'mention',
-                  doc_text: tweet.text,
-                  user_id: tweet.user.id_str,
-                  user_handle: tweet.user.screen_name,
-                  user_lang: tweet.user.lang,
-                  cadence_user_id: user.id
+                  query: {
+                    term: {_id: tweet.id_str}
+                  }
                 }
               }, function(err, response){
-                if (err){
-                  console.log('Error async.each esClient.create')
-                  console.log(err)
-                  nextTweet(err)
-                } else {
-                  nextTweet()
+                if ( (typeof err == 'undefined') && (response.count == 0) ){
+                  console.log('in condintional')
+                    console.log(err)
+                    esClient.create({
+                      index: 'cadence',
+                      type: user.domain,
+                      id: tweet.id_str,
+                      body: {
+                        doc_source: 'twitter',
+                        doc_type: 'mention',
+                        doc_text: tweet.text,
+                        user_id: tweet.user.id_str,
+                        user_handle: tweet.user.screen_name,
+                        user_lang: tweet.user.lang,
+                        cadence_user_id: user.id
+                      }
+                    }, function(err, response){
+                      if (err){
+                        console.log('Error async.each esClient.create')
+                        console.log(err)
+                        nextTweet(err)
+                      } else {
+                        nextTweet()
+                      }
+                    })
+                }else{
+                  if (typeof err != 'undefined'){
+                    console.log('Error from count')
+                    console.log(err)
+                    nextTweet(err)
+                  }else{
+                    nextTweet()
+                  }
                 }
               })
+
             }, function (err){
                 if (err){
                   console.log('Error async.each tweets complete')
