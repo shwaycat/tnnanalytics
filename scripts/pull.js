@@ -84,7 +84,6 @@ function findTweets(users, callback){
             nextUser(err)
           } else {
             async.each(tweets, function(tweet, nextTweet){
-              tweet.cadence_user_id = user.id
               esClient.create({
                 index: 'cadence',
                 type: user.domain,
@@ -95,7 +94,8 @@ function findTweets(users, callback){
                   doc_text: tweet.text,
                   user_id: tweet.user.id_str,
                   user_handle: tweet.user.screen_name,
-                  user_lang: tweet.user.lang
+                  user_lang: tweet.user.lang,
+                  cadence_user_id: user.id
                 }
               }, function(err, response){
                 nextTweet(err)

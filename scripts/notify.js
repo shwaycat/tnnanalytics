@@ -18,6 +18,7 @@ mongoose.connect(process.env.MONGOLAB_URI)
 
 var userSchema = new Schema({
     email: String,
+    domain: String,
     notifications: {
       keywords: String
     },
@@ -71,11 +72,12 @@ function findDocuments(users, callback){
     }
 
     var orQueries = _.map(keywords, function(keyword){
-      return { query: { match_phrase: {text: keyword} } }
+      return { query: { match_phrase: {doc_text: keyword} } }
     })
 
     esClient.search({
       index: 'cadence',
+      type: user.domain,
       body: {
         query: {
           filtered: {
@@ -99,8 +101,8 @@ function findDocuments(users, callback){
         if (response.hits.total > 0){
           links = _.map(response.hits.hits, function(hit){
             return {
-              text: hit._source.text,
-              href: 'https://twitter.com/'+hit._source.user.screen_name+'/status/'+hit._source.id_str
+              text: hit._source.doc_text,
+              href: 'https://twitter.com/'+hit._source.user_handle+'/status/'+hit._source._id
             }
           })
 
