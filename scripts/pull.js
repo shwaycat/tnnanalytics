@@ -89,7 +89,7 @@ function findTweets(users, callback){
             console.log(err)
             nextUser(err)
           } else {
-            async.each(tweets, function(tweet, nextTweet){
+            async.eachLimit(tweets, 5, function(tweet, nextTweet){
               console.log(tweet.id_str);
               esClient.count({
                 index: 'cadence',
