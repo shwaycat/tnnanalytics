@@ -110,7 +110,7 @@ function findDocuments(users, callback){
           nextUser(error)
           return;
         }
-
+        console.log(response.hits);
         var links = []
         if (response.hits.total > 0){
           links = _.map(response.hits.hits, function(hit){
@@ -129,6 +129,7 @@ function findDocuments(users, callback){
             },
             links: links
           });
+          console.log('Email OUT!');
         } 
           nextUser()
           return;
