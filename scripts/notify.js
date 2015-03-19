@@ -66,13 +66,21 @@ function findTwitterUsers(callback){
 }
 
 function findDocuments(users, callback){
+  console.log(users);
   async.each(users, function(user, nextUser){
     console.log('-----------------------Find Documents-------------------');
     console.log(user);
-    var keywords = user.notifications.keywords.split(',')
+    userCheck = true;
+    var keywords;
+    if(user) {
+      keywords = user.notifications.keywords.split(',');
+    } else {
+      userCheck = false;
+    }
 
-    if (keywords.length == 0){
+    if (keywords.length == 0 || !userCheck){
       nextUser()
+      return;
     }
 
     var orQueries = _.map(keywords, function(keyword){
