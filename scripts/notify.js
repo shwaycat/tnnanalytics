@@ -68,7 +68,7 @@ function findTwitterUsers(callback){
 function findDocuments(users, callback){
   async.each(users, function(user, nextUser){
     console.log('-----------------------Find Documents-------------------');
-    console.log('%s %j', user.name, user.notifications);
+    console.log('%s %j', user.email, user.notifications);
 
     userCheck = true;
     var keywords;

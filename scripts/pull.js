@@ -90,6 +90,7 @@ function findTweets(users, callback){
             nextUser(err)
           } else {
             async.each(tweets, function(tweet, nextTweet){
+              console.log(tweet.id_str);
               esClient.count({
                 index: 'cadence',
                 body: {
@@ -123,6 +124,7 @@ function findTweets(users, callback){
                     })
                 }else{
                   if (typeof err != 'undefined'){
+                    console.log(response);
                     console.log('Error from count')
                     console.log(err)
                     nextTweet(err)
