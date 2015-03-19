@@ -66,10 +66,9 @@ function findTwitterUsers(callback){
 }
 
 function findDocuments(users, callback){
-  console.log(users);
   async.each(users, function(user, nextUser){
     console.log('-----------------------Find Documents-------------------');
-    console.log(user);
+    console.log(user.notifications);
     userCheck = true;
     var keywords;
     if(user) {
@@ -109,6 +108,7 @@ function findDocuments(users, callback){
           console.log('Error esClient.search')
           console.log(error)
           nextUser(error)
+          return;
         }
 
         var links = []
@@ -128,10 +128,11 @@ function findDocuments(users, callback){
               email: 'no-reply@maxmedia.com'
             },
             links: links
-          }, nextUser);
-        } else {
+          });
+        } 
           nextUser()
-        }
+          return;
+        
     })
   },function(err){
     if (err) {
