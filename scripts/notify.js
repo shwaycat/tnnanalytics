@@ -68,8 +68,7 @@ function findTwitterUsers(callback){
 function findDocuments(users, callback){
   async.each(users, function(user, nextUser){
     console.log('-----------------------Find Documents-------------------');
-    console.log('%s %j', user.email, user.notifications);
-
+    console.log(user.notifications);
     userCheck = true;
     var keywords;
     if(user) {
@@ -111,7 +110,7 @@ function findDocuments(users, callback){
           nextUser(error)
           return;
         }
-        console.log(response.hits);
+
         var links = []
         if (response.hits.total > 0){
           links = _.map(response.hits.hits, function(hit){
@@ -129,12 +128,11 @@ function findDocuments(users, callback){
               email: 'no-reply@maxmedia.com'
             },
             links: links
-          });
-          console.log('Email OUT!');
-        } 
+          }, nextUser);
+        } else {
           nextUser()
           return;
-        
+        }
     })
   },function(err){
     if (err) {
