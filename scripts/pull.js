@@ -25,7 +25,7 @@ var userSchema = new Schema({
         accessToken: String,
         refreshToken: String,
         sinceId: String,
-        dmSinceId: String,
+        dmSinceId: String
       },
       facebook: {
         accessToken: String,
@@ -300,7 +300,6 @@ function findFacebookPosts(users, callback){
 async.waterfall([
     findTwitterUsers,
     findTweets,
-    findTwitterDirectMessages,
     findFacebookUsers,
     findFacebookPosts
 ],function(err){
