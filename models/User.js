@@ -71,7 +71,8 @@ User.add({
 
       accessToken: { type: String, label: 'Access Token', dependsOn: deps.twitter },
       refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.twitter },
-      sinceId: { type: String, label: 'Since Id', dependsOn: deps.twitter }
+      sinceId: { type: String, label: 'Since Id', dependsOn: deps.twitter },
+      dmSinceId: { type: String, label: 'Since Id', dependsOn: deps.twitter }
     }
   }
 });
