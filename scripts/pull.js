@@ -93,6 +93,7 @@ function findTweets(users, callback){
           } else {
             async.eachLimit(tweets, 5, function(tweet, nextTweet){
               console.log(tweet.id_str);
+              console.log('instance index: ' + config.index)
               esClient.count({
                 index: config.index,
                 body: {
