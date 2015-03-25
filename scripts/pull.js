@@ -165,7 +165,6 @@ function findTweets(users, callback){
 
   //callback(null, users);
 }
-/*
 function findTwitterDirectMessages(users, callback) {
   async.each(users, function(user, nextUser){
     var client = new tw({
@@ -270,7 +269,7 @@ function findTwitterDirectMessages(users, callback) {
     }
   })
 }
-*/
+
 function findFacebookUsers(callback){
   User.findConnectedFacebook(function(err, users){
     if (err){
@@ -302,6 +301,7 @@ function findFacebookPosts(users, callback){
 async.waterfall([
     findTwitterUsers,
     findTweets,
+    findTwitterDirectMessages,
     findFacebookUsers,
     findFacebookPosts
 ],function(err){
