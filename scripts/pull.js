@@ -6,6 +6,7 @@ var async = require('async')
   , Schema = mongoose.Schema
   , elasticsearch = require('elasticsearch')
   , tw = require('twitter')
+  , config = require('../config.json')
 
 var esClient = new elasticsearch.Client({
   host: process.env.BONSAI_URL
@@ -93,7 +94,7 @@ function findTweets(users, callback){
             async.eachLimit(tweets, 5, function(tweet, nextTweet){
               console.log(tweet.id_str);
               esClient.count({
-                index: 'cadence',
+                index: config.index,
                 body: {
                   query: {
                     term: {_id: tweet.id_str}
@@ -102,7 +103,7 @@ function findTweets(users, callback){
               }, function(err, response){
                 if ( (typeof err == 'undefined') && (response.count == 0) ){
                     esClient.create({
-                      index: 'cadence',
+                      index: config.index,
                       type: user.domain,
                       id: tweet.id_str,
                       body: {
@@ -198,7 +199,7 @@ function findTwitterDirectMessages(users, callback) {
             async.eachLimit(messages, 5, function(message, nextMessage){
               console.log(message.id_str);
               esClient.count({
-                index: 'cadence',
+                index: config.index,
                 body: {
                   query: {
                     term: {_id: message.id_str}
@@ -207,7 +208,7 @@ function findTwitterDirectMessages(users, callback) {
               }, function(err, response){
                 if ( (typeof err == 'undefined') && (response.count == 0) ){
                   esClient.create({
-                    index: 'cadence',
+                    index: config.index,
                     type: user.domain,
                     id: message.id_str,
                     body: {
