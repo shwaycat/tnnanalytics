@@ -163,7 +163,7 @@ function findTweets(users, callback){
     }
   })
 
-  callback(null, users);
+  //callback(null, users);
 }
 /*
 function findTwitterDirectMessages(users, callback) {
