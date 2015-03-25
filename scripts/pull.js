@@ -182,12 +182,13 @@ function findTwitterDirectMessages(users, callback) {
     }
 
     client.get('direct_messages', params, function(err, messages, response){
+      console.log('direct_messages retrieved');
       if (err) {
-        console.log('Error statuses/mentions_timeline');
+        console.log('Error direct_messages');
         console.log(err);
         nextUser(err);
       }
-      if (tweets.length > 0) {
+      if (messages.length > 0) {
         // Update User with most recent direct message
         User.update({ _id: user.id },{ $set: {'services.twitter.dmSinceId': messages[0].id_str} },
           function (err, numberAffected, raw){
@@ -227,9 +228,9 @@ function findTwitterDirectMessages(users, callback) {
                     if (err){
                       console.log('Error async.each esClient.create')
                       console.log(err)
-                      nextTweet(err)
+                      nextMessage(err)
                     } else {
-                      nextTweet()
+                      nextMessage()
                     }
                   })
                 }else{
