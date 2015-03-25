@@ -59,7 +59,6 @@ function findTwitterUsers(callback){
       callback(null, users)
     }
   })
-  
 }
 
 function findTweets(users, callback){
