@@ -62,6 +62,7 @@ function findTwitterUsers(callback){
 }
 
 function findTweets(users, callback){
+  console.log('instance index: ' + c.index);
   async.each(users, function(user, nextUser){
     var client = new tw({
       consumer_key: process.env.TWITTER_API_KEY,
@@ -78,7 +79,7 @@ function findTweets(users, callback){
     }
 
     client.get('statuses/mentions_timeline', params, function(err, tweets, response){
-      console.log('instance index: ' + c.index);
+
       if (err) {
         console.log('Error statuses/mentions_timeline')
         console.log(err)
