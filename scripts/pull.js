@@ -283,7 +283,6 @@ function findFacebookUsers(callback){
   })
 }
 
-
 //fields=id,message,updated_time,commments{id,message},likes{id,name},shares{id,name}
 function findFacebookPosts(users, callback){
   async.each(users, function(user, nextUser){
