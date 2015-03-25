@@ -157,9 +157,9 @@ function findTweets(users, callback){
     if (err){
       console.log('Error async.each users complete')
       console.log(err)
-      callback(err)
+      callback(err, users)
     } else {
-      callback();
+      callback(null, users);
     }
   })
 
