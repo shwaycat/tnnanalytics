@@ -62,8 +62,6 @@ function findTwitterUsers(callback){
 }
 
 function findTweets(users, callback){
-  console.log('TEST. THIS IS A TEST!')
-  console.log('instance index: ' + c.index)
   async.each(users, function(user, nextUser){
     var client = new tw({
       consumer_key: process.env.TWITTER_API_KEY,
@@ -96,7 +94,6 @@ function findTweets(users, callback){
           } else {
             async.eachLimit(tweets, 5, function(tweet, nextTweet){
               console.log(tweet.id_str);
-
               esClient.count({
                 index: c.index,
                 body: {
@@ -168,7 +165,7 @@ function findTweets(users, callback){
 
   callback(null, users);
 }
-
+/*
 function findTwitterDirectMessages(users, callback) {
   async.each(users, function(user, nextUser){
     var client = new tw({
@@ -273,7 +270,7 @@ function findTwitterDirectMessages(users, callback) {
     }
   })
 }
-
+*/
 function findFacebookUsers(callback){
   User.findConnectedFacebook(function(err, users){
     if (err){
