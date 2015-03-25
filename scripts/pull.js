@@ -6,7 +6,7 @@ var async = require('async')
   , Schema = mongoose.Schema
   , elasticsearch = require('elasticsearch')
   , tw = require('twitter')
-  , config = require('../config.json')
+  , c = require('../config.json')
 
 var esClient = new elasticsearch.Client({
   host: process.env.BONSAI_URL
@@ -78,6 +78,7 @@ function findTweets(users, callback){
     }
 
     client.get('statuses/mentions_timeline', params, function(err, tweets, response){
+      console.log('instance index: ' + c.index);
       if (err) {
         console.log('Error statuses/mentions_timeline')
         console.log(err)
@@ -93,9 +94,9 @@ function findTweets(users, callback){
           } else {
             async.eachLimit(tweets, 5, function(tweet, nextTweet){
               console.log(tweet.id_str);
-              console.log('instance index: ' + config.index)
+
               esClient.count({
-                index: config.index,
+                index: c.index,
                 body: {
                   query: {
                     term: {_id: tweet.id_str}
@@ -104,7 +105,7 @@ function findTweets(users, callback){
               }, function(err, response){
                 if ( (typeof err == 'undefined') && (response.count == 0) ){
                     esClient.create({
-                      index: config.index,
+                      index: c.index,
                       type: user.domain,
                       id: tweet.id_str,
                       body: {
@@ -200,7 +201,7 @@ function findTwitterDirectMessages(users, callback) {
             async.eachLimit(messages, 5, function(message, nextMessage){
               console.log(message.id_str);
               esClient.count({
-                index: config.index,
+                index: c.index,
                 body: {
                   query: {
                     term: {_id: message.id_str}
@@ -209,7 +210,7 @@ function findTwitterDirectMessages(users, callback) {
               }, function(err, response){
                 if ( (typeof err == 'undefined') && (response.count == 0) ){
                   esClient.create({
-                    index: config.index,
+                    index: c.index,
                     type: user.domain,
                     id: message.id_str,
                     body: {
