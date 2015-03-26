@@ -96,7 +96,7 @@ function findDocuments(users, callback){
             query: {
               match: {
                 cadence_user_id: user.id,
-                doc_type: 'metion'
+                doc_type: 'mention'
               }
             },
             filter: {
