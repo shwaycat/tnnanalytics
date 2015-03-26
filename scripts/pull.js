@@ -219,7 +219,8 @@ function findTwitterDirectMessages(users, callback) {
                       user_id: message.sender.id_str,
                       user_handle: message.sender.screen_name,
                       user_lang: message.sender.lang,
-                      cadence_user_id: user.id
+                      cadence_user_id: user.id,
+                      time_stamp: message.created_at
                     }
                   }, function(err, response){
                     if (err){
