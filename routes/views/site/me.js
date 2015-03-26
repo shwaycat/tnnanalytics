@@ -92,10 +92,6 @@ exports = module.exports = function(req, res) {
 
   });
 
-  view.render('site/me', {credentials:JSON.stringify({
-    clientID: process.env.FACEBOOK_APP_ID,
-    clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: process.env.FACEBOOK_CALLBACK_URL
-  })});
+  view.render('site/me');
   
 }
