@@ -1,6 +1,6 @@
 extends ../../layouts/default
 
-p #{credentials}
+
 block content
   .container
     .row
@@ -9,6 +9,7 @@ block content
           .hdr-dashboard.panel-heading
             | Hi #{user.name.first}, these are your settings
           .panel-body
+            p #{credentials}
             form(method='post', autocomplete='off', novalidate).me
               input(type='hidden', name='action', value='profile.details')
               input(type='hidden', name=csrf_token_key, value=csrf_token_value)
