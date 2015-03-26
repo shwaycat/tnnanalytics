@@ -178,7 +178,7 @@ function findTwitterDirectMessages(users, callback) {
 
     // We've made a query already, let's not get anything before that tweet
     if (user.services.twitter.dmSinceId ) {
-      params.since_id = user.services.twitter.dmSinceId;
+      //params.since_id = user.services.twitter.dmSinceId;
     }
 
     client.get('direct_messages', params, function(err, messages, response){
@@ -197,6 +197,7 @@ function findTwitterDirectMessages(users, callback) {
             console.log(err)
             nextUser(err)
           } else {
+            console.log('get messages');
             async.eachLimit(messages, 5, function(message, nextMessage){
               console.log(message.id_str);
               esClient.count({
@@ -216,12 +217,9 @@ function findTwitterDirectMessages(users, callback) {
                       doc_source: 'twitter',
                       doc_type: 'direct_message',
                       doc_text: message.text,
-                      from_user_id: message.sender.id_str,
-                      to_user_id: message.recipient.id_str,
-                      from_user_handle: message.sender.screen_name,
-                      to_user_handle: message.recipient.screen_name,
-                      sender_lang: message.sender.lang,
-                      recipient_lang: message.recipient.lang,
+                      user_id: message.sender.id_str,
+                      user_handle: message.sender.screen_name,
+                      user_lang: message.sender.lang,
                       cadence_user_id: user.id
                     }
                   }, function(err, response){
@@ -230,6 +228,7 @@ function findTwitterDirectMessages(users, callback) {
                       console.log(err)
                       nextMessage(err)
                     } else {
+                      console.log('direct message ' + message.id_str + ' created.')
                       nextMessage()
                     }
                   })
