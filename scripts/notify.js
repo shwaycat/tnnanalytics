@@ -122,7 +122,13 @@ function findDocuments(users, callback){
               href: 'https://twitter.com/'+hit._source.user_handle+'/status/'+hit._id
             }
            } else {
+             var timeStamp = '';
+             if(hit.time_stamp) {
+               timeStamp = hit.time_stamp;
+             }
              return {
+               text: '@' + hit._source.user_handle + ': ' + hit._source.doc_text + '  -  ' + timeStamp,
+               href: 'https://twitter.com/'+hit._source.user_handle
              }
            }
           })
