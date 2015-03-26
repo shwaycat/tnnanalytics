@@ -118,7 +118,7 @@ function findDocuments(users, callback){
             console.log(hit)
             return {
               text: hit._source.doc_text,
-              href: 'https://twitter.com/'+hit._source.user_handle+'/status/'+hit._source._id
+              href: 'https://twitter.com/'+hit._source.user_handle+'/status/'+hit._id
             }
           })
           console.log(links)
