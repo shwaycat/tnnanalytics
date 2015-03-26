@@ -95,7 +95,8 @@ function findDocuments(users, callback){
           filtered: {
             query: {
               match: {
-                cadence_user_id: user.id
+                cadence_user_id: user.id,
+                doc_type: 'metion'
               }
             },
             filter: {
