@@ -121,7 +121,7 @@ function findDocuments(users, callback){
               href: 'https://twitter.com/'+hit._source.user_handle+'/status/'+hit._source._id
             }
           })
-
+          console.log(links)
           new keystone.Email('notification').send({
             subject: 'Cadence Notification',
             to: user.email,
