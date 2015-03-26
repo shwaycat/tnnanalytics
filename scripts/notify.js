@@ -115,7 +115,6 @@ function findDocuments(users, callback){
         var links = []
         if (response.hits.total > 0){
           links = _.map(response.hits.hits, function(hit){
-            console.log(hit)
             return {
               text: hit._source.doc_text,
               href: 'https://twitter.com/'+hit._source.user_handle+'/status/'+hit._source._id
