@@ -216,42 +216,44 @@ function findTwitterDirectMessages(users, callback) {
                         term: {_id:message.id_str}
                       }
                     }
+                  }, function(err, resposne) {
+                    if ( (typeof err == 'undefined')){
+                      esClient.create({
+                        index: c.index,
+                        type: user.domain,
+                        id: message.id_str,
+                        body: {
+                          doc_source: 'twitter',
+                          doc_type: 'direct_message',
+                          doc_text: message.text,
+                          user_id: message.sender.id_str,
+                          user_handle: message.sender.screen_name,
+                          user_lang: message.sender.lang,
+                          cadence_user_id: user.id
+                        }
+                      }, function(err, response){
+                        if (err){
+                          console.log('Error async.each esClient.create')
+                          console.log(err)
+                          nextMessage(err)
+                        } else {
+                          console.log('direct message ' + message.id_str + ' created.')
+                          nextMessage()
+                        }
+                      })
+                    }else{
+                      if (typeof err != 'undefined'){
+                        console.log(response);
+                        console.log('Error from count')
+                        console.log(err)
+                        nextMessage(err)
+                      }else{
+                        nextMessage()
+                      }
+                    }
                   })
                 }
-                if ( (typeof err == 'undefined')){
-                  esClient.create({
-                    index: c.index,
-                    type: user.domain,
-                    id: message.id_str,
-                    body: {
-                      doc_source: 'twitter',
-                      doc_type: 'direct_message',
-                      doc_text: message.text,
-                      user_id: message.sender.id_str,
-                      user_handle: message.sender.screen_name,
-                      user_lang: message.sender.lang,
-                      cadence_user_id: user.id
-                    }
-                  }, function(err, response){
-                    if (err){
-                      console.log('Error async.each esClient.create')
-                      console.log(err)
-                      nextMessage(err)
-                    } else {
-                      console.log('direct message ' + message.id_str + ' created.')
-                      nextMessage()
-                    }
-                  })
-                }else{
-                  if (typeof err != 'undefined'){
-                    console.log(response);
-                    console.log('Error from count')
-                    console.log(err)
-                    nextMessage(err)
-                  }else{
-                    nextMessage()
-                  }
-                }
+
               })
             }, function (err){
               if (err){
