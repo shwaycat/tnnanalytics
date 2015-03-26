@@ -207,7 +207,18 @@ function findTwitterDirectMessages(users, callback) {
                   }
                 }
               }, function(err, response){
-                if ( (typeof err == 'undefined') && (response.count == 0) ){
+                if(response.count > 0) {
+                  //delete them
+                  esClient.deleteByQuery({
+                    index: c.index,
+                    body: {
+                      query: {
+                        term: {_id:message.id_str}
+                      }
+                    }
+                  })
+                }
+                if ( (typeof err == 'undefined')){
                   esClient.create({
                     index: c.index,
                     type: user.domain,
