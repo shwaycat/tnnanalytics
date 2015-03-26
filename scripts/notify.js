@@ -95,8 +95,7 @@ function findDocuments(users, callback){
           filtered: {
             query: {
               match: {
-                cadence_user_id: user.id,
-                doc_type: 'mention'
+                cadence_user_id: user.id
               }
             },
             filter: {
@@ -117,6 +116,7 @@ function findDocuments(users, callback){
         if (response.hits.total > 0){
           links = _.map(response.hits.hits, function(hit){
             console.log(hit)
+           // if(hit)
             return {
               text: hit._source.doc_text,
               href: 'https://twitter.com/'+hit._source.user_handle+'/status/'+hit._id
