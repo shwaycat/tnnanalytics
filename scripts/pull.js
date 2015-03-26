@@ -197,7 +197,6 @@ function findTwitterDirectMessages(users, callback) {
             console.log(err)
             nextUser(err)
           } else {
-            console.log('get messages');
             async.eachLimit(messages, 5, function(message, nextMessage){
               console.log(message.id_str);
               esClient.count({
