@@ -294,9 +294,19 @@ function findFacebookUsers(callback){
   })
 }
 
+
 //fields=id,message,updated_time,commments{id,message},likes{id,name},shares{id,name}
 function findFacebookPosts(users, callback){
   async.each(users, function(user, nextUser){
+    //get the pages for each user
+    var pageUrl = 'https://graph.facebook.com/v2.3/me/sccounts?access_token='+user.services.facebook.accessToken;
+    request({
+      url: pageUrl,
+      json: true
+    }, function (error, response, body) {
+      console.log(body);
+    })
+    /*
     //console.log(user.services.facebook);
     var since = user.services.facebook.lastPostTime;
     if(since === 'undefined' || since == null || since == '') {
@@ -315,7 +325,7 @@ function findFacebookPosts(users, callback){
      // console.log(response);
       console.log(body);
       nextUser(error)
-    })
+    })*/
   },function(err){
     callback(err)
   })

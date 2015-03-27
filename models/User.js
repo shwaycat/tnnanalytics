@@ -50,7 +50,12 @@ User.add({
       accessToken: { type: String, label: 'Access Token', dependsOn: deps.facebook },
       refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.facebook },
 
-      lastPostTime: { type: String, label: 'Last Post Time', dependsOn: deps.facebook }
+      pages : {
+        lastPostTime: { type: String, label: 'Last Post Time', dependsOn: deps.pages },
+        lastMessageTime: { type: String, label: 'Last Message Time', dependsOn: deps.pages},
+        pageIds: { type: [String], label: 'Page Ids', dependsOn: deps.pages }
+      }
+
     },
     google: {
       isConfigured: { type: Boolean, label: 'Google has been authenticated' },
