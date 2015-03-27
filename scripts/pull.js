@@ -299,8 +299,10 @@ function findFacebookPosts(users, callback){
   async.each(users, function(user, nextUser){
     //console.log(user);
     var qp = 'fields=id,message,updated_time,comments{id,message},likes{id,name},shares&since=1426377600'
+    var url = 'https://graph.facebook.com/v2.2/' + user.services.facebook.username + '/feed?'+qp+'&access_token='+user.services.facebook.accessToken;
+    console.log(url);
     request({
-      url: 'https://graph.facebook.com/v2.2/' + user.services.facebook.username + '/feed?'+qp+'&access_token='+user.services.facebook.accessToken,
+      url: url,
       json: true
     },function (error, response, body){
      // console.log(response);
