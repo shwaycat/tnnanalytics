@@ -321,11 +321,85 @@ function findFacebookPosts(users, callback){
             url: postsUrl,
             json: true
           },function (e, r, b){
-            //update the last post time so we don't pull any more posts than we have to in the future
+            if(e != null) {
+              nextPage(e);
+            } else {
+              if(b.data.length > 0) {
+                var lastPostTimeUnix = Math.floor(new Date(b.data[0].created_time).getTime() / 1000);
+                User.update({ _id: user.id },{ $set: {'services.facebook.lastPostTime': lastPostTimeUnix} },
+                  function (err, numberAffected, raw){
+                    if(err != null) {
+                      nextPage(err);
+                    } else {
+                      //iterate and store them in the database
+                      async.eachLimit(b.data, 5, function (post, nextPost) {
+                        esClient.count({
+                          index: c.index,
+                          body: {
+                            query: {
+                              term: {doc_source: 'facebook'},
+                              term: {doc_type: 'post'},
+                              term: {_id: post.id}
+                            }
+                          }
+                        }, function(err, response){
+                          if ( (typeof err == 'undefined') && response.count == 0){
+                            esClient.create({
+                              index: c.index,
+                              type: user.domain,
+                              id: post.id,
+                              body: {
+                                doc_source: 'facebook',
+                                doc_type: 'post',
+                                doc_text: post.message,
+                                user_id: post.from.id,
+                                user_name: post.from.name,
+                                //user_lang: post.from.languages[0],
+                                cadence_user_id: user.id,
+                                time_stamp: post.created_time
+                              }
+                            }, function(err, response){
+                              if (err){
+                                console.log('Error async.each post esClient.create')
+                                console.log(err)
+                                nextPost(err)
+                              } else {
+                                console.log('facebook post ' + post.id + ' created.')
+                                nextPost()
+                              }
+                            })
+                          }else{
+                            if (typeof err != 'undefined'){
+                              console.log(response);
+                              console.log('Error from count')
+                              console.log(err)
+                              nextMessage(err)
+                            }else{
+                              nextMessage()
+                            }
+                          }
+                        })
+                      }, function (err){
+                        if (err){
+                          console.log('Error async.each posts complete');
+                          console.log(err);
+                          nextPage(err);
+                        } else {
+                          nextPage();
+                        }
+                      });
+                    }
+                  });
+                //update the last post time so we don't pull any more posts than we have to in the future
+                // console.log(response);
+                console.log(b);
+                nextPage()
+              } else {
+                nextPage();
+              }
 
-            // console.log(response);
-            console.log(b);
-            nextPage(e)
+            }
+
           })
           }, function (err){
           if (err){
