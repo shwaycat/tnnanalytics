@@ -303,8 +303,8 @@ function findFacebookPosts(users, callback){
       var now = new Date();
       since = (new Date(now.getTime() - 30*24*60*60*1000)).getTime();
     }
-    var qp = 'fields=id,message,updated_time,comments{id,message},likes{id,name},shares&since=' + since;
-    var url = 'https://graph.facebook.com/v2.3/devinesoftware/feed?'+qp+'&access_token='+user.services.facebook.accessToken;
+    var qp = 'fields=id,message,updated_time,comments{id,message},likes{id,name},shares';
+    var url = 'https://graph.facebook.com/v2.3/' + user.services.facebook.profileId + '/feed?'+qp+'&access_token='+user.services.facebook.accessToken;
     //console.log(url);
     request({
       url: url,
