@@ -310,7 +310,7 @@ function findFacebookPosts(users, callback){
 }
 
 async.waterfall([
-    deleteTwitterDirectMessages,
+   // deleteTwitterDirectMessages,
     findTwitterUsers,
     findTweets,
     findTwitterDirectMessages,

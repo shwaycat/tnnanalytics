@@ -123,8 +123,8 @@ function findDocuments(users, callback){
             }
            } else {
              var timeStamp = '';
-             if(hit.time_stamp) {
-               timeStamp = hit.time_stamp;
+             if(hit._source.time_stamp) {
+               timeStamp = hit._source.time_stamp;
              }
              return {
                text: '@' + hit._source.user_handle + ': ' + hit._source.doc_text + '  -  ' + timeStamp,
