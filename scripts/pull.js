@@ -297,13 +297,13 @@ function findFacebookUsers(callback){
 //fields=id,message,updated_time,commments{id,message},likes{id,name},shares{id,name}
 function findFacebookPosts(users, callback){
   async.each(users, function(user, nextUser){
-    console.log(user);
+   // console.log(user);
     var qp = 'fields=id,message,updated_time,comments{id,message},likes{id,name},shares&since=1426377600'
     request({
       url: 'https://graph.facebook.com/v2.2/nookwit/feed?'+qp+'&access_token='+user.services.facebook.accessToken,
       json: true
     },function (error, response, body){
-      console.log(response);
+     // console.log(response);
       console.log(body);
       nextUser(error)
     })
