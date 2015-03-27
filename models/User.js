@@ -48,7 +48,9 @@ User.add({
       avatar: { type: String, label: 'Image', dependsOn: deps.facebook },
 
       accessToken: { type: String, label: 'Access Token', dependsOn: deps.facebook },
-      refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.facebook }
+      refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.facebook },
+
+      lastPostTime: { type: String, label: 'Last Post Time', dependsOn: deps.facebook }
     },
     google: {
       isConfigured: { type: Boolean, label: 'Google has been authenticated' },
