@@ -7,6 +7,7 @@ var keystone = require('keystone')
   , Schema = mongoose.Schema
   , elasticsearch = require('elasticsearch')
   , _ = require('underscore')
+  , c = require('../config.json')
 
 keystone.set('emails', '../templates/emails')
 
@@ -87,7 +88,7 @@ function findDocuments(users, callback){
     })
 
     esClient.search({
-      index: 'cadence',
+      index: c.index,
       type: user.domain,
       body: {
         query: {
@@ -114,12 +115,25 @@ function findDocuments(users, callback){
         var links = []
         if (response.hits.total > 0){
           links = _.map(response.hits.hits, function(hit){
+            console.log(hit)
+           if(hit._source.doc_type == 'mention') {
             return {
               text: hit._source.doc_text,
-              href: 'https://twitter.com/'+hit._source.user_handle+'/status/'+hit._source._id
+              href: 'https://twitter.com/'+hit._source.user_handle+'/status/'+hit._id
             }
+           } else {
+             var timeStamp = '';
+             if(hit._source.time_stamp) {
+               var date = new Date(hit._source.time_stamp);
+               timeStamp = date.toLocaleString();
+             }
+             return {
+               text: '@' + hit._source.user_handle + ': ' + hit._source.doc_text + '  -  ' + timeStamp,
+               href: 'https://twitter.com/'+hit._source.user_handle
+             }
+           }
           })
-
+          console.log(links)
           new keystone.Email('notification').send({
             subject: 'Cadence Notification',
             to: user.email,
