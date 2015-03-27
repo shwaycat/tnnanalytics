@@ -61,6 +61,18 @@ function findTwitterUsers(callback){
   })
 }
 
+function deleteTwitterDirectMessages(callback) {
+  esClient.deleteByQuery({
+    index: c.index,
+    body: {
+      query: {
+        term: {doc_type: 'direct_message'}
+      }
+    }
+  }, function(err, response){
+    callback();
+  })
+}
 function findTweets(users, callback){
   async.each(users, function(user, nextUser){
     var client = new tw({
@@ -298,6 +310,7 @@ function findFacebookPosts(users, callback){
 }
 
 async.waterfall([
+    deleteTwitterDirectMessages,
     findTwitterUsers,
     findTweets,
     findTwitterDirectMessages,
