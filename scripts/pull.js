@@ -397,6 +397,7 @@ function findFacebookPosts(users, callback){
                // console.log(b);
                 nextPage()
               } else {
+                console.log('no new posts');
                 nextPage();
               }
 
