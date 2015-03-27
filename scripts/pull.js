@@ -309,7 +309,7 @@ function findFacebookPosts(users, callback){
         nextUser(error);
       } else {
         async.eachLimit(body.data, 5, function(page, nextPage){
-          var since = user.services.facebook.pages.lastPostTime;
+          var since = user.services.facebook.lastPostTime;
           if(since === 'undefined' || since == null || since == '') {
             var now = new Date();
             since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
