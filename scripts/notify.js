@@ -124,7 +124,8 @@ function findDocuments(users, callback){
            } else {
              var timeStamp = '';
              if(hit._source.time_stamp) {
-               timeStamp = hit._source.time_stamp;
+               var date = new Date(hit._source.time_stamp);
+               timeStamp = date.toLocaleString();
              }
              return {
                text: '@' + hit._source.user_handle + ': ' + hit._source.doc_text + '  -  ' + timeStamp,
