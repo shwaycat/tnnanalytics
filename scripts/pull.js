@@ -299,7 +299,7 @@ function findFacebookUsers(callback){
 function findFacebookPosts(users, callback){
   async.each(users, function(user, nextUser){
     //get the pages for each user
-    var pageUrl = 'https://graph.facebook.com/v2.3/me/sccounts?access_token='+user.services.facebook.accessToken;
+    var pageUrl = 'https://graph.facebook.com/v2.3/me/accounts?access_token='+user.services.facebook.accessToken;
     request({
       url: pageUrl,
       json: true
