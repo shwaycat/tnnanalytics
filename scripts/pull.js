@@ -343,7 +343,7 @@ function findFacebookPosts(users, callback){
                             }
                           }
                         }, function(err, response){
-                          if ( (typeof err == 'undefined') && response.count == 0){
+                          if ((typeof err == 'undefined') && response.count == 0){
                             esClient.create({
                               index: c.index,
                               type: user.domain,
@@ -369,12 +369,14 @@ function findFacebookPosts(users, callback){
                               }
                             })
                           }else{
+
                             if (typeof err != 'undefined'){
                               console.log(response);
                               console.log('Error from count')
                               console.log(err)
                               nextPost(err)
                             }else{
+                              console.log('post already exists in database')
                               nextPost()
                             }
                           }
@@ -392,7 +394,7 @@ function findFacebookPosts(users, callback){
                   });
                 //update the last post time so we don't pull any more posts than we have to in the future
                 // console.log(response);
-                console.log(b);
+               // console.log(b);
                 nextPage()
               } else {
                 nextPage();
