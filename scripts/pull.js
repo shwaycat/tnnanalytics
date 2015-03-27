@@ -302,7 +302,7 @@ function findFacebookPosts(users, callback){
     if(since === 'undefined' || since == null || since == '') {
       var now = new Date();
       since = (new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000;
-      console.log(since);
+      console.log('since: ' + since);
     }
     var qp = 'fields=id,message,updated_time,comments{id,message},likes{id,name},shares&since=' + since;
     var url = 'https://graph.facebook.com/v2.3/me/posts?'+qp+'&access_token='+user.services.facebook.accessToken;
