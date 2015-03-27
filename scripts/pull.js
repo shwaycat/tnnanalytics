@@ -352,8 +352,8 @@ function findFacebookPosts(users, callback){
                                 doc_source: 'facebook',
                                 doc_type: 'post',
                                 doc_text: post.message,
-                                user_id: post.from.id,
-                                user_name: post.from.name,
+                                user_id: post.from != null ? post.from.id : '',
+                                user_name: post.from != null ? post.from.name : '',
                                 //user_lang: post.from.languages[0],
                                 cadence_user_id: user.id,
                                 time_stamp: post.created_time
