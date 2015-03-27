@@ -297,14 +297,21 @@ function findFacebookUsers(callback){
 //fields=id,message,updated_time,commments{id,message},likes{id,name},shares{id,name}
 function findFacebookPosts(users, callback){
   async.each(users, function(user, nextUser){
-    console.log(user.services.facebook);
-    var qp = 'fields=id,message,updated_time,comments{id,message},likes{id,name},shares&since=1426377600'
-    var url = 'https://graph.facebook.com/v2.2/' + user.services.facebook.profileId + '/feed?'+qp+'&access_token='+user.services.facebook.accessToken;
-    console.log(url);
+    //console.log(user.services.facebook);
+    var since = user.services.facebook.lastPostTime;
+    if(since === 'undefined' || since == null || since == '') {
+      var now = new Date();
+      since = (new Date(now.getTime() - 30*24*60*60*1000)).getTime();
+    }
+    var qp = 'fields=id,message,updated_time,comments{id,message},likes{id,name},shares&since=' + since;
+    var url = 'https://graph.facebook.com/v2.3/' + user.services.facebook.profileId + '/post?'+qp+'&access_token='+user.services.facebook.accessToken;
+    //console.log(url);
     request({
       url: url,
       json: true
     },function (error, response, body){
+      //update the last post time so we don't pull any more posts than we have to in the future
+
      // console.log(response);
       console.log(body);
       nextUser(error)
