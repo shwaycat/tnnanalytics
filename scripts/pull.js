@@ -303,8 +303,8 @@ function findFacebookPosts(users, callback){
       url: 'https://graph.facebook.com/v2.2/nookwit/feed?'+qp+'&access_token='+user.services.facebook.accessToken,
       json: true
     },function (error, response, body){
-      console.log('response: ' + response);
-      console.log('body: ' + body);
+      console.log(response);
+      console.log(body);
       nextUser(error)
     })
   },function(err){
