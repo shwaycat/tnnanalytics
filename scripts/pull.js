@@ -344,6 +344,7 @@ function findFacebookPosts(users, callback){
                           }
                         }, function(err, response){
                           if ((typeof err == 'undefined') && response.count == 0){
+                            console.log(post);
                             esClient.create({
                               index: c.index,
                               type: user.domain,
