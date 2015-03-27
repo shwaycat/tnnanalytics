@@ -331,9 +331,9 @@ function findFacebookPosts(users, callback){
           if (err){
             console.log('Error async.each pages complete');
             console.log(err);
-            nextPage(err);
+            nextUser(err);
           } else {
-            nextPage();
+            nextUser();
           }
         });
       }
