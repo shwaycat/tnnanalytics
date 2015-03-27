@@ -304,6 +304,7 @@ function findFacebookPosts(users, callback){
       url: pageUrl,
       json: true
     }, function (error, response, body) {
+
       console.log(body);
     })
     /*
