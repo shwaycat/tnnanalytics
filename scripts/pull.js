@@ -373,9 +373,9 @@ function findFacebookPosts(users, callback){
                               console.log(response);
                               console.log('Error from count')
                               console.log(err)
-                              nextMessage(err)
+                              nextPost(err)
                             }else{
-                              nextMessage()
+                              nextPost()
                             }
                           }
                         })
