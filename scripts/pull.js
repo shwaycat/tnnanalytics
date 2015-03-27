@@ -305,7 +305,39 @@ function findFacebookPosts(users, callback){
       json: true
     }, function (error, response, body) {
 
-      console.log(body);
+      if(error != null) {
+        nextUser(error);
+      } else {
+        async.eachLimit(body.data, 5, function(page, nextPage){
+          var since = user.services.facebook.pages.lastPostTime;
+          if(since === 'undefined' || since == null || since == '') {
+            var now = new Date();
+            since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
+          }
+          var qp = 'fields=id,message,updated_time,comments{id,message},likes{id,name},shares&since=' + since;
+          var postsUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/posts?'+qp+'&access_token='+page.access_token;
+          console.log(postsUrl);
+          request({
+            url: postsUrl,
+            json: true
+          },function (e, r, b){
+            //update the last post time so we don't pull any more posts than we have to in the future
+
+            // console.log(response);
+            console.log(b);
+            nextPage(e)
+          })
+          }, function (err){
+          if (err){
+            console.log('Error async.each pages complete');
+            console.log(err);
+            nextPage(err);
+          } else {
+            nextPage();
+          }
+        });
+      }
+      //console.log(body);
     })
     /*
     //console.log(user.services.facebook);
