@@ -135,7 +135,6 @@ User.schema.virtual('twitterUsername').get(function() {
   return (this.services.twitter && this.services.twitter.isConfigured) ? this.services.twitter.username : '';
 });
 
-
 /**
  * Methods
  * =======
