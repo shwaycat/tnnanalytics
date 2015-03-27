@@ -53,7 +53,7 @@ User.add({
       pages : {
         lastPostTime: { type: String, label: 'Last Post Time', dependsOn: deps.pages },
         lastMessageTime: { type: String, label: 'Last Message Time', dependsOn: deps.pages},
-        pageIds: { type: [String], label: 'Page Ids', dependsOn: deps.pages }
+        //pageIds: { type: [String], label: 'Page Ids', dependsOn: deps.pages }
       }
 
     },
