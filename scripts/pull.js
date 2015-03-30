@@ -608,10 +608,10 @@ function findFacebookMessages(pages, callback) {
     var groupedPages = _.groupBy(pages, function(page) {
       return page.user.id;
     });
-    console.log(groupedPages);
-    var users = [];
-    for(var i =0; i<groupedPages.length; i++) {
-      users.push(groupedPages[i][0].user);
+   // console.log(groupedPages);
+    var users = new Array;
+    for(var o in groupedPages) {
+      users.push(groupedPages[o][0].user);
     }
     console.log(users);
     if(err) {
