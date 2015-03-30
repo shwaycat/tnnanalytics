@@ -605,13 +605,15 @@ function findFacebookMessages(pages, callback) {
     });
   }, function (err) {
     //console.log("Error async.each users complete");
-    var groupedPages = _.groupBy(pages, function(page) {
-      return page.user.id;
-    });
-   // console.log(groupedPages);
-    var users = new Array;
-    for(var o in groupedPages) {
-      users.push(groupedPages[o][0].user);
+    var userData = {};
+    for(var i = 0; i<pages.length; i++) {
+      if(!_.has(userData, pages[i].user.id.toString())) {
+        userData[pages[i].user.id.toString()] = pages[i].user;
+      }
+    }
+    var users = []
+    for(var o in userData) {
+      users.push(userData[o].user);
     }
    // console.log('Number of Users extracted: ' + users.length);
     //console.log(users);
