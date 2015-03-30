@@ -497,7 +497,7 @@ function findFacebookData(users, callback){
 }
 
 function findFacebookMessages(user, page, callback){
-  console.log('Get Messages for page: ' + page);
+  //console.log('Get Messages for page: ' + page);
   //async.each(pages, function(page, nextPage){
     //get the conversations for each page
       var since = user.services.facebook.lastMessageTime;
@@ -626,7 +626,7 @@ function findFacebookMessages(user, page, callback){
 function findComments(users, callback){
   async.each(users, function(user, nextUser){
     //console.log(user);
-    console.log('-----------------------Find Posts and Comments-------------------');
+    console.log('----Find Posts and Comments----');
 
     esClient.search({
       index: c.index,
@@ -656,13 +656,14 @@ function findComments(users, callback){
           //console.log(hit);
           return hit._source.doc_type == 'post' || hit._source.doc_type == 'comment';
         });
+
         async.eachLimit(postsAndComments, 5, function(comment, nextComment) {
           console.log(comment);
           findFacebookComments(comment._source.cadence_user_id, comment._source.page_id, comment.id, comment._source.accessToken, function (err) {
             if(err != null) {
               nextComment(err);
             } else {
-              nextComment(err);
+              nextComment();
             }
           })
         }, function (err){
@@ -719,7 +720,7 @@ function findFacebookComments(userId, pageId, id, accessToken, callback) {
             }
           }, function (err, response) {
             if ((typeof err == 'undefined') && response.count == 0) {
-              //console.log(comment);
+              console.log(comment);
               esClient.create({
                 index: c.index,
                 type: user.domain,
@@ -742,7 +743,6 @@ function findFacebookComments(userId, pageId, id, accessToken, callback) {
                   console.log(err)
                   nextComment(err)
                 } else {
-
                   console.log('facebook comment ' + comment.id + ' created.')
                   if(comment.comment_count > 0) {
                     console.log('facebook comment has ' + comment.comment_count + ' replies.');
