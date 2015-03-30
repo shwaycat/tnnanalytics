@@ -356,7 +356,7 @@ function findFacebookData(users, callback){
             if(err == null) {
               callback(users);
             } else {
-              //console.log('error findFacebookMessages complete');
+              console.log('error findFacebookMessages complete');
               //console.log(err);
               callback(err, users);
             }
@@ -799,7 +799,7 @@ async.waterfall([
 ],function(err){
   if (err){
     console.log('Error async.waterfall complete')
-    console.log(err)
+    //console.log(err)
     process.exit(1)
   }else {
     process.exit(0)
