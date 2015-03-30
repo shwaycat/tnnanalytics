@@ -624,8 +624,8 @@ function findFacebookMessages(pages, callback) {
 }
 
 function findFacebookComments(users, callback){
-  console.log('finding comments for ' + users.length + ' users');
   async.each(users, function(user, nextUser){
+    console.log('finding comments for user ' + user.id);
     esClient.search({
       index: c.index,
       type: user.domain,
@@ -652,7 +652,9 @@ function findFacebookComments(users, callback){
           return hit._source.doc_type == 'post' || hit._source.doc_type == 'comment';
         });
 
+        console.log('Found Total of ' + postsAndComments.length + ' commentable objects');
         async.eachLimit(postsAndComments, 5, function(comment, nextComment) {
+
           findFacebookCommentsForObject(user, comment._source.page_id, comment.id, comment._source.accessToken, function (err) {
             if(err != null) {
               //console.log('Error findfacebookComments complete');
