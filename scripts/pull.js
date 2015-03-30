@@ -354,7 +354,7 @@ function findFacebookPages(users, callback) {
       } else {
         async.reduce(body.data, pageArray, function(pages, page, cb) {
           page.user = user;
-          console.log(page.user.id);
+          console.log('Assigned User to Page: ' + page.id + ' - ' + page.user.id);
           pages.push(page);
          // console.log(pages.length);
          // console.log(page);
@@ -405,7 +405,7 @@ function findFacebookPosts(pages, callback){
           if(b.data.length > 0) {
             console.log('Recording ' + b.data.length + ' posts');
             var lastPostTimeUnix = Math.floor(new Date(b.data[0].created_time).getTime() / 1000);
-            console.log(page.user);
+
             User.update({ _id: page.user.id },{ $set: {'services.facebook.lastPostTime': lastPostTimeUnix} },
               function (err, numberAffected, raw){
                 if(err != null) {
@@ -609,8 +609,8 @@ function findFacebookMessages(pages, callback) {
     //console.log("Error async.each users complete");
     var userData = {};
     for(var i = 0; i<pages.length; i++) {
-      if(!_.has(userData, pages[i].user.id.toString())) {
-        userData[pages[i].user.id.toString()] = pages[i].user;
+      if(!_.has(userData, pages[i].user.id)) {
+        userData[pages[i].user.id] = pages[i].user;
       }
     }
    // console.log(userData);
@@ -618,8 +618,8 @@ function findFacebookMessages(pages, callback) {
     for(var o in userData) {
      // console.log(o.toString());
       //console.log(userData[o]);
-      var user = userData[o.toString()].user;
-      //console.log(user);
+      var user = userData[o].user;
+      console.log(user);
       users.push(user);
     }
    // console.log('Number of Users extracted: ' + users.length);
