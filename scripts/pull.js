@@ -611,7 +611,7 @@ function findFacebookMessages(pages, callback) {
   })
 }
 
-function findComments(users, callback){
+function findFacebookComments(users, callback){
   console.log('finding comments');
   async.each(users, function(user, nextUser){
     esClient.search({
@@ -641,7 +641,7 @@ function findComments(users, callback){
         });
 
         async.eachLimit(postsAndComments, 5, function(comment, nextComment) {
-          findFacebookComments(comment._source.cadence_user_id, comment._source.page_id, comment.id, comment._source.accessToken, function (err) {
+          findFacebookCommentsForObject(comment._source.cadence_user_id, comment._source.page_id, comment.id, comment._source.accessToken, function (err) {
             if(err != null) {
               //console.log('Error findfacebookComments complete');
               //console.log(err);
@@ -674,7 +674,7 @@ function findComments(users, callback){
   })
 }
 
-function findFacebookComments(userId, pageId, id, accessToken, callback) {
+function findFacebookCommentsForObject(userId, pageId, id, accessToken, callback) {
   console.log('finding facebook comments');
   var since = user.services.facebook.lastMessageTime;
   if(since === 'undefined' || since == null || since == '') {
@@ -727,8 +727,8 @@ function findFacebookComments(userId, pageId, id, accessToken, callback) {
                   //console.log(err)
                   nextComment(err)
                 } else {
-                  /*if(comment.comment_count > 0) {
-                    findFacebookComments(userId, pageId, comment.id, accessToken, function (err) {
+                  if(comment.comment_count > 0) {
+                    findFacebookCommentsForObject(userId, pageId, comment.id, accessToken, function (err) {
                       if(err) {
                         nextComment(err);
                       } else {
@@ -738,7 +738,7 @@ function findFacebookComments(userId, pageId, id, accessToken, callback) {
                   } else {
                     //console.log('facebook comment has no replies');
                     nextComment()
-                  }*/
+                  }
                   nextComment();
                 }
               });
@@ -781,7 +781,7 @@ async.waterfall([
     findFacebookPages,
     findFacebookPosts,
     findFacebookMessages,
-    //findComments
+    findFacebookComments
 ],function(err){
   if (err){
     console.log('Error async.waterfall complete')
