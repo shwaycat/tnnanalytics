@@ -374,7 +374,7 @@ function findFacebookPages(users, callback) {
   })
 }
 //fields=id,message,updated_time,commments{id,message},likes{id,name},shares{id,name}
-function findFacebookData(pages, callback){
+function findFacebookPosts(pages, callback){
   console.log('finding facebook data');
     async.eachLimit(pages, 5, function(page, nextPage){
       var since = page.user.services.facebook.lastPostTime;
@@ -779,7 +779,7 @@ async.waterfall([
     findTwitterDirectMessages,
     findFacebookUsers,
     findFacebookPages,
-    findFacebookData,
+    findFacebookPosts,
     findFacebookMessages,
     //findComments
 ],function(err){
