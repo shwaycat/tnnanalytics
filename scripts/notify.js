@@ -92,13 +92,6 @@ function findDocuments(users, callback){
       type: user.domain,
       body: {
         query: {
-          bool: {
-            must: [
-              {term: {doc_type: "direct_message"}},
-              {term: {doc_type: "mention"}},
-              {term: {doc_type: "message"}}
-            ]
-          },
           filtered: {
             query: {
               match: {
@@ -107,7 +100,6 @@ function findDocuments(users, callback){
             },
             filter: {
               or: orQueries
-
             }
           }
         }
@@ -122,7 +114,7 @@ function findDocuments(users, callback){
 
         var links = []
         if (response.hits.total > 0){
-          links = _.map(response.hits.hits, function(hit){
+          links = _.filter(_.map(response.hits.hits, function(hit){
            // console.log(hit)
             if(hit._source.doc_source == 'twitter') {
               if(hit._source.doc_type == 'mention') {
@@ -150,8 +142,11 @@ function findDocuments(users, callback){
               }
             }
 
-          })
-          console.log(links)
+          }), function(hit) {
+            console.log(hit);
+            return hit._source.doc_type == 'mention' || hit._source.doc_type == 'direct_message' || hit._source.doc_type == 'message';
+          });
+         // console.log(links)
           new keystone.Email('notification').send({
             subject: 'Cadence Notification',
             to: user.email,
