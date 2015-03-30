@@ -334,9 +334,12 @@ function findFacebookUsers(callback){
     }
   })
 }
+
+
+
 function findFacebookPages(users, callback) {
   console.log('finding facebook pages');
-  users.pages = [];
+  var pages = new Array();
   async.each(users, function(user, nextUser){
     console.log('find pages for user: ' + user.id);
     var pageUrl = 'https://graph.facebook.com/v2.3/me/accounts?access_token='+user.services.facebook.accessToken;
@@ -352,7 +355,7 @@ function findFacebookPages(users, callback) {
       } else {
         async.eachLimit(body.data, 5, function(page, nextPage) {
           page.user = user;
-          users.pages.push(page);
+          pages.push(page);
           nextPage();
         }, function (err){
           if (err){
@@ -366,18 +369,19 @@ function findFacebookPages(users, callback) {
       }
     })
   },function(err){
+    console.log(pages);
     //console.log("Error async.each users complete");
     if(err != null) {
-      callback(err, users.pages);
+      callback(err, pages);
     }
     else {
-      callback(null, users.pages);
+      callback(null, pages);
     }
   })
 }
 //fields=id,message,updated_time,commments{id,message},likes{id,name},shares{id,name}
 function findFacebookPosts(pages, callback){
-  console.log(pages);
+  //console.log(pages);
   console.log('finding facebook posts');
     async.eachLimit(pages, 5, function(page, nextPage){
       var since = page.user.services.facebook.lastPostTime;
