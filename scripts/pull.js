@@ -335,7 +335,7 @@ function findFacebookUsers(callback){
 }
 var pages = [];
 function findFacebookPages(users, callback) {
-  console.log('finding facebook data');
+  console.log('finding facebook pages');
   async.each(users, function(user, nextUser){
 
     var pageUrl = 'https://graph.facebook.com/v2.3/me/accounts?access_token='+user.services.facebook.accessToken;
@@ -375,7 +375,8 @@ function findFacebookPages(users, callback) {
 }
 //fields=id,message,updated_time,commments{id,message},likes{id,name},shares{id,name}
 function findFacebookPosts(pages, callback){
-  console.log('finding facebook data');
+  console.log('finding facebook posts');
+  console.log(pages.length);
     async.eachLimit(pages, 5, function(page, nextPage){
       var since = page.user.services.facebook.lastPostTime;
       if(since === 'undefined' || since == null || since == '') {
@@ -770,8 +771,8 @@ function findFacebookCommentsForObject(userId, pageId, id, accessToken, callback
 }
 
 async.waterfall([
-   // deleteTwitterDirectMessages,
-   // deleteFacebookDirectMessages,
+   deleteTwitterDirectMessages,
+  deleteFacebookDirectMessages,
   deleteFacebookPosts,
   deleteFacebookComments,
     findTwitterUsers,
