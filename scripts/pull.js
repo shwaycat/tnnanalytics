@@ -308,7 +308,7 @@ function findFacebookPosts(users, callback){
       if(error != null) {
         nextUser(error);
       } else {
-        pages.concat(body.data);
+        pages.concat(body.data.slice(0));
         async.eachLimit(body.data, 5, function(page, nextPage){
           var since = user.services.facebook.lastPostTime;
           if(since === 'undefined' || since == null || since == '') {
@@ -427,6 +427,7 @@ function findFacebookPosts(users, callback){
     })
   },function(err){
     if(err != null) {
+      console.log('error occurred: ' + err)
       callback(err);
     } else {
       callback(null, pages);
