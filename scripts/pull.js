@@ -39,6 +39,7 @@ var userSchema = new Schema({
 })
 
 
+
 userSchema.statics.findConnectedFacebook = function (cb) {
     this.find({ 'services.facebook.isConfigured': true }, cb)
 }
@@ -335,11 +336,22 @@ function findFacebookUsers(callback){
   })
 }
 
-
+function PageAggregator() {
+  var _self = this;
+  _self.pages = [];
+  _self.getPages = function () {
+    return _self.pages;
+  }
+  _self.setPage = function(page, user) {
+    page.user = user;
+    _self.pages.push(page);
+  }
+}
+aggregator = new PageAggregator();
 
 function findFacebookPages(users, callback) {
   console.log('finding facebook pages');
-  var pages = new Array();
+
   async.each(users, function(user, nextUser){
     console.log('find pages for user: ' + user.id);
     var pageUrl = 'https://graph.facebook.com/v2.3/me/accounts?access_token='+user.services.facebook.accessToken;
@@ -353,23 +365,21 @@ function findFacebookPages(users, callback) {
         //console.log(error);
         nextUser(error);
       } else {
-        async.each(body.data, function(page, nextPage) {
-          page.user = user;
-          pages.push(page);
-          nextPage();
-        }, function (err){
-          if (err){
-            console.log('Error async.each p complete');
-            //console.log(err);
+        async.map(body.data, function(page, callback) {
+            aggregator.setPage(page, user);
+            callback(null, aggregator.getPages());
+          },
+          function (err, result) {
+          if(err) {
             nextUser(err);
           } else {
-            nextUser();
+            nextUser(null, result);
           }
         });
       }
     })
   },function(err){
-    console.log(pages);
+    //console.log(pages);
     //console.log("Error async.each users complete");
     if(err != null) {
       callback(err, pages);
