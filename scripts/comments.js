@@ -98,8 +98,9 @@ function findComments(users, callback){
         }
         if (response.hits.total > 0){
           console.log('building email');
+          console.log(response.hits);
           var postsAndComments = _.filter(response.hits.hits, function(hit) {
-             // console.log(hit);
+              //console.log(hit);
               return hit._source.doc_type == 'post' || hit._source.doc_type == 'comment';
             });
           async.eachLimit(postsAndComments, 5, function(comment, nextComment) {
