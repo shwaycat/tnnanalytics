@@ -116,22 +116,33 @@ function findDocuments(users, callback){
         if (response.hits.total > 0){
           links = _.map(response.hits.hits, function(hit){
             console.log(hit)
-           if(hit._source.doc_type == 'mention') {
-            return {
-              text: hit._source.doc_text,
-              href: 'https://twitter.com/'+hit._source.user_handle+'/status/'+hit._id
+
+            if(hit._source.doc_source == 'twitter') {
+              if(hit._source.doc_type == 'mention') {
+                return {
+                  text: hit._source.doc_text,
+                  href: 'https://twitter.com/'+hit._source.user_handle+'/status/'+hit._id
+                }
+              } else {
+                var timeStamp = '';
+                if(hit._source.time_stamp) {
+                  var date = new Date(hit._source.time_stamp);
+                  timeStamp = date.toLocaleString();
+                }
+                return {
+                  text: '@' + hit._source.user_handle + ': ' + hit._source.doc_text + '  -  ' + timeStamp,
+                  href: 'https://twitter.com/'+hit._source.user_handle
+                }
+              }
+            } else {
+              if(hit._source.doc_type == 'message') {
+                return {
+                  text: hit._source.doc_text,
+                  href: 'https://facebook.com/messages/'+hit._id
+                }
+              }
             }
-           } else {
-             var timeStamp = '';
-             if(hit._source.time_stamp) {
-               var date = new Date(hit._source.time_stamp);
-               timeStamp = date.toLocaleString();
-             }
-             return {
-               text: '@' + hit._source.user_handle + ': ' + hit._source.doc_text + '  -  ' + timeStamp,
-               href: 'https://twitter.com/'+hit._source.user_handle
-             }
-           }
+
           })
           console.log(links)
           new keystone.Email('notification').send({
