@@ -333,13 +333,11 @@ function findFacebookUsers(callback){
     }
   })
 }
-
-//fields=id,message,updated_time,commments{id,message},likes{id,name},shares{id,name}
-function findFacebookData(users, callback){
+var pages = [];
+function findFacebookPages(users, callback) {
   console.log('finding facebook data');
   async.each(users, function(user, nextUser){
-    //get the pages for each user
-    //var pageQP = "fields=id,name,name_with_location_descriptor";
+
     var pageUrl = 'https://graph.facebook.com/v2.3/me/accounts?access_token='+user.services.facebook.accessToken;
     request({
       url: pageUrl,
@@ -351,147 +349,12 @@ function findFacebookData(users, callback){
         //console.log(error);
         nextUser(error);
       } else {
-        var getMessagsFunc = function (user, page, callback) {
-          findFacebookMessages(user, page, function (err) {
-            if(err == null) {
-              callback(users);
-            } else {
-              //console.log('error findFacebookMessages complete');
-              //console.log(err);
-              callback(err, users);
-            }
-          });
-        };
-        async.eachLimit(body.data, 5, function(page, nextPage){
-          var since = user.services.facebook.lastPostTime;
-          if(since === 'undefined' || since == null || since == '') {
-            var now = new Date();
-            since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
-          }
-          var qp = 'fields=id,message,created_time,from';//&since=' + since;
-          var postsUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/posts?'+qp+'&access_token='+page.access_token;
-          request({
-            url: postsUrl,
-            json: true
-          },function (e, r, b){
-            if(e != null) {
-              console.log('error request posts failed');
-              getMessagsFunc(user, page, function (err) {
-                if(err != null) {
-                  console.log('getMessagsFunc failed');
-                  //console.log(err);
-                  nextPage(err);
-                } else {
-                  nextPage();
-                }
-              })
-            } else {
-              if(b.data.length > 0) {
-                var lastPostTimeUnix = Math.floor(new Date(b.data[0].created_time).getTime() / 1000);
-                User.update({ _id: user.id },{ $set: {'services.facebook.lastPostTime': lastPostTimeUnix} },
-                  function (err, numberAffected, raw){
-                    if(err != null) {
-                      getMessagsFunc(user, page, function (err) {
-                        if(err != null) {
-                          console.log('getMessagsFunc failed');
-                          //console.log(err);
-                          nextPage(err);
-                        } else {
-                          nextPage();
-                        }
-                      })
-                    } else {
-                      //iterate and store them in the database
-                      async.eachLimit(b.data, 5, function (post, nextPost) {
-                        esClient.count({
-                          index: c.index,
-                          body: {
-                            query: {
-                              term: {doc_source: 'facebook'},
-                              term: {doc_type: 'post'},
-                              term: {_id: post.id}
-                            }
-                          }
-                        }, function(err, response){
-                          if ((typeof err == 'undefined') && response.count == 0){
-                            esClient.create({
-                              index: c.index,
-                              type: user.domain,
-                              id: post.id,
-                              body: {
-                                doc_source: 'facebook',
-                                doc_type: 'post',
-                                doc_text: post.message,
-                                user_id: post.from != null ? post.from.id : '',
-                                user_name: post.from != null ? post.from.name : '',
-                                //user_lang: post.from.languages[0],
-                                cadence_user_id: user.id,
-                                time_stamp: post.created_time,
-                                page_id: page.id,
-                                access_token: page.access_token
-                              }
-                            }, function(err, response){
-                              if (err){
-                                console.log('Error async.each post esClient.create')
-                                //console.log(err)
-                                nextPost(err)
-                              } else {
-                                nextPost()
-                              }
-                            })
-                          }else{
-                            if (typeof err != 'undefined'){
-                              console.log('Error from post count')
-                              //console.log(err)
-                              nextPost(err)
-                            }else {
-                              nextPost();
-                            }
-                          }
-                        })
-                      }, function (err){
-                        if (err){
-                          console.log('Error async.each posts complete');
-                          //console.log(err);
-                          getMessagsFunc(user, page, function (merr) {
-                            if(merr == null) {
-                              nextPage();
-                            } else {
-                              console.log('getMessagsFunc  - async.each post failed - failed');
-                              //console.log(merr);
-                              nextPage(merr);
-                            }
-                          });
-                        } else {
-                          getMessagsFunc(user, page, function (merr) {
-                            if(merr == null) {
-                              nextPage();
-                            } else {
-                              console.log('getMessagsFunc - async.each post - failed');
-                              //console.log(merr);
-                              nextPage(merr);
-                            }
-                          });
-                        }
-                      });
-                    }
-                  });
-              } else {
-                getMessagsFunc(user, page, function (merr) {
-                  if(merr == null) {
-                    nextPage();
-                  } else {
-                    console.log('getMessagsFunc - no messages returned - failed');
-                    console.log(merr);
-                    nextPage(merr);
-                  }
-                });
-              }
-            }
-          });
-          }, function (err){
+        async.eachLimit(body.data, 5, function(p, np) {
+          p.user = user;
+          pages.push(p);
+        }, function (err){
           if (err){
-            console.log('Error async.each pages complete');
+            console.log('Error async.each p complete');
             //console.log(err);
             nextUser(err);
           } else {
@@ -501,130 +364,251 @@ function findFacebookData(users, callback){
       }
     })
   },function(err){
-       //console.log("Error async.each users complete");
-      callback(err, users);
+    //console.log("Error async.each users complete");
+    if(err != null) {
+      callback(err, pages);
+    }
+    else {
+      callback(null, pages);
+    }
   })
 }
-
-function findFacebookMessages(user, page, callback){
-  console.log('finding facebook messages');
-      var since = user.services.facebook.lastMessageTime;
+//fields=id,message,updated_time,commments{id,message},likes{id,name},shares{id,name}
+function findFacebookData(pages, callback){
+  console.log('finding facebook data');
+    async.eachLimit(pages, 5, function(page, nextPage){
+      var since = page.user.services.facebook.lastPostTime;
       if(since === 'undefined' || since == null || since == '') {
         var now = new Date();
         since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
       }
-      var qp = 'fields=id,updated_time';//&since=' + since;
-      var convoUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/conversations?'+qp+'&access_token='+page.access_token;
-
+      var qp = 'fields=id,message,created_time,from';//&since=' + since;
+      var postsUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/posts?'+qp+'&access_token='+page.access_token;
       request({
-        url: convoUrl,
+        url: postsUrl,
         json: true
       },function (e, r, b){
         if(e != null) {
-          callback(e);
+          console.log('error request posts failed');
+          nextPage(e);
         } else {
           if(b.data.length > 0) {
-            var lastMessageTimeUnix = Math.floor(new Date(b.data[0].updated_time).getTime() / 1000);
-            User.update({ _id: user.id },{ $set: {'services.facebook.lastMessageTimeUnix': lastMessageTimeUnix} },
+            var lastPostTimeUnix = Math.floor(new Date(b.data[0].created_time).getTime() / 1000);
+            User.update({ _id: page.user.id },{ $set: {'services.facebook.lastPostTime': lastPostTimeUnix} },
               function (err, numberAffected, raw){
                 if(err != null) {
-                  //console.log('Error user.update complete');
-                  //console.log(err);
-                  callback(err);
+                  nextPage(err);
                 } else {
                   //iterate and store them in the database
-                  async.eachLimit(b.data, 5, function (convo, nextConvo) {
-                    //get the messages for the conversation since the last message time
-                    var mqp = 'fields=id,from,message,subject,created_time';//&since=' + since;
-                    var messagesUrl = 'https://graph.facebook.com/v2.3/' + convo.id + '/messages?'+mqp+'&access_token='+page.access_token;
-                    request({
-                      url: messagesUrl,
-                      json: true
-                    }, function(me, mr, mb) {
-                      if(me != null) {
-                        //console.log('error messages request complete');
-                        //console.log(me);
-                        nextConvo(err);
-                      } else {
-                        if(mb.data.length > 0) {
-                          async.eachLimit(mb.data, 5, function (message, nextMessage) {
-                            esClient.count({
-                               index: c.index,
-                               body: {
-                                 query: {
-                                   term: {doc_source: 'facebook'},
-                                   term: {doc_type: 'message'},
-                                   term: {_id: message.id}
-                                 }
-                               }
-                             }, function(err, response){
-                              if ((typeof err == 'undefined') && response.count == 0){
-                                esClient.create({
-                                 index: c.index,
-                                 type: user.domain,
-                                 id: message.id,
-                                 body: {
-                                   doc_source: 'facebook',
-                                   doc_type: 'message',
-                                   doc_text: message.message,
-                                   user_id: message.from != null ? message.from.id : '',
-                                   user_name: message.from != null ? message.from.name : '',
-                                   //user_lang: post.from.languages[0],
-                                   cadence_user_id: user.id,
-                                   time_stamp: message.created_time,
-                                   page_id: page.id
-                                 }
-                              }, function(err, response){
-                                if (err){
-                                   //console.log('Error async.each message esClient.create')
-                                   //console.log(err)
-                                  nextMessage(err)
-                                } else {
-                                  nextMessage()
-                                }
-                              });
-                             }else{
-
-                               if (typeof err != 'undefined'){
-                                 //console.log('Error from count')
-                                 //console.log(err)
-                                 nextConvo(err)
-                               }else{
-                                 nextConvo()
-                               }
-                             }
-                             })
-                          }, function (err) {
-                            if(err) {
-                              //console.log('Error async.each messages complete');
-                              //console.log(err);
-                              nextConvo(err);
-                            } else {
-                              nextConvo();
-                            }
-                          })
-                        } else {
-                          nextConvo();
+                  async.eachLimit(b.data, 5, function (post, nextPost) {
+                    esClient.count({
+                      index: c.index,
+                      body: {
+                        query: {
+                          term: {doc_source: 'facebook'},
+                          term: {doc_type: 'post'},
+                          term: {_id: post.id}
+                        }
+                      }
+                    }, function(err, response){
+                      if ((typeof err == 'undefined') && response.count == 0){
+                        esClient.create({
+                          index: c.index,
+                          type: user.domain,
+                          id: post.id,
+                          body: {
+                            doc_source: 'facebook',
+                            doc_type: 'post',
+                            doc_text: post.message,
+                            user_id: post.from != null ? post.from.id : '',
+                            user_name: post.from != null ? post.from.name : '',
+                            //user_lang: post.from.languages[0],
+                            cadence_user_id: page.user.id,
+                            time_stamp: post.created_time,
+                            page_id: page.id,
+                            access_token: page.access_token
+                          }
+                        }, function(err, response){
+                          if (err){
+                            console.log('Error async.each post esClient.create')
+                            //console.log(err)
+                            nextPost(err)
+                          } else {
+                            nextPost()
+                          }
+                        })
+                      }else{
+                        if (typeof err != 'undefined'){
+                          console.log('Error from post count')
+                          //console.log(err)
+                          nextPost(err)
+                        }else {
+                          nextPost();
                         }
                       }
                     })
-
                   }, function (err){
-                    if (err != null){
-                      //console.log('Error async.each conversations complete');
-                      //console.log(err);
-                      callback(err);
+                    if (err){
+                      console.log('Error async.each posts complete');
+                      nextPage(err);
                     } else {
-                      callback();
+                      nextPage();
                     }
                   });
                 }
               });
           } else {
-            callback();
+            nextPage();
           }
         }
       });
+      }, function (err){
+      if (err){
+        console.log('Error async.each pages complete');
+        //console.log(err);
+        callback(err, pages);
+      } else {
+        callback(null, pages);
+      }
+    });
+
+}
+
+function findFacebookMessages(pages, callback) {
+  console.log('finding facebook messages');
+  async.eachLimit(pages, 5, function (page, nextPage) {
+    var since = page.user.services.facebook.lastMessageTime;
+    if (since === 'undefined' || since == null || since == '') {
+      var now = new Date();
+      since = Math.floor((new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)).getTime() / 1000);
+    }
+    var qp = 'fields=id,updated_time';//&since=' + since;
+    var convoUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/conversations?' + qp + '&access_token=' + page.access_token;
+    request({
+      url: convoUrl,
+      json: true
+    }, function (e, r, b) {
+      if (e != null) {
+        callback(e);
+      } else {
+        if (b.data.length > 0) {
+          var lastMessageTimeUnix = Math.floor(new Date(b.data[0].updated_time).getTime() / 1000);
+          User.update({_id: page.user.id}, {$set: {'services.facebook.lastMessageTimeUnix': lastMessageTimeUnix}},
+            function (err, numberAffected, raw) {
+              if (err != null) {
+                //console.log('Error user.update complete');
+                //console.log(err);
+                callback(err);
+              } else {
+                //iterate and store them in the database
+                async.eachLimit(b.data, 5, function (convo, nextConvo) {
+                  //get the messages for the conversation since the last message time
+                  var mqp = 'fields=id,from,message,subject,created_time';//&since=' + since;
+                  var messagesUrl = 'https://graph.facebook.com/v2.3/' + convo.id + '/messages?' + mqp + '&access_token=' + page.access_token;
+                  request({
+                    url: messagesUrl,
+                    json: true
+                  }, function (me, mr, mb) {
+                    if (me != null) {
+                      //console.log('error messages request complete');
+                      //console.log(me);
+                      nextConvo(err);
+                    } else {
+                      if (mb.data.length > 0) {
+                        async.eachLimit(mb.data, 5, function (message, nextMessage) {
+                          esClient.count({
+                            index: c.index,
+                            body: {
+                              query: {
+                                term: {doc_source: 'facebook'},
+                                term: {doc_type: 'message'},
+                                term: {_id: message.id}
+                              }
+                            }
+                          }, function (err, response) {
+                            if ((typeof err == 'undefined') && response.count == 0) {
+                              esClient.create({
+                                index: c.index,
+                                type: user.domain,
+                                id: message.id,
+                                body: {
+                                  doc_source: 'facebook',
+                                  doc_type: 'message',
+                                  doc_text: message.message,
+                                  user_id: message.from != null ? message.from.id : '',
+                                  user_name: message.from != null ? message.from.name : '',
+                                  //user_lang: post.from.languages[0],
+                                  cadence_user_id: page.user.id,
+                                  time_stamp: message.created_time,
+                                  page_id: page.id
+                                }
+                              }, function (err, response) {
+                                if (err) {
+                                  //console.log('Error async.each message esClient.create')
+                                  //console.log(err)
+                                  nextMessage(err)
+                                } else {
+                                  nextMessage()
+                                }
+                              });
+                            } else {
+
+                              if (typeof err != 'undefined') {
+                                //console.log('Error from count')
+                                //console.log(err)
+                                nextConvo(err)
+                              } else {
+                                nextConvo()
+                              }
+                            }
+                          })
+                        }, function (err) {
+                          if (err) {
+                            //console.log('Error async.each messages complete');
+                            //console.log(err);
+                            nextConvo(err);
+                          } else {
+                            nextConvo();
+                          }
+                        })
+                      } else {
+                        nextConvo();
+                      }
+                    }
+                  })
+
+                }, function (err) {
+                  if (err != null) {
+                    //console.log('Error async.each conversations complete');
+                    //console.log(err);
+                    nextPage(err);
+                  } else {
+                    nextPage();
+                  }
+                });
+              }
+            });
+        } else {
+          nextPage();
+        }
+      }
+    });
+  }, function (err) {
+    //console.log("Error async.each users complete");
+    var groupedPages = _.groupBy(pages, function(page) {
+      return page.user.id;
+    });
+    var users = [];
+    for(var i =0; i<groupedPages.length; i++) {
+      users.push(groupedPages[i][0].user);
+    }
+    console.log(users);
+    if(err) {
+      callback(err, users);
+    } else {
+      callback(null, users);
+    }
+  })
 }
 
 function findComments(users, callback){
@@ -794,7 +778,9 @@ async.waterfall([
     findTweets,
     findTwitterDirectMessages,
     findFacebookUsers,
-    findFacebookData//,
+    findFacebookPages,
+    findFacebookData,
+    findFacebookMessages,
     //findComments
 ],function(err){
   if (err){
