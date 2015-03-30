@@ -379,7 +379,7 @@ function findFacebookData(users, callback){
                           }
                         }, function(err, response){
                           if ((typeof err == 'undefined') && response.count == 0){
-                            console.log(post);
+                            //console.log(post);
                             esClient.create({
                               index: c.index,
                               type: user.domain,
@@ -512,7 +512,7 @@ function findFacebookMessages(user, page, callback){
                       } else {
                         if(mb.data.length > 0) {
                           async.eachLimit(mb.data, 5, function (message, nextMessage) {
-                            console.log(message);
+                           // console.log(message);
                             esClient.count({
                                index: c.index,
                                body: {
@@ -558,7 +558,7 @@ function findFacebookMessages(user, page, callback){
                                  console.log(err)
                                  nextConvo(err)
                                }else{
-                                 console.log('message already exists in database')
+                                 //console.log('message already exists in database')
                                  nextConvo()
                                }
                              }

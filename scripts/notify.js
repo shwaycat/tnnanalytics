@@ -65,6 +65,7 @@ function findConnectedUsers(callback){
       console.log(err)
       callback(err)
     } else {
+      console.log(users);
       callback(null, users)
     }
   })
@@ -75,8 +76,8 @@ function findDocuments(users, callback){
     console.log('-----------------------Find Documents-------------------');
     console.log(user.notifications);
     userCheck = true;
-    var keywords;
-    if(user) {
+    var keywords = [];
+    if(user && user.keywords) {
       keywords = user.notifications.keywords.split(',');
     } else {
       userCheck = false;
