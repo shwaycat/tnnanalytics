@@ -611,9 +611,10 @@ function findFacebookMessages(pages, callback) {
         userData[pages[i].user.id.toString()] = pages[i].user;
       }
     }
+    console.log(userData);
     var users = []
     for(var o in userData) {
-      console.log(userData[o].user);
+      //console.log(userData[o]);
       users.push(userData[o].user);
     }
    // console.log('Number of Users extracted: ' + users.length);
