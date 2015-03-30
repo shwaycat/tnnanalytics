@@ -349,10 +349,10 @@ function findFacebookPages(users, callback) {
         //console.log(error);
         nextUser(error);
       } else {
-        async.eachLimit(body.data, 5, function(p, np) {
-          p.user = user;
-          pages.push(p);
-          p();
+        async.eachLimit(body.data, 5, function(page, nextPage) {
+          page.user = user;
+          pages.push(page);
+          nextPage();
         }, function (err){
           if (err){
             console.log('Error async.each p complete');
