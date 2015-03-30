@@ -381,7 +381,7 @@ function findFacebookData(users, callback){
                             esClient.create({
                               index: c.index,
                               type: user.domain,
-                              id: post.id,
+                              id: post._id,
                               body: {
                                 doc_source: 'facebook',
                                 doc_type: 'post',
@@ -526,7 +526,7 @@ function findFacebookMessages(user, page, callback){
                                 esClient.create({
                                  index: c.index,
                                  type: user.domain,
-                                 id: message.id,
+                                 id: message._id,
                                  body: {
                                    doc_source: 'facebook',
                                    doc_type: 'message',
