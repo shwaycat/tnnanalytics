@@ -771,8 +771,8 @@ function findFacebookCommentsForObject(userId, pageId, id, accessToken, callback
 }
 
 async.waterfall([
-   deleteTwitterDirectMessages,
-  deleteFacebookDirectMessages,
+  // deleteTwitterDirectMessages,
+  //deleteFacebookDirectMessages,
   deleteFacebookPosts,
   deleteFacebookComments,
     findTwitterUsers,
