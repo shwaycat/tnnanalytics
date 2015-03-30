@@ -412,7 +412,13 @@ function findFacebookData(users, callback){
                               nextPost(err)
                             }else{
                               console.log('post already exists in database')
-                              nextPost()
+                              findFacebookComments(user, page, post.id, function (err) {
+                                if(typeof err != 'undefined') {
+                                  nextPost(err);
+                                } else {
+                                  nextPost();
+                                }
+                              });
                             }
                           }
                         })
@@ -472,6 +478,107 @@ function findFacebookData(users, callback){
   })
 }
 
+function findFacebookComments(user, page, id, callback) {
+  console.log('Get Messages for page: ' + page);
+  //async.each(pages, function(page, nextPage){
+  //get the conversations for each page
+  var since = user.services.facebook.lastMessageTime;
+  if(since === 'undefined' || since == null || since == '') {
+    var now = new Date();
+    since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
+  }
+  var qp = 'fields=id,comment_count,from,message,created_time';//&since=' + since;
+  var commentsUrl = 'https://graph.facebook.com/v2.3/' +id + '/comments?'+qp+'&access_token='+page.access_token;
+  //console.log(convoUrl);
+  request({
+    url: commentsUrl,
+    json: true
+  },function (e, r, b){
+    if(e != null) {
+      callback(e);
+    } else {
+      if(b.data.length > 0) {
+        //iterate and store them in the database
+        async.eachLimit(b.data, 5, function (comment, nextComment) {
+          esClient.count({
+            index: c.index,
+            body: {
+              query: {
+                term: {doc_source: 'facebook'},
+                term: {doc_type: 'comment'},
+                term: {_id: comment.id}
+              }
+            }
+          }, function (err, response) {
+            if ((typeof err == 'undefined') && response.count == 0) {
+              //console.log(message);
+              esClient.create({
+                index: c.index,
+                type: user.domain,
+                id: comment.id,
+                body: {
+                  doc_source: 'facebook',
+                  doc_type: 'comment',
+                  doc_text: comment.message,
+                  user_id: comment.from != null ? comment.from.id : '',
+                  user_name: comment.from != null ? comment.from.name : '',
+                  //user_lang: post.from.languages[0],
+                  cadence_user_id: user.id,
+                  time_stamp: comment.created_time,
+                  page_id: page.id
+                }
+              }, function (err, response) {
+                if (err) {
+                  console.log('Error async.each comment esClient.create')
+                  console.log(err)
+                  nextComment(err)
+                } else {
+                  console.log('facebook comment ' + comment.id + ' created.')
+                  if(comment.comment_count > 0) {
+                    console.log('facebook comment has ' + comment.comment_count + ' replies.');
+                    findFacebookComments(user, page, comment.id, function (err) {
+                      if(err) {
+                        nextComment(err);
+                      } else {
+                        nextComment();
+                      }
+                    })
+                  } else {
+                    nextComment()
+                  }
+
+                }
+              });
+            } else {
+              if (err) {
+                //console.log(response);
+                console.log('Error from count')
+                console.log(err)
+                nextComment(err)
+              } else {
+                //console.log('comment already exists in database')
+                nextComment()
+              }
+            }
+          })
+        }, function (err) {
+          if (err) {
+            console.log('Error async.each comment complete');
+            console.log(err);
+            callback(err);
+          } else {
+            callback();
+          }
+        });
+
+      } else {
+        console.log('no new comments');
+        callback();
+      }
+      console.log(b);
+    }
+  });
+}
 function findFacebookMessages(user, page, callback){
   console.log('Get Messages for page: ' + page);
   //async.each(pages, function(page, nextPage){
