@@ -51,7 +51,7 @@ var User = mongoose.model('User', userSchema)
 
 function findTwitterUsers(callback){
   User.findConnectedTwitter(function(err, users){
-    if (typeof err != 'undefined'){
+    if (err){
       console.log('Error in findTwitterUsers')
       console.log(err)
       callback(err)
@@ -104,7 +104,7 @@ function findTweets(users, callback){
 
     client.get('statuses/mentions_timeline', params, function(err, tweets, response){
 
-      if (typeof err != 'undefined') {
+      if (err) {
         console.log('Error statuses/mentions_timeline')
         console.log(err)
         nextUser(err)
@@ -112,7 +112,7 @@ function findTweets(users, callback){
       if (tweets.length > 0) {
         // Update User with most recent tweet
         User.update({ _id: user.id },{ $set: {'services.twitter.sinceId': tweets[0].id_str} }, function (err, numberAffected, raw){
-          if (typeof err != 'undefined'){
+          if (err){
             console.log('Error User.update')
             console.log(err)
             nextUser(err)
@@ -142,7 +142,7 @@ function findTweets(users, callback){
                         cadence_user_id: user.id
                       }
                     }, function(err, response){
-                      if (typeof err != 'undefined'){
+                      if (err){
                         console.log('Error async.each esClient.create')
                         console.log(err)
                         nextTweet(err)
@@ -163,7 +163,7 @@ function findTweets(users, callback){
               })
 
             }, function (err){
-              if (typeof err != 'undefined'){
+                if (err){
                   console.log('Error async.each tweets complete')
                   console.log(err)
                   nextUser(err)
@@ -179,7 +179,7 @@ function findTweets(users, callback){
     })
 
   },function(err){
-    if (typeof err != 'undefined'){
+    if (err){
       console.log('Error async.each users complete')
       console.log(err)
       callback(err, users)
@@ -208,7 +208,7 @@ function findTwitterDirectMessages(users, callback) {
 
     client.get('direct_messages', params, function(err, messages, response){
       //console.log('direct_messages retrieved');
-      if (typeof err != 'undefined') {
+      if (err) {
         console.log('Error direct_messages');
         console.log(err);
         nextUser(err);
@@ -217,7 +217,7 @@ function findTwitterDirectMessages(users, callback) {
         // Update User with most recent direct message
         User.update({ _id: user.id },{ $set: {'services.twitter.dmSinceId': messages[0].id_str} },
           function (err, numberAffected, raw){
-            if (typeof err != 'undefined'){
+          if (err){
             console.log('Error User.update')
             console.log(err)
             nextUser(err)
@@ -248,7 +248,7 @@ function findTwitterDirectMessages(users, callback) {
                       time_stamp: message.created_at
                     }
                   }, function(err, response){
-                    if (typeof err != 'undefined'){
+                    if (err){
                       console.log('Error async.each esClient.create')
                       console.log(err)
                       nextMessage(err)
@@ -269,7 +269,7 @@ function findTwitterDirectMessages(users, callback) {
                 }
               })
             }, function (err){
-              if (typeof err != 'undefined'){
+              if (err){
                 console.log('Error async.each direct messages complete');
                 console.log(err);
                 nextUser(err);
@@ -285,7 +285,7 @@ function findTwitterDirectMessages(users, callback) {
     })
 
   },function(err){
-    if (typeof err != 'undefined'){
+    if (err){
       console.log('Error async.each users complete')
       console.log(err)
       callback(err)
@@ -297,7 +297,7 @@ function findTwitterDirectMessages(users, callback) {
 
 function findFacebookUsers(callback){
   User.findConnectedFacebook(function(err, users){
-    if (typeof err != 'undefined'){
+    if (err){
       console.log('Error findConnectedFacebook')
       console.log(err)
       callback(err)
@@ -323,10 +323,10 @@ function findFacebookData(users, callback){
       } else {
         var getMessagsFunc = function (user, page, callback) {
           findFacebookMessages(user, page, function (err) {
-            if (typeof err != 'undefined') {
-              callback(err);
-            } else {
+            if(err == null) {
               callback();
+            } else {
+              callback(err);
             }
           });
         };
@@ -346,7 +346,7 @@ function findFacebookData(users, callback){
           },function (e, r, b){
             if(e != null) {
               getMessagsFunc(user, page, function (err) {
-                if (typeof err != 'undefined') {
+                if(err != null) {
                   nextPage(err);
                 } else {
                   nextPage();
@@ -359,7 +359,7 @@ function findFacebookData(users, callback){
                   function (err, numberAffected, raw){
                     if(err != null) {
                       getMessagsFunc(user, page, function (err) {
-                        if (typeof err != 'undefined') {
+                        if(err != null) {
                           nextPage(err);
                         } else {
                           nextPage();
@@ -395,7 +395,7 @@ function findFacebookData(users, callback){
                                 time_stamp: post.created_time
                               }
                             }, function(err, response){
-                              if (typeof err != 'undefined'){
+                              if (err){
                                 console.log('Error async.each post esClient.create')
                                 console.log(err)
                                 nextPost(err)
@@ -422,18 +422,18 @@ function findFacebookData(users, callback){
                           console.log('Error async.each posts complete');
                           console.log(err);
                           getMessagsFunc(user, page, function (merr) {
-                            if (typeof merr != 'undefined') {
-                              nextPage(merr);
-                            } else {
+                            if(merr == null) {
                               nextPage();
+                            } else {
+                              nextPage(merr);
                             }
                           });
                         } else {
                           getMessagsFunc(user, page, function (merr) {
-                            if (typeof merr != 'undefined') {
-                              nextPage(merr);
-                            } else {
+                            if(merr == null) {
                               nextPage();
+                            } else {
+                              nextPage(merr);
                             }
                           });
                         }
@@ -444,10 +444,10 @@ function findFacebookData(users, callback){
                 console.log('no new posts');
                 //nextPage();
                 getMessagsFunc(user, page, function (err) {
-                  if (typeof err != 'undefined') {
-                    nextPage(err);
-                  } else {
+                  if(err == null) {
                     nextPage();
+                  } else {
+                    nextPage(err);
                   }
                 });
               }
@@ -457,7 +457,7 @@ function findFacebookData(users, callback){
           });
 
           }, function (err){
-          if (typeof err != 'undefined'){
+          if (err){
             console.log('Error async.each pages complete');
             console.log(err);
             nextUser(err);
@@ -512,7 +512,7 @@ function findFacebookMessages(user, page, callback){
                       } else {
                         if(mb.data.length > 0) {
                           async.eachLimit(mb.data, 5, function (message, nextMessage) {
-                           //console.log(message);
+                           // console.log(message);
                             esClient.count({
                                index: c.index,
                                body: {
@@ -541,7 +541,7 @@ function findFacebookMessages(user, page, callback){
                                    page_id: page.id
                                  }
                               }, function(err, response){
-                                  if (typeof err != 'undefined'){
+                                if (err){
                                    console.log('Error async.each message esClient.create')
                                    console.log(err)
                                   nextMessage(err)
@@ -564,7 +564,7 @@ function findFacebookMessages(user, page, callback){
                              }
                              })
                           }, function (err) {
-                            if (typeof err != 'undefined') {
+                            if(err) {
                               console.log('Error async.each messages complete');
                               console.log(err);
                               nextConvo(err);
@@ -580,7 +580,7 @@ function findFacebookMessages(user, page, callback){
                     })
 
                   }, function (err){
-                    if (typeof err != 'undefined'){
+                    if (err != null){
                       console.log('Error async.each conversations complete');
                       console.log(err);
                       callback(err);
