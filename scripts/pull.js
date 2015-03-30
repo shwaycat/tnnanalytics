@@ -351,7 +351,7 @@ aggregator = new PageAggregator();
 
 function findFacebookPages(users, callback) {
   console.log('finding facebook pages');
-
+  var pageArray = [];
   async.eachLimit(users, 1, function(user, nextUser){
     console.log('find pages for user: ' + user.id);
     var pageUrl = 'https://graph.facebook.com/v2.3/me/accounts?access_token='+user.services.facebook.accessToken;
@@ -365,15 +365,16 @@ function findFacebookPages(users, callback) {
         //console.log(error);
         nextUser(error);
       } else {
-        async.mapLimit(body.data, 1, function(page, callback) {
-            aggregator.setPage(page, user);
-            callback(null, aggregator.getPages());
-          },
-          function (err, result) {
+        async.reduce(body.data, pageArray, function(pages, page, callback) {
+          page.user = user;
+          pages.push(page);
+          callback(null, pages);
+        }, function (err, result) {
+          pageArray = result;
           if(err) {
             nextUser(err);
           } else {
-            nextUser(null, result);
+            nextUser();
           }
         });
       }
@@ -382,10 +383,10 @@ function findFacebookPages(users, callback) {
     //console.log(pages);
     //console.log("Error async.each users complete");
     if(err != null) {
-      callback(err, aggregator.getPages());
+      callback(err, pageArray);
     }
     else {
-      callback(null, aggregator.getPages());
+      callback(null, pageArray);
     }
   })
 }
