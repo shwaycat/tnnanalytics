@@ -239,7 +239,7 @@ function findFacebookComments(userId, pageId, id, accessToken, callback) {
 
 async.waterfall([
     findConnectedUsers,
-    findDocuments,
+    findComments,
 ],function(err){
   if (err){
     console.log('Error async.waterfall complete')
