@@ -386,7 +386,7 @@ function findFacebookData(users, callback){
                           console.log(err);
                           nextPage(err);
                         } else {
-                          findFacebookMessages(page, function (err) {
+                          findFacebookMessages(user, page, function (err) {
                             if(err == null) {
                               nextPage();
                             } else {
@@ -439,7 +439,7 @@ function findFacebookData(users, callback){
   })
 }
 
-function findFacebookMessages(page, callback){
+function findFacebookMessages(user, page, callback){
   console.log('Get Messages for page: ' + page);
   //async.each(pages, function(page, nextPage){
     //get the conversations for each page
