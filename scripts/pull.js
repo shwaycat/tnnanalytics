@@ -296,6 +296,7 @@ function findFacebookUsers(callback){
 
 //fields=id,message,updated_time,commments{id,message},likes{id,name},shares{id,name}
 function findFacebookPosts(users, callback){
+  var pages = [];
   async.each(users, function(user, nextUser){
     //get the pages for each user
     var pageUrl = 'https://graph.facebook.com/v2.3/me/accounts?access_token='+user.services.facebook.accessToken;
@@ -307,7 +308,7 @@ function findFacebookPosts(users, callback){
       if(error != null) {
         nextUser(error);
       } else {
-
+        pages.concat(body.data);
         async.eachLimit(body.data, 5, function(page, nextPage){
           var since = user.services.facebook.lastPostTime;
           if(since === 'undefined' || since == null || since == '') {
@@ -412,19 +413,25 @@ function findFacebookPosts(users, callback){
             console.log(err);
             nextUser(err);
           } else {
-            findFacebookMessages(body.data, function (messagesError) {
+            nextUser();
+            /*findFacebookMessages(body.data, function (messagesError) {
               if(messagesError != null) {
                 nextUser(messagesError);
               } else {
                 nextUser();
               }
-            });
+            });*/
           }
         });
       }
     })
   },function(err){
-    callback(err);
+    if(err != null) {
+      callback(err);
+    } else {
+      callback(null, pages);
+    }
+
   })
 }
 
@@ -539,7 +546,8 @@ async.waterfall([
     findTweets,
     findTwitterDirectMessages,
     findFacebookUsers,
-    findFacebookPosts
+    findFacebookPosts,
+    findFacebookMessages
 ],function(err){
   if (err){
     console.log('Error async.waterfall complete')
