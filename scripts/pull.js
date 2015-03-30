@@ -353,7 +353,7 @@ function findFacebookPages(users, callback) {
         //console.log(error);
         nextUser(error);
       } else {
-        async.eachLimit(body.data, 5, function(page, nextPage) {
+        async.each(body.data, function(page, nextPage) {
           page.user = user;
           pages.push(page);
           nextPage();
