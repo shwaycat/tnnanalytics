@@ -330,6 +330,7 @@ function findFacebookData(users, callback){
           });
         };
         async.eachLimit(body.data, 5, function(page, nextPage){
+          console.log(page);
           var since = user.services.facebook.lastPostTime;
           if(since === 'undefined' || since == null || since == '') {
             var now = new Date();
