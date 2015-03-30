@@ -336,19 +336,6 @@ function findFacebookUsers(callback){
   })
 }
 
-function PageAggregator() {
-  var _self = this;
-  _self.pages = [];
-  _self.getPages = function () {
-    return _self.pages;
-  }
-  _self.setPage = function(page, user) {
-    page.user = user;
-    _self.pages.push(page);
-  }
-}
-aggregator = new PageAggregator();
-
 function findFacebookPages(users, callback) {
   console.log('finding facebook pages');
   var pageArray = [];
@@ -368,8 +355,11 @@ function findFacebookPages(users, callback) {
         async.reduce(body.data, pageArray, function(pages, page, callback) {
           page.user = user;
           pages.push(page);
+          console.log(pages.length);
+          console.log(page);
           callback(null, pages);
         }, function (err, result) {
+          console.log(result);
           pageArray = result;
           if(err) {
             nextUser(err);
