@@ -380,6 +380,7 @@ function findFacebookPages(users, callback) {
       }
     })
   },function(err){
+    console.log(pageArray);
     //console.log(pages);
     //console.log("Error async.each users complete");
     if(err != null) {
