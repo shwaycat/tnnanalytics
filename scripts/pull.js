@@ -307,6 +307,15 @@ function findFacebookData(users, callback){
       if(error != null) {
         nextUser(error);
       } else {
+        var getMessagsFunc = function (user, page, callback) {
+          findFacebookMessages(user, page, function (err) {
+            if(err == null) {
+              callback();
+            } else {
+              callback(err);
+            }
+          });
+        };
         async.eachLimit(body.data, 5, function(page, nextPage){
           var since = user.services.facebook.lastPostTime;
           if(since === 'undefined' || since == null || since == '') {
@@ -321,23 +330,26 @@ function findFacebookData(users, callback){
             json: true
           },function (e, r, b){
             if(e != null) {
-              nextPage(e);
+              getMessagsFunc(user, page, function (err) {
+                if(err != null) {
+                  nextPage(err);
+                } else {
+                  nextPage();
+                }
+              })
             } else {
-              var getMessagsFunc = function () {
-                findFacebookMessages(user, page, function (err) {
-                  if(err == null) {
-                    nextPage();
-                  } else {
-                    nextPage(err);
-                  }
-                });
-              };
               if(b.data.length > 0) {
                 var lastPostTimeUnix = Math.floor(new Date(b.data[0].created_time).getTime() / 1000);
                 User.update({ _id: user.id },{ $set: {'services.facebook.lastPostTime': lastPostTimeUnix} },
                   function (err, numberAffected, raw){
                     if(err != null) {
-                      nextPage(err);
+                      getMessagsFunc(user, page, function (err) {
+                        if(err != null) {
+                          nextPage(err);
+                        } else {
+                          nextPage();
+                        }
+                      })
                     } else {
                       //iterate and store them in the database
                       async.eachLimit(b.data, 5, function (post, nextPost) {
@@ -390,25 +402,39 @@ function findFacebookData(users, callback){
                           }
                         })
                       }, function (err){
+
                         if (err){
                           console.log('Error async.each posts complete');
                           console.log(err);
-                          nextPage(err);
+                          getMessagsFunc(user, page, function (merr) {
+                            if(merr == null) {
+                              nextPage();
+                            } else {
+                              nextPage(merr);
+                            }
+                          });
                         } else {
-                          getMessagsFunc();
+                          getMessagsFunc(user, page, function (merr) {
+                            if(err == null) {
+                              nextPage();
+                            } else {
+                              nextPage(merr);
+                            }
+                          });
                         }
                       });
                     }
                   });
-                //update the last post time so we don't pull any more posts than we have to in the future
-                // console.log(response);
-               // console.log(b);
-                //getMessagsFunc();
-                //nextPage()
               } else {
                 console.log('no new posts');
                 //nextPage();
-                getMessagsFunc();
+                getMessagsFunc(user, page, function (mrr) {
+                  if(err == null) {
+                    nextPage();
+                  } else {
+                    nextPage(err);
+                  }
+                });
               }
 
             }
