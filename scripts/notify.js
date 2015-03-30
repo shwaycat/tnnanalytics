@@ -114,7 +114,10 @@ function findDocuments(users, callback){
 
         var links = []
         if (response.hits.total > 0){
-          links = _.filter(_.map(response.hits.hits, function(hit){
+          links = _.map(_.filter(response.hits.hits, function(hit) {
+              console.log(hit);
+              return hit._source.doc_type == 'mention' || hit._source.doc_type == 'direct_message' || hit._source.doc_type == 'message';
+            }), function(hit){
            // console.log(hit)
             if(hit._source.doc_source == 'twitter') {
               if(hit._source.doc_type == 'mention') {
@@ -142,9 +145,6 @@ function findDocuments(users, callback){
               }
             }
 
-          }), function(hit) {
-            console.log(hit);
-            return hit._source.doc_type == 'mention' || hit._source.doc_type == 'direct_message' || hit._source.doc_type == 'message';
           });
          // console.log(links)
           new keystone.Email('notification').send({
