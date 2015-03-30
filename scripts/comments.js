@@ -83,8 +83,7 @@ function findComments(users, callback){
           filtered: {
             query: {
               match: {
-                cadence_user_id: user.id,
-                doc_source: 'facebook'
+                cadence_user_id: user.id
               }
             }
           }
@@ -104,6 +103,7 @@ function findComments(users, callback){
               return hit._source.doc_type == 'post' || hit._source.doc_type == 'comment';
             });
           async.eachLimit(postsAndComments, 5, function(comment, nextComment) {
+            console.log(comment);
             findFacebookComments(comment._source.cadence_user_id, comment._source.page_id, comment.id, comment._source.accessToken, function (err) {
               if(err != null) {
                 nextComment(err);
@@ -236,6 +236,8 @@ function findFacebookComments(userId, pageId, id, accessToken, callback) {
     }
   });
 }
+
+
 
 async.waterfall([
     findConnectedUsers,
