@@ -311,7 +311,8 @@ function findFacebookUsers(callback){
 function findFacebookData(users, callback){
   async.each(users, function(user, nextUser){
     //get the pages for each user
-    var pageUrl = 'https://graph.facebook.com/v2.3/me/accounts?access_token='+user.services.facebook.accessToken;
+    var pageQP = "fields=id,name,name_with_location_descriptor";
+    var pageUrl = 'https://graph.facebook.com/v2.3/me/accounts?' + pageQP + '&access_token='+user.services.facebook.accessToken;
     request({
       url: pageUrl,
       json: true
@@ -330,7 +331,7 @@ function findFacebookData(users, callback){
           });
         };
         async.eachLimit(body.data, 5, function(page, nextPage){
-          console.log(page);
+          console.log("PageData: " + page);
           var since = user.services.facebook.lastPostTime;
           if(since === 'undefined' || since == null || since == '') {
             var now = new Date();
@@ -382,7 +383,7 @@ function findFacebookData(users, callback){
                             esClient.create({
                               index: c.index,
                               type: user.domain,
-                              id: post._id,
+                              id: post.id,
                               body: {
                                 doc_source: 'facebook',
                                 doc_type: 'post',
@@ -527,7 +528,7 @@ function findFacebookMessages(user, page, callback){
                                 esClient.create({
                                  index: c.index,
                                  type: user.domain,
-                                 id: message._id,
+                                 id: message.id,
                                  body: {
                                    doc_source: 'facebook',
                                    doc_type: 'message',
@@ -536,7 +537,8 @@ function findFacebookMessages(user, page, callback){
                                    user_name: message.from != null ? message.from.name : '',
                                    //user_lang: post.from.languages[0],
                                    cadence_user_id: user.id,
-                                   time_stamp: message.created_time
+                                   time_stamp: message.created_time,
+                                   page_id: page.id
                                  }
                               }, function(err, response){
                                 if (err){
