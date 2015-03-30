@@ -334,9 +334,9 @@ function findFacebookUsers(callback){
     }
   })
 }
-var pages = [];
 function findFacebookPages(users, callback) {
   console.log('finding facebook pages');
+  users.pages = [];
   async.each(users, function(user, nextUser){
     console.log('find pages for user: ' + user.id);
     var pageUrl = 'https://graph.facebook.com/v2.3/me/accounts?access_token='+user.services.facebook.accessToken;
@@ -352,7 +352,7 @@ function findFacebookPages(users, callback) {
       } else {
         async.eachLimit(body.data, 5, function(page, nextPage) {
           page.user = user;
-          pages.push(page);
+          users.pages.push(page);
           nextPage();
         }, function (err){
           if (err){
@@ -368,10 +368,10 @@ function findFacebookPages(users, callback) {
   },function(err){
     //console.log("Error async.each users complete");
     if(err != null) {
-      callback(err, pages);
+      callback(err, users.pages);
     }
     else {
-      callback(null, pages);
+      callback(null, users.pages);
     }
   })
 }
