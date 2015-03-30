@@ -96,7 +96,7 @@ function deleteFacebookPosts(callback) {
       }
     }
   }, function(err, response){
-    console.log(response);
+   // console.log(response);
     callback();
   })
 }
@@ -110,7 +110,7 @@ function deleteFacebookComments(callback) {
       }
     }
   }, function(err, response){
-    console.log(response);
+   // console.log(response);
     callback();
   })
 }
@@ -146,7 +146,6 @@ function findTweets(users, callback){
             nextUser(err)
           } else {
             async.eachLimit(tweets, 5, function(tweet, nextTweet){
-              //console.log(tweet.id_str);
               esClient.count({
                 index: c.index,
                 body: {
@@ -180,7 +179,7 @@ function findTweets(users, callback){
                     })
                 }else{
                   if (typeof err != 'undefined'){
-                    //console.log(response);
+
                     console.log('Error from count')
                     console.log(err)
                     nextTweet(err)
@@ -235,7 +234,6 @@ function findTwitterDirectMessages(users, callback) {
     }
 
     client.get('direct_messages', params, function(err, messages, response){
-      //console.log('direct_messages retrieved');
       if (err) {
         console.log('Error direct_messages');
         console.log(err);
@@ -251,7 +249,6 @@ function findTwitterDirectMessages(users, callback) {
             nextUser(err)
           } else {
             async.eachLimit(messages, 5, function(message, nextMessage){
-              //console.log(message.id_str);
               esClient.count({
                 index: c.index,
                 body: {
@@ -281,13 +278,11 @@ function findTwitterDirectMessages(users, callback) {
                       console.log(err)
                       nextMessage(err)
                     } else {
-                      console.log('direct message ' + message.id_str + ' created.')
                       nextMessage()
                     }
                   })
                 }else{
                   if (typeof err != 'undefined'){
-                    //console.log(response);
                     console.log('Error from count')
                     console.log(err)
                     nextMessage(err)
@@ -363,7 +358,6 @@ function findFacebookData(users, callback){
           });
         };
         async.eachLimit(body.data, 5, function(page, nextPage){
-          //console.log(page);
           var since = user.services.facebook.lastPostTime;
           if(since === 'undefined' || since == null || since == '') {
             var now = new Date();
@@ -371,7 +365,6 @@ function findFacebookData(users, callback){
           }
           var qp = 'fields=id,message,created_time,from';//&since=' + since;
           var postsUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/posts?'+qp+'&access_token='+page.access_token;
-          //console.log(postsUrl);
           request({
             url: postsUrl,
             json: true
@@ -415,7 +408,6 @@ function findFacebookData(users, callback){
                           }
                         }, function(err, response){
                           if ((typeof err == 'undefined') && response.count == 0){
-                            //console.log(post);
                             esClient.create({
                               index: c.index,
                               type: user.domain,
@@ -438,18 +430,15 @@ function findFacebookData(users, callback){
                                 console.log(err)
                                 nextPost(err)
                               } else {
-                                console.log('facebook post ' + post.id + ' created.')
                                 nextPost()
                               }
                             })
                           }else{
                             if (typeof err != 'undefined'){
-                              //console.log(response);
                               console.log('Error from count')
                               console.log(err)
                               nextPost(err)
                             }else {
-                              console.log('post already exists in database')
                               nextPost();
                             }
                           }
@@ -482,7 +471,6 @@ function findFacebookData(users, callback){
                     }
                   });
               } else {
-                console.log('no new posts');
                 //nextPage();
                 getMessagsFunc(user, page, function (err) {
                   if(err == null) {
@@ -514,9 +502,6 @@ function findFacebookData(users, callback){
 }
 
 function findFacebookMessages(user, page, callback){
-  //console.log('Get Messages for page: ' + page);
-  //async.each(pages, function(page, nextPage){
-    //get the conversations for each page
       var since = user.services.facebook.lastMessageTime;
       if(since === 'undefined' || since == null || since == '') {
         var now = new Date();
@@ -524,7 +509,7 @@ function findFacebookMessages(user, page, callback){
       }
       var qp = 'fields=id,updated_time';//&since=' + since;
       var convoUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/conversations?'+qp+'&access_token='+page.access_token;
-      //console.log(convoUrl);
+
       request({
         url: convoUrl,
         json: true
@@ -552,12 +537,11 @@ function findFacebookMessages(user, page, callback){
                     }, function(me, mr, mb) {
                       if(me != null) {
                         console.log('error messages request complete');
-                        console.log(err);
+                        console.log(me);
                         nextConvo(err);
                       } else {
                         if(mb.data.length > 0) {
                           async.eachLimit(mb.data, 5, function (message, nextMessage) {
-                           // console.log(message);
                             esClient.count({
                                index: c.index,
                                body: {
@@ -569,7 +553,6 @@ function findFacebookMessages(user, page, callback){
                                }
                              }, function(err, response){
                               if ((typeof err == 'undefined') && response.count == 0){
-                                //console.log(message);
                                 esClient.create({
                                  index: c.index,
                                  type: user.domain,
@@ -591,19 +574,16 @@ function findFacebookMessages(user, page, callback){
                                    console.log(err)
                                   nextMessage(err)
                                 } else {
-                                   console.log('facebook message ' + message.id + ' created.')
                                   nextMessage()
                                 }
                               });
                              }else{
 
                                if (typeof err != 'undefined'){
-                                 //console.log(response);
                                  console.log('Error from count')
                                  console.log(err)
                                  nextConvo(err)
                                }else{
-                                 //console.log('message already exists in database')
                                  nextConvo()
                                }
                              }
@@ -618,7 +598,6 @@ function findFacebookMessages(user, page, callback){
                             }
                           })
                         } else {
-                          console.log('no new messages in ocnversation');
                           nextConvo();
                         }
                       }
@@ -636,16 +615,13 @@ function findFacebookMessages(user, page, callback){
                 }
               });
           } else {
-            console.log('no new conversations');
             callback();
           }
-          //console.log(b);
         }
       });
 }
 
 function findComments(users, callback){
-  console.log('----Find Posts and Comments----');
   async.each(users, function(user, nextUser){
     esClient.search({
       index: c.index,
@@ -669,7 +645,6 @@ function findComments(users, callback){
         return;
       }
       if (response.hits.total > 0){
-        console.log('commentable objects found');
         var postsAndComments = _.filter(response.hits.hits, function(hit) {
           return hit._source.doc_type == 'post' || hit._source.doc_type == 'comment';
         });
@@ -709,7 +684,6 @@ function findComments(users, callback){
 }
 
 function findFacebookComments(userId, pageId, id, accessToken, callback) {
-  console.log('Find facebook comments for id: ' + id);
   //async.each(pages, function(page, nextPage){
   //get the conversations for each page
   var since = user.services.facebook.lastMessageTime;
@@ -763,9 +737,7 @@ function findFacebookComments(userId, pageId, id, accessToken, callback) {
                   console.log(err)
                   nextComment(err)
                 } else {
-                  console.log('facebook comment ' + comment.id + ' created.')
-                  if(comment.comment_count > 0) {
-                    console.log('facebook comment has ' + comment.comment_count + ' replies.');
+                  /*if(comment.comment_count > 0) {
                     findFacebookComments(userId, pageId, comment.id, accessToken, function (err) {
                       if(err) {
                         nextComment(err);
@@ -776,18 +748,16 @@ function findFacebookComments(userId, pageId, id, accessToken, callback) {
                   } else {
                     console.log('facebook comment has no replies');
                     nextComment()
-                  }
-
+                  }*/
+                  nextComment();
                 }
               });
             } else {
               if (err) {
-                //console.log(response);
                 console.log('Error from comment count')
                 console.log(err)
                 nextComment(err)
               } else {
-                console.log('comment already exists in database')
                 nextComment()
               }
             }
@@ -803,10 +773,8 @@ function findFacebookComments(userId, pageId, id, accessToken, callback) {
         });
 
       } else {
-        console.log('no new comments');
         callback();
       }
-      console.log(b);
     }
   });
 }
