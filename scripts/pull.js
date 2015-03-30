@@ -429,13 +429,7 @@ function findFacebookData(users, callback){
       }
     })
   },function(err){
-    if(err != null) {
-      console.log('error occurred: ' + err)
       callback(err);
-    } else {
-      callback(null, pages);
-    }
-
   })
 }
 
