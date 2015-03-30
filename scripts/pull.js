@@ -307,15 +307,16 @@ function findFacebookPosts(users, callback){
       if(error != null) {
         nextUser(error);
       } else {
+
         async.eachLimit(body.data, 5, function(page, nextPage){
           var since = user.services.facebook.lastPostTime;
           if(since === 'undefined' || since == null || since == '') {
             var now = new Date();
             since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
           }
-          var qp = 'fields=id,message,updated_time,comments{id,message},likes{id,name},shares';//&since=' + since;
+          var qp = 'since=' + since;
           var postsUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/posts?'+qp+'&access_token='+page.access_token;
-          console.log(postsUrl);
+          //console.log(postsUrl);
           request({
             url: postsUrl,
             json: true
@@ -403,42 +404,133 @@ function findFacebookPosts(users, callback){
 
             }
 
-          })
+          });
+
           }, function (err){
           if (err){
             console.log('Error async.each pages complete');
             console.log(err);
             nextUser(err);
           } else {
-            nextUser();
+            findFacebookMessages(body.data, function (messagesError) {
+              if(messagesError != null) {
+                nextUser(messagesError);
+              } else {
+                nextUser();
+              }
+            });
           }
         });
       }
-      //console.log(body);
     })
-    /*
-    //console.log(user.services.facebook);
-    var since = user.services.facebook.lastPostTime;
-    if(since === 'undefined' || since == null || since == '') {
-      var now = new Date();
-      since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
-    }
-    var qp = 'fields=id,message,updated_time,comments{id,message},likes{id,name},shares&since=' + since;
-    var url = 'https://graph.facebook.com/v2.3/me/posts?'+qp+'&access_token='+user.services.facebook.accessToken;
-    //console.log(url);
-    request({
-      url: url,
-      json: true
-    },function (error, response, body){
-      //update the last post time so we don't pull any more posts than we have to in the future
-
-     // console.log(response);
-      console.log(body);
-      nextUser(error)
-    })*/
   },function(err){
-    callback(err)
+    callback(err);
   })
+}
+
+function findFacebookMessages(pages, callback){
+  async.each(pages, function(page, nextPage){
+    //get the conversations for each page
+      var since = user.services.facebook.lastPostTime;
+      if(since === 'undefined' || since == null || since == '') {
+        var now = new Date();
+        since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
+      }
+      var qp = 'since=' + since;
+      var convoUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/conversations?'+qp+'&access_token='+page.access_token;
+      //console.log(postsUrl);
+      request({
+        url: convoUrl,
+        json: true
+      },function (e, r, b){
+        if(e != null) {
+          nextPage(e);
+        } else {
+          /*if(b.data.length > 0) {
+            var lastMessageTimeUnix = Math.floor(new Date(b.data[0].created_time).getTime() / 1000);
+            User.update({ _id: user.id },{ $set: {'services.facebook.lastPostTime': lastPostTimeUnix} },
+              function (err, numberAffected, raw){
+                if(err != null) {
+                  nextPage(err);
+                } else {
+                  //iterate and store them in the database
+                  async.eachLimit(b.data, 5, function (post, nextPost) {
+                    esClient.count({
+                      index: c.index,
+                      body: {
+                        query: {
+                          term: {doc_source: 'facebook'},
+                          term: {doc_type: 'post'},
+                          term: {_id: post.id}
+                        }
+                      }
+                    }, function(err, response){
+                      if ((typeof err == 'undefined') && response.count == 0){
+                        console.log(post);
+                        esClient.create({
+                          index: c.index,
+                          type: user.domain,
+                          id: post.id,
+                          body: {
+                            doc_source: 'facebook',
+                            doc_type: 'post',
+                            doc_text: post.message,
+                            user_id: post.from != null ? post.from.id : '',
+                            user_name: post.from != null ? post.from.name : '',
+                            //user_lang: post.from.languages[0],
+                            cadence_user_id: user.id,
+                            time_stamp: post.created_time
+                          }
+                        }, function(err, response){
+                          if (err){
+                            console.log('Error async.each post esClient.create')
+                            console.log(err)
+                            nextPost(err)
+                          } else {
+                            console.log('facebook post ' + post.id + ' created.')
+                            nextPost()
+                          }
+                        })
+                      }else{
+
+                        if (typeof err != 'undefined'){
+                          console.log(response);
+                          console.log('Error from count')
+                          console.log(err)
+                          nextPost(err)
+                        }else{
+                          console.log('post already exists in database')
+                          nextPost()
+                        }
+                      }
+                    })
+                  }, function (err){
+                    if (err){
+                      console.log('Error async.each posts complete');
+                      console.log(err);
+                      nextPage(err);
+                    } else {
+                      nextPage();
+                    }
+                  });
+                }
+              });
+            //update the last post time so we don't pull any more posts than we have to in the future
+            // console.log(response);
+            // console.log(b);
+            nextPage()
+          } else {
+            console.log('no new posts');
+            nextPage();
+          }*/
+          console.log(b);
+        }
+
+      });
+
+    },function(err){
+      callback(err)
+  });
 }
 
 async.waterfall([
