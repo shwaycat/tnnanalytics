@@ -140,7 +140,7 @@ function findDocuments(users, callback){
               if(hit._source.doc_type == 'message') {
                 return {
                   text: hit._source.doc_text,
-                  href: 'https://facebook.com/' + hit._source.page_id + '/messages/' + hit._id
+                  href: 'https://facebook.com/' + hit._source.page_id + '/messages/'
                 }
               }
             }
