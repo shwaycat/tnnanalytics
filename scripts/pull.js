@@ -624,10 +624,9 @@ function findFacebookMessages(user, page, callback){
 }
 
 function findComments(users, callback){
+  console.log('----Find Posts and Comments----');
   async.each(users, function(user, nextUser){
     //console.log(user);
-    console.log('----Find Posts and Comments----');
-
     esClient.search({
       index: c.index,
       type: user.domain,
@@ -658,7 +657,7 @@ function findComments(users, callback){
         });
 
         async.eachLimit(postsAndComments, 5, function(comment, nextComment) {
-          console.log(comment);
+          //console.log(comment);
           findFacebookComments(comment._source.cadence_user_id, comment._source.page_id, comment.id, comment._source.accessToken, function (err) {
             if(err != null) {
               nextComment(err);
@@ -689,6 +688,7 @@ function findComments(users, callback){
 }
 
 function findFacebookComments(userId, pageId, id, accessToken, callback) {
+  console.log('Find facebook comments for id: ' + id);
   //async.each(pages, function(page, nextPage){
   //get the conversations for each page
   var since = user.services.facebook.lastMessageTime;
@@ -698,7 +698,7 @@ function findFacebookComments(userId, pageId, id, accessToken, callback) {
   }
   var qp = 'fields=id,comment_count,from,message,created_time';//&since=' + since;
   var commentsUrl = 'https://graph.facebook.com/v2.3/' +id + '/comments?'+qp+'&access_token='+accessToken;
-  //console.log(convoUrl);
+
   request({
     url: commentsUrl,
     json: true
@@ -720,7 +720,6 @@ function findFacebookComments(userId, pageId, id, accessToken, callback) {
             }
           }, function (err, response) {
             if ((typeof err == 'undefined') && response.count == 0) {
-              console.log(comment);
               esClient.create({
                 index: c.index,
                 type: user.domain,
@@ -754,6 +753,7 @@ function findFacebookComments(userId, pageId, id, accessToken, callback) {
                       }
                     })
                   } else {
+                    console.log('facebook comment has no replies');
                     nextComment()
                   }
 
@@ -762,11 +762,11 @@ function findFacebookComments(userId, pageId, id, accessToken, callback) {
             } else {
               if (err) {
                 //console.log(response);
-                console.log('Error from count')
+                console.log('Error from comment count')
                 console.log(err)
                 nextComment(err)
               } else {
-                //console.log('comment already exists in database')
+                console.log('comment already exists in database')
                 nextComment()
               }
             }
