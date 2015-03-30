@@ -428,7 +428,7 @@ function findFacebookData(users, callback){
                           });
                         } else {
                           getMessagsFunc(user, page, function (merr) {
-                            if(err == null) {
+                            if(merr == null) {
                               nextPage();
                             } else {
                               nextPage(merr);
@@ -441,7 +441,7 @@ function findFacebookData(users, callback){
               } else {
                 console.log('no new posts');
                 //nextPage();
-                getMessagsFunc(user, page, function (mrr) {
+                getMessagsFunc(user, page, function (err) {
                   if(err == null) {
                     nextPage();
                   } else {
@@ -577,7 +577,7 @@ function findFacebookMessages(user, page, callback){
                     })
 
                   }, function (err){
-                    if (err){
+                    if (err != null){
                       console.log('Error async.each conversations complete');
                       console.log(err);
                       callback(err);
