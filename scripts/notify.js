@@ -138,8 +138,13 @@ function findDocuments(users, callback){
               }
             } else {
               if(hit._source.doc_type == 'message') {
+                var timeStamp = '';
+                if(hit._source.time_stamp) {
+                  var date = new Date(hit._source.time_stamp);
+                  timeStamp = date.toLocaleString();
+                }
                 return {
-                  text: hit._source.doc_text,
+                  text: hit._source.user_handle + ': ' + hit._source.doc_text + ' - ' + timeStamp,
                   href: 'https://facebook.com/' + hit._source.page_id + '/messages/'
                 }
               }
