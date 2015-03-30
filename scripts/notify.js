@@ -52,7 +52,7 @@ userSchema.statics.findConnectedTwitter = function (cb) {
 }
 
 userSchema.statics.findConnectedUsers = function (cb) {
-  this.find({ 'services.twitter.isConfigured': true }, {'services.facebook.isConfigured': true}, cb)
+  this.find({ 'services.twitter.isConfigured': true }, cb)
 }
 
 var User = mongoose.model('User', userSchema)
@@ -65,7 +65,6 @@ function findConnectedUsers(callback){
       console.log(err)
       callback(err)
     } else {
-      console.log(users);
       callback(null, users)
     }
   })
@@ -73,6 +72,7 @@ function findConnectedUsers(callback){
 
 function findDocuments(users, callback){
   async.each(users, function(user, nextUser){
+    console.log(user);
     console.log('-----------------------Find Documents-------------------');
     console.log(user.notifications);
     userCheck = true;
