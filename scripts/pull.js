@@ -613,7 +613,7 @@ function findFacebookMessages(pages, callback) {
     }
     var users = []
     for(var o in userData) {
-      console.log(user);
+      console.log(userData[o].user);
       users.push(userData[o].user);
     }
    // console.log('Number of Users extracted: ' + users.length);
