@@ -354,6 +354,7 @@ function findFacebookPages(users, callback) {
       } else {
         async.reduce(body.data, pageArray, function(pages, page, cb) {
           page.user = user;
+          console.log(page.user.id);
           pages.push(page);
          // console.log(pages.length);
          // console.log(page);
@@ -614,10 +615,10 @@ function findFacebookMessages(pages, callback) {
    // console.log(userData);
     var users = []
     for(var o in userData) {
-      console.log(o.toString());
+     // console.log(o.toString());
       //console.log(userData[o]);
       var user = userData[o.toString()].user;
-      console.log(user);
+      //console.log(user);
       users.push(user);
     }
    // console.log('Number of Users extracted: ' + users.length);
