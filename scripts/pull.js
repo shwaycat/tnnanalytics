@@ -647,7 +647,6 @@ function findFacebookMessages(user, page, callback){
 function findComments(users, callback){
   console.log('----Find Posts and Comments----');
   async.each(users, function(user, nextUser){
-    //console.log(user);
     esClient.search({
       index: c.index,
       type: user.domain,
@@ -672,12 +671,10 @@ function findComments(users, callback){
       if (response.hits.total > 0){
         console.log('commentable objects found');
         var postsAndComments = _.filter(response.hits.hits, function(hit) {
-          //console.log(hit);
           return hit._source.doc_type == 'post' || hit._source.doc_type == 'comment';
         });
 
         async.eachLimit(postsAndComments, 5, function(comment, nextComment) {
-          //console.log(comment);
           findFacebookComments(comment._source.cadence_user_id, comment._source.page_id, comment.id, comment._source.accessToken, function (err) {
             if(err != null) {
               console.log('Error findfacebookComments complete');
@@ -819,12 +816,12 @@ async.waterfall([
    // deleteFacebookDirectMessages,
   deleteFacebookPosts,
   deleteFacebookComments,
-    findTwitterUsers,
+    /*findTwitterUsers,
     findTweets,
     findTwitterDirectMessages,
     findFacebookUsers,
     findFacebookData,
-    findComments,
+    findComments*/
 ],function(err){
   if (err){
     console.log('Error async.waterfall complete')
