@@ -51,13 +51,17 @@ userSchema.statics.findConnectedTwitter = function (cb) {
     this.find({ 'services.twitter.isConfigured': true }, cb)
 }
 
+userSchema.statics.findConnectedUsers = function (cb) {
+  this.find({ 'services.twitter.isConfigured': true }, {'services.facebook.isConfigured': true}, cb)
+}
+
 var User = mongoose.model('User', userSchema)
 
 
-function findTwitterUsers(callback){
-  User.findConnectedTwitter(function(err, users){
+function findConnectedUsers(callback){
+  User.findConnectedUsers(function(err, users){
     if (err){
-      console.log('Error findConnectTwitter')
+      console.log('Error findConnectedUesrs')
       console.log(err)
       callback(err)
     } else {
@@ -178,7 +182,7 @@ function findDocuments(users, callback){
 }
 
 async.waterfall([
-    findTwitterUsers,
+    findConnectedUsers,
     findDocuments,
 ],function(err){
   if (err){

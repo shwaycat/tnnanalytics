@@ -601,7 +601,7 @@ function findFacebookMessages(user, page, callback){
 
 async.waterfall([
    // deleteTwitterDirectMessages,
-    deleteFacebookDirectMessages,
+   // deleteFacebookDirectMessages,
     findTwitterUsers,
     findTweets,
     findTwitterDirectMessages,
