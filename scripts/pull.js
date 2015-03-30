@@ -337,7 +337,7 @@ var pages = [];
 function findFacebookPages(users, callback) {
   console.log('finding facebook pages');
   async.each(users, function(user, nextUser){
-
+    console.log('find pages for user: ' + user.id);
     var pageUrl = 'https://graph.facebook.com/v2.3/me/accounts?access_token='+user.services.facebook.accessToken;
     request({
       url: pageUrl,
@@ -345,13 +345,14 @@ function findFacebookPages(users, callback) {
     }, function (error, response, body) {
 
       if(error != null) {
-        //console.log('error request accounts completed');
+        console.log('error request accounts completed');
         //console.log(error);
         nextUser(error);
       } else {
         async.eachLimit(body.data, 5, function(p, np) {
           p.user = user;
           pages.push(p);
+          p();
         }, function (err){
           if (err){
             console.log('Error async.each p complete');
@@ -376,7 +377,6 @@ function findFacebookPages(users, callback) {
 //fields=id,message,updated_time,commments{id,message},likes{id,name},shares{id,name}
 function findFacebookPosts(pages, callback){
   console.log('finding facebook posts');
-  console.log(pages);
     async.eachLimit(pages, 5, function(page, nextPage){
       var since = page.user.services.facebook.lastPostTime;
       if(since === 'undefined' || since == null || since == '') {
