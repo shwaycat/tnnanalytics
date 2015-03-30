@@ -311,8 +311,8 @@ function findFacebookUsers(callback){
 function findFacebookData(users, callback){
   async.each(users, function(user, nextUser){
     //get the pages for each user
-    var pageQP = "fields=id,name,name_with_location_descriptor";
-    var pageUrl = 'https://graph.facebook.com/v2.3/me/accounts?' + pageQP + '&access_token='+user.services.facebook.accessToken;
+    //var pageQP = "fields=id,name,name_with_location_descriptor";
+    var pageUrl = 'https://graph.facebook.com/v2.3/me/accounts?access_token='+user.services.facebook.accessToken;
     request({
       url: pageUrl,
       json: true
