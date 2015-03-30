@@ -613,7 +613,7 @@ function findFacebookMessages(pages, callback) {
     for(var o in groupedPages) {
       users.push(groupedPages[o][0].user);
     }
-    console.log(users);
+    //console.log(users);
     if(err) {
       callback(err, users);
     } else {
@@ -623,7 +623,7 @@ function findFacebookMessages(pages, callback) {
 }
 
 function findFacebookComments(users, callback){
-  console.log('finding comments');
+  console.log('finding comments for ' + users.lenght + ' users');
   async.each(users, function(user, nextUser){
     esClient.search({
       index: c.index,
