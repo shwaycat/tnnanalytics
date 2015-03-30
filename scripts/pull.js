@@ -313,7 +313,7 @@ function findFacebookData(users, callback){
             var now = new Date();
             since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
           }
-          var qp = 'since=' + since;
+          var qp = 'fields=id,message,created_time,from';//&since=' + since;
           var postsUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/posts?'+qp+'&access_token='+page.access_token;
           //console.log(postsUrl);
           request({
@@ -323,6 +323,15 @@ function findFacebookData(users, callback){
             if(e != null) {
               nextPage(e);
             } else {
+              var getMessagsFunc = function () {
+                findFacebookMessages(user, page, function (err) {
+                  if(err == null) {
+                    nextPage();
+                  } else {
+                    nextPage(err);
+                  }
+                });
+              };
               if(b.data.length > 0) {
                 var lastPostTimeUnix = Math.floor(new Date(b.data[0].created_time).getTime() / 1000);
                 User.update({ _id: user.id },{ $set: {'services.facebook.lastPostTime': lastPostTimeUnix} },
@@ -386,13 +395,7 @@ function findFacebookData(users, callback){
                           console.log(err);
                           nextPage(err);
                         } else {
-                          findFacebookMessages(user, page, function (err) {
-                            if(err == null) {
-                              nextPage();
-                            } else {
-                              nextPage(err);
-                            }
-                          });
+                          getMessagsFunc();
                         }
                       });
                     }
@@ -400,10 +403,12 @@ function findFacebookData(users, callback){
                 //update the last post time so we don't pull any more posts than we have to in the future
                 // console.log(response);
                // console.log(b);
-                nextPage()
+                //getMessagsFunc();
+                //nextPage()
               } else {
                 console.log('no new posts');
-                nextPage();
+                //nextPage();
+                getMessagsFunc();
               }
 
             }
@@ -417,13 +422,6 @@ function findFacebookData(users, callback){
             nextUser(err);
           } else {
             nextUser();
-            /*findFacebookMessages(body.data, function (messagesError) {
-              if(messagesError != null) {
-                nextUser(messagesError);
-              } else {
-                nextUser();
-              }
-            });*/
           }
         });
       }
