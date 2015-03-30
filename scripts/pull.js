@@ -52,10 +52,11 @@ var User = mongoose.model('User', userSchema)
 function findTwitterUsers(callback){
   User.findConnectedTwitter(function(err, users){
     if (err){
-      console.log('Error in findTwitterUsers')
-      console.log(err)
+      //console.log('Error in findTwitterUsers')
+      //console.log(err)
       callback(err)
     } else {
+      console.log('found users');
       callback(null, users)
     }
   })
@@ -96,7 +97,7 @@ function deleteFacebookPosts(callback) {
       }
     }
   }, function(err, response){
-   // console.log(response);
+   // //console.log(response);
     callback();
   })
 }
@@ -110,11 +111,12 @@ function deleteFacebookComments(callback) {
       }
     }
   }, function(err, response){
-   // console.log(response);
+   // //console.log(response);
     callback();
   })
 }
 function findTweets(users, callback){
+  console.log('finding tweets');
   async.each(users, function(user, nextUser){
     var client = new tw({
       consumer_key: process.env.TWITTER_API_KEY,
@@ -133,16 +135,16 @@ function findTweets(users, callback){
     client.get('statuses/mentions_timeline', params, function(err, tweets, response){
 
       if (err) {
-        console.log('Error statuses/mentions_timeline')
-        console.log(err)
+        //console.log('Error statuses/mentions_timeline')
+        //console.log(err)
         nextUser(err)
       }
       if (tweets.length > 0) {
         // Update User with most recent tweet
         User.update({ _id: user.id },{ $set: {'services.twitter.sinceId': tweets[0].id_str} }, function (err, numberAffected, raw){
           if (err){
-            console.log('Error User.update')
-            console.log(err)
+            //console.log('Error User.update')
+            //console.log(err)
             nextUser(err)
           } else {
             async.eachLimit(tweets, 5, function(tweet, nextTweet){
@@ -170,8 +172,8 @@ function findTweets(users, callback){
                       }
                     }, function(err, response){
                       if (err){
-                        console.log('Error async.each esClient.create')
-                        console.log(err)
+                        //console.log('Error async.each esClient.create')
+                        //console.log(err)
                         nextTweet(err)
                       } else {
                         nextTweet()
@@ -180,8 +182,8 @@ function findTweets(users, callback){
                 }else{
                   if (typeof err != 'undefined'){
 
-                    console.log('Error from count')
-                    console.log(err)
+                    //console.log('Error from count')
+                    //console.log(err)
                     nextTweet(err)
                   }else{
                     nextTweet()
@@ -191,8 +193,8 @@ function findTweets(users, callback){
 
             }, function (err){
                 if (err){
-                  console.log('Error async.each tweets complete')
-                  console.log(err)
+                  //console.log('Error async.each tweets complete')
+                  //console.log(err)
                   nextUser(err)
                 } else {
                   nextUser()
@@ -207,8 +209,8 @@ function findTweets(users, callback){
 
   },function(err){
     if (err){
-      console.log('Error async.each users complete')
-      console.log(err)
+      //console.log('Error async.each users complete')
+      //console.log(err)
       callback(err, users)
     } else {
       callback(null, users);
@@ -218,6 +220,7 @@ function findTweets(users, callback){
   //callback(null, users);
 }
 function findTwitterDirectMessages(users, callback) {
+  console.log('finding direct messages');
   async.each(users, function(user, nextUser){
     var client = new tw({
       consumer_key: process.env.TWITTER_API_KEY,
@@ -235,8 +238,8 @@ function findTwitterDirectMessages(users, callback) {
 
     client.get('direct_messages', params, function(err, messages, response){
       if (err) {
-        console.log('Error direct_messages');
-        console.log(err);
+        //console.log('Error direct_messages');
+        //console.log(err);
         nextUser(err);
       }
       if (messages.length > 0) {
@@ -244,8 +247,8 @@ function findTwitterDirectMessages(users, callback) {
         User.update({ _id: user.id },{ $set: {'services.twitter.dmSinceId': messages[0].id_str} },
           function (err, numberAffected, raw){
           if (err){
-            console.log('Error User.update')
-            console.log(err)
+            //console.log('Error User.update')
+            //console.log(err)
             nextUser(err)
           } else {
             async.eachLimit(messages, 5, function(message, nextMessage){
@@ -274,8 +277,8 @@ function findTwitterDirectMessages(users, callback) {
                     }
                   }, function(err, response){
                     if (err){
-                      console.log('Error async.each esClient.create')
-                      console.log(err)
+                      //console.log('Error async.each esClient.create')
+                      //console.log(err)
                       nextMessage(err)
                     } else {
                       nextMessage()
@@ -283,8 +286,8 @@ function findTwitterDirectMessages(users, callback) {
                   })
                 }else{
                   if (typeof err != 'undefined'){
-                    console.log('Error from count')
-                    console.log(err)
+                    //console.log('Error from count')
+                    //console.log(err)
                     nextMessage(err)
                   }else{
                     nextMessage()
@@ -293,8 +296,8 @@ function findTwitterDirectMessages(users, callback) {
               })
             }, function (err){
               if (err){
-                console.log('Error async.each direct messages complete');
-                console.log(err);
+                //console.log('Error async.each direct messages complete');
+                //console.log(err);
                 nextUser(err);
               } else {
                 nextUser();
@@ -309,8 +312,8 @@ function findTwitterDirectMessages(users, callback) {
 
   },function(err){
     if (err){
-      console.log('Error async.each users complete')
-      console.log(err)
+      //console.log('Error async.each users complete')
+      //console.log(err)
       callback(err)
     } else {
       callback()
@@ -321,10 +324,11 @@ function findTwitterDirectMessages(users, callback) {
 function findFacebookUsers(callback){
   User.findConnectedFacebook(function(err, users){
     if (err){
-      console.log('Error findConnectedFacebook')
-      console.log(err)
+      //console.log('Error findConnectedFacebook')
+      //console.log(err)
       callback(err)
     } else {
+      console.log('found facebook users');
       callback(null, users)
     }
   })
@@ -332,6 +336,7 @@ function findFacebookUsers(callback){
 
 //fields=id,message,updated_time,commments{id,message},likes{id,name},shares{id,name}
 function findFacebookData(users, callback){
+  console.log('finding facebook data');
   async.each(users, function(user, nextUser){
     //get the pages for each user
     //var pageQP = "fields=id,name,name_with_location_descriptor";
@@ -342,8 +347,8 @@ function findFacebookData(users, callback){
     }, function (error, response, body) {
 
       if(error != null) {
-        console.log('error request accounts completed');
-        console.log(error);
+        //console.log('error request accounts completed');
+        //console.log(error);
         nextUser(error);
       } else {
         var getMessagsFunc = function (user, page, callback) {
@@ -351,8 +356,8 @@ function findFacebookData(users, callback){
             if(err == null) {
               callback(users);
             } else {
-              console.log('error findFacebookMessages complete');
-              console.log(err);
+              //console.log('error findFacebookMessages complete');
+              //console.log(err);
               callback(err, users);
             }
           });
@@ -372,8 +377,8 @@ function findFacebookData(users, callback){
             if(e != null) {
               getMessagsFunc(user, page, function (err) {
                 if(err != null) {
-                  console.log('getMessagsFunc failed');
-                  console.log(err);
+                  //console.log('getMessagsFunc failed');
+                  //console.log(err);
                   nextPage(err);
                 } else {
                   nextPage();
@@ -387,8 +392,8 @@ function findFacebookData(users, callback){
                     if(err != null) {
                       getMessagsFunc(user, page, function (err) {
                         if(err != null) {
-                          console.log('getMessagsFunc failed');
-                          console.log(err);
+                          //console.log('getMessagsFunc failed');
+                          //console.log(err);
                           nextPage(err);
                         } else {
                           nextPage();
@@ -426,8 +431,8 @@ function findFacebookData(users, callback){
                               }
                             }, function(err, response){
                               if (err){
-                                console.log('Error async.each post esClient.create')
-                                console.log(err)
+                                //console.log('Error async.each post esClient.create')
+                                //console.log(err)
                                 nextPost(err)
                               } else {
                                 nextPost()
@@ -435,8 +440,8 @@ function findFacebookData(users, callback){
                             })
                           }else{
                             if (typeof err != 'undefined'){
-                              console.log('Error from count')
-                              console.log(err)
+                              //console.log('Error from count')
+                              //console.log(err)
                               nextPost(err)
                             }else {
                               nextPost();
@@ -445,14 +450,14 @@ function findFacebookData(users, callback){
                         })
                       }, function (err){
                         if (err){
-                          console.log('Error async.each posts complete');
-                          console.log(err);
+                          //console.log('Error async.each posts complete');
+                          //console.log(err);
                           getMessagsFunc(user, page, function (merr) {
                             if(merr == null) {
                               nextPage();
                             } else {
-                              console.log('getMessagsFunc failed');
-                              console.log(merr);
+                              //console.log('getMessagsFunc failed');
+                              //console.log(merr);
                               nextPage(merr);
                             }
                           });
@@ -461,8 +466,8 @@ function findFacebookData(users, callback){
                             if(merr == null) {
                               nextPage();
                             } else {
-                              console.log('getMessagsFunc failed');
-                              console.log(merr);
+                              //console.log('getMessagsFunc failed');
+                              //console.log(merr);
                               nextPage(merr);
                             }
                           });
@@ -476,8 +481,8 @@ function findFacebookData(users, callback){
                   if(err == null) {
                     nextPage();
                   } else {
-                    console.log('getMessagsFunc failed');
-                    console.log(err);
+                    //console.log('getMessagsFunc failed');
+                    //console.log(err);
                     nextPage(err);
                   }
                 });
@@ -486,8 +491,8 @@ function findFacebookData(users, callback){
           });
           }, function (err){
           if (err){
-            console.log('Error async.each pages complete');
-            console.log(err);
+            //console.log('Error async.each pages complete');
+            //console.log(err);
             nextUser(err);
           } else {
             nextUser();
@@ -496,12 +501,13 @@ function findFacebookData(users, callback){
       }
     })
   },function(err){
-       console.log("Error async.each users complete");
+       //console.log("Error async.each users complete");
       callback(err, users);
   })
 }
 
 function findFacebookMessages(user, page, callback){
+  console.log('finding facebook messages');
       var since = user.services.facebook.lastMessageTime;
       if(since === 'undefined' || since == null || since == '') {
         var now = new Date();
@@ -522,8 +528,8 @@ function findFacebookMessages(user, page, callback){
             User.update({ _id: user.id },{ $set: {'services.facebook.lastMessageTimeUnix': lastMessageTimeUnix} },
               function (err, numberAffected, raw){
                 if(err != null) {
-                  console.log('Error user.update complete');
-                  console.log(err);
+                  //console.log('Error user.update complete');
+                  //console.log(err);
                   callback(err);
                 } else {
                   //iterate and store them in the database
@@ -536,8 +542,8 @@ function findFacebookMessages(user, page, callback){
                       json: true
                     }, function(me, mr, mb) {
                       if(me != null) {
-                        console.log('error messages request complete');
-                        console.log(me);
+                        //console.log('error messages request complete');
+                        //console.log(me);
                         nextConvo(err);
                       } else {
                         if(mb.data.length > 0) {
@@ -570,8 +576,8 @@ function findFacebookMessages(user, page, callback){
                                  }
                               }, function(err, response){
                                 if (err){
-                                   console.log('Error async.each message esClient.create')
-                                   console.log(err)
+                                   //console.log('Error async.each message esClient.create')
+                                   //console.log(err)
                                   nextMessage(err)
                                 } else {
                                   nextMessage()
@@ -580,8 +586,8 @@ function findFacebookMessages(user, page, callback){
                              }else{
 
                                if (typeof err != 'undefined'){
-                                 console.log('Error from count')
-                                 console.log(err)
+                                 //console.log('Error from count')
+                                 //console.log(err)
                                  nextConvo(err)
                                }else{
                                  nextConvo()
@@ -590,8 +596,8 @@ function findFacebookMessages(user, page, callback){
                              })
                           }, function (err) {
                             if(err) {
-                              console.log('Error async.each messages complete');
-                              console.log(err);
+                              //console.log('Error async.each messages complete');
+                              //console.log(err);
                               nextConvo(err);
                             } else {
                               nextConvo();
@@ -605,8 +611,8 @@ function findFacebookMessages(user, page, callback){
 
                   }, function (err){
                     if (err != null){
-                      console.log('Error async.each conversations complete');
-                      console.log(err);
+                      //console.log('Error async.each conversations complete');
+                      //console.log(err);
                       callback(err);
                     } else {
                       callback();
@@ -622,6 +628,7 @@ function findFacebookMessages(user, page, callback){
 }
 
 function findComments(users, callback){
+  console.log('finding comments');
   async.each(users, function(user, nextUser){
     esClient.search({
       index: c.index,
@@ -639,8 +646,8 @@ function findComments(users, callback){
       }
     }, function (error, response) {
       if (error) {
-        console.log('Error esClient.search')
-        console.log(error)
+        //console.log('Error esClient.search')
+        //console.log(error)
         nextUser(error)
         return;
       }
@@ -652,8 +659,8 @@ function findComments(users, callback){
         async.eachLimit(postsAndComments, 5, function(comment, nextComment) {
           findFacebookComments(comment._source.cadence_user_id, comment._source.page_id, comment.id, comment._source.accessToken, function (err) {
             if(err != null) {
-              console.log('Error findfacebookComments complete');
-              console.log(err);
+              //console.log('Error findfacebookComments complete');
+              //console.log(err);
               nextComment(err);
             } else {
               nextComment();
@@ -661,8 +668,8 @@ function findComments(users, callback){
           })
         }, function (err){
           if(err != null) {
-            console.log('error async.each commentableObject completed');
-            console.log(err);
+            //console.log('error async.each commentableObject completed');
+            //console.log(err);
             nextUser(err);
           } else {
             nextUser();
@@ -674,8 +681,8 @@ function findComments(users, callback){
     })
   },function(err){
     if (err) {
-      console.log('Error async.each users complete')
-      console.log(err)
+      //console.log('Error async.each users complete')
+      //console.log(err)
       callback(err)
     } else {
       callback()
@@ -684,8 +691,7 @@ function findComments(users, callback){
 }
 
 function findFacebookComments(userId, pageId, id, accessToken, callback) {
-  //async.each(pages, function(page, nextPage){
-  //get the conversations for each page
+  console.log('finding facebook comments');
   var since = user.services.facebook.lastMessageTime;
   if(since === 'undefined' || since == null || since == '') {
     var now = new Date();
@@ -733,8 +739,8 @@ function findFacebookComments(userId, pageId, id, accessToken, callback) {
                 }
               }, function (err, response) {
                 if (err) {
-                  console.log('Error async.each comment esClient.create')
-                  console.log(err)
+                  //console.log('Error async.each comment esClient.create')
+                  //console.log(err)
                   nextComment(err)
                 } else {
                   /*if(comment.comment_count > 0) {
@@ -746,7 +752,7 @@ function findFacebookComments(userId, pageId, id, accessToken, callback) {
                       }
                     })
                   } else {
-                    console.log('facebook comment has no replies');
+                    //console.log('facebook comment has no replies');
                     nextComment()
                   }*/
                   nextComment();
@@ -754,8 +760,8 @@ function findFacebookComments(userId, pageId, id, accessToken, callback) {
               });
             } else {
               if (err) {
-                console.log('Error from comment count')
-                console.log(err)
+                //console.log('Error from comment count')
+                //console.log(err)
                 nextComment(err)
               } else {
                 nextComment()
@@ -764,8 +770,8 @@ function findFacebookComments(userId, pageId, id, accessToken, callback) {
           })
         }, function (err) {
           if (err) {
-            console.log('Error async.each comment complete');
-            console.log(err);
+            //console.log('Error async.each comment complete');
+            //console.log(err);
             callback(err);
           } else {
             callback();
@@ -792,8 +798,8 @@ async.waterfall([
     //findComments
 ],function(err){
   if (err){
-    console.log('Error async.waterfall complete')
-    console.log(err)
+    //console.log('Error async.waterfall complete')
+    //console.log(err)
     process.exit(1)
   }else {
     process.exit(0)
