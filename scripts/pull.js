@@ -746,7 +746,7 @@ function findFacebookComments(userId, pageId, id, accessToken, callback) {
                   console.log('facebook comment ' + comment.id + ' created.')
                   if(comment.comment_count > 0) {
                     console.log('facebook comment has ' + comment.comment_count + ' replies.');
-                    findFacebookComments(userId, pageI, comment.id, accessToken, function (err) {
+                    findFacebookComments(userId, pageId, comment.id, accessToken, function (err) {
                       if(err) {
                         nextComment(err);
                       } else {
