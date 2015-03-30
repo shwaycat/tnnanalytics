@@ -798,8 +798,8 @@ async.waterfall([
     //findComments
 ],function(err){
   if (err){
-    //console.log('Error async.waterfall complete')
-    //console.log(err)
+    console.log('Error async.waterfall complete')
+    console.log(err)
     process.exit(1)
   }else {
     process.exit(0)
