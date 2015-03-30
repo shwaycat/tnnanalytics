@@ -415,7 +415,7 @@ function findFacebookPosts(pages, callback){
                       if ((typeof err == 'undefined') && response.count == 0){
                         esClient.create({
                           index: c.index,
-                          type: user.domain,
+                          type: page.user.domain,
                           id: post.id,
                           body: {
                             doc_source: 'facebook',
@@ -530,7 +530,7 @@ function findFacebookMessages(pages, callback) {
                             if ((typeof err == 'undefined') && response.count == 0) {
                               esClient.create({
                                 index: c.index,
-                                type: user.domain,
+                                type: page.user.domain,
                                 id: message.id,
                                 body: {
                                   doc_source: 'facebook',
@@ -642,7 +642,7 @@ function findFacebookComments(users, callback){
         });
 
         async.eachLimit(postsAndComments, 5, function(comment, nextComment) {
-          findFacebookCommentsForObject(comment._source.cadence_user_id, comment._source.page_id, comment.id, comment._source.accessToken, function (err) {
+          findFacebookCommentsForObject(user, comment._source.page_id, comment.id, comment._source.accessToken, function (err) {
             if(err != null) {
               //console.log('Error findfacebookComments complete');
               //console.log(err);
@@ -675,7 +675,7 @@ function findFacebookComments(users, callback){
   })
 }
 
-function findFacebookCommentsForObject(userId, pageId, id, accessToken, callback) {
+function findFacebookCommentsForObject(user, pageId, id, accessToken, callback) {
   console.log('finding facebook comments');
   var since = user.services.facebook.lastMessageTime;
   if(since === 'undefined' || since == null || since == '') {
@@ -717,7 +717,7 @@ function findFacebookCommentsForObject(userId, pageId, id, accessToken, callback
                   user_id: comment.from != null ? comment.from.id : '',
                   user_name: comment.from != null ? comment.from.name : '',
                   //user_lang: post.from.languages[0],
-                  cadence_user_id: userId,
+                  cadence_user_id: user.id,
                   time_stamp: comment.created_time,
                   page_id: pageId,
                   access_token: accessToken
@@ -729,7 +729,7 @@ function findFacebookCommentsForObject(userId, pageId, id, accessToken, callback
                   nextComment(err)
                 } else {
                   if(comment.comment_count > 0) {
-                    findFacebookCommentsForObject(userId, pageId, comment.id, accessToken, function (err) {
+                    findFacebookCommentsForObject(user, pageId, comment.id, accessToken, function (err) {
                       if(err) {
                         nextComment(err);
                       } else {
