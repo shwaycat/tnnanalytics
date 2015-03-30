@@ -295,8 +295,7 @@ function findFacebookUsers(callback){
 }
 
 //fields=id,message,updated_time,commments{id,message},likes{id,name},shares{id,name}
-function findFacebookPosts(users, callback){
-  var pages = [];
+function findFacebookData(users, callback){
   async.each(users, function(user, nextUser){
     //get the pages for each user
     var pageUrl = 'https://graph.facebook.com/v2.3/me/accounts?access_token='+user.services.facebook.accessToken;
@@ -308,7 +307,6 @@ function findFacebookPosts(users, callback){
       if(error != null) {
         nextUser(error);
       } else {
-        pages.concat(body.data.slice(0));
         async.eachLimit(body.data, 5, function(page, nextPage){
           var since = user.services.facebook.lastPostTime;
           if(since === 'undefined' || since == null || since == '') {
@@ -371,7 +369,6 @@ function findFacebookPosts(users, callback){
                               }
                             })
                           }else{
-
                             if (typeof err != 'undefined'){
                               console.log(response);
                               console.log('Error from count')
@@ -389,7 +386,13 @@ function findFacebookPosts(users, callback){
                           console.log(err);
                           nextPage(err);
                         } else {
-                          nextPage();
+                          findFacebookMessages(page, function (err) {
+                            if(err == null) {
+                              nextPage();
+                            } else {
+                              nextPage(err);
+                            }
+                          });
                         }
                       });
                     }
@@ -436,10 +439,9 @@ function findFacebookPosts(users, callback){
   })
 }
 
-function findFacebookMessages(pages, callback){
-  console.log('Get Messages for page');
-  console.log(pages);
-  async.each(pages, function(page, nextPage){
+function findFacebookMessages(page, callback){
+  console.log('Get Messages for page: ' + page);
+  //async.each(pages, function(page, nextPage){
     //get the conversations for each page
       var since = user.services.facebook.lastPostTime;
       if(since === 'undefined' || since == null || since == '') {
@@ -454,7 +456,7 @@ function findFacebookMessages(pages, callback){
         json: true
       },function (e, r, b){
         if(e != null) {
-          nextPage(e);
+          callback(e);
         } else {
           /*if(b.data.length > 0) {
             var lastMessageTimeUnix = Math.floor(new Date(b.data[0].created_time).getTime() / 1000);
@@ -535,12 +537,7 @@ function findFacebookMessages(pages, callback){
           }*/
           console.log(b);
         }
-
       });
-
-    },function(err){
-      callback(err)
-  });
 }
 
 async.waterfall([
@@ -549,8 +546,7 @@ async.waterfall([
     findTweets,
     findTwitterDirectMessages,
     findFacebookUsers,
-    findFacebookPosts,
-    findFacebookMessages
+    findFacebookData,
 ],function(err){
   if (err){
     console.log('Error async.waterfall complete')
