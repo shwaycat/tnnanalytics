@@ -356,7 +356,7 @@ function findFacebookData(users, callback){
             if(err == null) {
               callback(users);
             } else {
-              console.log('error findFacebookMessages complete');
+              //console.log('error findFacebookMessages complete');
               //console.log(err);
               callback(err, users);
             }
@@ -377,7 +377,7 @@ function findFacebookData(users, callback){
             if(e != null) {
               getMessagsFunc(user, page, function (err) {
                 if(err != null) {
-                  //console.log('getMessagsFunc failed');
+                  console.log('getMessagsFunc failed');
                   //console.log(err);
                   nextPage(err);
                 } else {
@@ -392,7 +392,7 @@ function findFacebookData(users, callback){
                     if(err != null) {
                       getMessagsFunc(user, page, function (err) {
                         if(err != null) {
-                          //console.log('getMessagsFunc failed');
+                          console.log('getMessagsFunc failed');
                           //console.log(err);
                           nextPage(err);
                         } else {
@@ -431,7 +431,7 @@ function findFacebookData(users, callback){
                               }
                             }, function(err, response){
                               if (err){
-                                //console.log('Error async.each post esClient.create')
+                                console.log('Error async.each post esClient.create')
                                 //console.log(err)
                                 nextPost(err)
                               } else {
@@ -440,7 +440,7 @@ function findFacebookData(users, callback){
                             })
                           }else{
                             if (typeof err != 'undefined'){
-                              //console.log('Error from count')
+                              console.log('Error from post count')
                               //console.log(err)
                               nextPost(err)
                             }else {
@@ -450,13 +450,13 @@ function findFacebookData(users, callback){
                         })
                       }, function (err){
                         if (err){
-                          //console.log('Error async.each posts complete');
+                          console.log('Error async.each posts complete');
                           //console.log(err);
                           getMessagsFunc(user, page, function (merr) {
                             if(merr == null) {
                               nextPage();
                             } else {
-                              //console.log('getMessagsFunc failed');
+                              console.log('getMessagsFunc  - async.each post failed - failed');
                               //console.log(merr);
                               nextPage(merr);
                             }
@@ -466,7 +466,7 @@ function findFacebookData(users, callback){
                             if(merr == null) {
                               nextPage();
                             } else {
-                              //console.log('getMessagsFunc failed');
+                              console.log('getMessagsFunc - async.each post - failed');
                               //console.log(merr);
                               nextPage(merr);
                             }
@@ -476,12 +476,11 @@ function findFacebookData(users, callback){
                     }
                   });
               } else {
-                //nextPage();
                 getMessagsFunc(user, page, function (err) {
                   if(err == null) {
                     nextPage();
                   } else {
-                    //console.log('getMessagsFunc failed');
+                    console.log('getMessagsFunc - no messages returned - failed');
                     //console.log(err);
                     nextPage(err);
                   }
@@ -491,7 +490,7 @@ function findFacebookData(users, callback){
           });
           }, function (err){
           if (err){
-            //console.log('Error async.each pages complete');
+            console.log('Error async.each pages complete');
             //console.log(err);
             nextUser(err);
           } else {
