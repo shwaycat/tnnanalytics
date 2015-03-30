@@ -437,6 +437,7 @@ function findFacebookPosts(users, callback){
 
 function findFacebookMessages(pages, callback){
   console.log('Get Messages for page');
+  console.log(pages);
   async.each(pages, function(page, nextPage){
     //get the conversations for each page
       var since = user.services.facebook.lastPostTime;
