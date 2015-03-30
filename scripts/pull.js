@@ -608,8 +608,9 @@ function findFacebookMessages(pages, callback) {
   }, function (err) {
     //console.log("Error async.each users complete");
     var userData = {};
+
     for(var i = 0; i<pages.length; i++) {
-      console.log(pages[i].user.id);
+      console.log('user id: ' + pages[i].user.id);
       if(!_.has(userData, pages[i].user.id)) {
         userData[pages[i].user.id] = pages[i].user;
       }
