@@ -511,7 +511,7 @@ function findFacebookComments(user, page, id, callback) {
             }
           }, function (err, response) {
             if ((typeof err == 'undefined') && response.count == 0) {
-              //console.log(message);
+              console.log(comment);
               esClient.create({
                 index: c.index,
                 type: user.domain,
@@ -533,6 +533,7 @@ function findFacebookComments(user, page, id, callback) {
                   console.log(err)
                   nextComment(err)
                 } else {
+
                   console.log('facebook comment ' + comment.id + ' created.')
                   if(comment.comment_count > 0) {
                     console.log('facebook comment has ' + comment.comment_count + ' replies.');
