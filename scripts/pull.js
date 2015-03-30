@@ -816,12 +816,12 @@ async.waterfall([
    // deleteFacebookDirectMessages,
   deleteFacebookPosts,
   deleteFacebookComments,
-    /*findTwitterUsers,
+    findTwitterUsers,
     findTweets,
     findTwitterDirectMessages,
     findFacebookUsers,
-    findFacebookData,
-    findComments*/
+    findFacebookData//,
+    //findComments
 ],function(err){
   if (err){
     console.log('Error async.waterfall complete')
