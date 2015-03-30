@@ -382,10 +382,10 @@ function findFacebookPages(users, callback) {
     //console.log(pages);
     //console.log("Error async.each users complete");
     if(err != null) {
-      callback(err, pages);
+      callback(err, aggregator.getPages());
     }
     else {
-      callback(null, pages);
+      callback(null, aggregator.getPages());
     }
   })
 }
