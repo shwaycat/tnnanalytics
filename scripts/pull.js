@@ -7,6 +7,7 @@ var async = require('async')
   , elasticsearch = require('elasticsearch')
   , tw = require('twitter')
   , c = require('../config.json')
+  , _ = require('underscore')
 
 var esClient = new elasticsearch.Client({
   host: process.env.BONSAI_URL
