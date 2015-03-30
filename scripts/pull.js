@@ -118,7 +118,7 @@ function findTweets(users, callback){
             nextUser(err)
           } else {
             async.eachLimit(tweets, 5, function(tweet, nextTweet){
-              console.log(tweet.id_str);
+              //console.log(tweet.id_str);
               esClient.count({
                 index: c.index,
                 body: {
@@ -152,7 +152,7 @@ function findTweets(users, callback){
                     })
                 }else{
                   if (typeof err != 'undefined'){
-                    console.log(response);
+                    //console.log(response);
                     console.log('Error from count')
                     console.log(err)
                     nextTweet(err)
@@ -207,7 +207,7 @@ function findTwitterDirectMessages(users, callback) {
     }
 
     client.get('direct_messages', params, function(err, messages, response){
-      console.log('direct_messages retrieved');
+      //console.log('direct_messages retrieved');
       if (err) {
         console.log('Error direct_messages');
         console.log(err);
@@ -223,7 +223,7 @@ function findTwitterDirectMessages(users, callback) {
             nextUser(err)
           } else {
             async.eachLimit(messages, 5, function(message, nextMessage){
-              console.log(message.id_str);
+              //console.log(message.id_str);
               esClient.count({
                 index: c.index,
                 body: {
@@ -259,7 +259,7 @@ function findTwitterDirectMessages(users, callback) {
                   })
                 }else{
                   if (typeof err != 'undefined'){
-                    console.log(response);
+                    //console.log(response);
                     console.log('Error from count')
                     console.log(err)
                     nextMessage(err)
@@ -406,7 +406,7 @@ function findFacebookData(users, callback){
                             })
                           }else{
                             if (typeof err != 'undefined'){
-                              console.log(response);
+                              //console.log(response);
                               console.log('Error from count')
                               console.log(err)
                               nextPost(err)
@@ -524,7 +524,7 @@ function findFacebookMessages(user, page, callback){
                                }
                              }, function(err, response){
                               if ((typeof err == 'undefined') && response.count == 0){
-                                console.log(message);
+                                //console.log(message);
                                 esClient.create({
                                  index: c.index,
                                  type: user.domain,
@@ -553,7 +553,7 @@ function findFacebookMessages(user, page, callback){
                              }else{
 
                                if (typeof err != 'undefined'){
-                                 console.log(response);
+                                 //console.log(response);
                                  console.log('Error from count')
                                  console.log(err)
                                  nextConvo(err)
