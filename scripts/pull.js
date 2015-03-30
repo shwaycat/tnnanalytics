@@ -365,7 +365,7 @@ function findFacebookPages(users, callback) {
         //console.log(error);
         nextUser(error);
       } else {
-        async.map(body.data, function(page, callback) {
+        async.mapLimit(body.data, 1, function(page, callback) {
             aggregator.setPage(page, user);
             callback(null, aggregator.getPages());
           },
