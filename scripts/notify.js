@@ -77,7 +77,7 @@ function findDocuments(users, callback){
     console.log(user.notifications);
     userCheck = true;
     var keywords = [];
-    if(user && user.keywords) {
+    if(user && user.notifications && user.notifications.keywords) {
       keywords = user.notifications.keywords.split(',');
     } else {
       userCheck = false;
