@@ -384,8 +384,8 @@ function findFacebookPages(users, callback) {
 }
 //fields=id,message,updated_time,commments{id,message},likes{id,name},shares{id,name}
 function findFacebookPosts(pages, callback){
-  console.log(pages);
-  console.log('finding facebook posts');
+ // console.log(pages);
+  console.log('finding facebook posts for ' + pages.length + ' pages');
     async.eachLimit(pages, 5, function(page, nextPage){
       var since = page.user.services.facebook.lastPostTime;
       if(since === 'undefined' || since == null || since == '') {
