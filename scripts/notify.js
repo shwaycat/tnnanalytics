@@ -122,14 +122,19 @@ function findDocuments(users, callback){
           console.log('building email');
           links = _.map(_.filter(response.hits.hits, function(hit) {
              // console.log(hit);
-              return hit._source.doc_type == 'mention' || hit._source.doc_type == 'direct_message' || hit._source.doc_type == 'message';
+              return hit._source.doc_type == 'mention' || hit._source.doc_type == 'direct_message' || hit._source.doc_type == 'message' || hit._source.doc_type == 'comment';
             }), function(hit){
            // console.log(hit)
             if(hit._source.doc_source == 'twitter') {
               if(hit._source.doc_type == 'mention') {
                 console.log('twitter mention');
+                var timeStamp = '';
+                if(hit._source.time_stamp) {
+                  var date = new Date(hit._source.time_stamp);
+                  timeStamp = date.toLocaleString();
+                }
                 return {
-                  text: hit._source.doc_text,
+                  text: 'Twitter: @' + hit._source.user_handle + ': ' + hit._source.doc_text + ' - ' + timeStamp,
                   href: 'https://twitter.com/'+hit._source.user_handle+'/status/'+hit._id
                 }
               } else {
@@ -140,7 +145,7 @@ function findDocuments(users, callback){
                   timeStamp = date.toLocaleString();
                 }
                 return {
-                  text: '@' + hit._source.user_handle + ': ' + hit._source.doc_text + '  -  ' + timeStamp,
+                  text: 'Twitter: @' + hit._source.user_handle + ': ' + hit._source.doc_text + '  -  ' + timeStamp,
                   href: 'https://twitter.com/'+hit._source.user_handle
                 }
               }
@@ -153,7 +158,19 @@ function findDocuments(users, callback){
                   timeStamp = date.toLocaleString();
                 }
                 return {
-                  text: hit._source.user_name + ': ' + hit._source.doc_text + ' - ' + timeStamp,
+                  text: 'Facebook: @' + hit._source.user_name + ': ' + hit._source.doc_text + ' - ' + timeStamp,
+                  href: 'https://facebook.com/' + hit._source.page_id + '/messages/'
+                }
+              } else if(hit._source.doc_type == 'comment') {
+                console.log('facebook comment');
+                console.log(comment);
+                var timeStamp = '';
+                if(hit._source.time_stamp) {
+                  var date = new Date(hit._source.time_stamp);
+                  timeStamp = date.toLocaleString();
+                }
+                return {
+                  text: 'Facebook: @' + hit._source.user_name + ': ' + hit._source.doc_text + ' - ' + timeStamp,
                   href: 'https://facebook.com/' + hit._source.page_id + '/messages/'
                 }
               }
