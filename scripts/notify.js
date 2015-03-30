@@ -59,9 +59,9 @@ var User = mongoose.model('User', userSchema)
 
 
 function findConnectedUsers(callback){
-  User.findConnectedUsers(function(err, users){
+  User.findConnectedTwitter(function(err, users){
     if (err){
-      console.log('Error findConnectedUesrs')
+      console.log('Error findConnectedTwitter')
       console.log(err)
       callback(err)
     } else {
@@ -74,7 +74,7 @@ function findDocuments(users, callback){
   async.each(users, function(user, nextUser){
     //console.log(user);
     console.log('-----------------------Find Documents-------------------');
-    //console.log(user.notifications);
+    console.log(user.notifications);
     userCheck = true;
     var keywords = [];
     if(user && user.keywords) {
@@ -119,7 +119,7 @@ function findDocuments(users, callback){
 
         var links = []
         if (response.hits.total > 0){
-          console.log('building email: ' + response.hits.total + ' notifications');
+          console.log('building email');
           links = _.map(_.filter(response.hits.hits, function(hit) {
              // console.log(hit);
               return hit._source.doc_type == 'mention' || hit._source.doc_type == 'direct_message' || hit._source.doc_type == 'message';
@@ -127,11 +127,13 @@ function findDocuments(users, callback){
            // console.log(hit)
             if(hit._source.doc_source == 'twitter') {
               if(hit._source.doc_type == 'mention') {
+                console.log('twitter mention');
                 return {
                   text: hit._source.doc_text,
                   href: 'https://twitter.com/'+hit._source.user_handle+'/status/'+hit._id
                 }
               } else {
+                console.log('twitter direct message');
                 var timeStamp = '';
                 if(hit._source.time_stamp) {
                   var date = new Date(hit._source.time_stamp);
@@ -144,6 +146,7 @@ function findDocuments(users, callback){
               }
             } else {
               if(hit._source.doc_type == 'message') {
+                console.log('facebook messsage');
                 var timeStamp = '';
                 if(hit._source.time_stamp) {
                   var date = new Date(hit._source.time_stamp);
@@ -166,10 +169,7 @@ function findDocuments(users, callback){
               email: 'no-reply@maxmedia.com'
             },
             links: links
-          }, function () {
-            console.log('email queued');
-            nextUser();
-          });
+          }, nextUser);
         } else {
           nextUser()
           return;
