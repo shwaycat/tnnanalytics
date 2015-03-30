@@ -384,7 +384,6 @@ function findFacebookPages(users, callback) {
 }
 //fields=id,message,updated_time,commments{id,message},likes{id,name},shares{id,name}
 function findFacebookPosts(pages, callback){
- // console.log(pages);
   console.log('finding facebook posts for ' + pages.length + ' pages');
     async.eachLimit(pages, 5, function(page, nextPage){
       var since = page.user.services.facebook.lastPostTime;
@@ -403,6 +402,7 @@ function findFacebookPosts(pages, callback){
           nextPage(e);
         } else {
           if(b.data.length > 0) {
+            console.log('Recording ' + b.data.length + ' posts');
             var lastPostTimeUnix = Math.floor(new Date(b.data[0].created_time).getTime() / 1000);
             User.update({ _id: page.user.id },{ $set: {'services.facebook.lastPostTime': lastPostTimeUnix} },
               function (err, numberAffected, raw){
@@ -608,6 +608,7 @@ function findFacebookMessages(pages, callback) {
     var groupedPages = _.groupBy(pages, function(page) {
       return page.user.id;
     });
+    console.log(groupedPages);
     var users = [];
     for(var i =0; i<groupedPages.length; i++) {
       users.push(groupedPages[i][0].user);
