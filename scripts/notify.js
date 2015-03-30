@@ -144,7 +144,7 @@ function findDocuments(users, callback){
                   timeStamp = date.toLocaleString();
                 }
                 return {
-                  text: hit._source.user_handle + ': ' + hit._source.doc_text + ' - ' + timeStamp,
+                  text: hit._source.user_name + ': ' + hit._source.doc_text + ' - ' + timeStamp,
                   href: 'https://facebook.com/' + hit._source.page_id + '/messages/'
                 }
               }

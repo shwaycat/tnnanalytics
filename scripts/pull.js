@@ -534,7 +534,7 @@ function findFacebookMessages(user, page, callback){
                                    doc_type: 'message',
                                    doc_text: message.message,
                                    user_id: message.from != null ? message.from.id : '',
-                                   user_handle: message.from != null ? message.from.name : '',
+                                   user_name: message.from != null ? message.from.name : '',
                                    //user_lang: post.from.languages[0],
                                    cadence_user_id: user.id,
                                    time_stamp: message.created_time,
