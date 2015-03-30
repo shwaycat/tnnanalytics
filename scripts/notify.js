@@ -166,7 +166,10 @@ function findDocuments(users, callback){
               email: 'no-reply@maxmedia.com'
             },
             links: links
-          }, nextUser);
+          }, function () {
+            console.log('email queued');
+            nextUser();
+          });
         } else {
           nextUser()
           return;
