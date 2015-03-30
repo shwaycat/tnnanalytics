@@ -482,7 +482,7 @@ function findFacebookMessages(user, page, callback){
                                }
                              }, function(err, response){
                               if ((typeof err == 'undefined') && response.count == 0){
-                                console.log(post);
+                                console.log(message);
                                 esClient.create({
                                  index: c.index,
                                  type: user.domain,
@@ -501,10 +501,10 @@ function findFacebookMessages(user, page, callback){
                                 if (err){
                                    console.log('Error async.each message esClient.create')
                                    console.log(err)
-                                   nextConvo(err)
+                                  nextMessage(err)
                                 } else {
                                    console.log('facebook message ' + message.id + ' created.')
-                                   nextConvo()
+                                  nextMessage()
                                 }
                               });
                              }else{
