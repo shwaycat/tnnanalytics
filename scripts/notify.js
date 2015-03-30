@@ -72,9 +72,9 @@ function findConnectedUsers(callback){
 
 function findDocuments(users, callback){
   async.each(users, function(user, nextUser){
-    console.log(user);
+    //console.log(user);
     console.log('-----------------------Find Documents-------------------');
-    console.log(user.notifications);
+    //console.log(user.notifications);
     userCheck = true;
     var keywords = [];
     if(user && user.keywords) {
@@ -119,8 +119,9 @@ function findDocuments(users, callback){
 
         var links = []
         if (response.hits.total > 0){
+          console.log('building email: ' + response.hits.total + ' notifications');
           links = _.map(_.filter(response.hits.hits, function(hit) {
-              console.log(hit);
+             // console.log(hit);
               return hit._source.doc_type == 'mention' || hit._source.doc_type == 'direct_message' || hit._source.doc_type == 'message';
             }), function(hit){
            // console.log(hit)
