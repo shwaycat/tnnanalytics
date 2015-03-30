@@ -437,12 +437,12 @@ function findFacebookMessages(user, page, callback){
   console.log('Get Messages for page: ' + page);
   //async.each(pages, function(page, nextPage){
     //get the conversations for each page
-      var since = user.services.facebook.lastPostTime;
+      var since = user.services.facebook.lastMessageTime;
       if(since === 'undefined' || since == null || since == '') {
         var now = new Date();
         since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
       }
-      var qp = 'since=' + since;
+      var qp = 'fields=id';//&since=' + since;
       var convoUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/conversations?'+qp+'&access_token='+page.access_token;
       console.log(convoUrl);
       request({
