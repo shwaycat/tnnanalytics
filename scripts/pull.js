@@ -405,6 +405,7 @@ function findFacebookPosts(pages, callback){
           if(b.data.length > 0) {
             console.log('Recording ' + b.data.length + ' posts');
             var lastPostTimeUnix = Math.floor(new Date(b.data[0].created_time).getTime() / 1000);
+            console.log(page.user);
             User.update({ _id: page.user.id },{ $set: {'services.facebook.lastPostTime': lastPostTimeUnix} },
               function (err, numberAffected, raw){
                 if(err != null) {
