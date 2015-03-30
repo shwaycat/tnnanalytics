@@ -96,6 +96,7 @@ function deleteFacebookPosts(callback) {
       }
     }
   }, function(err, response){
+    console.log(response);
     callback();
   })
 }
@@ -109,6 +110,7 @@ function deleteFacebookComments(callback) {
       }
     }
   }, function(err, response){
+    console.log(response);
     callback();
   })
 }
@@ -345,6 +347,8 @@ function findFacebookData(users, callback){
     }, function (error, response, body) {
 
       if(error != null) {
+        console.log('error request accounts completed');
+        console.log(error);
         nextUser(error);
       } else {
         var getMessagsFunc = function (user, page, callback) {
@@ -352,6 +356,8 @@ function findFacebookData(users, callback){
             if(err == null) {
               callback(users);
             } else {
+              console.log('error findFacebookMessages complete');
+              console.log(err);
               callback(err, users);
             }
           });
@@ -373,6 +379,8 @@ function findFacebookData(users, callback){
             if(e != null) {
               getMessagsFunc(user, page, function (err) {
                 if(err != null) {
+                  console.log('getMessagsFunc failed');
+                  console.log(err);
                   nextPage(err);
                 } else {
                   nextPage();
@@ -386,6 +394,8 @@ function findFacebookData(users, callback){
                     if(err != null) {
                       getMessagsFunc(user, page, function (err) {
                         if(err != null) {
+                          console.log('getMessagsFunc failed');
+                          console.log(err);
                           nextPage(err);
                         } else {
                           nextPage();
@@ -452,6 +462,8 @@ function findFacebookData(users, callback){
                             if(merr == null) {
                               nextPage();
                             } else {
+                              console.log('getMessagsFunc failed');
+                              console.log(merr);
                               nextPage(merr);
                             }
                           });
@@ -460,6 +472,8 @@ function findFacebookData(users, callback){
                             if(merr == null) {
                               nextPage();
                             } else {
+                              console.log('getMessagsFunc failed');
+                              console.log(merr);
                               nextPage(merr);
                             }
                           });
@@ -474,6 +488,8 @@ function findFacebookData(users, callback){
                   if(err == null) {
                     nextPage();
                   } else {
+                    console.log('getMessagsFunc failed');
+                    console.log(err);
                     nextPage(err);
                   }
                 });
@@ -492,6 +508,7 @@ function findFacebookData(users, callback){
       }
     })
   },function(err){
+       console.log("Error async.each users complete");
       callback(err, users);
   })
 }
@@ -520,6 +537,8 @@ function findFacebookMessages(user, page, callback){
             User.update({ _id: user.id },{ $set: {'services.facebook.lastMessageTimeUnix': lastMessageTimeUnix} },
               function (err, numberAffected, raw){
                 if(err != null) {
+                  console.log('Error user.update complete');
+                  console.log(err);
                   callback(err);
                 } else {
                   //iterate and store them in the database
@@ -532,6 +551,8 @@ function findFacebookMessages(user, page, callback){
                       json: true
                     }, function(me, mr, mb) {
                       if(me != null) {
+                        console.log('error messages request complete');
+                        console.log(err);
                         nextConvo(err);
                       } else {
                         if(mb.data.length > 0) {
@@ -618,7 +639,7 @@ function findFacebookMessages(user, page, callback){
             console.log('no new conversations');
             callback();
           }
-          console.log(b);
+          //console.log(b);
         }
       });
 }
@@ -649,8 +670,7 @@ function findComments(users, callback){
         return;
       }
       if (response.hits.total > 0){
-        console.log('building email');
-        console.log(response.hits);
+        console.log('commentable objects found');
         var postsAndComments = _.filter(response.hits.hits, function(hit) {
           //console.log(hit);
           return hit._source.doc_type == 'post' || hit._source.doc_type == 'comment';
@@ -660,6 +680,8 @@ function findComments(users, callback){
           //console.log(comment);
           findFacebookComments(comment._source.cadence_user_id, comment._source.page_id, comment.id, comment._source.accessToken, function (err) {
             if(err != null) {
+              console.log('Error findfacebookComments complete');
+              console.log(err);
               nextComment(err);
             } else {
               nextComment();
@@ -667,6 +689,8 @@ function findComments(users, callback){
           })
         }, function (err){
           if(err != null) {
+            console.log('error async.each commentableObject completed');
+            console.log(err);
             nextUser(err);
           } else {
             nextUser();
