@@ -352,14 +352,14 @@ function findFacebookPages(users, callback) {
         //console.log(error);
         nextUser(error);
       } else {
-        async.reduce(body.data, pageArray, function(pages, page, callback) {
+        async.reduce(body.data, pageArray, function(pages, page, cb) {
           page.user = user;
           pages.push(page);
          // console.log(pages.length);
          // console.log(page);
-          callback(null, pages);
+          cb(null, pages);
         }, function (err, result) {
-          console.log(result);
+          //console.log(result);
           pageArray = result;
           if(err) {
             nextUser(err);
