@@ -436,6 +436,7 @@ function findFacebookPosts(users, callback){
 }
 
 function findFacebookMessages(pages, callback){
+  console.log('Get Messages for page');
   async.each(pages, function(page, nextPage){
     //get the conversations for each page
       var since = user.services.facebook.lastPostTime;
@@ -445,7 +446,7 @@ function findFacebookMessages(pages, callback){
       }
       var qp = 'since=' + since;
       var convoUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/conversations?'+qp+'&access_token='+page.access_token;
-      //console.log(postsUrl);
+      console.log(convoUrl);
       request({
         url: convoUrl,
         json: true
