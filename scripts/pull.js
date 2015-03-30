@@ -471,6 +471,7 @@ function findFacebookMessages(user, page, callback){
                       } else {
                         if(mb.data.length > 0) {
                           async.eachLimit(mb.data, 5, function (message, nextMessage) {
+                            console.log(message);
                             esClient.count({
                                index: c.index,
                                body: {
