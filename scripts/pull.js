@@ -352,7 +352,7 @@ aggregator = new PageAggregator();
 function findFacebookPages(users, callback) {
   console.log('finding facebook pages');
 
-  async.each(users, function(user, nextUser){
+  async.eachLimit(users, 1, function(user, nextUser){
     console.log('find pages for user: ' + user.id);
     var pageUrl = 'https://graph.facebook.com/v2.3/me/accounts?access_token='+user.services.facebook.accessToken;
     request({
