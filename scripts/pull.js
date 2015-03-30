@@ -375,6 +375,7 @@ function findFacebookData(users, callback){
             json: true
           },function (e, r, b){
             if(e != null) {
+              console.log('error request posts failed');
               getMessagsFunc(user, page, function (err) {
                 if(err != null) {
                   console.log('getMessagsFunc failed');
@@ -476,13 +477,13 @@ function findFacebookData(users, callback){
                     }
                   });
               } else {
-                getMessagsFunc(user, page, function (err) {
-                  if(err == null) {
+                getMessagsFunc(user, page, function (merr) {
+                  if(merr == null) {
                     nextPage();
                   } else {
                     console.log('getMessagsFunc - no messages returned - failed');
-                    //console.log(err);
-                    nextPage(err);
+                    console.log(merr);
+                    nextPage(merr);
                   }
                 });
               }
