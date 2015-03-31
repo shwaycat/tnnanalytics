@@ -446,6 +446,7 @@ function findFacebookPosts(pages, callback){
                             //console.log(err)
                             nextPost(err)
                           } else {
+                            console.log('facebook post created: ' + pst.id + ' for ' + page.user.id);
                             nextPost()
                           }
                         })
@@ -455,6 +456,7 @@ function findFacebookPosts(pages, callback){
                           //console.log(err)
                           nextPost(err)
                         }else {
+                          console.log('facebook post already recorded to database');
                           nextPost();
                         }
                       }
@@ -464,6 +466,7 @@ function findFacebookPosts(pages, callback){
                       console.log('Error async.each posts complete');
                       nextPage(err);
                     } else {
+                      console.log('no new posts to record');
                       nextPage();
                     }
                   });
@@ -560,6 +563,7 @@ function findFacebookMessages(pages, callback) {
                                   //console.log(err)
                                   nextMessage(err)
                                 } else {
+                                  console.log('message created');
                                   nextMessage()
                                 }
                               });
@@ -570,6 +574,7 @@ function findFacebookMessages(pages, callback) {
                                 //console.log(err)
                                 nextConvo(err)
                               } else {
+                                console.log('message already recorded to database');
                                 nextConvo()
                               }
                             }
@@ -584,6 +589,7 @@ function findFacebookMessages(pages, callback) {
                           }
                         })
                       } else {
+                        console.log('no new messages found');
                         nextConvo();
                       }
                     }
