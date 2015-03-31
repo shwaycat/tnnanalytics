@@ -712,10 +712,7 @@ function findFacebookMessages(pages, callback) {
     var uniqueUsers = _.pluck(_.uniq(pages, false, function (page) {
       return page.user.id;
     }), 'user');
-    //console.log('Number of unique users with pages: ' + uniqueUsers.length);
 
-   // //console.log('Number of Users extracted: ' + users.length);
-    ////console.log(users);
     if(err) {
       callback(err, uniqueUsers);
     } else {
@@ -786,11 +783,7 @@ function findFacebookComments(users, callback){
 }
 
 function findFacebookCommentsForObject(user, pageId, commentableId, accessToken, callback) {
-  //console.log('User Id: ' + user.id);
-  //console.log('Page Id: ' + pageId);
-  //console.log('Commentable Id: ' + commentableId);
-  //console.log('Access Token: ' + accessToken);
-  //console.log('finding facebook comments');
+
   var since = user.services.facebook.lastMessageTime;
   if(since === 'undefined' || since == null || since == '') {
     var now = new Date();
@@ -798,7 +791,7 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
   }
   var qp = 'fields=id,comment_count,from,message,created_time';//&since=' + since;
   var commentsUrl = 'https://graph.facebook.com/v2.3/' + commentableId + '/comments?'+qp+'&access_token='+accessToken;
-  console.log(commentsUrl);
+  //console.log(commentsUrl);
   request({
     url: commentsUrl,
     json: true
@@ -809,6 +802,7 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
       if(b.data.length > 0) {
         //iterate and store them in the database
         async.eachLimit(b.data, 5, function (comment, nextComment) {
+          console.log(comment);
           esClient.count({
             index: c.index,
             body: {
@@ -842,7 +836,9 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
                   ////console.log(err)
                   nextComment(err)
                 } else {
+                  console.log('facebook comment created with id: ' + comment.id);
                   if(comment.comment_count > 0) {
+                    console.log('facebook comment ' + comment.id + ' has ' + comment.comment_count + ' replies.');
                     findFacebookCommentsForObject(user, pageId, comment.id, accessToken, function (err) {
                       if(err) {
                         nextComment(err);
@@ -851,26 +847,26 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
                       }
                     })
                   } else {
-                    ////console.log('facebook comment has no replies');
+                    console.log('facebook comment ' + comment.id + ' has no replies');
                     nextComment()
                   }
-                  nextComment();
                 }
               });
             } else {
               if (err) {
-                ////console.log('Error from comment count')
-                ////console.log(err)
+                console.log('Error from comment count')
+                console.log(err)
                 nextComment(err)
               } else {
+                console.log('facebook comment ' + comment.id + ' already in database');
                 nextComment()
               }
             }
           })
         }, function (err) {
           if (err) {
-            ////console.log('Error async.each comment complete');
-            ////console.log(err);
+            console.log('Error async.each comment complete');
+            console.log(err);
             callback(err);
           } else {
             callback();
@@ -878,6 +874,7 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
         });
 
       } else {
+        console.log('facebook object ' + commentableId + ' has no comments');
         callback();
       }
     }
