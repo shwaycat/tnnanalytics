@@ -594,7 +594,7 @@ function findFacebookPosts(pages, callback){
 }
 
 function findFacebookMessages(pages, callback) {
-  //console.log('finding facebook messages');
+  console.log('finding facebook messages');
   async.eachLimit(pages, 5, function (page, nextPage) {
     var since = page.user.services.facebook.lastMessageTime;
     if (since === 'undefined' || since == null || since == '') {
@@ -622,6 +622,7 @@ function findFacebookMessages(pages, callback) {
                 //iterate and store them in the database
                 async.eachLimit(b.data, 5, function (convo, nextConvo) {
                   if (convo.messages.data.length > 0) {
+                    console.log(convo.messages.data.length + ' messages found in conversation ' + convo.id);
                     async.eachLimit(convo.messages.data, 5, function (message, nextMessage) {
                       esClient.count({
                         index: c.index,
@@ -650,43 +651,43 @@ function findFacebookMessages(pages, callback) {
                             }
                           }, function (err, response) {
                             if (err) {
-                              ////console.log('Error async.each message esClient.create')
-                              ////console.log(err)
+                              console.log('Error async.each message esClient.create')
+                              console.log(err)
                               nextMessage(err)
                             } else {
-                              //console.log('message created');
+                              console.log('message created');
                               nextMessage()
                             }
                           });
                         } else {
 
                           if (typeof err != 'undefined') {
-                            ////console.log('Error from count')
-                            ////console.log(err)
+                            console.log('Error from count')
+                            console.log(err)
                             nextConvo(err)
                           } else {
-                            //console.log('message already recorded to database');
+                            console.log('message already recorded to database');
                             nextConvo()
                           }
                         }
                       })
                     }, function (err) {
                       if (err) {
-                        ////console.log('Error async.each messages complete');
-                        ////console.log(err);
+                        console.log('Error async.each messages complete');
+                        console.log(err);
                         nextConvo(err);
                       } else {
                         nextConvo();
                       }
                     })
                   } else {
-                    //console.log('no new messages found');
+                    console.log('no new messages found');
                     nextConvo();
                   }
                 }, function (err) {
                   if (err != null) {
-                    ////console.log('Error async.each conversations complete');
-                    ////console.log(err);
+                    console.log('Error async.each conversations complete');
+                    console.log(err);
                     nextPage(err);
                   } else {
                     nextPage();
@@ -700,7 +701,7 @@ function findFacebookMessages(pages, callback) {
       }
     });
   }, function (err) {
-    ////console.log("Error async.each users complete");
+    console.log("Error async.each users complete");
     var uniqueUsers = _.pluck(_.uniq(pages, false, function (page) {
       return page.user.id;
     }), 'user');
