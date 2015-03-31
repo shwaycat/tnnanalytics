@@ -181,9 +181,11 @@ function findDocuments(users, callback){
                   var date = new Date(hit._source.time_stamp);
                   timeStamp = date.toLocaleString();
                 }
+                var idParts = hit._id.split("_");
                 return {
+                  //https://www.facebook.com/permalink.php?story_fbid=937455652951753&id=163504433680216
                   text: 'Facebook: @' + hit._source.user_name + ': ' + hit._source.doc_text + ' - ' + timeStamp,
-                  href: 'https://facebook.com/' + hit._source.page_id + '/messages/'
+                  href: 'https://www.facebook.com/permalink.php?story_fbid=' + idParts[0]+ '&id=' + hit._id
                 }
               }
             }
