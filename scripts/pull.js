@@ -602,7 +602,6 @@ function findFacebookPosts(pages, callback){
                      getPostsFinishedCallback(page, err);
                    } else {
                      console.log('no new posts to record');
-                     console.log(b.paging);
                      if(b.paging && b.paging.next && b.paging.next != '') {
                        console.log('facebook messages posts - next');
                        getPosts(page, b.paging.next, function (page, err) {
@@ -668,103 +667,118 @@ function findFacebookMessages(pages, callback) {
     }
     var qp = 'fields=id,updated_time,messages&since=' + since;
     var convoUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/conversations?' + qp + '&access_token=' + page.access_token;
-    request({
-      url: convoUrl,
-      json: true
-    }, function (e, r, b) {
-      if (e != null) {
-        callback(e);
-      } else {
-        if (b.data.length > 0) {
-          var lastMessageTimeUnix = Math.floor(new Date(b.data[0].updated_time).getTime() / 1000);
-          User.update({_id: page.user.id}, {$set: {'services.facebook.lastMessageTime': lastMessageTimeUnix}},
-            function (err, numberAffected, raw) {
-              if (err != null) {
-                console.log('Error user.update complete');
-                console.log(err);
-                callback(err);
-              } else {
-                //iterate and store them in the database
-                async.eachLimit(b.data, 5, function (convo, nextConvo) {
-                  if (convo.messages.data.length > 0) {
-                    console.log(convo.messages.data.length + ' messages found in conversation ' + convo.id);
-                    async.eachLimit(convo.messages.data, 5, function (message, nextMessage) {
-                      esClient.count({
-                        index: c.index,
-                        body: {
-                          query: {
-                            term: {doc_type: 'message'},
-                            term: {_id: message.id}
+
+    function getConversations(page, url, getConversationsFinishedCallback) {
+      request({
+        url: url,
+        json: true
+      }, function (e, r, b) {
+        if (e != null) {
+          getConversationsFinishedCallback(page, e);
+        } else {
+          if (b.data.length > 0) {
+            var lastMessageTimeUnix = Math.floor(new Date(b.data[0].updated_time).getTime() / 1000);
+            User.update({_id: page.user.id}, {$set: {'services.facebook.lastMessageTime': lastMessageTimeUnix}},
+              function (err, numberAffected, raw) {
+                if (err != null) {
+                  console.log('Error user.update complete');
+                  console.log(err);
+                  getConversationsFinishedCallback(page, err);
+                } else {
+                  //iterate and store them in the database
+                  async.eachLimit(b.data, 5, function (convo, nextConvo) {
+                    if (convo.messages.data.length > 0) {
+                      console.log(convo.messages.data.length + ' messages found in conversation ' + convo.id);
+                      async.eachLimit(convo.messages.data, 5, function (message, nextMessage) {
+                        esClient.count({
+                          index: c.index,
+                          body: {
+                            query: {
+                              term: {doc_type: 'message'},
+                              term: {_id: message.id}
+                            }
                           }
-                        }
-                      }, function (err, response) {
-                        if ((typeof err == 'undefined') && response.count == 0) {
-                          esClient.create({
-                            index: c.index,
-                            type: page.user.domain,
-                            id: message.id,
-                            body: {
-                              doc_source: 'facebook',
-                              doc_type: 'message',
-                              doc_text: message.message,
-                              user_id: message.from != null ? message.from.id : '',
-                              user_name: message.from != null ? message.from.name : '',
-                              //user_lang: post.from.languages[0],
-                              cadence_user_id: page.user.id,
-                              time_stamp: message.created_time,
-                              page_id: page.id,
-                              notified: false
-                            }
-                          }, function (err, response) {
-                            if (err) {
-                              console.log('Error async.each message esClient.create')
-                              console.log(err)
-                              nextMessage(err)
-                            } else {
-                              console.log('message created');
-                              nextMessage()
-                            }
-                          });
-                        } else {
-                          if (typeof err != 'undefined') {
-                            console.log('Error from count')
-                            console.log(err)
-                            nextConvo(err)
+                        }, function (err, response) {
+                          if ((typeof err == 'undefined') && response.count == 0) {
+                            esClient.create({
+                              index: c.index,
+                              type: page.user.domain,
+                              id: message.id,
+                              body: {
+                                doc_source: 'facebook',
+                                doc_type: 'message',
+                                doc_text: message.message,
+                                user_id: message.from != null ? message.from.id : '',
+                                user_name: message.from != null ? message.from.name : '',
+                                //user_lang: post.from.languages[0],
+                                cadence_user_id: page.user.id,
+                                time_stamp: message.created_time,
+                                page_id: page.id,
+                                notified: false
+                              }
+                            }, function (err, response) {
+                              if (err) {
+                                console.log('Error async.each message esClient.create')
+                                console.log(err)
+                                nextMessage(err)
+                              } else {
+                                console.log('message created');
+                                nextMessage()
+                              }
+                            });
                           } else {
-                            console.log('message already recorded to database');
-                            nextConvo()
+                            if (typeof err != 'undefined') {
+                              console.log('Error from count')
+                              console.log(err)
+                              nextConvo(err)
+                            } else {
+                              console.log('message already recorded to database');
+                              nextConvo()
+                            }
                           }
+                        })
+                      }, function (err) {
+                        if (err) {
+                          console.log('Error async.each messages complete');
+                          console.log(err);
+                          nextConvo(err);
+                        } else {
+                          nextConvo();
                         }
                       })
-                    }, function (err) {
-                      if (err) {
-                        console.log('Error async.each messages complete');
-                        console.log(err);
-                        nextConvo(err);
-                      } else {
-                        nextConvo();
-                      }
-                    })
-                  } else {
-                    console.log('no new messages found');
-                    nextConvo();
-                  }
-                }, function (err) {
-                  if (err != null) {
-                    console.log('Error async.each conversations complete');
-                    console.log(err);
-                    nextPage(err);
-                  } else {
-                    nextPage();
-                  }
-                });
-              }
-            });
-        } else {
-          nextPage();
+                    } else {
+                      console.log('no new messages found');
+                      nextConvo();
+                    }
+                  }, function (err) {
+                    if (err != null) {
+                      console.log('Error async.each conversations complete');
+                      console.log(err);
+                      getConversationsFinishedCallback(page, err);
+                    } else {
+                      getConversationsFinishedCallback(page);
+                    }
+                  });
+                }
+              });
+          } else {
+            getConversationsFinishedCallback(page);
+          }
         }
+      });
+    }
+
+    getConversations(page, convoUrl, function(page, err) {
+      if(err) {
+        console.log('error getConversations completed');
+        console.log(err);
+        nextPage(err);
+      } else {
+        console.log('getConversations completed');
+        nextPage();
       }
-    });
+    })
+
   }, function (err) {
     var uniqueUsers = _.pluck(_.uniq(pages, false, function (page) {
       return page.user.id;
