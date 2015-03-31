@@ -183,9 +183,9 @@ function findDocuments(users, callback){
                 }
                 var idParts = hit._id.split("_");
                 return {
-                  //https://www.facebook.com/permalink.php?story_fbid=937455652951753&id=163504433680216
+                  //https://www.facebook.com/permalink.php?story_fbid=post_id&id=page_id&comment_id=comment.id
                   text: 'Facebook: @' + hit._source.user_name + ': ' + hit._source.doc_text + ' - ' + timeStamp,
-                  href: 'https://www.facebook.com/permalink.php?story_fbid=' + idParts[0]+ '&id=' + hit._id
+                  href: 'https://www.facebook.com/permalink.php?story_fbid=' + idParts[0]+ '&id=' + hit._source.root_id + '&comment_id=' + idParts[1]
                 }
               }
             }

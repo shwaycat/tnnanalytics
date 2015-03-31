@@ -780,7 +780,8 @@ function findFacebookComments(users, callback){
         console.log('Found Total of ' + postsAndComments.length + ' commentable objects');
         async.eachLimit(postsAndComments, 5, function(object, nextObject) {
           //console.log(object);
-          findFacebookCommentsForObject(user, object._source.page_id, object._id, object._source.access_token, function (err) {
+          var rootId = object._source.doc_type == 'post' ? object._id : object._source.root_id;
+          findFacebookCommentsForObject(user, object._source.page_id, object._id, rootId, object._source.access_token, function (err) {
             if(err != null) {
               console.log('Error findFacebookCommentsForObject complete');
               console.log(err);
@@ -813,7 +814,7 @@ function findFacebookComments(users, callback){
   })
 }
 
-function findFacebookCommentsForObject(user, pageId, commentableId, accessToken, callback) {
+function findFacebookCommentsForObject(user, pageId, commentableId, rootId, accessToken, callback) {
   var qp = 'fields=id,comment_count,from,message,created_time';
   var commentsUrl = 'https://graph.facebook.com/v2.3/' + commentableId + '/comments?'+qp+'&access_token='+accessToken;
   //console.log(commentsUrl);
@@ -861,7 +862,8 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
                         time_stamp: comment.created_time,
                         page_id: pageId,
                         access_token: accessToken,
-                        notified:false
+                        notified:false,
+                        root_id: rootId
                       }
                     }, function (err, response) {
                       if (err) {
@@ -872,7 +874,7 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
                         console.log('facebook comment created with id: ' + comment.id);
                         if(comment.comment_count > 0) {
                          console.log('facebook comment ' + comment.id + ' has ' + comment.comment_count + ' replies.');
-                         findFacebookCommentsForObject(user, pageId, comment.id, accessToken, function (err) {
+                         findFacebookCommentsForObject(user, pageId, comment.id, rootId, accessToken, function (err) {
                            if(err) {
                              console.log('Error findFacebookCommentsForObject recursion');
                              console.log(err);
@@ -918,17 +920,17 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
 }
 
 async.waterfall([
-    /*deleteTwitterMentions,
+    deleteTwitterMentions,
     deleteTwitterDirectMessages,
     deleteFacebookDirectMessages,
     deleteFacebookPosts,
-    deleteFacebookComments,*/
+    deleteFacebookComments,
     findTwitterUsers,
-    //resetUsersLastTimes,
+    resetUsersLastTimes,
     findTweets,
     findTwitterDirectMessages,
     findFacebookUsers,
-    //resetUsersLastTimes,
+    resetUsersLastTimes,
     findFacebookPages,
     findFacebookPosts,
     findFacebookMessages,
