@@ -597,6 +597,7 @@ function findFacebookMessages(pages, callback) {
   console.log('finding facebook messages');
   async.eachLimit(pages, 5, function (page, nextPage) {
     var since = page.user.services.facebook.lastMessageTime;
+    console.log('Last Message Time' + since);
     if (since === 'undefined' || since == null || since == '') {
       var now = new Date();
       since = Math.floor((new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)).getTime() / 1000);
