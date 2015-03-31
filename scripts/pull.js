@@ -786,6 +786,7 @@ function findFacebookComments(users, callback){
 }
 
 function findFacebookCommentsForObject(user, pageId, id, accessToken, callback) {
+  console.log(arguments);
   //console.log('finding facebook comments');
   var since = user.services.facebook.lastMessageTime;
   if(since === 'undefined' || since == null || since == '') {
@@ -794,7 +795,7 @@ function findFacebookCommentsForObject(user, pageId, id, accessToken, callback) 
   }
   var qp = 'fields=id,comment_count,from,message,created_time';//&since=' + since;
   var commentsUrl = 'https://graph.facebook.com/v2.3/' +id + '/comments?'+qp+'&access_token='+accessToken;
-  console.log(commentsUrl);
+  //console.log(commentsUrl);
   request({
     url: commentsUrl,
     json: true
