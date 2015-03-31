@@ -74,6 +74,7 @@ function deleteTwitterMentions(callback) {
     }
   }, function(err, response){
     if(err == null && response.count > 0) {
+      console.log('Mentions To Delete: ' + response.count);
       esClient.deleteByQuery({
         index: c.index,
         body: {
@@ -87,6 +88,7 @@ function deleteTwitterMentions(callback) {
     } else if(err != null) {
       callback(err);
     } else {
+      console.log('No Mentions to Delete');
       callback();
     }
   });
@@ -102,6 +104,7 @@ function deleteTwitterDirectMessages(callback) {
     }
   }, function(err, response) {
     if (err == null && response.count > 0) {
+      console.log('Direct Messages To Delete: ' + response.count);
       esClient.deleteByQuery({
         index: c.index,
         body: {
@@ -115,6 +118,7 @@ function deleteTwitterDirectMessages(callback) {
     } else if(err != null) {
       callback(err);
     } else {
+      console.log('No Direct Messages to Delete');
       callback();
     }
   });
@@ -130,6 +134,7 @@ function deleteFacebookDirectMessages(callback) {
     }
   }, function(err, response) {
     if (err == null && response.count > 0) {
+      console.log('Messages To Delete: ' + response.count);
       esClient.deleteByQuery({
         index: c.index,
         body: {
@@ -143,6 +148,7 @@ function deleteFacebookDirectMessages(callback) {
     } else if(err != null) {
       callback(err);
     } else {
+      console.log('No Messages to Delete');
       callback();
     }
   });
@@ -158,6 +164,7 @@ function deleteFacebookPosts(callback) {
     }
   }, function(err, response) {
     if (err == null && response.count > 0) {
+      console.log('Posts To Delete: ' + response.count);
       esClient.deleteByQuery({
         index: c.index,
         body: {
@@ -172,6 +179,7 @@ function deleteFacebookPosts(callback) {
     } else if(err != null) {
       callback(err);
     } else {
+      console.log('No Posts to Delete');
       callback();
     }
   });
@@ -724,13 +732,8 @@ function findFacebookComments(users, callback){
       type: user.domain,
       body: {
         query: {
-          filtered: {
-            query: {
-              match: {
-                cadence_user_id: user.id
-              }
-            }
-          }
+          term: { cadence_user_id: user.id },
+          term: { doc_source: 'facebook' }
         }
       }
     }, function (error, response) {
@@ -742,7 +745,7 @@ function findFacebookComments(users, callback){
       }
       if (response.hits.total > 0){
         var postsAndComments = _.filter(response.hits.hits, function(hit) {
-          console.log(hit);
+          //console.log(hit);
           return hit._source.doc_type == 'post' || hit._source.doc_type == 'comment';
         });
 
