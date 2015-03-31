@@ -64,6 +64,34 @@ function findTwitterUsers(callback){
   })
 }
 
+function resetUsersLastTimes(users, callback) {
+  async.eachLimit(users, 5, function(user, nextUser) {
+    User.update({ _id: user.id },{ $set: {'services.twitter.sinceId': ''},
+      $set: {'services.twitter.dmSinceId': ''},
+      $set: {'services.facebook.lastPostTime': ''},
+      $set: {'services.facebook.lastMessageTime': ''}},
+      function (err, numberAffected, raw) {
+      if(err) {
+        console.log('error User.update');
+        console.log(err);
+        nextUser(err);
+      } else {
+        console.log('User ' + user.id + ' last times reset');
+        nextUser();
+      }
+    });
+  }, function (err) {
+    if(err) {
+      console.log('error resetUsersLastTimes');
+      console.log(err);
+      callback(err, users);
+    } else {
+      console.log('resetUsersLastTimes completed');
+      callback(users);
+    }
+  });
+}
+
 function deleteTwitterMentions(callback) {
   esClient.count({
     index: c.index,
@@ -888,15 +916,17 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
 }
 
 async.waterfall([
-    /*deleteTwitterMentions,
+    deleteTwitterMentions,
     deleteTwitterDirectMessages,
     deleteFacebookDirectMessages,
     deleteFacebookPosts,
-    deleteFacebookComments,*/
+    deleteFacebookComments,
     findTwitterUsers,
+    resetUsersLastTimes,
     findTweets,
     findTwitterDirectMessages,
     findFacebookUsers,
+    resetUsersLastTimes,
     findFacebookPages,
     findFacebookPosts,
     findFacebookMessages,
