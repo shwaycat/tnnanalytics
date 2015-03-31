@@ -602,6 +602,7 @@ function findFacebookPosts(pages, callback){
                      getPostsFinishedCallback(page, err);
                    } else {
                      console.log('no new posts to record');
+                     console.log(b.paging);
                      if(b.paging && b.paging.next && b.paging.next != '') {
                        console.log('facebook messages posts - next');
                        getPosts(page, b.paging.next, function (page, err) {
