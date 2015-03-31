@@ -871,105 +871,141 @@ function findFacebookComments(users, callback){
 
 function findFacebookCommentsForObject(user, pageId, commentableId, rootId, accessToken, callback) {
   var qp = 'fields=id,comment_count,from,message,created_time';
-  var commentsUrl = 'https://graph.facebook.com/v2.3/' + commentableId + '/comments?'+qp+'&access_token='+accessToken;
+  var commentsUrl = 'https://graph.facebook.com/v2.3/' + commentableId + '/comments?'+qp+'&access_token='+ accessToken;
   //console.log(commentsUrl);
-  request({
-    url: commentsUrl,
-    json: true
-  },function (e, r, b){
-    if(e != null) {
-      callback(e);
-    } else {
-      if(b.data.length > 0) {
-        var newLastCommentTimeUnix = Math.floor(new Date(b.data[0].created_time).getTime() / 1000);
-        User.update({_id: user.id}, {$set: {'services.facebook.lastCommentTime': newLastCommentTimeUnix}},
-          function (err, numberAffected, raw) {
-            if (err) {
-              console.log('Error last comment time update');
-              console.log('err');
-              callback(err);
-            } else {
-              //iterate and store them in the database
-              async.eachLimit(b.data, 5, function (comment, nextComment) {
-                //console.log(comment);
-                esClient.count({
-                  index: c.index,
-                  body: {
-                    query: {
-                      term: {doc_type: 'comment'},
-                      term: {_id: comment.id}
-                    }
-                  }
-                }, function (err, response) {
-                  if ((typeof err == 'undefined') && response.count == 0) {
-                    esClient.create({
-                      index: c.index,
-                      type: user.domain,
-                      id: comment.id,
-                      body: {
-                        doc_source: 'facebook',
-                        doc_type: 'comment',
-                        doc_text: comment.message,
-                        user_id: comment.from != null ? comment.from.id : '',
-                        user_name: comment.from != null ? comment.from.name : '',
-                        //user_lang: post.from.languages[0],
-                        cadence_user_id: user.id,
-                        time_stamp: comment.created_time,
-                        page_id: pageId,
-                        access_token: accessToken,
-                        notified:false,
-                        root_id: rootId
+
+  function getComments(url, data, getCommentsFinishedCallback) {
+    request({
+      url: url,
+      json: true
+    },function (e, r, b){
+      if(e != null) {
+        getCommentsFinishedCallback(url, data, e);
+      } else {
+        if(b.data && b.data.length > 0) {
+          var newLastCommentTimeUnix = Math.floor(new Date(b.data[0].created_time).getTime() / 1000);
+          User.update({_id: data.user.id}, {$set: {'services.facebook.lastCommentTime': newLastCommentTimeUnix}},
+            function (err, numberAffected, raw) {
+              if (err) {
+                console.log('Error last comment time update');
+                console.log('err');
+                getCommentsFinishedCallback(url, data, err);;
+              } else {
+                //iterate and store them in the database
+                async.eachLimit(b.data, 5, function (comment, nextComment) {
+                  //console.log(comment);
+                  esClient.count({
+                    index: c.index,
+                    body: {
+                      query: {
+                        term: {doc_type: 'comment'},
+                        term: {_id: comment.id}
                       }
-                    }, function (err, response) {
+                    }
+                  }, function (err, response) {
+                    if ((typeof err == 'undefined') && response.count == 0) {
+                      esClient.create({
+                        index: c.index,
+                        type: data.user.domain,
+                        id: comment.id,
+                        body: {
+                          doc_source: 'facebook',
+                          doc_type: 'comment',
+                          doc_text: comment.message,
+                          user_id: comment.from != null ? comment.from.id : '',
+                          user_name: comment.from != null ? comment.from.name : '',
+                          //user_lang: post.from.languages[0],
+                          cadence_user_id: data.user.id,
+                          time_stamp: comment.created_time,
+                          page_id: data.pageId,
+                          access_token: accessToken,
+                          notified:false,
+                          root_id: data.rootId
+                        }
+                      }, function (err, response) {
+                        if (err) {
+                          console.log('Error async.each comment esClient.create')
+                          console.log(err)
+                          nextComment(err)
+                        } else {
+                          console.log('facebook comment created with id: ' + comment.id);
+                          if(comment.comment_count > 0) {
+                            console.log('facebook comment ' + comment.id + ' has ' + comment.comment_count + ' replies.');
+                            findFacebookCommentsForObject(data.user, data.pageId, comment.id, data.rootId, data.accessToken, function (err) {
+                              if(err) {
+                                console.log('Error findFacebookCommentsForObject recursion');
+                                console.log(err);
+                                nextComment(err);
+                              } else {
+                                nextComment();
+                              }
+                            });
+                          } else {
+                            console.log('facebook comment ' + comment.id + ' has no replies');
+                            nextComment()
+                          }
+                        }
+                      });
+                    } else {
                       if (err) {
-                        console.log('Error async.each comment esClient.create')
+                        console.log('Error from comment count')
                         console.log(err)
                         nextComment(err)
                       } else {
-                        console.log('facebook comment created with id: ' + comment.id);
-                        if(comment.comment_count > 0) {
-                         console.log('facebook comment ' + comment.id + ' has ' + comment.comment_count + ' replies.');
-                         findFacebookCommentsForObject(user, pageId, comment.id, rootId, accessToken, function (err) {
-                           if(err) {
-                             console.log('Error findFacebookCommentsForObject recursion');
-                             console.log(err);
-                            nextComment(err);
-                           } else {
-                            nextComment();
-                           }
-                         });
-                       } else {
-                         console.log('facebook comment ' + comment.id + ' has no replies');
-                         nextComment()
-                       }
+                        console.log('facebook comment ' + comment.id + ' already in database');
+                        nextComment()
                       }
-                    });
+                    }
+                  })
+                }, function (err) {
+                  if (err) {
+                    console.log('Error async.each comment complete');
+                    console.log(err);
+                    getCommentsFinishedCallback(url, data, err);
                   } else {
-                    if (err) {
-                      console.log('Error from comment count')
-                      console.log(err)
-                      nextComment(err)
+                    if(b.paging && b.paging.next && b.paging.next != '') {
+                      console.log('facebook comments - next');
+                      getComments(b.paging.next, data, function (uri, data, err) {
+                        if(err) {
+                          console.log('Error async.each next comments complete');
+                          console.log(err);
+                          getCommentsFinishedCallback(uri, data, err);
+                        } else { //we're done with this child
+                          console.log('comments paging completed');
+                          getCommentsFinishedCallback(uri, data);
+                        }
+                      });
                     } else {
-                      console.log('facebook comment ' + comment.id + ' already in database');
-                      nextComment()
+                      getCommentsFinishedCallback(url, data);
                     }
                   }
-                })
-              }, function (err) {
-                if (err) {
-                  console.log('Error async.each comment complete');
-                  console.log(err);
-                  callback(err);
-                } else {
-                  callback();
-                }
-              });
-            }
-          });
-      } else {
-        console.log('facebook object ' + commentableId + ' has no comments');
-        callback();
+                });
+              }
+            });
+        } else {
+          console.log('facebook object ' + commentableId + ' has no comments');
+          getCommentsFinishedCallback(url, data);
+        }
       }
+    });
+  }
+
+  var d = {
+    user: user,
+    pageId: pageId,
+    commentableId: commentableId,
+    rootId: rootId,
+    accessToken: accessToken
+  };
+
+  getComments(commentsUrl, d, function (url, data, err) {
+    if(err) {
+      console.log('error getComments');
+      console.log(err);
+      callback(err);
+    } else {
+      console.log('getComments completed');
+      callback();
     }
   });
 }
