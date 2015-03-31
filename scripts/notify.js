@@ -195,7 +195,7 @@ function findDocuments(users, callback){
             esClient.update({
               index: c.index,
               type: user.domain,
-              id: hit.id,
+              id: hit._id,
               body: {
                 notified: true
               }
