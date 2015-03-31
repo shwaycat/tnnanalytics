@@ -755,8 +755,8 @@ function findFacebookComments(users, callback){
           //console.log(object);
           findFacebookCommentsForObject(user, object._source.page_id, object._id, object._source.access_token, function (err) {
             if(err != null) {
-              ////console.log('Error findfacebookComments complete');
-              ////console.log(err);
+              console.log('Error findfacebookCommentsForObject complete');
+              console.log(err);
               nextObject(err);
             } else {
               nextObject();
@@ -764,8 +764,8 @@ function findFacebookComments(users, callback){
           })
         }, function (err){
           if(err != null) {
-            ////console.log('error async.each commentableObject completed');
-            ////console.log(err);
+            console.log('error async.each commentableObject completed');
+            console.log(err);
             nextUser(err);
           } else {
             nextUser();
