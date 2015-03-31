@@ -254,7 +254,7 @@ function findTweets(users, callback){
       consumer_key: process.env.TWITTER_API_KEY,
       consumer_secret: process.env.TWITTER_API_SECRET,
       access_token_key: user.services.twitter.accessToken,
-      access_token_secret: user.services.twitter.refreshToken,
+      access_token_secret: user.services.twitter.refreshToken
     })
 
     var params = {count: 200, include_rts: 1}
