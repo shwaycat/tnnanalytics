@@ -524,7 +524,7 @@ function findFacebookPages(users, callback) {
 //fields=id,message,updated_time,commments{id,message},likes{id,name},shares{id,name}
 function findFacebookPosts(pages, callback){
   //console.log('finding facebook posts for ' + pages.length + ' pages');
-   function getPosts(url, getPostsFinishedCallback) {
+   function getPosts(page, url, getPostsFinishedCallback) {
      request({
        url: url,
        json: true
@@ -532,7 +532,7 @@ function findFacebookPosts(pages, callback){
        if(e != null) {
          console.log('error request posts failed');
          console.log(e);
-         nextPage(e);
+         getPostsFinishedCallback(page, e);
        } else {
          if(b.data.length > 0) {
            //console.log('Recording ' + b.data.length + ' posts');
@@ -543,7 +543,7 @@ function findFacebookPosts(pages, callback){
                if(err != null) {
                  console.log('error update last post time');
                  console.log(err);
-                 nextPage(err);
+                 getPostsFinishedCallback(page, err);
                } else {
                  //iterate and store them in the database
                  async.eachLimit(b.data, 5, function (post, nextPost) {
@@ -599,16 +599,16 @@ function findFacebookPosts(pages, callback){
                    if (err){
                      console.log('Error async.each posts complete');
                      console.log(err);
-                     getPostsFinishedCallback(err);
+                     getPostsFinishedCallback(page, err);
                    } else {
                      console.log('no new posts to record');
-                     getPostsFinishedCallback();
+                     getPostsFinishedCallback(page);
                    }
                  });
                }
              });
          } else {
-           getPostsFinishedCallback();
+           getPostsFinishedCallback(page);
          }
        }
      });
@@ -621,7 +621,7 @@ function findFacebookPosts(pages, callback){
       }
       var qp = 'fields=id,message,created_time,from&since=' + since;
       var postsUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/posts?'+qp+'&access_token='+page.access_token;
-      getPosts(postsUrl, function (err) {
+      getPosts(page, postsUrl, function (page, err) {
         if(err) {
           console.log('error getPosts completed handler');
           console.log(err);
