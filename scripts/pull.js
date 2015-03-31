@@ -648,6 +648,7 @@ function findFacebookComments(users, callback){
       }
       if (response.hits.total > 0){
         var postsAndComments = _.filter(response.hits.hits, function(hit) {
+          console.log(hit);
           return hit._source.doc_type == 'post' || hit._source.doc_type == 'comment';
         });
 
