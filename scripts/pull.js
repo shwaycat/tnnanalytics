@@ -804,7 +804,7 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
       if(b.data.length > 0) {
         //iterate and store them in the database
         async.eachLimit(b.data, 5, function (comment, nextComment) {
-          console.log(comment);
+          //console.log(comment);
           esClient.count({
             index: c.index,
             body: {
