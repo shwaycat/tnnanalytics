@@ -602,7 +602,21 @@ function findFacebookPosts(pages, callback){
                      getPostsFinishedCallback(page, err);
                    } else {
                      console.log('no new posts to record');
-                     getPostsFinishedCallback(page);
+                     if(b.paging && b.paging.next && b.paging.next != '') {
+                       console.log('facebook messages posts - next');
+                       getPosts(page, b.paging.next, function (page, err) {
+                         if(err) {
+                           console.log('Error async.each next posts complete');
+                           console.log(err);
+                           getPostsFinishedCallback(page, err);
+                         } else { //we're done with this child
+                           getPostsFinishedCallback(page);
+                         }
+                       });
+                     } else {
+                       getPostsFinishedCallback(page);
+                     }
+
                    }
                  });
                }
