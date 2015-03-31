@@ -189,7 +189,7 @@ function findDocuments(users, callback){
             }
 
           });
-          console.log('Items to Notify: ' + hitstoUpdate.length);
+          console.log('Items to Notify: ' + hitsToUpdate.length);
           async.eachLimit(hitsToUpdate, 5, function (hit, nextHit) {
             console.log('building patch for hit ' + hit._id);
             esClient.update({
