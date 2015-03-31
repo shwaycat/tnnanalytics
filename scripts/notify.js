@@ -200,8 +200,8 @@ function findDocuments(users, callback){
             }, function (error, response) {
               if(error) {
                 console.log('Error esClient.update document');
-                console.log(err);
-                nextHit(err);
+                console.log(error);
+                nextHit(error);
               } else {
                 nextHit();
               }
