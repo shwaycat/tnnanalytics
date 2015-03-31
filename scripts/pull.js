@@ -701,12 +701,14 @@ function findFacebookMessages(pages, callback) {
       }
     });
   }, function (err) {
-    console.log("Error async.each users complete");
+
     var uniqueUsers = _.pluck(_.uniq(pages, false, function (page) {
       return page.user.id;
     }), 'user');
 
     if(err) {
+      console.log("Error async.each users complete");
+      console.log(err);
       callback(err, uniqueUsers);
     } else {
       callback(null, uniqueUsers);
