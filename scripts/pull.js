@@ -33,7 +33,9 @@ var userSchema = new Schema({
         accessToken: String,
         avatar: String,
         isConfigured: Boolean,
-        profileId: String
+        profileId: String,
+        lastPostTime: String,
+        lastMessageTime: String
       }
     }
 })
@@ -916,17 +918,17 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
 }
 
 async.waterfall([
-    //deleteTwitterMentions,
-    //deleteTwitterDirectMessages,
-    //deleteFacebookDirectMessages,
-    //deleteFacebookPosts,
-    //deleteFacebookComments,
+    deleteTwitterMentions,
+    deleteTwitterDirectMessages,
+    deleteFacebookDirectMessages,
+    deleteFacebookPosts,
+    deleteFacebookComments,
     findTwitterUsers,
-    //resetUsersLastTimes,
+    resetUsersLastTimes,
     findTweets,
     findTwitterDirectMessages,
     findFacebookUsers,
-    //resetUsersLastTimes,
+    resetUsersLastTimes,
     findFacebookPages,
     findFacebookPosts,
     findFacebookMessages,
