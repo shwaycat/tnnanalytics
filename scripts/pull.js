@@ -446,7 +446,7 @@ function findFacebookPosts(pages, callback){
                             //console.log(err)
                             nextPost(err)
                           } else {
-                            console.log('facebook post created: ' + pst.id + ' for ' + page.user.id);
+                            console.log('facebook post created: ' + post.id + ' for ' + page.user.id);
                             nextPost()
                           }
                         })
