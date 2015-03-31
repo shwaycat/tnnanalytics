@@ -127,7 +127,7 @@ function findDocuments(users, callback){
         if (response.hits.total > 0){
           console.log('building email');
           links = _.map(_.filter(response.hits.hits, function(hit) {
-             // console.log(hit);
+              console.log('Document Type: ' + hit._source.doc_type);
               return hit._source.doc_type == 'mention' || hit._source.doc_type == 'direct_message' || hit._source.doc_type == 'message' || hit._source.doc_type == 'comment';
             }), function(hit){
            // console.log(hit)
