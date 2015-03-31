@@ -259,7 +259,7 @@ function findTweets(users, callback){
 
     // We've made a query already, let's not get anything before that tweet
     if (user.services.twitter.sinceId) {
-      params.since_id = user.services.twitter.sinceId
+      //params.since_id = user.services.twitter.sinceId
     }
 
     client.get('statuses/mentions_timeline', params, function(err, tweets, response){
@@ -366,7 +366,7 @@ function findTwitterDirectMessages(users, callback) {
 
     // We've made a query already, let's not get anything before that tweet
     if (user.services.twitter.dmSinceId ) {
-      params.since_id = user.services.twitter.dmSinceId;
+      //params.since_id = user.services.twitter.dmSinceId;
     }
 
     client.get('direct_messages', params, function(err, messages, response){
