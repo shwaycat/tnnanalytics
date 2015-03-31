@@ -839,7 +839,7 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
                   nextComment(err)
                 } else {
                   console.log('facebook comment created with id: ' + comment.id);
-                  if(comment.comment_count > 0) {
+                  /*if(comment.comment_count > 0) {
                     console.log('facebook comment ' + comment.id + ' has ' + comment.comment_count + ' replies.');
                     findFacebookCommentsForObject(user, pageId, comment.id, accessToken, function (err) {
                       if(err) {
@@ -851,7 +851,7 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
                   } else {
                     console.log('facebook comment ' + comment.id + ' has no replies');
                     nextComment()
-                  }
+                  }*/
                 }
               });
             } else {
