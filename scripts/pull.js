@@ -788,7 +788,7 @@ function findFacebookComments(users, callback){
 function findFacebookCommentsForObject(user, pageId, commentableId, accessToken, callback) {
   console.log('User Id: ' + user.id);
   console.log('Page Id: ' + pageId);
-  console.log('Commentable Id: ' + id);
+  console.log('Commentable Id: ' + commentableId);
   console.log('Access Token: ' + accessToken);
   //console.log('finding facebook comments');
   var since = user.services.facebook.lastMessageTime;
