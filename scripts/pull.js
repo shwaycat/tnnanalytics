@@ -195,6 +195,7 @@ function deleteFacebookComments(callback) {
     }
   }, function(err, response) {
     if (err == null && response.count > 0) {
+      console.log('Comments To Delete: ' + response.count);
       esClient.deleteByQuery({
         index: c.index,
         body: {
@@ -209,6 +210,7 @@ function deleteFacebookComments(callback) {
     } else if(err != null) {
       callback(err);
     } else {
+      console.log('No Comments to Delete');
       callback();
     }
   });
@@ -882,9 +884,9 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
 }
 
 async.waterfall([
-  deleteTwitterMentions,
-  deleteTwitterDirectMessages,
-  deleteFacebookDirectMessages,
+ // deleteTwitterMentions,
+  //deleteTwitterDirectMessages,
+  //deleteFacebookDirectMessages,
   deleteFacebookPosts,
   deleteFacebookComments,
     findTwitterUsers,
