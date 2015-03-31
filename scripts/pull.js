@@ -231,22 +231,22 @@ function findTweets(users, callback){
 
     // We've made a query already, let's not get anything before that tweet
     if (user.services.twitter.sinceId) {
-      //params.since_id = user.services.twitter.sinceId
+      params.since_id = user.services.twitter.sinceId
     }
 
     client.get('statuses/mentions_timeline', params, function(err, tweets, response){
 
       if (err) {
-        ////console.log('Error statuses/mentions_timeline')
-        ////console.log(err)
+        console.log('Error statuses/mentions_timeline')
+        console.log(err)
         nextUser(err)
       }
       if (tweets.length > 0) {
         // Update User with most recent tweet
         User.update({ _id: user.id },{ $set: {'services.twitter.sinceId': tweets[0].id_str} }, function (err, numberAffected, raw){
           if (err){
-            ////console.log('Error User.update')
-            ////console.log(err)
+            console.log('Error User.update')
+            console.log(err)
             nextUser(err)
           } else {
             async.eachLimit(tweets, 5, function(tweet, nextTweet){
@@ -274,8 +274,8 @@ function findTweets(users, callback){
                       }
                     }, function(err, response){
                       if (err){
-                        ////console.log('Error async.each esClient.create')
-                        ////console.log(err)
+                        console.log('Error async.each esClient.create')
+                        console.log(err)
                         nextTweet(err)
                       } else {
                         nextTweet()
@@ -283,9 +283,8 @@ function findTweets(users, callback){
                     })
                 }else{
                   if (typeof err != 'undefined'){
-
-                    ////console.log('Error from count')
-                    ////console.log(err)
+                    console.log('Error from count')
+                    console.log(err)
                     nextTweet(err)
                   }else{
                     nextTweet()
@@ -295,8 +294,8 @@ function findTweets(users, callback){
 
             }, function (err){
                 if (err){
-                  ////console.log('Error async.each tweets complete')
-                  ////console.log(err)
+                  console.log('Error async.each tweets complete')
+                  console.log(err)
                   nextUser(err)
                 } else {
                   nextUser()
@@ -311,8 +310,8 @@ function findTweets(users, callback){
 
   },function(err){
     if (err){
-      ////console.log('Error async.each users complete')
-      ////console.log(err)
+      console.log('Error async.each users complete')
+      console.log(err)
       callback(err, users)
     } else {
       callback(null, users);
@@ -335,13 +334,13 @@ function findTwitterDirectMessages(users, callback) {
 
     // We've made a query already, let's not get anything before that tweet
     if (user.services.twitter.dmSinceId ) {
-      //params.since_id = user.services.twitter.dmSinceId;
+      params.since_id = user.services.twitter.dmSinceId;
     }
 
     client.get('direct_messages', params, function(err, messages, response){
       if (err) {
-        ////console.log('Error direct_messages');
-        ////console.log(err);
+        console.log('Error direct_messages');
+        console.log(err);
         nextUser(err);
       }
       if (messages.length > 0) {
@@ -349,8 +348,8 @@ function findTwitterDirectMessages(users, callback) {
         User.update({ _id: user.id },{ $set: {'services.twitter.dmSinceId': messages[0].id_str} },
           function (err, numberAffected, raw){
           if (err){
-            ////console.log('Error User.update')
-            ////console.log(err)
+            console.log('Error User.update')
+            console.log(err)
             nextUser(err)
           } else {
             async.eachLimit(messages, 5, function(message, nextMessage){
@@ -379,8 +378,8 @@ function findTwitterDirectMessages(users, callback) {
                     }
                   }, function(err, response){
                     if (err){
-                      ////console.log('Error async.each esClient.create')
-                      ////console.log(err)
+                      console.log('Error async.each esClient.create')
+                      console.log(err)
                       nextMessage(err)
                     } else {
                       nextMessage()
@@ -388,8 +387,8 @@ function findTwitterDirectMessages(users, callback) {
                   })
                 }else{
                   if (typeof err != 'undefined'){
-                    ////console.log('Error from count')
-                    ////console.log(err)
+                    console.log('Error from count')
+                    console.log(err)
                     nextMessage(err)
                   }else{
                     nextMessage()
@@ -398,8 +397,8 @@ function findTwitterDirectMessages(users, callback) {
               })
             }, function (err){
               if (err){
-                ////console.log('Error async.each direct messages complete');
-                ////console.log(err);
+                console.log('Error async.each direct messages complete');
+                console.log(err);
                 nextUser(err);
               } else {
                 nextUser();
@@ -414,8 +413,8 @@ function findTwitterDirectMessages(users, callback) {
 
   },function(err){
     if (err){
-      ////console.log('Error async.each users complete')
-      ////console.log(err)
+      console.log('Error async.each users complete')
+      console.log(err)
       callback(err)
     } else {
       callback()
@@ -426,11 +425,11 @@ function findTwitterDirectMessages(users, callback) {
 function findFacebookUsers(callback){
   User.findConnectedFacebook(function(err, users){
     if (err){
-      ////console.log('Error findConnectedFacebook')
-      ////console.log(err)
+      console.log('Error findConnectedFacebook')
+      console.log(err)
       callback(err)
     } else {
-      //console.log('found facebook users');
+      console.log('found facebook users');
       callback(null, users)
     }
   })
@@ -475,7 +474,8 @@ function findFacebookPages(users, callback) {
     ////console.log(pages);
 
     if(err != null) {
-      //console.log("Error async.each users complete");
+      console.log("Error async.each users complete");
+      console.log(err);
       callback(err, pageArray);
     }
     else {
@@ -492,14 +492,15 @@ function findFacebookPosts(pages, callback){
         var now = new Date();
         since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
       }
-      var qp = 'fields=id,message,created_time,from';//&since=' + since;
+      var qp = 'fields=id,message,created_time,from&since=' + since;
       var postsUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/posts?'+qp+'&access_token='+page.access_token;
       request({
         url: postsUrl,
         json: true
       },function (e, r, b){
         if(e != null) {
-          //console.log('error request posts failed');
+          console.log('error request posts failed');
+          console.log(e);
           nextPage(e);
         } else {
           if(b.data.length > 0) {
@@ -509,6 +510,8 @@ function findFacebookPosts(pages, callback){
             User.update({ _id: page.user.id },{ $set: {'services.facebook.lastPostTime': lastPostTimeUnix} },
               function (err, numberAffected, raw){
                 if(err != null) {
+                  console.log('error update last post time');
+                  console.log(err);
                   nextPage(err);
                 } else {
                   //iterate and store them in the database
@@ -542,31 +545,32 @@ function findFacebookPosts(pages, callback){
                           }
                         }, function(err, response){
                           if (err){
-                            //console.log('Error async.each post esClient.create')
-                            ////console.log(err)
+                            console.log('Error async.each post esClient.create')
+                            console.log(err)
                             nextPost(err)
                           } else {
-                            //console.log('facebook post created: ' + post.id + ' for ' + page.user.id);
+                            console.log('facebook post created: ' + post.id + ' for ' + page.user.id);
                             nextPost()
                           }
                         })
                       }else{
-                        if (typeof err != 'undefined'){
-                          //console.log('Error from post count')
-                          ////console.log(err)
+                        if (err){
+                          console.log('Error from post count')
+                          console.log(err)
                           nextPost(err)
                         }else {
-                          //console.log('facebook post already recorded to database');
+                          console.log('facebook post already recorded to database');
                           nextPost();
                         }
                       }
                     })
                   }, function (err){
                     if (err){
-                      //console.log('Error async.each posts complete');
+                      console.log('Error async.each posts complete');
+                      console.log(err);
                       nextPage(err);
                     } else {
-                      //console.log('no new posts to record');
+                      console.log('no new posts to record');
                       nextPage();
                     }
                   });
@@ -579,8 +583,8 @@ function findFacebookPosts(pages, callback){
       });
       }, function (err){
       if (err){
-        //console.log('Error async.each pages complete');
-        ////console.log(err);
+        console.log('Error async.each pages complete');
+        console.log(err);
         callback(err, pages);
       } else {
         callback(null, pages);
@@ -608,7 +612,7 @@ function findFacebookMessages(pages, callback) {
       } else {
         if (b.data.length > 0) {
           var lastMessageTimeUnix = Math.floor(new Date(b.data[0].updated_time).getTime() / 1000);
-          User.update({_id: page.user.id}, {$set: {'services.facebook.lastMessageTimeUnix': lastMessageTimeUnix}},
+          User.update({_id: page.user.id}, {$set: {'services.facebook.lastMessageTime': lastMessageTimeUnix}},
             function (err, numberAffected, raw) {
               if (err != null) {
                 console.log('Error user.update complete');
@@ -618,7 +622,7 @@ function findFacebookMessages(pages, callback) {
                 //iterate and store them in the database
                 async.eachLimit(b.data, 5, function (convo, nextConvo) {
                   //get the messages for the conversation since the last message time
-                  var mqp = 'fields=id,from,message,subject,created_time';//&since=' + since;
+                  var mqp = 'fields=id,from,message,subject,created_time&since=' + since;
                   var messagesUrl = 'https://graph.facebook.com/v2.3/' + convo.id + '/messages?' + mqp + '&access_token=' + page.access_token;
                   request({
                     url: messagesUrl,
@@ -793,7 +797,7 @@ function findFacebookComments(users, callback){
 
 function findFacebookCommentsForObject(user, pageId, commentableId, accessToken, lastCommentTimeUnix, callback) {
 
-  var qp = 'fields=id,comment_count,from,message,created_time';//&since=' + lastCommentTimeUnix;
+  var qp = 'fields=id,comment_count,from,message,created_time&since=' + lastCommentTimeUnix;
   var commentsUrl = 'https://graph.facebook.com/v2.3/' + commentableId + '/comments?'+qp+'&access_token='+accessToken;
   //console.log(commentsUrl);
   request({
@@ -894,11 +898,11 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
 }
 
 async.waterfall([
-  //deleteTwitterMentions,
-  //deleteTwitterDirectMessages,
-  //deleteFacebookDirectMessages,
-  //deleteFacebookPosts,
-  //deleteFacebookComments,
+    //deleteTwitterMentions,
+    //deleteTwitterDirectMessages,
+    //deleteFacebookDirectMessages,
+    //deleteFacebookPosts,
+    //deleteFacebookComments,
     findTwitterUsers,
     findTweets,
     findTwitterDirectMessages,
