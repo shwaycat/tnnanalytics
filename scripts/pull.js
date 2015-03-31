@@ -811,9 +811,8 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
             index: c.index,
             body: {
               query: {
-                term: {doc_source: 'facebook'},
                 term: {doc_type: 'comment'},
-                term: {_id: comment.id}
+                term: {id: comment.id}
               }
             }
           }, function (err, response) {
