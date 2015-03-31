@@ -610,7 +610,7 @@ function findFacebookPosts(pages, callback){
                            console.log(err);
                            getPostsFinishedCallback(page, err);
                          } else { //we're done with this child
-                           console.log('paging completed');
+                           console.log('post paging completed');
                            getPostsFinishedCallback(page);
                          }
                        });
@@ -676,7 +676,7 @@ function findFacebookMessages(pages, callback) {
         if (e != null) {
           getConversationsFinishedCallback(page, e);
         } else {
-          if (b.data.length > 0) {
+          if (b.data && b.data.length > 0) {
             var lastMessageTimeUnix = Math.floor(new Date(b.data[0].updated_time).getTime() / 1000);
             User.update({_id: page.user.id}, {$set: {'services.facebook.lastMessageTime': lastMessageTimeUnix}},
               function (err, numberAffected, raw) {
@@ -756,7 +756,21 @@ function findFacebookMessages(pages, callback) {
                       console.log(err);
                       getConversationsFinishedCallback(page, err);
                     } else {
-                      getConversationsFinishedCallback(page);
+                      if(b.paging && b.paging.next && b.paging.next != '') {
+                        console.log('facebook conversations - next');
+                        getConversations(page, b.paging.next, function (page, err) {
+                          if(err) {
+                            console.log('Error async.each next conversations complete');
+                            console.log(err);
+                            getConversationsFinishedCallback(page, err);
+                          } else { //we're done with this child
+                            console.log('conversations paging completed');
+                            getConversationsFinishedCallback(page);
+                          }
+                        });
+                      } else {
+                        getConversationsFinishedCallback(page);
+                      }
                     }
                   });
                 }
