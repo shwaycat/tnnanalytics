@@ -99,7 +99,7 @@ function deleteTwitterDirectMessages(callback) {
     index: c.index,
     body: {
       query: {
-        term: {doc_type: 'direct_mention'}
+        term: {doc_type: 'direct_message'}
       }
     }
   }, function(err, response) {
