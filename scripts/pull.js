@@ -582,15 +582,14 @@ function findFacebookPosts(pages, callback){
         }
       });
       }, function (err){
-      if (err){
-        console.log('Error async.each pages complete');
-        console.log(err);
-        callback(err, pages);
-      } else {
-        callback(null, pages);
-      }
+        if (err){
+          console.log('Error async.each pages complete');
+          console.log(err);
+          callback(err, pages);
+        } else {
+          callback(null, pages);
+        }
     });
-
 }
 
 function findFacebookMessages(pages, callback) {
@@ -661,7 +660,6 @@ function findFacebookMessages(pages, callback) {
                             }
                           });
                         } else {
-
                           if (typeof err != 'undefined') {
                             console.log('Error from count')
                             console.log(err)
@@ -745,7 +743,7 @@ function findFacebookComments(users, callback){
           //console.log(object);
           findFacebookCommentsForObject(user, object._source.page_id, object._id, object._source.access_token, function (err) {
             if(err != null) {
-              console.log('Error findfacebookCommentsForObject complete');
+              console.log('Error findFacebookCommentsForObject complete');
               console.log(err);
               nextObject(err);
             } else {
@@ -777,7 +775,6 @@ function findFacebookComments(users, callback){
 }
 
 function findFacebookCommentsForObject(user, pageId, commentableId, accessToken, callback) {
-
   var qp = 'fields=id,comment_count,from,message,created_time';
   var commentsUrl = 'https://graph.facebook.com/v2.3/' + commentableId + '/comments?'+qp+'&access_token='+accessToken;
   //console.log(commentsUrl);
@@ -879,11 +876,6 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
 }
 
 async.waterfall([
-    //deleteTwitterMentions,
-    //deleteTwitterDirectMessages,
-    //deleteFacebookDirectMessages,
-    //deleteFacebookPosts,
-    //deleteFacebookComments,
     findTwitterUsers,
     findTweets,
     findTwitterDirectMessages,

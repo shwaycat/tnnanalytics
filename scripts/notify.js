@@ -97,6 +97,12 @@ function findDocuments(users, callback){
       type: user.domain,
       body: {
         query: {
+          term: {cadence_user_id: user.id}
+        },
+        filter: {
+          or: orQueries
+        }
+       /* query: {
           filtered: {
             query: {
               match: {
@@ -107,7 +113,7 @@ function findDocuments(users, callback){
               or: orQueries
             }
           }
-        }
+        }*/
       }
     }, function (error, response) {
         if (error){
