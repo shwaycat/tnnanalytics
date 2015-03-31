@@ -534,7 +534,7 @@ function findFacebookPosts(pages, callback){
          console.log(e);
          getPostsFinishedCallback(page, e);
        } else {
-         if(b.data.length > 0) {
+         if(b.data && b.data.length > 0) {
            //console.log('Recording ' + b.data.length + ' posts');
            var lastPostTimeUnix = Math.floor(new Date(b.data[0].created_time).getTime() / 1000);
 
@@ -610,6 +610,7 @@ function findFacebookPosts(pages, callback){
                            console.log(err);
                            getPostsFinishedCallback(page, err);
                          } else { //we're done with this child
+                           console.log('paging completed');
                            getPostsFinishedCallback(page);
                          }
                        });
