@@ -750,15 +750,15 @@ function findFacebookComments(users, callback){
         });
 
         console.log('Found Total of ' + postsAndComments.length + ' commentable objects');
-        async.eachLimit(postsAndComments, 5, function(comment, nextComment) {
-          //console.log('Comment id: ' + comment.id);
-          findFacebookCommentsForObject(user, comment._source.page_id, comment.id, comment._source.access_token, function (err) {
+        async.eachLimit(postsAndComments, 5, function(object, nextObject) {
+          console.log('Commentable Object: ' + object);
+          findFacebookCommentsForObject(user, object._source.page_id, object.id, object._source.access_token, function (err) {
             if(err != null) {
               ////console.log('Error findfacebookComments complete');
               ////console.log(err);
-              nextComment(err);
+              nextObject(err);
             } else {
-              nextComment();
+              nextObject();
             }
           })
         }, function (err){
