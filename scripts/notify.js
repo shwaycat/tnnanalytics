@@ -175,7 +175,7 @@ function findDocuments(users, callback){
                 }
               } else if(hit._source.doc_type == 'comment') {
                 console.log('facebook comment');
-                console.log(comment);
+                //console.log(comment);
                 var timeStamp = '';
                 if(hit._source.time_stamp) {
                   var date = new Date(hit._source.time_stamp);
