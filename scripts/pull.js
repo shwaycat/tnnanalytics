@@ -751,8 +751,8 @@ function findFacebookComments(users, callback){
 
         console.log('Found Total of ' + postsAndComments.length + ' commentable objects');
         async.eachLimit(postsAndComments, 5, function(comment, nextComment) {
-          console.log(comment._source);
-          findFacebookCommentsForObject(user, comment._source.page_id, comment.id, comment._source.accessToken, function (err) {
+          console.log('Comment id: ' + comment.id);
+          findFacebookCommentsForObject(user, comment._source.page_id, comment.id, comment._source.access_token, function (err) {
             if(err != null) {
               ////console.log('Error findfacebookComments complete');
               ////console.log(err);
