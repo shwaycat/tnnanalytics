@@ -601,7 +601,7 @@ function findFacebookMessages(pages, callback) {
       var now = new Date();
       since = Math.floor((new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)).getTime() / 1000);
     }
-    var qp = 'fields=id,updated_time';//&since=' + since;
+    var qp = 'since=' + since;
     var convoUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/conversations?' + qp + '&access_token=' + page.access_token;
     request({
       url: convoUrl,
@@ -621,83 +621,68 @@ function findFacebookMessages(pages, callback) {
               } else {
                 //iterate and store them in the database
                 async.eachLimit(b.data, 5, function (convo, nextConvo) {
-                  //get the messages for the conversation since the last message time
-                  var mqp = 'fields=id,from,message,subject,created_time&since=' + since;
-                  var messagesUrl = 'https://graph.facebook.com/v2.3/' + convo.id + '/messages?' + mqp + '&access_token=' + page.access_token;
-                  request({
-                    url: messagesUrl,
-                    json: true
-                  }, function (me, mr, mb) {
-                    if (me != null) {
-                      ////console.log('error messages request complete');
-                      ////console.log(me);
-                      nextConvo(err);
-                    } else {
-                      if (mb.data.length > 0) {
-                        async.eachLimit(mb.data, 5, function (message, nextMessage) {
-                          esClient.count({
+                  if (convo.messages.data.length > 0) {
+                    async.eachLimit(convo.messages.data, 5, function (message, nextMessage) {
+                      esClient.count({
+                        index: c.index,
+                        body: {
+                          query: {
+                            term: {doc_type: 'message'},
+                            term: {_id: message.id}
+                          }
+                        }
+                      }, function (err, response) {
+                        if ((typeof err == 'undefined') && response.count == 0) {
+                          esClient.create({
                             index: c.index,
+                            type: page.user.domain,
+                            id: message.id,
                             body: {
-                              query: {
-                                term: {doc_type: 'message'},
-                                term: {_id: message.id}
-                              }
+                              doc_source: 'facebook',
+                              doc_type: 'message',
+                              doc_text: message.message,
+                              user_id: message.from != null ? message.from.id : '',
+                              user_name: message.from != null ? message.from.name : '',
+                              //user_lang: post.from.languages[0],
+                              cadence_user_id: page.user.id,
+                              time_stamp: message.created_time,
+                              page_id: page.id
                             }
                           }, function (err, response) {
-                            if ((typeof err == 'undefined') && response.count == 0) {
-                              esClient.create({
-                                index: c.index,
-                                type: page.user.domain,
-                                id: message.id,
-                                body: {
-                                  doc_source: 'facebook',
-                                  doc_type: 'message',
-                                  doc_text: message.message,
-                                  user_id: message.from != null ? message.from.id : '',
-                                  user_name: message.from != null ? message.from.name : '',
-                                  //user_lang: post.from.languages[0],
-                                  cadence_user_id: page.user.id,
-                                  time_stamp: message.created_time,
-                                  page_id: page.id
-                                }
-                              }, function (err, response) {
-                                if (err) {
-                                  ////console.log('Error async.each message esClient.create')
-                                  ////console.log(err)
-                                  nextMessage(err)
-                                } else {
-                                  //console.log('message created');
-                                  nextMessage()
-                                }
-                              });
+                            if (err) {
+                              ////console.log('Error async.each message esClient.create')
+                              ////console.log(err)
+                              nextMessage(err)
                             } else {
-
-                              if (typeof err != 'undefined') {
-                                ////console.log('Error from count')
-                                ////console.log(err)
-                                nextConvo(err)
-                              } else {
-                                //console.log('message already recorded to database');
-                                nextConvo()
-                              }
+                              //console.log('message created');
+                              nextMessage()
                             }
-                          })
-                        }, function (err) {
-                          if (err) {
-                            ////console.log('Error async.each messages complete');
-                            ////console.log(err);
-                            nextConvo(err);
+                          });
+                        } else {
+
+                          if (typeof err != 'undefined') {
+                            ////console.log('Error from count')
+                            ////console.log(err)
+                            nextConvo(err)
                           } else {
-                            nextConvo();
+                            //console.log('message already recorded to database');
+                            nextConvo()
                           }
-                        })
+                        }
+                      })
+                    }, function (err) {
+                      if (err) {
+                        ////console.log('Error async.each messages complete');
+                        ////console.log(err);
+                        nextConvo(err);
                       } else {
-                        //console.log('no new messages found');
                         nextConvo();
                       }
-                    }
-                  })
-
+                    })
+                  } else {
+                    //console.log('no new messages found');
+                    nextConvo();
+                  }
                 }, function (err) {
                   if (err != null) {
                     ////console.log('Error async.each conversations complete');
@@ -732,11 +717,6 @@ function findFacebookComments(users, callback){
 
   async.each(users, function(user, nextUser){
     console.log('finding comments for user ' + user.id);
-    var lastCommentTimeUnix = user.services.facebook.lastCommentTime;
-    if(lastCommentTimeUnix === 'undefined' || lastCommentTimeUnix == null || lastCommentTimeUnix == '') {
-      var now = new Date();
-      lastCommentTimeUnix = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
-    }
     esClient.search({
       index: c.index,
       type: user.domain,
@@ -762,7 +742,7 @@ function findFacebookComments(users, callback){
         console.log('Found Total of ' + postsAndComments.length + ' commentable objects');
         async.eachLimit(postsAndComments, 5, function(object, nextObject) {
           //console.log(object);
-          findFacebookCommentsForObject(user, object._source.page_id, object._id, object._source.access_token, lastCommentTimeUnix, function (err) {
+          findFacebookCommentsForObject(user, object._source.page_id, object._id, object._source.access_token, function (err) {
             if(err != null) {
               console.log('Error findfacebookCommentsForObject complete');
               console.log(err);
@@ -795,9 +775,9 @@ function findFacebookComments(users, callback){
   })
 }
 
-function findFacebookCommentsForObject(user, pageId, commentableId, accessToken, lastCommentTimeUnix, callback) {
+function findFacebookCommentsForObject(user, pageId, commentableId, accessToken, callback) {
 
-  var qp = 'fields=id,comment_count,from,message,created_time&since=' + lastCommentTimeUnix;
+  var qp = 'fields=id,comment_count,from,message,created_time';
   var commentsUrl = 'https://graph.facebook.com/v2.3/' + commentableId + '/comments?'+qp+'&access_token='+accessToken;
   //console.log(commentsUrl);
   request({
@@ -854,7 +834,7 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
                         console.log('facebook comment created with id: ' + comment.id);
                         if(comment.comment_count > 0) {
                          console.log('facebook comment ' + comment.id + ' has ' + comment.comment_count + ' replies.');
-                         findFacebookCommentsForObject(user, pageId, comment.id, accessToken, lastCommentTimeUnix, function (err) {
+                         findFacebookCommentsForObject(user, pageId, comment.id, accessToken, function (err) {
                            if(err) {
                             nextComment(err);
                            } else {

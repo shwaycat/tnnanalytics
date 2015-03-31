@@ -51,8 +51,7 @@ User.add({
       refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.facebook },
 
       lastPostTime: { type: String, label: 'Last Post Time', dependsOn: deps.facebook },
-      lastMessageTime: { type: String, label: 'Last Message Time', dependsOn: deps.facebook},
-      lastCommentTime: { type: String, label: 'Last Comment Time', dependsOn: deps.facebook},
+      lastMessageTime: { type: String, label: 'Last Message Time', dependsOn: deps.facebook}
         //pageIds: { type: [String], label: 'Page Ids', dependsOn: deps.pages }
 
 
