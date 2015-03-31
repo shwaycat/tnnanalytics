@@ -190,6 +190,7 @@ function findDocuments(users, callback){
 
           });
           async.eachLimit(hitsToUpdate, 5, function (hit, nextHit) {
+            console.log('building patch for hit ' + hit.id);
             esClient.update({
               index: c.index,
               type: user.domain,
