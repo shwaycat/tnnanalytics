@@ -263,7 +263,7 @@ function findTweets(users, callback){
     if (user.services.twitter.sinceId && user.services.twitter.sinceId != '') {
       params.since_id = user.services.twitter.sinceId;
     }
-
+    console.log(params);
     client.get('statuses/mentions_timeline', params, function(err, tweets, response){
 
       if (err) {
