@@ -270,7 +270,8 @@ function findTweets(users, callback){
                         user_id: tweet.user.id_str,
                         user_handle: tweet.user.screen_name,
                         user_lang: tweet.user.lang,
-                        cadence_user_id: user.id
+                        cadence_user_id: user.id,
+                        notified: false,
                       }
                     }, function(err, response){
                       if (err){
@@ -374,7 +375,8 @@ function findTwitterDirectMessages(users, callback) {
                       user_handle: message.sender.screen_name,
                       user_lang: message.sender.lang,
                       cadence_user_id: user.id,
-                      time_stamp: message.created_at
+                      time_stamp: message.created_at,
+                      notified: false
                     }
                   }, function(err, response){
                     if (err){
@@ -647,7 +649,8 @@ function findFacebookMessages(pages, callback) {
                               //user_lang: post.from.languages[0],
                               cadence_user_id: page.user.id,
                               time_stamp: message.created_time,
-                              page_id: page.id
+                              page_id: page.id,
+                              notified: false
                             }
                           }, function (err, response) {
                             if (err) {
@@ -821,7 +824,8 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
                         cadence_user_id: user.id,
                         time_stamp: comment.created_time,
                         page_id: pageId,
-                        access_token: accessToken
+                        access_token: accessToken,
+                        notified:false
                       }
                     }, function (err, response) {
                       if (err) {
@@ -878,6 +882,9 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
 }
 
 async.waterfall([
+    deleteTwitterMentions,
+    deleteTwitterDirectMessages,
+    deleteFacebookDirectMessages,
     deleteFacebookPosts,
     deleteFacebookComments,
     findTwitterUsers,
