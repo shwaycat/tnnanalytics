@@ -196,7 +196,7 @@ function findDocuments(users, callback){
               index: c.index,
               type: user.domain,
               id: hit._id,
-              body: {
+              doc: {
                 notified: true
               }
             }, function (error, response) {
