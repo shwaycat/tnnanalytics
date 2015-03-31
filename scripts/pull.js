@@ -751,8 +751,8 @@ function findFacebookComments(users, callback){
 
         console.log('Found Total of ' + postsAndComments.length + ' commentable objects');
         async.eachLimit(postsAndComments, 5, function(object, nextObject) {
-          console.log(object);
-          findFacebookCommentsForObject(user, object._source.page_id, object.id, object._source.access_token, function (err) {
+          //console.log(object);
+          findFacebookCommentsForObject(user, object._source.page_id, object._id, object._source.access_token, function (err) {
             if(err != null) {
               ////console.log('Error findfacebookComments complete');
               ////console.log(err);
@@ -786,10 +786,10 @@ function findFacebookComments(users, callback){
 }
 
 function findFacebookCommentsForObject(user, pageId, commentableId, accessToken, callback) {
-  console.log('User Id: ' + user.id);
-  console.log('Page Id: ' + pageId);
-  console.log('Commentable Id: ' + commentableId);
-  console.log('Access Token: ' + accessToken);
+  //console.log('User Id: ' + user.id);
+  //console.log('Page Id: ' + pageId);
+  //console.log('Commentable Id: ' + commentableId);
+  //console.log('Access Token: ' + accessToken);
   //console.log('finding facebook comments');
   var since = user.services.facebook.lastMessageTime;
   if(since === 'undefined' || since == null || since == '') {
