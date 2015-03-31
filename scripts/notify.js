@@ -97,7 +97,8 @@ function findDocuments(users, callback){
       type: user.domain,
       body: {
         query: {
-          term: {cadence_user_id: user.id}
+          term: {cadence_user_id: user.id},
+          term: {notified: false}
         },
         filter: {
           or: orQueries
@@ -126,9 +127,14 @@ function findDocuments(users, callback){
         var links = []
         if (response.hits.total > 0){
           console.log('building email');
+          var hitsToUpdate = [];
           links = _.map(_.filter(response.hits.hits, function(hit) {
               console.log('Document Type: ' + hit._source.doc_source + '.' + hit._source.doc_type);
-              return hit._source.doc_type == 'mention' || hit._source.doc_type == 'direct_message' || hit._source.doc_type == 'message' || hit._source.doc_type == 'comment';
+             if(hit._source.doc_type == 'mention' || hit._source.doc_type == 'direct_message' || hit._source.doc_type == 'message' || hit._source.doc_type == 'comment') {
+              hitsToUpdate.push(hit);
+               return true;
+             }
+             return false;
             }), function(hit){
            // console.log(hit)
             if(hit._source.doc_source == 'twitter') {
@@ -183,19 +189,43 @@ function findDocuments(users, callback){
             }
 
           });
-         // console.log(links)
-          new keystone.Email('notification').send({
-            subject: 'Cadence Notification',
-            to: user.email,
-            from: {
-              name: 'Cadence',
-              email: 'no-reply@maxmedia.com'
-            },
-            links: links
-          }, nextUser);
+          async.eachLimit(hitsToUpdate, 5, function (hit, nextHit) {
+            esClient.update({
+              index: c.index,
+              type: user.domain,
+              id: hit.id,
+              body: {
+                notified: true
+              }
+            }, function (error, response) {
+              if(error) {
+                console.log('Error esClient.update document');
+                console.log(err);
+                nextHit(err);
+              } else {
+                nextHit();
+              }
+            })
+          }, function(err) {
+            if(err) {
+              console.log('Error async.eachLimit hitsToUpdate');
+              console.log(err);
+              nextUser(err);
+            } else {
+              // console.log(links)
+              new keystone.Email('notification').send({
+                subject: 'Cadence Notification',
+                to: user.email,
+                from: {
+                  name: 'Cadence',
+                  email: 'no-reply@maxmedia.com'
+                },
+                links: links
+              }, nextUser);
+            }
+          });
         } else {
           nextUser()
-          return;
         }
     })
   },function(err){
