@@ -834,6 +834,8 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
                          console.log('facebook comment ' + comment.id + ' has ' + comment.comment_count + ' replies.');
                          findFacebookCommentsForObject(user, pageId, comment.id, accessToken, function (err) {
                            if(err) {
+                             console.log('Error findFacebookCommentsForObject recursion');
+                             console.log(err);
                             nextComment(err);
                            } else {
                             nextComment();
@@ -876,6 +878,8 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
 }
 
 async.waterfall([
+    deleteFacebookPosts,
+    deleteFacebookComments,
     findTwitterUsers,
     findTweets,
     findTwitterDirectMessages,
