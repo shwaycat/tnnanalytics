@@ -218,7 +218,7 @@ function deleteFacebookComments(callback) {
   });
 }
 function findTweets(users, callback){
-  //console.log('finding tweets');
+  console.log('finding tweets');
   async.each(users, function(user, nextUser){
     var client = new tw({
       consumer_key: process.env.TWITTER_API_KEY,
@@ -242,6 +242,7 @@ function findTweets(users, callback){
         nextUser(err)
       }
       if (tweets.length > 0) {
+        console.log(tweets.length + ' tweets recovered');
         // Update User with most recent tweet
         User.update({ _id: user.id },{ $set: {'services.twitter.sinceId': tweets[0].id_str} }, function (err, numberAffected, raw){
           if (err){
@@ -279,6 +280,7 @@ function findTweets(users, callback){
                         console.log(err)
                         nextTweet(err)
                       } else {
+                        console.log('tweet ' + tweet.id_str + ' created');
                         nextTweet()
                       }
                     })
@@ -288,6 +290,7 @@ function findTweets(users, callback){
                     console.log(err)
                     nextTweet(err)
                   }else{
+                    console.log('tweet ' + tweet.id_str + ' already exists in database');
                     nextTweet()
                   }
                 }
@@ -322,7 +325,7 @@ function findTweets(users, callback){
   //callback(null, users);
 }
 function findTwitterDirectMessages(users, callback) {
-  //console.log('finding direct messages');
+  console.log('finding direct messages');
   async.each(users, function(user, nextUser){
     var client = new tw({
       consumer_key: process.env.TWITTER_API_KEY,
@@ -345,6 +348,7 @@ function findTwitterDirectMessages(users, callback) {
         nextUser(err);
       }
       if (messages.length > 0) {
+        console.log(messages.length + ' twitter direct messages to create');
         // Update User with most recent direct message
         User.update({ _id: user.id },{ $set: {'services.twitter.dmSinceId': messages[0].id_str} },
           function (err, numberAffected, raw){
@@ -384,6 +388,7 @@ function findTwitterDirectMessages(users, callback) {
                       console.log(err)
                       nextMessage(err)
                     } else {
+                      console.log('twitter direct message ' + message.id_str + ' created in database');
                       nextMessage()
                     }
                   })
@@ -393,6 +398,7 @@ function findTwitterDirectMessages(users, callback) {
                     console.log(err)
                     nextMessage(err)
                   }else{
+                    console.log('twitter direct message ' + message.id_str + ' exists in database');
                     nextMessage()
                   }
                 }
