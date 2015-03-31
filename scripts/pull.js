@@ -794,7 +794,7 @@ function findFacebookCommentsForObject(user, pageId, id, accessToken, callback) 
   }
   var qp = 'fields=id,comment_count,from,message,created_time';//&since=' + since;
   var commentsUrl = 'https://graph.facebook.com/v2.3/' +id + '/comments?'+qp+'&access_token='+accessToken;
-
+  console.log(commentsUrl);
   request({
     url: commentsUrl,
     json: true
