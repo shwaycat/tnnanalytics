@@ -602,7 +602,7 @@ function findFacebookMessages(pages, callback) {
       var now = new Date();
       since = Math.floor((new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)).getTime() / 1000);
     }
-    var qp = 'since=' + since;
+    var qp = 'fields=id,updated_time,messages&since=' + since;
     var convoUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/conversations?' + qp + '&access_token=' + page.access_token;
     request({
       url: convoUrl,
@@ -702,11 +702,9 @@ function findFacebookMessages(pages, callback) {
       }
     });
   }, function (err) {
-
     var uniqueUsers = _.pluck(_.uniq(pages, false, function (page) {
       return page.user.id;
     }), 'user');
-
     if(err) {
       console.log("Error async.each users complete");
       console.log(err);
@@ -718,7 +716,6 @@ function findFacebookMessages(pages, callback) {
 }
 
 function findFacebookComments(users, callback){
-
   async.each(users, function(user, nextUser){
     console.log('finding comments for user ' + user.id);
     esClient.search({
