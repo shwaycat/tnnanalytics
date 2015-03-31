@@ -158,7 +158,7 @@ function findDocuments(users, callback){
                 }
                 return {
                   text: 'Twitter: @' + hit._source.user_handle + ': ' + hit._source.doc_text + '  -  ' + timeStamp,
-                  href: 'https://twitter.com/'+hit._source.user_handle
+                  href: 'https://twitter.com/'+ user.services.twitter.username
                 }
               }
             } else {

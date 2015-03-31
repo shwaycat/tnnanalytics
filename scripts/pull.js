@@ -916,17 +916,17 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
 }
 
 async.waterfall([
-   /* deleteTwitterMentions,
+    deleteTwitterMentions,
     deleteTwitterDirectMessages,
     deleteFacebookDirectMessages,
     deleteFacebookPosts,
-    deleteFacebookComments,*/
+    deleteFacebookComments,
     findTwitterUsers,
-    //resetUsersLastTimes,
+    resetUsersLastTimes,
     findTweets,
     findTwitterDirectMessages,
     findFacebookUsers,
-   // resetUsersLastTimes,
+    resetUsersLastTimes,
     findFacebookPages,
     findFacebookPosts,
     findFacebookMessages,
