@@ -635,7 +635,6 @@ function findFacebookMessages(pages, callback) {
                             index: c.index,
                             body: {
                               query: {
-                                term: {doc_source: 'facebook'},
                                 term: {doc_type: 'message'},
                                 term: {_id: message.id}
                               }
@@ -739,8 +738,8 @@ function findFacebookComments(users, callback){
       }
     }, function (error, response) {
       if (error) {
-        ////console.log('Error esClient.search')
-        ////console.log(error)
+        console.log('Error esClient.search')
+        console.log(error)
         nextUser(error)
         return;
       }
@@ -777,8 +776,8 @@ function findFacebookComments(users, callback){
     })
   },function(err){
     if (err) {
-      ////console.log('Error async.each users complete')
-      ////console.log(err)
+      console.log('Error async.each users complete')
+      console.log(err)
       callback(err)
     } else {
       callback()
@@ -812,7 +811,7 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
             body: {
               query: {
                 term: {doc_type: 'comment'},
-                term: {id: comment.id}
+                term: {_id: comment.id}
               }
             }
           }, function (err, response) {
@@ -835,8 +834,8 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
                 }
               }, function (err, response) {
                 if (err) {
-                  ////console.log('Error async.each comment esClient.create')
-                  ////console.log(err)
+                  console.log('Error async.each comment esClient.create')
+                  console.log(err)
                   nextComment(err)
                 } else {
                   console.log('facebook comment created with id: ' + comment.id);
@@ -885,9 +884,9 @@ function findFacebookCommentsForObject(user, pageId, commentableId, accessToken,
 }
 
 async.waterfall([
- // deleteTwitterMentions,
-  //deleteTwitterDirectMessages,
-  //deleteFacebookDirectMessages,
+  deleteTwitterMentions,
+  deleteTwitterDirectMessages,
+  deleteFacebookDirectMessages,
   deleteFacebookPosts,
   deleteFacebookComments,
     findTwitterUsers,
@@ -900,8 +899,8 @@ async.waterfall([
     findFacebookComments
 ],function(err){
   if (err){
-    //console.log('Error async.waterfall complete')
-    ////console.log(err)
+    console.log('Error async.waterfall complete')
+    console.log(err)
     process.exit(1)
   }else {
     process.exit(0)
