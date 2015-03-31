@@ -173,6 +173,7 @@ function deleteFacebookPosts(callback) {
           }
         }
       }, function (err, response) {
+        console.log('Posts Deleted');
         // ////console.log(response);
         callback();
       })
@@ -204,7 +205,8 @@ function deleteFacebookComments(callback) {
           }
         }
       }, function (err, response) {
-        // ////console.log(response);
+        console.log('Comments Deleted');
+        console.log(err);
         callback();
       })
     } else if(err != null) {
