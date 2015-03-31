@@ -189,8 +189,9 @@ function findDocuments(users, callback){
             }
 
           });
+          console.log('Items to Notify: ' + hitstoUpdate.length);
           async.eachLimit(hitsToUpdate, 5, function (hit, nextHit) {
-            console.log('building patch for hit ' + hit.id);
+            console.log('building patch for hit ' + hit._id);
             esClient.update({
               index: c.index,
               type: user.domain,
