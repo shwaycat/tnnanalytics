@@ -637,7 +637,7 @@ function findFacebookPosts(pages, callback){
         var now = new Date();
         since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
       }
-      var qp = 'fields=id,message,created_time,from&since=' + (since - 1);
+      var qp = 'fields=id,message,created_time,from&since=' + since;
       var postsUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/posts?'+qp+'&access_token='+page.access_token;
       getPosts(page, postsUrl, function (page, err) {
         if(err) {
