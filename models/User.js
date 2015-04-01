@@ -48,7 +48,13 @@ User.add({
       avatar: { type: String, label: 'Image', dependsOn: deps.facebook },
 
       accessToken: { type: String, label: 'Access Token', dependsOn: deps.facebook },
-      refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.facebook }
+      refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.facebook },
+
+      lastPostTime: { type: String, label: 'Last Post Time', dependsOn: deps.facebook },
+      lastMessageTime: { type: String, label: 'Last Message Time', dependsOn: deps.facebook}
+        //pageIds: { type: [String], label: 'Page Ids', dependsOn: deps.pages }
+
+
     },
     google: {
       isConfigured: { type: Boolean, label: 'Google has been authenticated' },
@@ -71,7 +77,8 @@ User.add({
 
       accessToken: { type: String, label: 'Access Token', dependsOn: deps.twitter },
       refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.twitter },
-      sinceId: { type: String, label: 'Since Id', dependsOn: deps.twitter }
+      sinceId: { type: String, label: 'Since Id', dependsOn: deps.twitter },
+      dmSinceId: { type: String, label: 'Since Id', dependsOn: deps.twitter }
     }
   }
 });
@@ -133,7 +140,6 @@ User.schema.virtual('avatarUrl').get(function() {
 User.schema.virtual('twitterUsername').get(function() {
   return (this.services.twitter && this.services.twitter.isConfigured) ? this.services.twitter.username : '';
 });
-
 
 /**
  * Methods
