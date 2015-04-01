@@ -257,14 +257,12 @@ function findTweets(users, callback){
       access_token_secret: user.services.twitter.refreshToken
     })
 
-    var params = {count: 200, include_rts: 1};//, since_id: null}
-
-    console.log("SINCE ID: |" + user.services.twitter.sinceId + "|");
+    var params = {count: 200, include_rts: 1, since_id: null}
 
     // We've made a query already, let's not get anything before that tweet
-    // if (user.services.twitter.sinceId && user.services.twitter.sinceId != '') {
-    //   params.since_id = user.services.twitter.sinceId;
-    // }
+    if (user.services.twitter.sinceId && user.services.twitter.sinceId != '') {
+      params.since_id = user.services.twitter.sinceId;
+    }
     //console.log(params);
     client.get('statuses/mentions_timeline', params, function(err, tweets, response){
 
@@ -368,14 +366,12 @@ function findTwitterDirectMessages(users, callback) {
       access_token_secret: user.services.twitter.refreshToken
     });
 
-    var params = {count: 200, include_entities: 0};//, since_id: null};
-
-    console.log("SINCE ID: |" + user.services.twitter.dmSinceId + "|");
+    var params = {count: 200, include_entities: 0, since_id: null};
 
     // We've made a query already, let's not get anything before that tweet
-    // if (user.services.twitter.dmSinceId && user.services.twitter.dmSinceId != '' ) {
-    //  params.since_id = user.services.twitter.dmSinceId;
-    // }
+    if (user.services.twitter.dmSinceId && user.services.twitter.dmSinceId != '' ) {
+     params.since_id = user.services.twitter.dmSinceId;
+    }
 
     client.get('direct_messages', params, function(err, messages, response){
       if (err) {
