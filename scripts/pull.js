@@ -629,6 +629,7 @@ function findFacebookPosts(pages, callback){
              });
          } else {
            console.log('no posts returned');
+           console.log(b);
            getPostsFinishedCallback(page);
          }
        }
