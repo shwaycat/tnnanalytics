@@ -549,7 +549,7 @@ function findFacebookPosts(pages, callback){
                  console.log(err);
                  getPostsFinishedCallback(page, err);
                } else {
-                 console.log(page.user);
+                 console.log(b.data);
                  //iterate and store them in the database
                  async.eachLimit(b.data, 5, function (post, nextPost) {
                    esClient.count({
