@@ -51,13 +51,17 @@ userSchema.statics.findConnectedTwitter = function (cb) {
     this.find({ 'services.twitter.isConfigured': true }, cb)
 }
 
+userSchema.statics.findConnectedUsers = function (cb) {
+  this.find( { $or:[ {'services.twitter.isConfigured':true}, {'services.facebook.isConfigured':true} ]}, cb);
+}
+
 var User = mongoose.model('User', userSchema)
 
 
-function findTwitterUsers(callback){
-  User.findConnectedTwitter(function(err, users){
+function findConnectedUsers(callback){
+  User.findConnectedUsers(function(err, users){
     if (err){
-      console.log('Error findConnectTwitter')
+      console.log('Error User.findConnectedUsers')
       console.log(err)
       callback(err)
     } else {
@@ -67,12 +71,15 @@ function findTwitterUsers(callback){
 }
 
 function findDocuments(users, callback){
+  var now = new Date(new Date().toUTCString().substr(0, 25));
+  var since = new Date(now.getTime() - 30*24*60*60*1000);
   async.each(users, function(user, nextUser){
+    //console.log(user);
     console.log('-----------------------Find Documents-------------------');
     console.log(user.notifications);
     userCheck = true;
-    var keywords;
-    if(user) {
+    var keywords = [];
+    if(user && user.notifications && user.notifications.keywords) {
       keywords = user.notifications.keywords.split(',');
     } else {
       userCheck = false;
@@ -90,8 +97,17 @@ function findDocuments(users, callback){
     esClient.search({
       index: c.index,
       type: user.domain,
+      from: 0,
+      size: 1000000000,
       body: {
         query: {
+          term: {cadence_user_id: user.id},
+          term: {notified: false}
+        },
+        filter: {
+          or: orQueries
+        }
+       /* query: {
           filtered: {
             query: {
               match: {
@@ -102,7 +118,7 @@ function findDocuments(users, callback){
               or: orQueries
             }
           }
-        }
+        }*/
       }
     }, function (error, response) {
         if (error){
@@ -114,38 +130,112 @@ function findDocuments(users, callback){
 
         var links = []
         if (response.hits.total > 0){
-          links = _.map(response.hits.hits, function(hit){
-            console.log(hit)
-           if(hit._source.doc_type == 'mention') {
-            return {
-              text: hit._source.doc_text,
-              href: 'https://twitter.com/'+hit._source.user_handle+'/status/'+hit._id
+          console.log('building email');
+          var hitsToUpdate = [];
+          links = _.map(_.filter(response.hits.hits, function(hit) {
+              console.log('Document Type: ' + hit._source.doc_source + '.' + hit._source.doc_type);
+             if(hit._source.doc_type == 'mention' || hit._source.doc_type == 'direct_message' || hit._source.doc_type == 'message' || hit._source.doc_type == 'comment') {
+              hitsToUpdate.push(hit);
+               return true;
+             }
+             return false;
+            }), function(hit){
+           // console.log(hit)
+            if(hit._source.doc_source == 'twitter') {
+              if(hit._source.doc_type == 'mention') {
+                console.log('twitter mention');
+                var timeStamp = '';
+                if(hit._source.time_stamp) {
+                  var date = new Date(hit._source.time_stamp);
+                  timeStamp = date.toLocaleString();
+                }
+                return {
+                  text: 'Twitter: @' + hit._source.user_handle + ': ' + hit._source.doc_text + ' - ' + timeStamp,
+                  href: 'https://twitter.com/'+hit._source.user_handle+'/status/'+hit._id
+                }
+              } else {
+                console.log('twitter direct message');
+                var timeStamp = '';
+                if(hit._source.time_stamp) {
+                  var date = new Date(hit._source.time_stamp);
+                  timeStamp = date.toLocaleString();
+                }
+                return {
+                  text: 'Twitter: @' + hit._source.user_handle + ': ' + hit._source.doc_text + '  -  ' + timeStamp,
+                  href: 'https://twitter.com/'+ user.services.twitter.username
+                }
+              }
+            } else {
+              if(hit._source.doc_type == 'message') {
+                console.log('facebook messsage');
+                var timeStamp = '';
+                if(hit._source.time_stamp) {
+                  var date = new Date(hit._source.time_stamp);
+                  timeStamp = date.toLocaleString();
+                }
+                return {
+                  text: 'Facebook: @' + hit._source.user_name + ': ' + hit._source.doc_text + ' - ' + timeStamp,
+                  href: 'https://facebook.com/' + hit._source.page_id + '/messages/'
+                }
+              } else if(hit._source.doc_type == 'comment') {
+                console.log('facebook comment');
+                //console.log(comment);
+                var timeStamp = '';
+                if(hit._source.time_stamp) {
+                  var date = new Date(hit._source.time_stamp);
+                  timeStamp = date.toLocaleString();
+                }
+                var idParts = hit._id.split("_");
+                return {
+                  //https://www.facebook.com/permalink.php?story_fbid=post_id&id=page_id&comment_id=comment.id
+                  text: 'Facebook: @' + hit._source.user_name + ': ' + hit._source.doc_text + ' - ' + timeStamp,
+                  href: 'https://www.facebook.com/permalink.php?story_fbid=' + idParts[0]+ '&id=' + hit._source.root_id + '&comment_id=' + idParts[1]
+                }
+              }
             }
-           } else {
-             var timeStamp = '';
-             if(hit._source.time_stamp) {
-               var date = new Date(hit._source.time_stamp);
-               timeStamp = date.toLocaleString();
-             }
-             return {
-               text: '@' + hit._source.user_handle + ': ' + hit._source.doc_text + '  -  ' + timeStamp,
-               href: 'https://twitter.com/'+hit._source.user_handle
-             }
-           }
-          })
-          console.log(links)
-          new keystone.Email('notification').send({
-            subject: 'Cadence Notification',
-            to: user.email,
-            from: {
-              name: 'Cadence',
-              email: 'no-reply@maxmedia.com'
-            },
-            links: links
-          }, nextUser);
+
+          });
+          console.log('Items to Notify: ' + hitsToUpdate.length);
+          async.eachLimit(hitsToUpdate, 5, function (hit, nextHit) {
+            console.log('building patch for hit ' + hit._id);
+            esClient.update({
+              index: c.index,
+              type: user.domain,
+              id: hit._id,
+              body: {
+                doc: {
+                  notified: true
+                }
+              }
+            }, function (error, response) {
+              if(error) {
+                console.log('Error esClient.update document');
+                console.log(error);
+                nextHit(error);
+              } else {
+                nextHit();
+              }
+            })
+          }, function(err) {
+            if(err) {
+              console.log('Error async.eachLimit hitsToUpdate');
+              console.log(err);
+              nextUser(err);
+            } else {
+              // console.log(links)
+              new keystone.Email('notification').send({
+                subject: 'Cadence Notification',
+                to: user.email,
+                from: {
+                  name: 'Cadence',
+                  email: 'no-reply@maxmedia.com'
+                },
+                links: links
+              }, nextUser);
+            }
+          });
         } else {
           nextUser()
-          return;
         }
     })
   },function(err){
@@ -160,7 +250,7 @@ function findDocuments(users, callback){
 }
 
 async.waterfall([
-    findTwitterUsers,
+    findConnectedUsers,
     findDocuments,
 ],function(err){
   if (err){
