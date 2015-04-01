@@ -259,6 +259,8 @@ function findTweets(users, callback){
 
     var params = {count: 200, include_rts: 1, since_id: null}
 
+    console.log("SINCE ID: |" + user.services.twitter.sinceId + "|");
+
     // We've made a query already, let's not get anything before that tweet
     if (user.services.twitter.sinceId && user.services.twitter.sinceId != '') {
       params.since_id = user.services.twitter.sinceId;
@@ -367,6 +369,8 @@ function findTwitterDirectMessages(users, callback) {
     });
 
     var params = {count: 200, include_entities: 0, since_id: null};
+
+    console.log("SINCE ID: |" + user.services.twitter.dmSinceId + "|");
 
     // We've made a query already, let's not get anything before that tweet
     if (user.services.twitter.dmSinceId && user.services.twitter.dmSinceId != '' ) {
