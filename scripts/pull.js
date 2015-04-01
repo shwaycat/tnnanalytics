@@ -528,6 +528,7 @@ function findFacebookPosts(pages, callback){
      //console.log('post-url: ' + url);
      console.log('get Posts for page ' + page.id + ' for user ' + page.user.id);
      console.log('user _id: ' + page.user._id);
+     console.log('querying url: ' + url);
      request({
        url: url,
        json: true
