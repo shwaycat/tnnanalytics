@@ -1045,7 +1045,7 @@ async.waterfall([
     deleteFacebookPosts,
     deleteFacebookComments,*/
     findTwitterUsers,
-    resetUsersLastTimes,
+    // resetUsersLastTimes,
     findTweets,
     findTwitterDirectMessages,
     findFacebookUsers,
