@@ -105,12 +105,7 @@ function findDocuments(users, callback){
           term: {notified: false}
         },
         filter: {
-          or: orQueries,
-          range : {
-            time_stamp : {
-              "gte" : since.toISOString()
-            }
-          }
+          or: orQueries
         }
        /* query: {
           filtered: {
