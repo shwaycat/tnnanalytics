@@ -56,11 +56,12 @@ var User = mongoose.model('User', userSchema)
 function findTwitterUsers(callback){
   User.findConnectedTwitter(function(err, users){
     if (err){
-      ////console.log('Error in findTwitterUsers')
-      ////console.log(err)
+      console.log('Error in findTwitterUsers')
+      console.log(err)
       callback(err)
     } else {
-      //console.log('found users');
+      console.log('found users');
+      console.log(users);
       callback(null, users)
     }
   })
@@ -1043,7 +1044,7 @@ async.waterfall([
     deleteFacebookPosts,
     deleteFacebookComments,*/
     findTwitterUsers,
-    //resetUsersLastTimes,
+    resetUsersLastTimes,
     findTweets,
     findTwitterDirectMessages,
     findFacebookUsers,
