@@ -270,6 +270,7 @@ function findTweets(users, callback){
         console.log('Error statuses/mentions_timeline')
         console.log(err)
         nextUser(err)
+        return;
       }
       if (tweets.length > 0) {
         console.log(tweets.length + ' tweets recovered');
@@ -279,6 +280,7 @@ function findTweets(users, callback){
             console.log('Error User.update')
             console.log(err)
             nextUser(err)
+            return;
           } else {
             async.eachLimit(tweets, 5, function(tweet, nextTweet){
               esClient.count({
