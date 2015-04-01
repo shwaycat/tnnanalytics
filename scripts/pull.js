@@ -364,11 +364,11 @@ function findTwitterDirectMessages(users, callback) {
       access_token_secret: user.services.twitter.refreshToken
     });
 
-    var params = {count: 200, include_entities: 0};
+    var params = {count: 200, include_entities: 0, since_id: null};
 
     // We've made a query already, let's not get anything before that tweet
     if (user.services.twitter.dmSinceId && user.services.twitter.dmSinceId != '' ) {
-     // params.since_id = user.services.twitter.dmSinceId;
+     params.since_id = user.services.twitter.dmSinceId;
     }
 
     client.get('direct_messages', params, function(err, messages, response){
