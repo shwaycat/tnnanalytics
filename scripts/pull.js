@@ -630,6 +630,7 @@ function findFacebookPosts(pages, callback){
    }
     async.eachLimit(pages, 5, function(page, nextPage){
       var since = page.user.services.facebook.lastPostTime;
+      console.log('Last Post Time: ' + since);
       if(since === 'undefined' || since == null || since == '') {
         var now = new Date();
         since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
