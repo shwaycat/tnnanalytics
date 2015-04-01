@@ -525,6 +525,7 @@ function findFacebookPages(users, callback) {
 function findFacebookPosts(pages, callback){
   //console.log('finding facebook posts for ' + pages.length + ' pages');
    function getPosts(page, url, getPostsFinishedCallback) {
+     console.log('post-url: ' + url);
      request({
        url: url,
        json: true
