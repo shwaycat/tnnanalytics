@@ -575,7 +575,8 @@ function findFacebookPosts(pages, callback){
                            cadence_user_id: page.user.id,
                            time_stamp: post.created_time,
                            page_id: page.id,
-                           access_token: page.access_token
+                           access_token: page.access_token,
+                           level: 1
                          }
                        }, function(err, response){
                          if (err){
@@ -816,15 +817,25 @@ function findFacebookMessages(pages, callback) {
 }
 
 function findFacebookComments(users, callback){
+  var now = new Date(new Date().toUTCString().substr(0, 25));
+  var since = new Date(now.getTime() - 30*24*60*60*1000);
+
   async.each(users, function(user, nextUser){
     console.log('finding commentables for user ' + user.id);
     esClient.search({
       index: c.index,
       type: user.domain,
+      from: 0,
+      size: 1000000000,
       body: {
         query: {
           term: { cadence_user_id: user.id },
-          term: { doc_source: 'facebook' }
+          term: { doc_source: 'facebook' },
+          range : {
+            time_stamp : {
+              "gte" : since.toISOString()
+            }
+          }
         }
       }
     }, function (error, response) {
@@ -839,7 +850,8 @@ function findFacebookComments(users, callback){
         console.log('Commentables Retrned: ' + response.hits.hits.length);
         var postsAndComments = _.filter(response.hits.hits, function(hit) {
           console.log('Document Type: ' + hit._source.doc_source + '.' + hit._source.doc_type);
-          return hit._source.doc_type == 'post' || hit._source.doc_type == 'comment';
+
+          return hit._source.doc_type == 'post' || hit._source.doc_type == 'comment'
         });
 
         console.log('Found Total of ' + postsAndComments.length + ' commentable objects');
