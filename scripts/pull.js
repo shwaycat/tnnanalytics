@@ -257,11 +257,11 @@ function findTweets(users, callback){
       access_token_secret: user.services.twitter.refreshToken
     })
 
-    var params = {count: 200, include_rts: 1}
+    var params = {count: 200, include_rts: 1, since_id: null}
 
     // We've made a query already, let's not get anything before that tweet
     if (user.services.twitter.sinceId && user.services.twitter.sinceId != '') {
-      //params.since_id = user.services.twitter.sinceId;
+      params.since_id = user.services.twitter.sinceId;
     }
     //console.log(params);
     client.get('statuses/mentions_timeline', params, function(err, tweets, response){
