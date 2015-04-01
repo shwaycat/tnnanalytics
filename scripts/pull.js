@@ -836,6 +836,7 @@ function findFacebookComments(users, callback){
       }
       if (response.hits.total > 0){
         console.log('Commentable Count: ' + response.hits.total);
+        console.log('Commentables Retrned: ' + response.hits.hits.length);
         var postsAndComments = _.filter(response.hits.hits, function(hit) {
           console.log('Document Type: ' + hit._source.doc_source + '.' + hit._source.doc_type);
           return hit._source.doc_type == 'post' || hit._source.doc_type == 'comment';
