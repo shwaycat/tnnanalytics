@@ -525,7 +525,7 @@ function findFacebookPages(users, callback) {
 function findFacebookPosts(pages, callback){
   //console.log('finding facebook posts for ' + pages.length + ' pages');
    function getPosts(page, url, getPostsFinishedCallback) {
-     console.log('post-url: ' + url);
+     //console.log('post-url: ' + url);
      request({
        url: url,
        json: true
@@ -536,7 +536,7 @@ function findFacebookPosts(pages, callback){
          getPostsFinishedCallback(page, e);
        } else {
          if(b.data && b.data.length > 0) {
-           //console.log('Recording ' + b.data.length + ' posts');
+           console.log('Recording ' + b.data.length + ' posts');
            var lastPostTimeUnix = Math.floor(new Date(b.data[0].created_time).getTime() / 1000);
 
            User.update({ _id: page.user.id },{ $set: {'services.facebook.lastPostTime': lastPostTimeUnix} },
@@ -624,6 +624,7 @@ function findFacebookPosts(pages, callback){
                }
              });
          } else {
+           console.log('no posts returned');
            getPostsFinishedCallback(page);
          }
        }
