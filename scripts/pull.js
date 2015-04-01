@@ -521,14 +521,12 @@ function findFacebookPages(users, callback) {
     }
   })
 }
-//fields=id,message,updated_time,commments{id,message},likes{id,name},shares{id,name}
+
+//works
 function findFacebookPosts(pages, callback){
   //console.log('finding facebook posts for ' + pages.length + ' pages');
    function getPosts(page, url, getPostsFinishedCallback) {
      //console.log('post-url: ' + url);
-     console.log('get Posts for page ' + page.id + ' for user ' + page.user.id);
-     console.log('user _id: ' + page.user._id);
-     console.log('querying url: ' + url);
      request({
        url: url,
        json: true
@@ -549,7 +547,7 @@ function findFacebookPosts(pages, callback){
                  console.log(err);
                  getPostsFinishedCallback(page, err);
                } else {
-                 console.log(b.data);
+                 //console.log(b.data);
                  //iterate and store them in the database
                  async.eachLimit(b.data, 5, function (post, nextPost) {
                    esClient.count({
@@ -606,7 +604,7 @@ function findFacebookPosts(pages, callback){
                      console.log(err);
                      getPostsFinishedCallback(page, err);
                    } else {
-                     console.log('no new posts to record');
+                     //console.log('no new posts to record');
                      if(b.paging && b.paging.next && b.paging.next != '') {
                        console.log('facebook messages posts - next');
                        getPosts(page, b.paging.next, function (page, err) {
@@ -620,6 +618,7 @@ function findFacebookPosts(pages, callback){
                          }
                        });
                      } else {
+                       console.log('last page');
                        getPostsFinishedCallback(page);
                      }
 
@@ -818,7 +817,7 @@ function findFacebookMessages(pages, callback) {
 
 function findFacebookComments(users, callback){
   async.each(users, function(user, nextUser){
-    console.log('finding comments for user ' + user.id);
+    console.log('finding commentables for user ' + user.id);
     esClient.search({
       index: c.index,
       type: user.domain,
@@ -836,6 +835,7 @@ function findFacebookComments(users, callback){
         return;
       }
       if (response.hits.total > 0){
+        console.log('Commentable Count: ' + response.hits.total);
         var postsAndComments = _.filter(response.hits.hits, function(hit) {
           console.log('Document Type: ' + hit._source.doc_source + '.' + hit._source.doc_type);
           return hit._source.doc_type == 'post' || hit._source.doc_type == 'comment';
