@@ -222,7 +222,7 @@ function findDocuments(users, callback){
               console.log(err);
               nextUser(err);
             } else {
-              // console.log(links)
+              console.log(links)
               new keystone.Email('notification').send({
                 subject: 'Cadence Notification',
                 to: user.email,
