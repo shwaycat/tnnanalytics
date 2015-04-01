@@ -575,8 +575,7 @@ function findFacebookPosts(pages, callback){
                            cadence_user_id: page.user.id,
                            time_stamp: post.created_time,
                            page_id: page.id,
-                           access_token: page.access_token,
-                           level: 1
+                           access_token: page.access_token
                          }
                        }, function(err, response){
                          if (err){
@@ -642,7 +641,7 @@ function findFacebookPosts(pages, callback){
         var now = new Date();
         since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
       }
-      var qp = 'fields=id,message,created_time,from&since=' + (since - 100).toString();
+      var qp = 'fields=id,message,created_time,from&since=' + since;
       var postsUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/posts?'+qp+'&access_token='+page.access_token;
       getPosts(page, postsUrl, function (page, err) {
         if(err) {
@@ -853,13 +852,12 @@ function findFacebookComments(users, callback){
         console.log('Commentables Retrned: ' + response.hits.hits.length);
         var postsAndComments = _.filter(response.hits.hits, function(hit) {
           console.log('Document Type: ' + hit._source.doc_source + '.' + hit._source.doc_type);
-
-          return hit._source.doc_type == 'post' || hit._source.doc_type == 'comment'
+          return hit._source.doc_type == 'post' || hit._source.doc_type == 'comment';
         });
 
         console.log('Found Total of ' + postsAndComments.length + ' commentable objects');
         async.eachLimit(postsAndComments, 5, function(object, nextObject) {
-          console.log('comment: ' + object._source.doc_text);
+          //console.log('comment: ' + object._source.doc_text);
           var rootId = object._source.doc_type == 'post' ? object._id : object._source.root_id;
           findFacebookCommentsForObject(user, object._source.page_id, object._id, rootId, object._source.access_token, function (err) {
             if(err != null) {

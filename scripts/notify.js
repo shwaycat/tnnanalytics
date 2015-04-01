@@ -71,6 +71,8 @@ function findConnectedUsers(callback){
 }
 
 function findDocuments(users, callback){
+  var now = new Date(new Date().toUTCString().substr(0, 25));
+  var since = new Date(now.getTime() - 30*24*60*60*1000);
   async.each(users, function(user, nextUser){
     //console.log(user);
     console.log('-----------------------Find Documents-------------------');
@@ -95,13 +97,20 @@ function findDocuments(users, callback){
     esClient.search({
       index: c.index,
       type: user.domain,
+      from: 0,
+      size: 1000000000,
       body: {
         query: {
           term: {cadence_user_id: user.id},
           term: {notified: false}
         },
         filter: {
-          or: orQueries
+          or: orQueries,
+          range : {
+            time_stamp : {
+              "gte" : since.toISOString()
+            }
+          }
         }
        /* query: {
           filtered: {
