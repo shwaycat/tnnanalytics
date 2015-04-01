@@ -633,7 +633,7 @@ function findFacebookPosts(pages, callback){
       console.log('Last Post Time: ' + since);
       if(since === 'undefined' || since == null || since == '') {
         var now = new Date();
-        since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
+        since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000) - 1;
       }
       var qp = 'fields=id,message,created_time,from&since=' + since;
       var postsUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/posts?'+qp+'&access_token='+page.access_token;
