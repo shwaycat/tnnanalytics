@@ -61,7 +61,6 @@ function findTwitterUsers(callback){
       callback(err)
     } else {
       console.log('found users');
-      console.log(users);
       callback(null, users)
     }
   })
@@ -1044,7 +1043,7 @@ async.waterfall([
     deleteFacebookPosts,
     deleteFacebookComments,*/
     findTwitterUsers,
-    resetUsersLastTimes,
+    // resetUsersLastTimes,
     findTweets,
     findTwitterDirectMessages,
     findFacebookUsers,
