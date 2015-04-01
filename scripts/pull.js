@@ -260,9 +260,9 @@ function findTweets(users, callback){
     var params = {count: 200, include_rts: 1, since_id: null}
 
     // We've made a query already, let's not get anything before that tweet
-    if (user.services.twitter.sinceId && user.services.twitter.sinceId != '') {
-      params.since_id = user.services.twitter.sinceId;
-    }
+    // if (user.services.twitter.sinceId && user.services.twitter.sinceId != '') {
+    //   params.since_id = user.services.twitter.sinceId;
+    // }
     //console.log(params);
     client.get('statuses/mentions_timeline', params, function(err, tweets, response){
 
@@ -376,7 +376,7 @@ function findTwitterDirectMessages(users, callback) {
         console.log('Error direct_messages');
         console.log(err);
         console.log('Travis & Jeremy did this.');
-        console.log(user.name);
+        console.log(user.id);
         nextUser();
         return;
       }
