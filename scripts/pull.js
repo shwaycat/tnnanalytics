@@ -375,7 +375,7 @@ function findTwitterDirectMessages(users, callback) {
       if (err) {
         console.log('Error direct_messages');
         console.log(err);
-        nextUser();
+        return nextUser();
       }
       if (messages.length > 0) {
         console.log(messages.length + ' twitter direct messages to create');
