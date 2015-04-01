@@ -831,11 +831,14 @@ function findFacebookComments(users, callback){
         query: {
           term: { cadence_user_id: user.id },
           term: { doc_source: 'facebook' },
-          range : {
-            time_stamp : {
-              "gte" : since.toISOString()
+          filter: {
+            range : {
+              time_stamp : {
+                "gte" : since.toISOString()
+              }
             }
           }
+
         }
       }
     }, function (error, response) {
