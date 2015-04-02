@@ -877,6 +877,7 @@ function findFacebookComments(users, callback){
       if (error) {
         console.log('Error esClient.search')
         console.log(error)
+        console.log(response)
         nextUser(error)
         return;
       }
