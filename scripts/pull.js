@@ -462,8 +462,8 @@ function findTwitterDirectMessages(users, callback) {
   })
 }
 
-var request_delay = 330;
-var days_to_pull = 365;
+var request_delay = c.normalThrottleMS;
+var days_to_pull = 30;
 
 function makeThrottledRequest(url, json, requestCompleteHandler) {
   setTimeout(function () {
@@ -1059,17 +1059,17 @@ process.argv.forEach(function (val, index, array) {
   //console.log(index + ': ' + val);
   if(val.toUpperCase() == "YEAR") {
     days_to_pull = 365;
-    request_delay = 450;
+    request_delay = c.yearThrottleMS;
   }
 });
 
 console.log('Days to Fetch: ' + days_to_pull);
 async.waterfall([
-   deleteTwitterMentions,
+   /*deleteTwitterMentions,
     deleteTwitterDirectMessages,
     deleteFacebookDirectMessages,
     deleteFacebookPosts,
-    deleteFacebookComments,
+    deleteFacebookComments,*/
     findTwitterUsers,
     //resetUsersLastTimes,
     findTweets,
