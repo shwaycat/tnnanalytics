@@ -1066,6 +1066,7 @@ process.argv.forEach(function (val, index, array) {
   }
 });
 
+console.log('Days to Fetch: ' + days_to_pull);
 async.waterfall([
    deleteTwitterMentions,
     deleteTwitterDirectMessages,
