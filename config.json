@@ -1,4 +1,6 @@
 {
   "index": "cadence-dev",
-  "justRecent" : false
+  "justRecent" : false,
+  "normalThrottleMS" : 330,
+  "yearThrottleMS" : 450
 }
