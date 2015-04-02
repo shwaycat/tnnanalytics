@@ -1060,9 +1060,6 @@ process.argv.forEach(function (val, index, array) {
   if(val.toUpperCase() == "YEAR") {
     days_to_pull = 365;
     request_delay = 450;
-  } else {
-    days_to_pull = 30;
-    request_delay = 330;
   }
 });
 
