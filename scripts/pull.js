@@ -659,8 +659,12 @@ function findFacebookPosts(pages, callback){
         var now = new Date();
         since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
       }*/
-      var since = Math.floor((new Date((new Date()).getTime() - days_to_pull * 24 * 60 * 60 * 1000)).getTime() / 1000);
-      var qp = 'fields=id,message,created_time,from&since=' + since;
+      var qp = 'fields=id,message,created_time,from';
+      if(days_to_pull > -1) {
+        var since = Math.floor((new Date((new Date()).getTime() - days_to_pull * 24 * 60 * 60 * 1000)).getTime() / 1000);
+        qp + '&since=' + since;
+      }
+
       var postsUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/feed?'+qp+'&access_token='+page.access_token;
       getPosts(page, postsUrl, function (page, err) {
         if(err) {
@@ -692,8 +696,12 @@ function findFacebookMessages(pages, callback) {
       var now = new Date();
       since = Math.floor((new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)).getTime() / 1000);
     }*/
-    var since = Math.floor((new Date((new Date()).getTime() - days_to_pull * 24 * 60 * 60 * 1000)).getTime() / 1000);
-    var qp = 'fields=id,updated_time,messages&since=' + since;
+
+    var qp = 'fields=id,updated_time,messages';
+    if(days_to_pull > -1) {
+      var since = Math.floor((new Date((new Date()).getTime() - days_to_pull * 24 * 60 * 60 * 1000)).getTime() / 1000);
+      qp + '&since=' + since;
+    }
     var convoUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/conversations?' + qp + '&access_token=' + page.access_token;
 
     function getConversations(page, url, getConversationsFinishedCallback) {
@@ -837,8 +845,19 @@ function findFacebookMessages(pages, callback) {
 }
 
 function findFacebookComments(users, callback){
-  var now = new Date(new Date().toUTCString().substr(0, 25));
-  var since = new Date(now.getTime() - days_to_pull*24*60*60*1000);
+
+  var rangeFilters = {};
+  if(days_to_pull > -1) {
+    var now = new Date(new Date().toUTCString().substr(0, 25));
+    var since = new Date(now.getTime() - days_to_pull*24*60*60*1000);
+    rangeFilters = {
+      range: {
+        time_stamp: {
+          "gte": since.toISOString()
+        }
+      }
+    };
+  }
 
   async.each(users, function(user, nextUser){
     console.log('finding commentables for user ' + user.id);
@@ -851,15 +870,8 @@ function findFacebookComments(users, callback){
         query: {
           term: { cadence_user_id: user.id },
           term: { doc_source: 'facebook' }
-
         },
-        filter: {
-          range : {
-            time_stamp : {
-              "gte" : since.toISOString()
-            }
-          }
-        }
+        filter: rangeFilters
       }
     }, function (error, response) {
       if (error) {
@@ -1057,19 +1069,19 @@ function findFacebookCommentsForObject(user, pageId, commentableId, rootId, acce
 
 process.argv.forEach(function (val, index, array) {
   //console.log(index + ': ' + val);
-  if(val.toUpperCase() == "YEAR") {
-    days_to_pull = 365;
-    request_delay = c.yearThrottleMS;
+  if(val.toUpperCase() == "FOREVER") {
+    days_to_pull = -1;
+    request_delay = c.allTimeThrottleMS;
   }
 });
 
 console.log('Days to Fetch: ' + days_to_pull);
 async.waterfall([
-   /*deleteTwitterMentions,
+   deleteTwitterMentions,
     deleteTwitterDirectMessages,
     deleteFacebookDirectMessages,
     deleteFacebookPosts,
-    deleteFacebookComments,*/
+    deleteFacebookComments,
     findTwitterUsers,
     //resetUsersLastTimes,
     findTweets,
