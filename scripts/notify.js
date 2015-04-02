@@ -126,7 +126,7 @@ function findDocuments(users, callback){
                hit._source.doc_type == 'direct_message' ||
                hit._source.doc_type == 'message' ||
                hit._source.doc_type == 'comment' ||
-               (hit._source.doc_type == 'post' && hit._source.username != user.services.facebook.username)) {
+               (hit._source.doc_type == 'post')) {
               hitsToUpdate.push(hit);
                return true;
              }
@@ -182,6 +182,19 @@ function findDocuments(users, callback){
                   //https://www.facebook.com/permalink.php?story_fbid=post_id&id=page_id&comment_id=comment.id
                   text: 'Facebook: @' + hit._source.user_name + ': ' + hit._source.doc_text + ' - ' + timeStamp,
                   href: 'https://www.facebook.com/permalink.php?story_fbid=' + idParts[0]+ '&id=' + hit._source.root_id + '&comment_id=' + idParts[1]
+                }
+              } else if(hit._source.doc_type == 'post') {
+                console.log('facebook post');
+                //console.log(comment);
+                var timeStamp = '';
+                if(hit._source.time_stamp) {
+                  var date = new Date(hit._source.time_stamp);
+                  timeStamp = date.toLocaleString();
+                }
+                return {
+                  //https://www.facebook.com/permalink.php?story_fbid=post_id&id=page_id&comment_id=comment.id
+                  text: 'Facebook: @' + hit._source.user_name + ': ' + hit._source.doc_text + ' - ' + timeStamp,
+                  href: 'https://www.facebook.com/permalink.php?story_fbid=' + hit._id+ '&id=' + hit._source.page_id
                 }
               }
             }
