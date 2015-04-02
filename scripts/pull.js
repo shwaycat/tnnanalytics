@@ -68,7 +68,7 @@ function findTwitterUsers(callback){
 }
 
 function resetUsersLastTimes(users, callback) {
-  async.eachLimit(users, 5, function(user, nextUser) {
+  async.eachLimit(users, c.concurrentThreads, function(user, nextUser) {
     User.update({ _id: user.id },{ $set: {'services.twitter.sinceId': ''},
       $set: {'services.twitter.dmSinceId': ''},
       $set: {'services.facebook.lastPostTime': ''},
@@ -251,7 +251,7 @@ function deleteFacebookComments(callback) {
 
 function findTweets(users, callback){
   console.log('finding tweets');
-  async.each(users, function(user, nextUser){
+  async.eachLimit(users, c.concurrentThreads, function(user, nextUser){
     var client = new tw({
       consumer_key: process.env.TWITTER_API_KEY,
       consumer_secret: process.env.TWITTER_API_SECRET,
@@ -282,7 +282,7 @@ function findTweets(users, callback){
             console.log(err)
             nextUser(err)
           } else {
-            async.eachLimit(tweets, 5, function(tweet, nextTweet){
+            async.eachLimit(tweets, c.concurrentThreads, function(tweet, nextTweet){
               esClient.count({
                 index: c.index,
                 body: {
@@ -358,7 +358,7 @@ function findTweets(users, callback){
 }
 function findTwitterDirectMessages(users, callback) {
   console.log('finding direct messages');
-  async.each(users, function(user, nextUser){
+  async.eachLimit(users, c.concurrentThreads, function(user, nextUser){
     var client = new tw({
       consumer_key: process.env.TWITTER_API_KEY,
       consumer_secret: process.env.TWITTER_API_SECRET,
@@ -389,7 +389,7 @@ function findTwitterDirectMessages(users, callback) {
             console.log(err)
             nextUser(err)
           } else {
-            async.eachLimit(messages, 5, function(message, nextMessage){
+            async.eachLimit(messages, c.concurrentThreads, function(message, nextMessage){
               esClient.count({
                 index: c.index,
                 body: {
@@ -490,7 +490,7 @@ function findFacebookUsers(callback){
 function findFacebookPages(users, callback) {
   //console.log('finding facebook pages');
   var pageArray = [];
-  async.eachLimit(users, 5, function(user, nextUser){
+  async.eachLimit(users, c.concurrentThreads, function(user, nextUser){
     //console.log('find pages for user: ' + user.id);
     var pageUrl = 'https://graph.facebook.com/v2.3/me/accounts?access_token='+user.services.facebook.accessToken;
     /*request({
@@ -566,7 +566,7 @@ function findFacebookPosts(pages, callback){
                } else {
                  //console.log(b.data);
                  //iterate and store them in the database
-                 async.eachLimit(b.data, 5, function (post, nextPost) {
+                 async.eachLimit(b.data, c.concurrentThreads, function (post, nextPost) {
                    console.log('post from ' + post.from != null ? post.from.name : '' + ' ' + post.message);
                    esClient.count({
                      index: c.index,
@@ -655,7 +655,7 @@ function findFacebookPosts(pages, callback){
        }
      });
    }
-    async.eachLimit(pages, 5, function(page, nextPage){
+    async.eachLimit(pages, c.concurrentThreads, function(page, nextPage){
       /*var since = page.user.services.facebook.lastPostTime;
       console.log('Last Post Time: ' + since);
       if(since === 'undefined' || since == null || since == '') {
@@ -692,7 +692,7 @@ function findFacebookPosts(pages, callback){
 //works
 function findFacebookMessages(pages, callback) {
   console.log('finding facebook messages');
-  async.eachLimit(pages, 5, function (page, nextPage) {
+  async.eachLimit(pages, c.concurrentThreads, function (page, nextPage) {
     /*var since = page.user.services.facebook.lastMessageTime;
     console.log('Last Message Time' + since);
     if (since === 'undefined' || since == null || since == '') {
@@ -726,10 +726,10 @@ function findFacebookMessages(pages, callback) {
                   getConversationsFinishedCallback(page, err);
                 } else {
                   //iterate and store them in the database
-                  async.eachLimit(b.data, 3, function (convo, nextConvo) {
+                  async.eachLimit(b.data, c.concurrentThreads, function (convo, nextConvo) {
                     if (convo.messages.data.length > 0) {
                       console.log(convo.messages.data.length + ' messages found in conversation ' + convo.id);
-                      async.eachLimit(convo.messages.data, 3, function (message, nextMessage) {
+                      async.eachLimit(convo.messages.data, c.concurrentThreads, function (message, nextMessage) {
                         esClient.count({
                           index: c.index,
                           body: {
@@ -863,7 +863,7 @@ function findFacebookComments(users, callback){
     };
   }
 
-  async.eachLimit(users, 10, function(user, nextUser){
+  async.eachLimit(users, c.concurrentThreads, function(user, nextUser){
     console.log('finding commentables for user ' + user.id);
     esClient.search({
       index: c.index,
@@ -894,7 +894,7 @@ function findFacebookComments(users, callback){
         });
 
         console.log('Found Total of ' + postsAndComments.length + ' commentable objects');
-        async.eachLimit(postsAndComments, 5, function(object, nextObject) {
+        async.eachLimit(postsAndComments, c.concurrentThreads, function(object, nextObject) {
           //console.log('comment: ' + object._source.doc_text);
           var rootId = object._source.doc_type == 'post' ? object._id : object._source.root_id;
           findFacebookCommentsForObject(user, object._source.page_id, object._id, rootId, object._source.access_token, function (err) {
@@ -954,7 +954,7 @@ function findFacebookCommentsForObject(user, pageId, commentableId, rootId, acce
                 getCommentsFinishedCallback(url, data, err);;
               } else {
                 //iterate and store them in the database
-                async.eachLimit(b.data, 5, function (comment, nextComment) {
+                async.eachLimit(b.data, c.concurrentThreads, function (comment, nextComment) {
                   //console.log(comment);
                   esClient.count({
                     index: c.index,
