@@ -592,7 +592,7 @@ function findFacebookPosts(pages, callback){
                            time_stamp: post.created_time,
                            page_id: page.id,
                            access_token: page.access_token,
-                           notified: (post.from != null ? post.from.name : '') == user.services.facebook.username
+                           notified: (post.from != null ? post.from.name : '') == page.user.services.facebook.username
                          }
                        }, function(err, response){
                          if (err){
