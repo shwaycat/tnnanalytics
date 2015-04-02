@@ -499,8 +499,10 @@ function findFacebookPages(users, callback) {
     }, function (error, response, body) {*/
     makeThrottledRequest(pageUrl, true, function (error, response, body) {
       if(error != null) {
+
         //console.log('error request accounts completed');
-        ////console.log(error);
+        console.log(error);
+        console.log(response);
         nextUser(error);
       } else {
         async.reduce(body.data, pageArray, function(pages, page, cb) {
@@ -609,6 +611,7 @@ function findFacebookPosts(pages, callback){
                        if (err){
                          console.log('Error from post count')
                          console.log(err)
+                         console.log(response)
                          nextPost(err)
                        }else {
                          console.log('facebook post already recorded to database');
@@ -767,6 +770,7 @@ function findFacebookMessages(pages, callback) {
                             if (typeof err != 'undefined') {
                               console.log('Error from count')
                               console.log(err)
+                              console.log(responsee)
                               nextConvo(err)
                             } else {
                               console.log('message already recorded to database');
@@ -984,6 +988,7 @@ function findFacebookCommentsForObject(user, pageId, commentableId, rootId, acce
                         if (err) {
                           console.log('Error async.each comment esClient.create')
                           console.log(err)
+                          console.log(response)
                           nextComment(err)
                         } else {
                           console.log('facebook comment created with id: ' + comment.id);
