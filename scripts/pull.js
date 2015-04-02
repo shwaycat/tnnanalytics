@@ -1076,7 +1076,7 @@ function findFacebookCommentsForObject(user, pageId, commentableId, rootId, acce
 process.argv.forEach(function (val, index, array) {
   //console.log(index + ': ' + val);
   if(val.toUpperCase() == "FOREVER") {
-    days_to_pull = 365;
+    days_to_pull = -1;
     request_delay = c.allTimeThrottleMS;
   }
 });
