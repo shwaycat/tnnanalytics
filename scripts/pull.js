@@ -559,6 +559,7 @@ function findFacebookPosts(pages, callback){
                  //console.log(b.data);
                  //iterate and store them in the database
                  async.eachLimit(b.data, 5, function (post, nextPost) {
+                   console.log('post from ' + post.from != null ? post.from.name : '' + ' ' + post.message);
                    esClient.count({
                      index: c.index,
                      body: {
@@ -584,7 +585,8 @@ function findFacebookPosts(pages, callback){
                            cadence_user_id: page.user.id,
                            time_stamp: post.created_time,
                            page_id: page.id,
-                           access_token: page.access_token
+                           access_token: page.access_token,
+                           notified: false
                          }
                        }, function(err, response){
                          if (err){
