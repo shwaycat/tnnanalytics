@@ -1055,6 +1055,17 @@ function findFacebookCommentsForObject(user, pageId, commentableId, rootId, acce
   });
 }
 
+process.argv.forEach(function (val, index, array) {
+  //console.log(index + ': ' + val);
+  if(val.toUpperCase() == "YEAR") {
+    days_to_pull = 365;
+    request_delay = 450;
+  } else {
+    days_to_pull = 30;
+    request_delay = 330;
+  }
+});
+
 async.waterfall([
    deleteTwitterMentions,
     deleteTwitterDirectMessages,
