@@ -2,5 +2,6 @@
   "index": "cadence-dev",
   "justRecent" : false,
   "normalThrottleMS" : 330,
-  "allTimeThrottleMS" : 550
+  "allTimeThrottleMS" : 550,
+  "normalPullDays" : 30
 }
