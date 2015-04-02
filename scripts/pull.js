@@ -577,7 +577,7 @@ function findFacebookPosts(pages, callback){
                      }
                    }, function(err, response){
                      if ((typeof err == 'undefined') && response.count == 0){
-                       var notify = post && post.from.name != page.user.services.facebook.username;)
+                       var notify = post && post.from.name != page.user.services.facebook.username;
                        esClient.create({
                          index: c.index,
                          type: page.user.domain,
