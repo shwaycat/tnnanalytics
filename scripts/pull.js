@@ -466,7 +466,7 @@ function makeThrottledRequest(url, json, requestCompleteHandler) {
       url: url,
       json: json
     }, requestCompleteHandler);
-  }, 100);
+  }, 250);
 }
 function findFacebookUsers(callback){
   User.findConnectedFacebook(function(err, users){
