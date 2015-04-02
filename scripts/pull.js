@@ -466,7 +466,7 @@ function makeThrottledRequest(url, json, requestCompleteHandler) {
       url: url,
       json: json
     }, requestCompleteHandler);
-  }, 50);
+  }, 100);
 }
 function findFacebookUsers(callback){
   User.findConnectedFacebook(function(err, users){
@@ -535,10 +535,11 @@ function findFacebookPosts(pages, callback){
   //console.log('finding facebook posts for ' + pages.length + ' pages');
    function getPosts(page, url, getPostsFinishedCallback) {
      //console.log('post-url: ' + url);
-     request({
+     /*request({
        url: url,
        json: true
-     },function (e, r, b){
+     },function (e, r, b){*/
+     makeThrottledRequest(url, true, function (e, r, b) {
        if(e != null) {
          console.log('error request posts failed');
          console.log(e);
@@ -687,10 +688,11 @@ function findFacebookMessages(pages, callback) {
     var convoUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/conversations?' + qp + '&access_token=' + page.access_token;
 
     function getConversations(page, url, getConversationsFinishedCallback) {
-      request({
+      /*request({
         url: url,
         json: true
-      }, function (e, r, b) {
+      }, function (e, r, b) {*/
+      makeThrottledRequest(url, true, function (e, r, b) {
         if (e != null) {
           getConversationsFinishedCallback(page, e);
         } else {
@@ -908,10 +910,11 @@ function findFacebookCommentsForObject(user, pageId, commentableId, rootId, acce
   //console.log(commentsUrl);
 
   function getComments(url, data, getCommentsFinishedCallback) {
-    request({
+    /*request({
       url: url,
       json: true
-    },function (e, r, b){
+    },function (e, r, b){*/
+    makeThrottledRequest(url, true, function (e, r, b) {
       if(e != null) {
         getCommentsFinishedCallback(url, data, e);
       } else {
@@ -1044,11 +1047,11 @@ function findFacebookCommentsForObject(user, pageId, commentableId, rootId, acce
 }
 
 async.waterfall([
-   deleteTwitterMentions,
+   /*deleteTwitterMentions,
     deleteTwitterDirectMessages,
     deleteFacebookDirectMessages,
     deleteFacebookPosts,
-    deleteFacebookComments,
+    deleteFacebookComments,*/
     findTwitterUsers,
     //resetUsersLastTimes,
     findTweets,
