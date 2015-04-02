@@ -723,7 +723,7 @@ function findFacebookMessages(pages, callback) {
                   getConversationsFinishedCallback(page, err);
                 } else {
                   //iterate and store them in the database
-                  async.eachLimit(b.data, 5, function (convo, nextConvo) {
+                  async.eachLimit(b.data, 3, function (convo, nextConvo) {
                     if (convo.messages.data.length > 0) {
                       console.log(convo.messages.data.length + ' messages found in conversation ' + convo.id);
                       async.eachLimit(convo.messages.data, 3, function (message, nextMessage) {
