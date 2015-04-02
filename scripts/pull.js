@@ -1072,6 +1072,7 @@ process.argv.forEach(function (val, index, array) {
   if(val.toUpperCase() == "FOREVER") {
     days_to_pull = -1;
     request_delay = c.allTimeThrottleMS;
+    
   }
 });
 
