@@ -859,7 +859,7 @@ function findFacebookComments(users, callback){
     };
   }
 
-  async.eachLimit(users, 5, function(user, nextUser){
+  async.eachLimit(users, 10, function(user, nextUser){
     console.log('finding commentables for user ' + user.id);
     esClient.search({
       index: c.index,
