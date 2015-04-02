@@ -56,11 +56,11 @@ var User = mongoose.model('User', userSchema)
 function findTwitterUsers(callback){
   User.findConnectedTwitter(function(err, users){
     if (err){
-      ////console.log('Error in findTwitterUsers')
-      ////console.log(err)
+      //////console.log('Error in findTwitterUsers')
+      //////console.log(err)
       callback(err)
     } else {
-      //console.log('found users');
+      ////console.log('found users');
       callback(null, users)
     }
   })
@@ -74,21 +74,21 @@ function resetUsersLastTimes(users, callback) {
       $set: {'services.facebook.lastMessageTime': ''}},
       function (err, numberAffected, raw) {
       if(err) {
-        console.log('error User.update');
-        console.log(err);
+        //console.log('error User.update');
+        //console.log(err);
         nextUser(err);
       } else {
-        console.log('User ' + user.id + ' last times reset');
+        //console.log('User ' + user.id + ' last times reset');
         nextUser();
       }
     });
   }, function (err) {
     if(err) {
-      console.log('error resetUsersLastTimes');
-      console.log(err);
+      //console.log('error resetUsersLastTimes');
+      //console.log(err);
       callback(err, users);
     } else {
-      console.log('resetUsersLastTimes completed');
+      //console.log('resetUsersLastTimes completed');
       callback(users);
     }
   });
@@ -104,7 +104,7 @@ function deleteTwitterMentions(callback) {
     }
   }, function(err, response){
     if(err == null && response.count > 0) {
-      console.log('Mentions To Delete: ' + response.count);
+      //console.log('Mentions To Delete: ' + response.count);
       esClient.deleteByQuery({
         index: c.index,
         body: {
@@ -118,7 +118,7 @@ function deleteTwitterMentions(callback) {
     } else if(err != null) {
       callback(err);
     } else {
-      console.log('No Mentions to Delete');
+      //console.log('No Mentions to Delete');
       callback();
     }
   });
@@ -134,7 +134,7 @@ function deleteTwitterDirectMessages(callback) {
     }
   }, function(err, response) {
     if (err == null && response.count > 0) {
-      console.log('Direct Messages To Delete: ' + response.count);
+      //console.log('Direct Messages To Delete: ' + response.count);
       esClient.deleteByQuery({
         index: c.index,
         body: {
@@ -148,7 +148,7 @@ function deleteTwitterDirectMessages(callback) {
     } else if(err != null) {
       callback(err);
     } else {
-      console.log('No Direct Messages to Delete');
+      //console.log('No Direct Messages to Delete');
       callback();
     }
   });
@@ -164,7 +164,7 @@ function deleteFacebookDirectMessages(callback) {
     }
   }, function(err, response) {
     if (err == null && response.count > 0) {
-      console.log('Messages To Delete: ' + response.count);
+      //console.log('Messages To Delete: ' + response.count);
       esClient.deleteByQuery({
         index: c.index,
         body: {
@@ -178,7 +178,7 @@ function deleteFacebookDirectMessages(callback) {
     } else if(err != null) {
       callback(err);
     } else {
-      console.log('No Messages to Delete');
+      //console.log('No Messages to Delete');
       callback();
     }
   });
@@ -194,7 +194,7 @@ function deleteFacebookPosts(callback) {
     }
   }, function(err, response) {
     if (err == null && response.count > 0) {
-      console.log('Posts To Delete: ' + response.count);
+      //console.log('Posts To Delete: ' + response.count);
       esClient.deleteByQuery({
         index: c.index,
         body: {
@@ -203,14 +203,14 @@ function deleteFacebookPosts(callback) {
           }
         }
       }, function (err, response) {
-        console.log('Posts Deleted');
-        // ////console.log(response);
+        //console.log('Posts Deleted');
+        // //////console.log(response);
         callback();
       })
     } else if(err != null) {
       callback(err);
     } else {
-      console.log('No Posts to Delete');
+      //console.log('No Posts to Delete');
       callback();
     }
   });
@@ -226,7 +226,7 @@ function deleteFacebookComments(callback) {
     }
   }, function(err, response) {
     if (err == null && response.count > 0) {
-      console.log('Comments To Delete: ' + response.count);
+      //console.log('Comments To Delete: ' + response.count);
       esClient.deleteByQuery({
         index: c.index,
         body: {
@@ -235,20 +235,20 @@ function deleteFacebookComments(callback) {
           }
         }
       }, function (err, response) {
-        console.log('Comments Deleted');
-        console.log(err);
+        //console.log('Comments Deleted');
+        //console.log(err);
         callback();
       })
     } else if(err != null) {
       callback(err);
     } else {
-      console.log('No Comments to Delete');
+      //console.log('No Comments to Delete');
       callback();
     }
   });
 }
 function findTweets(users, callback){
-  console.log('finding tweets');
+  //console.log('finding tweets');
   async.each(users, function(user, nextUser){
     var client = new tw({
       consumer_key: process.env.TWITTER_API_KEY,
@@ -263,21 +263,21 @@ function findTweets(users, callback){
     if (user.services.twitter.sinceId && user.services.twitter.sinceId != '') {
       params.since_id = user.services.twitter.sinceId;
     }
-    //console.log(params);
+    ////console.log(params);
     client.get('statuses/mentions_timeline', params, function(err, tweets, response){
 
       if (err) {
-        console.log('Error statuses/mentions_timeline')
-        console.log(err)
+        //console.log('Error statuses/mentions_timeline')
+        //console.log(err)
         nextUser(err)
       }
       if (tweets.length > 0) {
-        console.log(tweets.length + ' tweets recovered');
+        //console.log(tweets.length + ' tweets recovered');
         // Update User with most recent tweet
         User.update({ _id: user.id },{ $set: {'services.twitter.sinceId': tweets[0].id_str} }, function (err, numberAffected, raw){
           if (err){
-            console.log('Error User.update')
-            console.log(err)
+            //console.log('Error User.update')
+            //console.log(err)
             nextUser(err)
           } else {
             async.eachLimit(tweets, 5, function(tweet, nextTweet){
@@ -306,21 +306,21 @@ function findTweets(users, callback){
                       }
                     }, function(err, response){
                       if (err){
-                        console.log('Error async.each esClient.create')
-                        console.log(err)
+                        //console.log('Error async.each esClient.create')
+                        //console.log(err)
                         nextTweet(err)
                       } else {
-                        console.log('tweet ' + tweet.id_str + ' created');
+                        //console.log('tweet ' + tweet.id_str + ' created');
                         nextTweet()
                       }
                     })
                 }else{
                   if (typeof err != 'undefined'){
-                    console.log('Error from count')
-                    console.log(err)
+                    //console.log('Error from count')
+                    //console.log(err)
                     nextTweet(err)
                   }else{
-                    console.log('tweet ' + tweet.id_str + ' already exists in database');
+                    //console.log('tweet ' + tweet.id_str + ' already exists in database');
                     nextTweet()
                   }
                 }
@@ -328,8 +328,8 @@ function findTweets(users, callback){
 
             }, function (err){
                 if (err){
-                  console.log('Error async.each tweets complete')
-                  console.log(err)
+                  //console.log('Error async.each tweets complete')
+                  //console.log(err)
                   nextUser(err)
                 } else {
                   nextUser()
@@ -344,8 +344,8 @@ function findTweets(users, callback){
 
   },function(err){
     if (err){
-      console.log('Error async.each users complete')
-      console.log(err)
+      //console.log('Error async.each users complete')
+      //console.log(err)
       callback(err, users)
     } else {
       callback(null, users);
@@ -355,7 +355,7 @@ function findTweets(users, callback){
   //callback(null, users);
 }
 function findTwitterDirectMessages(users, callback) {
-  console.log('finding direct messages');
+  //console.log('finding direct messages');
   async.each(users, function(user, nextUser){
     var client = new tw({
       consumer_key: process.env.TWITTER_API_KEY,
@@ -373,18 +373,18 @@ function findTwitterDirectMessages(users, callback) {
 
     client.get('direct_messages', params, function(err, messages, response){
       if (err) {
-        console.log('Error direct_messages');
-        console.log(err);
+        //console.log('Error direct_messages');
+        //console.log(err);
         nextUser(err);
       }
       if (messages.length > 0) {
-        console.log(messages.length + ' twitter direct messages to create');
+        //console.log(messages.length + ' twitter direct messages to create');
         // Update User with most recent direct message
         User.update({ _id: user.id },{ $set: {'services.twitter.dmSinceId': messages[0].id_str} },
           function (err, numberAffected, raw){
           if (err){
-            console.log('Error User.update')
-            console.log(err)
+            //console.log('Error User.update')
+            //console.log(err)
             nextUser(err)
           } else {
             async.eachLimit(messages, 5, function(message, nextMessage){
@@ -414,29 +414,29 @@ function findTwitterDirectMessages(users, callback) {
                     }
                   }, function(err, response){
                     if (err){
-                      console.log('Error async.each esClient.create')
-                      console.log(err)
+                      //console.log('Error async.each esClient.create')
+                      //console.log(err)
                       nextMessage(err)
                     } else {
-                      console.log('twitter direct message ' + message.id_str + ' created in database');
+                      //console.log('twitter direct message ' + message.id_str + ' created in database');
                       nextMessage()
                     }
                   })
                 }else{
                   if (typeof err != 'undefined'){
-                    console.log('Error from count')
-                    console.log(err)
+                    //console.log('Error from count')
+                    //console.log(err)
                     nextMessage(err)
                   }else{
-                    console.log('twitter direct message ' + message.id_str + ' exists in database');
+                    //console.log('twitter direct message ' + message.id_str + ' exists in database');
                     nextMessage()
                   }
                 }
               })
             }, function (err){
               if (err){
-                console.log('Error async.each direct messages complete');
-                console.log(err);
+                //console.log('Error async.each direct messages complete');
+                //console.log(err);
                 nextUser(err);
               } else {
                 nextUser();
@@ -451,8 +451,8 @@ function findTwitterDirectMessages(users, callback) {
 
   },function(err){
     if (err){
-      console.log('Error async.each users complete')
-      console.log(err)
+      //console.log('Error async.each users complete')
+      //console.log(err)
       callback(err)
     } else {
       callback()
@@ -471,21 +471,21 @@ function makeThrottledRequest(url, json, requestCompleteHandler) {
 function findFacebookUsers(callback){
   User.findConnectedFacebook(function(err, users){
     if (err){
-      console.log('Error findConnectedFacebook')
-      console.log(err)
+      //console.log('Error findConnectedFacebook')
+      //console.log(err)
       callback(err)
     } else {
-      console.log('found facebook users');
+      //console.log('found facebook users');
       callback(null, users)
     }
   })
 }
 
 function findFacebookPages(users, callback) {
-  //console.log('finding facebook pages');
+  ////console.log('finding facebook pages');
   var pageArray = [];
   async.eachLimit(users, 1, function(user, nextUser){
-    //console.log('find pages for user: ' + user.id);
+    ////console.log('find pages for user: ' + user.id);
     var pageUrl = 'https://graph.facebook.com/v2.3/me/accounts?access_token='+user.services.facebook.accessToken;
     /*request({
       url: pageUrl,
@@ -493,19 +493,19 @@ function findFacebookPages(users, callback) {
     }, function (error, response, body) {*/
     makeThrottledRequest(pageUrl, true, function (error, response, body) {
       if(error != null) {
-        //console.log('error request accounts completed');
-        ////console.log(error);
+        ////console.log('error request accounts completed');
+        //////console.log(error);
         nextUser(error);
       } else {
         async.reduce(body.data, pageArray, function(pages, page, cb) {
           page.user = user;
-          //console.log('Assigned User to Page: ' + page.id + ' - ' + page.user.id);
+          ////console.log('Assigned User to Page: ' + page.id + ' - ' + page.user.id);
           pages.push(page);
-         // //console.log(pages.length);
-         // //console.log(page);
+         // ////console.log(pages.length);
+         // ////console.log(page);
           cb(null, pages);
         }, function (err, result) {
-          ////console.log(result);
+          //////console.log(result);
           pageArray = result;
           if(err) {
             nextUser(err);
@@ -516,12 +516,12 @@ function findFacebookPages(users, callback) {
       }
     })
   },function(err){
-    ////console.log(pageArray);
-    ////console.log(pages);
+    //////console.log(pageArray);
+    //////console.log(pages);
 
     if(err != null) {
-      console.log("Error async.each users complete");
-      console.log(err);
+      //console.log("Error async.each users complete");
+      //console.log(err);
       callback(err, pageArray);
     }
     else {
@@ -532,34 +532,34 @@ function findFacebookPages(users, callback) {
 
 //works
 function findFacebookPosts(pages, callback){
-  //console.log('finding facebook posts for ' + pages.length + ' pages');
+  ////console.log('finding facebook posts for ' + pages.length + ' pages');
    function getPosts(page, url, getPostsFinishedCallback) {
-     //console.log('post-url: ' + url);
+     ////console.log('post-url: ' + url);
      /*request({
        url: url,
        json: true
      },function (e, r, b){*/
      makeThrottledRequest(url, true, function (e, r, b) {
        if(e != null) {
-         console.log('error request posts failed');
-         console.log(e);
+         //console.log('error request posts failed');
+         //console.log(e);
          getPostsFinishedCallback(page, e);
        } else {
          if(b.data && b.data.length > 0) {
-           console.log('Recording ' + b.data.length + ' posts');
+           //console.log('Recording ' + b.data.length + ' posts');
            var lastPostTimeUnix = Math.floor(new Date(b.data[0].created_time).getTime() / 1000);
 
            User.update({ _id: page.user.id },{ $set: {'services.facebook.lastPostTime': lastPostTimeUnix} },
              function (err, numberAffected, raw){
                if(err != null) {
-                 console.log('error update last post time');
-                 console.log(err);
+                 //console.log('error update last post time');
+                 //console.log(err);
                  getPostsFinishedCallback(page, err);
                } else {
-                 //console.log(b.data);
+                 ////console.log(b.data);
                  //iterate and store them in the database
                  async.eachLimit(b.data, 5, function (post, nextPost) {
-                   console.log('post from ' + post.from != null ? post.from.name : '' + ' ' + post.message);
+                   console.log('post from ' + post.from.name + ' - ' + post.message);
                    esClient.count({
                      index: c.index,
                      body: {
@@ -590,46 +590,46 @@ function findFacebookPosts(pages, callback){
                          }
                        }, function(err, response){
                          if (err){
-                           console.log('Error async.each post esClient.create')
-                           console.log(err)
+                           //console.log('Error async.each post esClient.create')
+                           //console.log(err)
                            nextPost(err)
                          } else {
-                           console.log('facebook post created: ' + post.id + ' for user: ' + page.user.id);
+                           //console.log('facebook post created: ' + post.id + ' for user: ' + page.user.id);
                            nextPost()
                          }
                        })
                      }else{
                        if (err){
-                         console.log('Error from post count')
-                         console.log(err)
+                         //console.log('Error from post count')
+                         //console.log(err)
                          nextPost(err)
                        }else {
-                         console.log('facebook post already recorded to database');
+                         //console.log('facebook post already recorded to database');
                          nextPost();
                        }
                      }
                    })
                  }, function (err){
                    if (err){
-                     console.log('Error async.each posts complete');
-                     console.log(err);
+                     //console.log('Error async.each posts complete');
+                     //console.log(err);
                      getPostsFinishedCallback(page, err);
                    } else {
-                     //console.log('no new posts to record');
+                     ////console.log('no new posts to record');
                      if(b.paging && b.paging.next && b.paging.next != '') {
-                       console.log('facebook messages posts - next');
+                       //console.log('facebook messages posts - next');
                        getPosts(page, b.paging.next, function (page, err) {
                          if(err) {
-                           console.log('Error async.each next posts complete');
-                           console.log(err);
+                           //console.log('Error async.each next posts complete');
+                           //console.log(err);
                            getPostsFinishedCallback(page, err);
                          } else { //we're done with this child
-                           console.log('post paging completed');
+                           //console.log('post paging completed');
                            getPostsFinishedCallback(page);
                          }
                        });
                      } else {
-                       console.log('last page');
+                       //console.log('last page');
                        getPostsFinishedCallback(page);
                      }
 
@@ -638,8 +638,8 @@ function findFacebookPosts(pages, callback){
                }
              });
          } else {
-           console.log('no posts returned');
-           console.log(b);
+           //console.log('no posts returned');
+           //console.log(b);
            getPostsFinishedCallback(page);
          }
        }
@@ -647,7 +647,7 @@ function findFacebookPosts(pages, callback){
    }
     async.eachLimit(pages, 5, function(page, nextPage){
       /*var since = page.user.services.facebook.lastPostTime;
-      console.log('Last Post Time: ' + since);
+      //console.log('Last Post Time: ' + since);
       if(since === 'undefined' || since == null || since == '') {
         var now = new Date();
         since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
@@ -657,8 +657,8 @@ function findFacebookPosts(pages, callback){
       var postsUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/posts?'+qp+'&access_token='+page.access_token;
       getPosts(page, postsUrl, function (page, err) {
         if(err) {
-          console.log('error getPosts completed handler');
-          console.log(err);
+          //console.log('error getPosts completed handler');
+          //console.log(err);
           nextPage(err);
         } else {
           nextPage();
@@ -666,8 +666,8 @@ function findFacebookPosts(pages, callback){
       });
       }, function (err){
         if (err){
-          console.log('Error async.each pages complete');
-          console.log(err);
+          //console.log('Error async.each pages complete');
+          //console.log(err);
           callback(err, pages);
         } else {
           callback(null, pages);
@@ -677,10 +677,10 @@ function findFacebookPosts(pages, callback){
 
 //works
 function findFacebookMessages(pages, callback) {
-  console.log('finding facebook messages');
+  //console.log('finding facebook messages');
   async.eachLimit(pages, 5, function (page, nextPage) {
     /*var since = page.user.services.facebook.lastMessageTime;
-    console.log('Last Message Time' + since);
+    //console.log('Last Message Time' + since);
     if (since === 'undefined' || since == null || since == '') {
       var now = new Date();
       since = Math.floor((new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)).getTime() / 1000);
@@ -703,14 +703,14 @@ function findFacebookMessages(pages, callback) {
             User.update({_id: page.user.id}, {$set: {'services.facebook.lastMessageTime': lastMessageTimeUnix}},
               function (err, numberAffected, raw) {
                 if (err != null) {
-                  console.log('Error user.update complete');
-                  console.log(err);
+                  //console.log('Error user.update complete');
+                  //console.log(err);
                   getConversationsFinishedCallback(page, err);
                 } else {
                   //iterate and store them in the database
                   async.eachLimit(b.data, 5, function (convo, nextConvo) {
                     if (convo.messages.data.length > 0) {
-                      console.log(convo.messages.data.length + ' messages found in conversation ' + convo.id);
+                      //console.log(convo.messages.data.length + ' messages found in conversation ' + convo.id);
                       async.eachLimit(convo.messages.data, 5, function (message, nextMessage) {
                         esClient.count({
                           index: c.index,
@@ -740,53 +740,53 @@ function findFacebookMessages(pages, callback) {
                               }
                             }, function (err, response) {
                               if (err) {
-                                console.log('Error async.each message esClient.create')
-                                console.log(err)
+                                //console.log('Error async.each message esClient.create')
+                                //console.log(err)
                                 nextMessage(err)
                               } else {
-                                console.log('message created');
+                                //console.log('message created');
                                 nextMessage()
                               }
                             });
                           } else {
                             if (typeof err != 'undefined') {
-                              console.log('Error from count')
-                              console.log(err)
+                              //console.log('Error from count')
+                              //console.log(err)
                               nextConvo(err)
                             } else {
-                              console.log('message already recorded to database');
+                              //console.log('message already recorded to database');
                               nextConvo()
                             }
                           }
                         })
                       }, function (err) {
                         if (err) {
-                          console.log('Error async.each messages complete');
-                          console.log(err);
+                          //console.log('Error async.each messages complete');
+                          //console.log(err);
                           nextConvo(err);
                         } else {
                           nextConvo();
                         }
                       })
                     } else {
-                      console.log('no new messages found');
+                      //console.log('no new messages found');
                       nextConvo();
                     }
                   }, function (err) {
                     if (err != null) {
-                      console.log('Error async.each conversations complete');
-                      console.log(err);
+                      //console.log('Error async.each conversations complete');
+                      //console.log(err);
                       getConversationsFinishedCallback(page, err);
                     } else {
                       if(b.paging && b.paging.next && b.paging.next != '') {
-                        console.log('facebook conversations - next');
+                        //console.log('facebook conversations - next');
                         getConversations(page, b.paging.next, function (page, err) {
                           if(err) {
-                            console.log('Error async.each next conversations complete');
-                            console.log(err);
+                            //console.log('Error async.each next conversations complete');
+                            //console.log(err);
                             getConversationsFinishedCallback(page, err);
                           } else { //we're done with this child
-                            console.log('conversations paging completed');
+                            //console.log('conversations paging completed');
                             getConversationsFinishedCallback(page);
                           }
                         });
@@ -806,11 +806,11 @@ function findFacebookMessages(pages, callback) {
 
     getConversations(page, convoUrl, function(page, err) {
       if(err) {
-        console.log('error getConversations completed');
-        console.log(err);
+        //console.log('error getConversations completed');
+        //console.log(err);
         nextPage(err);
       } else {
-        console.log('getConversations completed');
+        //console.log('getConversations completed');
         nextPage();
       }
     })
@@ -820,8 +820,8 @@ function findFacebookMessages(pages, callback) {
       return page.user.id;
     }), 'user');
     if(err) {
-      console.log("Error async.each users complete");
-      console.log(err);
+      //console.log("Error async.each users complete");
+      //console.log(err);
       callback(err, uniqueUsers);
     } else {
       callback(null, uniqueUsers);
@@ -834,7 +834,7 @@ function findFacebookComments(users, callback){
   var since = new Date(now.getTime() - 30*24*60*60*1000);
 
   async.each(users, function(user, nextUser){
-    console.log('finding commentables for user ' + user.id);
+    //console.log('finding commentables for user ' + user.id);
     esClient.search({
       index: c.index,
       type: user.domain,
@@ -856,27 +856,27 @@ function findFacebookComments(users, callback){
       }
     }, function (error, response) {
       if (error) {
-        console.log('Error esClient.search')
-        console.log(error)
+        //console.log('Error esClient.search')
+        //console.log(error)
         nextUser(error)
         return;
       }
       if (response.hits.total > 0){
-        console.log('Commentable Count: ' + response.hits.total);
-        console.log('Commentables Retrned: ' + response.hits.hits.length);
+        //console.log('Commentable Count: ' + response.hits.total);
+        //console.log('Commentables Retrned: ' + response.hits.hits.length);
         var postsAndComments = _.filter(response.hits.hits, function(hit) {
-          console.log('Document Type: ' + hit._source.doc_source + '.' + hit._source.doc_type);
+          //console.log('Document Type: ' + hit._source.doc_source + '.' + hit._source.doc_type);
           return hit._source.doc_type == 'post' || hit._source.doc_type == 'comment';
         });
 
-        console.log('Found Total of ' + postsAndComments.length + ' commentable objects');
+        //console.log('Found Total of ' + postsAndComments.length + ' commentable objects');
         async.eachLimit(postsAndComments, 5, function(object, nextObject) {
-          //console.log('comment: ' + object._source.doc_text);
+          ////console.log('comment: ' + object._source.doc_text);
           var rootId = object._source.doc_type == 'post' ? object._id : object._source.root_id;
           findFacebookCommentsForObject(user, object._source.page_id, object._id, rootId, object._source.access_token, function (err) {
             if(err != null) {
-              console.log('Error findFacebookCommentsForObject complete');
-              console.log(err);
+              //console.log('Error findFacebookCommentsForObject complete');
+              //console.log(err);
               nextObject(err);
             } else {
               nextObject();
@@ -884,8 +884,8 @@ function findFacebookComments(users, callback){
           })
         }, function (err){
           if(err != null) {
-            console.log('error async.each commentableObject completed');
-            console.log(err);
+            //console.log('error async.each commentableObject completed');
+            //console.log(err);
             nextUser(err);
           } else {
             nextUser();
@@ -897,8 +897,8 @@ function findFacebookComments(users, callback){
     })
   },function(err){
     if (err) {
-      console.log('Error async.each users complete')
-      console.log(err)
+      //console.log('Error async.each users complete')
+      //console.log(err)
       callback(err)
     } else {
       callback()
@@ -909,7 +909,7 @@ function findFacebookComments(users, callback){
 function findFacebookCommentsForObject(user, pageId, commentableId, rootId, accessToken, callback) {
   var qp = 'fields=id,comment_count,from,message,created_time';
   var commentsUrl = 'https://graph.facebook.com/v2.3/' + commentableId + '/comments?'+qp+'&access_token='+ accessToken;
-  //console.log(commentsUrl);
+  ////console.log(commentsUrl);
 
   function getComments(url, data, getCommentsFinishedCallback) {
     /*request({
@@ -925,13 +925,13 @@ function findFacebookCommentsForObject(user, pageId, commentableId, rootId, acce
           User.update({_id: data.user.id}, {$set: {'services.facebook.lastCommentTime': newLastCommentTimeUnix}},
             function (err, numberAffected, raw) {
               if (err) {
-                console.log('Error last comment time update');
-                console.log('err');
+                //console.log('Error last comment time update');
+                //console.log('err');
                 getCommentsFinishedCallback(url, data, err);;
               } else {
                 //iterate and store them in the database
                 async.eachLimit(b.data, 5, function (comment, nextComment) {
-                  //console.log(comment);
+                  ////console.log(comment);
                   esClient.count({
                     index: c.index,
                     body: {
@@ -962,54 +962,54 @@ function findFacebookCommentsForObject(user, pageId, commentableId, rootId, acce
                         }
                       }, function (err, response) {
                         if (err) {
-                          console.log('Error async.each comment esClient.create')
-                          console.log(err)
+                          //console.log('Error async.each comment esClient.create')
+                          //console.log(err)
                           nextComment(err)
                         } else {
-                          console.log('facebook comment created with id: ' + comment.id);
+                          //console.log('facebook comment created with id: ' + comment.id);
                           if(comment.comment_count > 0) {
-                            console.log('facebook comment ' + comment.id + ' has ' + comment.comment_count + ' replies.');
+                            //console.log('facebook comment ' + comment.id + ' has ' + comment.comment_count + ' replies.');
                             findFacebookCommentsForObject(data.user, data.pageId, comment.id, data.rootId, data.accessToken, function (err) {
                               if(err) {
-                                console.log('Error findFacebookCommentsForObject recursion');
-                                console.log(err);
+                                //console.log('Error findFacebookCommentsForObject recursion');
+                                //console.log(err);
                                 nextComment(err);
                               } else {
                                 nextComment();
                               }
                             });
                           } else {
-                            console.log('facebook comment ' + comment.id + ' has no replies');
+                            //console.log('facebook comment ' + comment.id + ' has no replies');
                             nextComment()
                           }
                         }
                       });
                     } else {
                       if (err) {
-                        console.log('Error from comment count')
-                        console.log(err)
+                        //console.log('Error from comment count')
+                        //console.log(err)
                         nextComment(err)
                       } else {
-                        console.log('facebook comment ' + comment.id + ' already in database');
+                        //console.log('facebook comment ' + comment.id + ' already in database');
                         nextComment()
                       }
                     }
                   })
                 }, function (err) {
                   if (err) {
-                    console.log('Error async.each comment complete');
-                    console.log(err);
+                    //console.log('Error async.each comment complete');
+                    //console.log(err);
                     getCommentsFinishedCallback(url, data, err);
                   } else {
                     if(b.paging && b.paging.next && b.paging.next != '') {
-                      console.log('facebook comments - next');
+                      //console.log('facebook comments - next');
                       getComments(b.paging.next, data, function (uri, data, err) {
                         if(err) {
-                          console.log('Error async.each next comments complete');
-                          console.log(err);
+                          //console.log('Error async.each next comments complete');
+                          //console.log(err);
                           getCommentsFinishedCallback(uri, data, err);
                         } else { //we're done with this child
-                          console.log('comments paging completed');
+                          //console.log('comments paging completed');
                           getCommentsFinishedCallback(uri, data);
                         }
                       });
@@ -1021,7 +1021,7 @@ function findFacebookCommentsForObject(user, pageId, commentableId, rootId, acce
               }
             });
         } else {
-          console.log('facebook object ' + commentableId + ' has no comments');
+          //console.log('facebook object ' + commentableId + ' has no comments');
           getCommentsFinishedCallback(url, data);
         }
       }
@@ -1038,22 +1038,22 @@ function findFacebookCommentsForObject(user, pageId, commentableId, rootId, acce
 
   getComments(commentsUrl, d, function (url, data, err) {
     if(err) {
-      console.log('error getComments');
-      console.log(err);
+      //console.log('error getComments');
+      //console.log(err);
       callback(err);
     } else {
-      console.log('getComments completed');
+      //console.log('getComments completed');
       callback();
     }
   });
 }
 
 async.waterfall([
-   /*deleteTwitterMentions,
+   deleteTwitterMentions,
     deleteTwitterDirectMessages,
     deleteFacebookDirectMessages,
     deleteFacebookPosts,
-    deleteFacebookComments,*/
+    deleteFacebookComments,
     findTwitterUsers,
     //resetUsersLastTimes,
     findTweets,
@@ -1066,8 +1066,8 @@ async.waterfall([
     findFacebookComments
 ],function(err){
   if (err){
-    console.log('Error async.waterfall complete')
-    console.log(err)
+    //console.log('Error async.waterfall complete')
+    //console.log(err)
     process.exit(1)
   }else {
     process.exit(0)
