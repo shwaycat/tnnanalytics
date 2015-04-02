@@ -726,7 +726,7 @@ function findFacebookMessages(pages, callback) {
                   async.eachLimit(b.data, 5, function (convo, nextConvo) {
                     if (convo.messages.data.length > 0) {
                       console.log(convo.messages.data.length + ' messages found in conversation ' + convo.id);
-                      async.eachLimit(convo.messages.data, 5, function (message, nextMessage) {
+                      async.eachLimit(convo.messages.data, 3, function (message, nextMessage) {
                         esClient.count({
                           index: c.index,
                           body: {
