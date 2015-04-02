@@ -463,7 +463,7 @@ function findTwitterDirectMessages(users, callback) {
 }
 
 var request_delay = c.normalThrottleMS;
-var days_to_pull = c.normalPullDays;
+var days_to_pull = 30;
 
 function makeThrottledRequest(url, json, requestCompleteHandler) {
   setTimeout(function () {
@@ -660,7 +660,7 @@ function findFacebookPosts(pages, callback){
         since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
       }*/
       var qp = 'fields=id,message,created_time,from';
-      if(days_to_pull > 0) {
+      if(days_to_pull > -1) {
         var since = Math.floor((new Date((new Date()).getTime() - days_to_pull * 24 * 60 * 60 * 1000)).getTime() / 1000);
         qp + '&since=' + since;
       }
@@ -698,7 +698,7 @@ function findFacebookMessages(pages, callback) {
     }*/
 
     var qp = 'fields=id,updated_time,messages';
-    if(days_to_pull > 0) {
+    if(days_to_pull > -1) {
       var since = Math.floor((new Date((new Date()).getTime() - days_to_pull * 24 * 60 * 60 * 1000)).getTime() / 1000);
       qp + '&since=' + since;
     }
@@ -847,7 +847,7 @@ function findFacebookMessages(pages, callback) {
 function findFacebookComments(users, callback){
 
   var rangeFilters = {};
-  if(days_to_pull > 0) {
+  if(days_to_pull > -1) {
     var now = new Date(new Date().toUTCString().substr(0, 25));
     var since = new Date(now.getTime() - days_to_pull*24*60*60*1000);
     rangeFilters = {
@@ -1077,11 +1077,11 @@ process.argv.forEach(function (val, index, array) {
 
 console.log('Days to Fetch: ' + days_to_pull);
 async.waterfall([
-   /*deleteTwitterMentions,
+   deleteTwitterMentions,
     deleteTwitterDirectMessages,
     deleteFacebookDirectMessages,
     deleteFacebookPosts,
-    deleteFacebookComments*/,
+    deleteFacebookComments,
     findTwitterUsers,
     //resetUsersLastTimes,
     findTweets,
