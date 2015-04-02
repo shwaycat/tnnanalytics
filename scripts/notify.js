@@ -222,16 +222,21 @@ function findDocuments(users, callback){
               console.log(err);
               nextUser(err);
             } else {
-              // console.log(links)
-              new keystone.Email('notification').send({
-                subject: 'Cadence Notification',
-                to: user.email,
-                from: {
-                  name: 'Cadence',
-                  email: 'no-reply@maxmedia.com'
-                },
-                links: links
-              }, nextUser);
+              if(links.length > 0) {
+                // console.log(links)
+                new keystone.Email('notification').send({
+                  subject: 'Cadence Notification',
+                  to: user.email,
+                  from: {
+                    name: 'Cadence',
+                    email: 'no-reply@maxmedia.com'
+                  },
+                  links: links
+                }, nextUser);
+              } else {
+                nextUser();
+              }
+
             }
           });
         } else {

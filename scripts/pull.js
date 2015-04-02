@@ -14,6 +14,7 @@ var esClient = new elasticsearch.Client({
 })
 
 
+
 mongoose.connect(process.env.MONGOLAB_URI)
 
 var userSchema = new Schema({
@@ -459,6 +460,7 @@ function findTwitterDirectMessages(users, callback) {
     }
   })
 }
+var request_delay = 300;
 
 function makeThrottledRequest(url, json, requestCompleteHandler) {
   setTimeout(function () {
@@ -466,8 +468,9 @@ function makeThrottledRequest(url, json, requestCompleteHandler) {
       url: url,
       json: json
     }, requestCompleteHandler);
-  }, 250);
+  }, request_delay);
 }
+
 function findFacebookUsers(callback){
   User.findConnectedFacebook(function(err, users){
     if (err){
@@ -1049,11 +1052,11 @@ function findFacebookCommentsForObject(user, pageId, commentableId, rootId, acce
 }
 
 async.waterfall([
-   deleteTwitterMentions,
+   /*deleteTwitterMentions,
     deleteTwitterDirectMessages,
     deleteFacebookDirectMessages,
     deleteFacebookPosts,
-    deleteFacebookComments,
+    deleteFacebookComments,*/
     findTwitterUsers,
     //resetUsersLastTimes,
     findTweets,
