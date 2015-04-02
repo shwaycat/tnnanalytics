@@ -577,6 +577,7 @@ function findFacebookPosts(pages, callback){
                      }
                    }, function(err, response){
                      if ((typeof err == 'undefined') && response.count == 0){
+                       var notify = post && post.from.name != page.user.services.facebook.username;)
                        esClient.create({
                          index: c.index,
                          type: page.user.domain,
@@ -592,7 +593,7 @@ function findFacebookPosts(pages, callback){
                            time_stamp: post.created_time,
                            page_id: page.id,
                            access_token: page.access_token,
-                           notified: (post.from != null ? post.from.name : '') == page.user.services.facebook.username
+                           notified: !notify
                          }
                        }, function(err, response){
                          if (err){
