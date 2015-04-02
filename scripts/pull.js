@@ -460,6 +460,14 @@ function findTwitterDirectMessages(users, callback) {
   })
 }
 
+function makeThrottledRequest(url, json, requestCompleteHandler) {
+  setTimeout(function () {
+    request({
+      url: url,
+      json: json
+    }, requestCompleteHandler);
+  }, 50);
+}
 function findFacebookUsers(callback){
   User.findConnectedFacebook(function(err, users){
     if (err){
@@ -479,11 +487,11 @@ function findFacebookPages(users, callback) {
   async.eachLimit(users, 1, function(user, nextUser){
     //console.log('find pages for user: ' + user.id);
     var pageUrl = 'https://graph.facebook.com/v2.3/me/accounts?access_token='+user.services.facebook.accessToken;
-    request({
+    /*request({
       url: pageUrl,
       json: true
-    }, function (error, response, body) {
-
+    }, function (error, response, body) {*/
+    makeThrottledRequest(pageUrl, true, function (error, response, body) {
       if(error != null) {
         //console.log('error request accounts completed');
         ////console.log(error);
@@ -635,12 +643,13 @@ function findFacebookPosts(pages, callback){
      });
    }
     async.eachLimit(pages, 5, function(page, nextPage){
-      var since = page.user.services.facebook.lastPostTime;
+      /*var since = page.user.services.facebook.lastPostTime;
       console.log('Last Post Time: ' + since);
       if(since === 'undefined' || since == null || since == '') {
         var now = new Date();
         since = Math.floor((new Date(now.getTime() - 30*24*60*60*1000)).getTime() / 1000);
-      }
+      }*/
+      var since = Math.floor((new Date((new Date()).getTime() - 30 * 24 * 60 * 60 * 1000)).getTime() / 1000);
       var qp = 'fields=id,message,created_time,from&since=' + since;
       var postsUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/posts?'+qp+'&access_token='+page.access_token;
       getPosts(page, postsUrl, function (page, err) {
@@ -667,12 +676,13 @@ function findFacebookPosts(pages, callback){
 function findFacebookMessages(pages, callback) {
   console.log('finding facebook messages');
   async.eachLimit(pages, 5, function (page, nextPage) {
-    var since = page.user.services.facebook.lastMessageTime;
+    /*var since = page.user.services.facebook.lastMessageTime;
     console.log('Last Message Time' + since);
     if (since === 'undefined' || since == null || since == '') {
       var now = new Date();
       since = Math.floor((new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)).getTime() / 1000);
-    }
+    }*/
+    var since = Math.floor((new Date((new Date()).getTime() - 30 * 24 * 60 * 60 * 1000)).getTime() / 1000);
     var qp = 'fields=id,updated_time,messages&since=' + since;
     var convoUrl = 'https://graph.facebook.com/v2.3/' + page.id + '/conversations?' + qp + '&access_token=' + page.access_token;
 
@@ -1034,11 +1044,11 @@ function findFacebookCommentsForObject(user, pageId, commentableId, rootId, acce
 }
 
 async.waterfall([
-   /* deleteTwitterMentions,
+   deleteTwitterMentions,
     deleteTwitterDirectMessages,
     deleteFacebookDirectMessages,
     deleteFacebookPosts,
-    deleteFacebookComments,*/
+    deleteFacebookComments,
     findTwitterUsers,
     //resetUsersLastTimes,
     findTweets,
