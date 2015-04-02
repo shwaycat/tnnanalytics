@@ -3,5 +3,5 @@
   "justRecent" : false,
   "normalThrottleMS" : 330,
   "allTimeThrottleMS" : 550,
-  "concurrentThreads" : 2
+  "concurrentThreads" : 1
 }
