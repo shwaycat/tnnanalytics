@@ -1070,18 +1070,18 @@ function findFacebookCommentsForObject(user, pageId, commentableId, rootId, acce
 process.argv.forEach(function (val, index, array) {
   //console.log(index + ': ' + val);
   if(val.toUpperCase() == "FOREVER") {
-    days_to_pull = -1;
+    days_to_pull = 365;
     request_delay = c.allTimeThrottleMS;
   }
 });
 
 console.log('Days to Fetch: ' + days_to_pull);
 async.waterfall([
-   deleteTwitterMentions,
+   /*deleteTwitterMentions,
     deleteTwitterDirectMessages,
     deleteFacebookDirectMessages,
     deleteFacebookPosts,
-    deleteFacebookComments,
+    deleteFacebookComments,*/
     findTwitterUsers,
     //resetUsersLastTimes,
     findTweets,
