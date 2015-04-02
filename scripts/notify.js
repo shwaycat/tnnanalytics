@@ -98,7 +98,7 @@ function findDocuments(users, callback){
       index: c.index,
       type: user.domain,
       from: 0,
-      size: 100000000000,
+      size: 1000000000,
       body: {
         query: {
           term: {cadence_user_id: user.id},
