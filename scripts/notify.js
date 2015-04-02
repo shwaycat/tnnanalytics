@@ -98,7 +98,7 @@ function findDocuments(users, callback){
       index: c.index,
       type: user.domain,
       from: 0,
-      size: 1000000000,
+      size: 100000000000,
       body: {
         query: {
           term: {cadence_user_id: user.id},
@@ -107,18 +107,6 @@ function findDocuments(users, callback){
         filter: {
           or: orQueries
         }
-       /* query: {
-          filtered: {
-            query: {
-              match: {
-                cadence_user_id: user.id
-              }
-            },
-            filter: {
-              or: orQueries
-            }
-          }
-        }*/
       }
     }, function (error, response) {
         if (error){
@@ -134,7 +122,11 @@ function findDocuments(users, callback){
           var hitsToUpdate = [];
           links = _.map(_.filter(response.hits.hits, function(hit) {
               console.log('Document Type: ' + hit._source.doc_source + '.' + hit._source.doc_type);
-             if(hit._source.doc_type == 'mention' || hit._source.doc_type == 'direct_message' || hit._source.doc_type == 'message' || hit._source.doc_type == 'comment') {
+             if(hit._source.doc_type == 'mention' ||
+               hit._source.doc_type == 'direct_message' ||
+               hit._source.doc_type == 'message' ||
+               hit._source.doc_type == 'comment' ||
+               (hit._source.doc_type == 'post' && hit._source.username != user.services.facebook.username)) {
               hitsToUpdate.push(hit);
                return true;
              }
