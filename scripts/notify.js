@@ -107,18 +107,6 @@ function findDocuments(users, callback){
         filter: {
           or: orQueries
         }
-       /* query: {
-          filtered: {
-            query: {
-              match: {
-                cadence_user_id: user.id
-              }
-            },
-            filter: {
-              or: orQueries
-            }
-          }
-        }*/
       }
     }, function (error, response) {
         if (error){
@@ -134,7 +122,11 @@ function findDocuments(users, callback){
           var hitsToUpdate = [];
           links = _.map(_.filter(response.hits.hits, function(hit) {
               console.log('Document Type: ' + hit._source.doc_source + '.' + hit._source.doc_type);
-             if(hit._source.doc_type == 'mention' || hit._source.doc_type == 'direct_message' || hit._source.doc_type == 'message' || hit._source.doc_type == 'comment') {
+             if(hit._source.doc_type == 'mention' ||
+               hit._source.doc_type == 'direct_message' ||
+               hit._source.doc_type == 'message' ||
+               hit._source.doc_type == 'comment' ||
+               (hit._source.doc_type == 'post')) {
               hitsToUpdate.push(hit);
                return true;
              }
@@ -191,6 +183,20 @@ function findDocuments(users, callback){
                   text: 'Facebook: @' + hit._source.user_name + ': ' + hit._source.doc_text + ' - ' + timeStamp,
                   href: 'https://www.facebook.com/permalink.php?story_fbid=' + idParts[0]+ '&id=' + hit._source.root_id + '&comment_id=' + idParts[1]
                 }
+              } else if(hit._source.doc_type == 'post') {
+                console.log('facebook post');
+                //console.log(comment);
+                var timeStamp = '';
+                if(hit._source.time_stamp) {
+                  var date = new Date(hit._source.time_stamp);
+                  timeStamp = date.toLocaleString();
+                }
+                var idParts = hit._id.split("_");
+                return {
+                  //https://www.facebook.com/permalink.php?story_fbid=post_id&id=page_id&comment_id=comment.id
+                  text: 'Facebook: @' + hit._source.user_name + ': ' + hit._source.doc_text + ' - ' + timeStamp,
+                  href: 'https://www.facebook.com/permalink.php?story_fbid=' + idParts[1] + '&id=' + hit._source.page_id
+                }
               }
             }
 
@@ -222,16 +228,21 @@ function findDocuments(users, callback){
               console.log(err);
               nextUser(err);
             } else {
-              console.log(links)
-              new keystone.Email('notification').send({
-                subject: 'Cadence Notification',
-                to: user.email,
-                from: {
-                  name: 'Cadence',
-                  email: 'no-reply@maxmedia.com'
-                },
-                links: links
-              }, nextUser);
+
+              if(links.length > 0) {
+                // console.log(links)
+                new keystone.Email('notification').send({
+                  subject: 'Cadence Notification',
+                  to: user.email,
+                  from: {
+                    name: 'Cadence',
+                    email: 'no-reply@maxmedia.com'
+                  },
+                  links: links
+                }, nextUser);
+              } else {
+                nextUser();
+              }
             }
           });
         } else {
