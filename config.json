@@ -1,4 +1,7 @@
 {
   "index": "cadence-dev",
-  "justRecent" : false
+  "justRecent" : false,
+  "normalThrottleMS" : 330,
+  "allTimeThrottleMS" : 550,
+  "concurrentThreads" : 4
 }
