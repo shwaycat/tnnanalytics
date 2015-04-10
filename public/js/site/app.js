@@ -1,0 +1,8 @@
+$(window).resize(function(){
+
+});
+
+
+$(function() {
+
+});

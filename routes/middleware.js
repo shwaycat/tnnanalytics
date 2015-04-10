@@ -11,8 +11,25 @@ exports.initLocals = function(req, res, next) {
 	var locals = res.locals
 
 	locals.navLinks = [
-		{ label: 'Home',		key: 'home',		href: '/' },
-		{ label: 'Terms/Privacy',		key: 'privacy',		href: '/privacy' },
+		{ label: 'Dashboard',			type: 'page-dashboard',		key: 'dashboard',			href: '/accounts/:accountname' },
+		{ label: 'Facebook',			type: 'page-social',		key: 'facebook',			href: '/accounts/:accountname/facebook' },
+		{ label: 'Twitter',				type: 'page-social',		key: 'twitter',				href: '/accounts/:accountname/twitter' },
+		{ label: 'Instagram',			type: 'page-social',		key: 'instagram',			href: '/accounts/:accountname/instagram' },
+		{ label: 'Youtube',				type: 'page-social',		key: 'youtube',				href: '/accounts/:accountname/youtube' },
+		{ label: 'Google+',				type: 'page-social',		key: 'google-plus',			href: '/accounts/:accountname/google-plus' },
+		{ label: 'All',					type: 'page-analytics',		key: 'analytics-all',		href: '/accounts/:accountname/analytics-all' },
+		{ label: 'Global',				type: 'page-analytics',		key: 'analytics-global',	href: '/accounts/:accountname/analytics-global' },
+		{ label: 'US',					type: 'page-analytics',		key: 'analytics-us',		href: '/accounts/:accountname/analytics-us' },
+		{ label: 'Adverse Events',		type: 'page-events',		key: 'events',				href: '/accounts/:accountname/events' }
+	]
+
+	locals.footerLinks = [
+		{ label: 'Terms/Privacy',		type: 'page',		key: 'privacy',				href: '/privacy' },
+		{ label: 'Facebook',			type: 'social',		key: 'facebook',			href: '/facebook' },
+		{ label: 'Twitter',				type: 'social',		key: 'twitter',				href: '/twitter' },
+		{ label: 'Instagram',			type: 'social',		key: 'instagram',			href: '/instagram' },
+		{ label: 'Youtube',				type: 'social',		key: 'youtube',				href: '/youtube' },
+		{ label: 'Google+',				type: 'social',		key: 'google-plus',			href: '/google-plus' }
 	]
 
 	locals.user = req.user
