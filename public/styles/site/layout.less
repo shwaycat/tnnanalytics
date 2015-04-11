@@ -1,38 +1,94 @@
 
-.container-xs,
-.container-sm,
-.container-md {
-	.container-fixed();
+// .container-xs,
+// .container-sm,
+// .container-md {
+//  .container-fixed();
+// }
+
+// @media (min-width: @screen-sm-min) {
+//  .container-xs { width: 600px; }
+//  .container-sm { width: @screen-sm-min - @grid-gutter-width; }
+//  .container-md { max-width: @screen-md-min - @grid-gutter-width; }
+// }
+
+
+// .page-intro {
+//  padding-bottom: @page-padding;
+//  text-align: center;
+//  h1 {
+//    margin-bottom: 0.25em;
+//  }
+//  .buttons > .btn {
+//    margin-right: 10px;
+//  }
+//  .lead {
+//    max-width: @screen-sm-min - @grid-gutter-width;
+//    margin-left: auto;
+//    margin-right: auto;
+//  }
+// }
+
+// .page-content {
+//  .floor;
+//  .floor-1;
+// }
+
+// .form-actions button{
+//   margin-top: 2em;
+// }
+
+html, body {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  background-color:@background_site;
+}
+body {
+  font-family: @font_main;
+  color: @font_color;
+  font-weight: 300;
+  font-style: normal;
+  font-variant: normal;
+  font-size: 1em;
+  line-height: 1;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
 }
 
-@media (min-width: @screen-sm-min) {
-	.container-xs { width: 600px; }
-	.container-sm { width: @screen-sm-min - @grid-gutter-width; }
-	.container-md { max-width: @screen-md-min - @grid-gutter-width; }
+* {
+  ::selection {
+    background: white;
+    color: black;
+  }
+  ::-moz-selection {
+    background: white;
+    color: black;
+  }
 }
 
-
-.page-intro {
-	padding-bottom: @page-padding;
-	text-align: center;
-	h1 {
-		margin-bottom: 0.25em;
-	}
-	.buttons > .btn {
-		margin-right: 10px;
-	}
-	.lead {
-		max-width: @screen-sm-min - @grid-gutter-width;
-		margin-left: auto;
-		margin-right: auto;
-	}
+header, main, footer {
+  padding-left: 3%;
+  padding-right: 3%;
 }
 
-.page-content {
-	.floor;
-	.floor-1;
-}
-
-.form-actions button{
+header {
   margin-top: 2em;
+  padding-bottom: 3em;
+}
+
+main {
+  padding-bottom:5em;
+}
+
+ul, ol, li {
+  list-style-type: none;
+  margin:0;
+  padding:0;
+}
+
+a, a:hover, a:visited, a:active, a:focus {
+  text-decoration: none;
+  color:@font_color;
 }
