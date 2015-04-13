@@ -2,6 +2,7 @@
 @navigation_transition: 0.1s;
 
 .side-navigation {
+  padding-bottom:2em;
   ul {
 
   }
@@ -15,11 +16,11 @@
     height: 3em;
     line-height: 1.2;
     .respond-lg({
-      font-size:1.5em;
+       //font-size: 1.25em;
     });
-    .responsive(1920px, {
+    .respond-xlg {
       font-size: 1.8em;
-    });
+    }
     * {
       vertical-align: middle;
     }
@@ -59,6 +60,22 @@
       padding: @navigation_padding;
     }
   }
+  .navigation-sublink {
+    border-bottom: 1px solid #363940;
+    &.navigation-google-plus, &.navigation-analytics-us {
+      border-bottom:0;
+    }
+    .navigation-icon.sublink {
+      opacity:0;
+      .transition(@navigation_transition);
+    }
+    &.active, &:hover {
+      .navigation-icon.sublink {
+        opacity:1;
+        .transition(@navigation_transition);
+      }
+    }
+  }
   .navigation-icon {
     display: block;
     position: absolute;
@@ -68,17 +85,45 @@
     .transition(@navigation_transition);
     width: 3em;
     height: 100%;
+    > div {
+      color: #FFF;
+      position: absolute;
+      margin: auto;
+      top: 30%;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: table-cell;
+      text-align: center;
+      font-size: 2.2em;
+    }
+    &.sublink {
+      background-color:transparent;
       > div {
-        color: #FFF;
-        position: absolute;
-        margin: auto;
-        top: 30%;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        display: table-cell;
-        text-align: center;
-        font-size: 2.2em;
+        left:initial;
+        right: 10%;
+        font-size: 3em;
+        top: 25%;
+        color:transparent;
       }
+    }
+  }
+  .navigation-facebook .navigation-icon.sublink div {
+      color:@social_fb_main;
+  }
+  .navigation-twitter .navigation-icon.sublink div {
+      color:@social_twitter_main;
+  }
+  .navigation-instagram .navigation-icon.sublink div {
+      color:@social_instagram_main;
+  }
+  .navigation-youtube .navigation-icon.sublink div{
+      color:@social_youtube_main;
+  }
+  .navigation-google-plus .navigation-icon.sublink div {
+      color:@social_googleplus_main;
+  }
+  [class*='navigation-analytics'] .navigation-icon.sublink div {
+    color:@lightBlue;
   }
 }

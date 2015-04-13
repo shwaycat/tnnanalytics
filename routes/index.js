@@ -32,17 +32,16 @@ var routes = {
 exports = module.exports = function(app) {
 
 	// Unrestricted/General
-	app.get('/', routes.views.index);
+	app.get('/', routes.views.session.signin);
 	app.get('/privacy', routes.views.privacy);
-	app.all('/session*', middleware.requireUser);
 	app.all('/accounts*', middleware.requireUser);
 	app.all('/user*', middleware.requireUser);
 
 	// Session
-	app.all('/session/signin', routes.views.session.signin);
-	app.get('/session/signout', routes.views.session.signout);
-	app.all('/session/forgot-password', routes.views.session['forgot-password']);
-	app.all('/session/reset-password/:key', routes.views.session['reset-password']);
+	app.all('/signin', routes.views.session.signin);
+	app.get('/signout', routes.views.session.signout);
+	app.all('/forgot-password', routes.views.session['forgot-password']);
+	app.all('/reset-password/:key', routes.views.session['reset-password']);
 
 	// User
 	app.all('/user/:uid', routes.views.user.user);

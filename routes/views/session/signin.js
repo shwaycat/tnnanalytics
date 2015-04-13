@@ -4,7 +4,7 @@ var keystone = require('keystone'),
 exports = module.exports = function(req, res) {
 
 	if (req.user) {
-		return res.redirect(req.cookies.target || '/');
+		return res.redirect(req.cookies.target || '/signin');
 	}
 
 	var view = new keystone.View(req, res),
@@ -30,7 +30,7 @@ exports = module.exports = function(req, res) {
 				res.redirect(req.body.target);
 				console.log('why');
 			} else {
-				res.redirect('/session/signin');
+				res.redirect('/signin');
 				console.log('what');
 			}
 		}

@@ -1,6 +1,8 @@
 include ../mixins/flash-messages
 include ../mixins/auth/auth-forms
 
+include ../mixins/global/side-navigation
+
 html
   head
     meta(charset="utf-8")
@@ -22,53 +24,24 @@ html
           .col-xs-12.col-sm-6
             a(href="/" title="Cadence Home")
               img(src="" alt="Cadence Logo")
-        //- div(role="navigation").navbar.navbar-default
-        //-   .container-fluid
-        //-     .navbar-header
-        //-       button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
-        //-         span.sr-only Toggle navigation
-        //-         span.icon-bar
-        //-         span.icon-bar
-        //-         span.icon-bar
-        //-       a.navbar-brand(href='/')=site.brand
-        //-     .collapse.navbar-collapse
-        //-       ul.nav.navbar-nav.navbar-left
-        //-         each link in navLinks
-        //-           li(class=(section == link.key ? 'active' : null)): a(href=link.href)= link.label
-        //-       ul.nav.navbar-nav.navbar-right
-        //-         if user
-        //-           if user.canAccessKeystone
-        //-             li: a(href='/keystone') Open Keystone
-        //-           li: a(href='/me').user.hidden-xs
-        //-             img(src=(user.avatarUrl || '/images/avatar.png'), width=27).img-circle
-        //-             =' ' +user.name.first
-        //-           li: a(href='/signout')
-        //-             span.visible-xs Sign out
-        //-             span.entypo.entypo-large.entypo-logout.hidden-xs
-        //-         else
-        //-           li: a(href='/signin', data-from=page.path, data-initial='signin').js-auth-trigger Sign in
+            if user
+              if user.canAccessKeystone
+                li: a(href='/keystone') Open Keystone
+              li: a(href='/me').user.hidden-xs
+                img(src=(user.avatarUrl || '/images/avatar.png'), width=27).img-circle
+                =' ' +user.name.first
+              li: a(href='/signout')
+                span.visible-xs Sign out
+                span.entypo.entypo-large.entypo-logout.hidden-xs
+            else
+              li: a(href='/signin', data-from=page.path, data-initial='signin').js-auth-trigger Sign in
 
     .container-fluid
       main
         .row
-          .col-xs-12.col-sm-3
-            nav.side-navigation
-              ul
-                each item, index in navLinks
-                  if item.type == 'link'
-                    li.navigation-section(class='navigation-'+item.key+' '+(section == item.key ? 'active' : ''))
-                      a(href=item.href title=item.label)= item.label
-                        .navigation-icon
-                          .entypo.entypo-phone
-                  if item.type == 'navigation'
-                    li.navigation-section.navigation-section-title(class='navigation-'+item.key+' '+"icon-"+item.key )
-                      span=item.label
-                        .navigation-icon
-                          .entypo.entypo-phone
-                  if item.type == 'sub-link'
-                    li.navigation-sublink(class='navigation-'+item.key+' '+(section == item.key ? 'active' : ''))
-                      a(href=item.href title=item.label)= item.label
-          .col-xs-12.col-sm-9
+          .col-xs-12.col-md-4.col-lg-3
+            +side-navigation
+          .col-xs-12.col-md-8.col-lg-9
             block content
   
     .container-fluid
@@ -91,7 +64,7 @@ html
     script(src='/js/lib/bootstrap/bootstrap-3.2.0.min.js')
 
     //- TODO Put this in a block JS section for the pages its needed on.
-    //- script(src='/js/ui.js')
+    script(src='/js/ui.js')
 
     include shared/analytics
 
