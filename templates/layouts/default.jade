@@ -18,7 +18,7 @@ html
     block css
     block head
   body(class=section)
-    .container-fluid
+    .container-fluid.header-container
       header
         .row
           .col-xs-12.col-sm-6
@@ -36,22 +36,32 @@ html
             else
               li: a(href='/signin', data-from=page.path, data-initial='signin').js-auth-trigger Sign in
 
-    .container-fluid
+    .container-fluid.main-container
       main
         .row
           .col-xs-12.col-md-4.col-lg-3
             +side-navigation
-          .col-xs-12.col-md-8.col-lg-9
+          .col-xs-12.col-md-8.col-lg-9.content
+            .row
+              a(href='#').warning-block.col-xs-12.col-lg-9
+                .warning-count
+                  span 01
+                .warning-message
+                  p New Adverse Events(s)
+                  span Go there now
+
             block content
   
-    .container-fluid
+    .container-fluid.footer-container
       footer
         p &copy; Team Novo Nordisk | 
           a(href="/privacy" title="Privacy Policy") Privacy Policy
         ul
           each link in footerLinks
             if link.type == 'social'
-              li: a(href=link.href title=link.label)= link.label
+              li: a(href=link.href title=link.label)
+                .footer-icon
+                  .entypo-social(class="entypo-"+link.key)
 
     if !user
       #modal-auth(tabindex="-1", role="dialog", aria-labelledby="signin", aria-hidden="true").modal.fade

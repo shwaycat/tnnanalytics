@@ -7,5 +7,5 @@ exports = module.exports = function(req, res) {
 
 	locals.section = 'facebook';
 
-	view.render('account/placeholder');
+	view.render('account/facebook');
 };

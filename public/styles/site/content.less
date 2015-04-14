@@ -1,6 +1,51 @@
+@content-padding: 0.75em;
+@min-height: 15em;
+
 .view-title {
 	margin:0;
+	font-size: 1.75em;
+	padding: 0.5em 0;
+	font-weight:300;
+	display:inline-block;
 }
 .section-title {
 	margin:0;
+	padding: @content-padding;
+	font-weight:300;
+	display:inline-block;
+}
+
+.analytics-cta {
+	position: absolute;
+	right: 15px;
+	top: 0.5em;
+	padding-left: 2em;
+	padding-right: 2em;
+	font-weight: 300;
+}
+
+.content-row {
+	> div > .content-block {
+		margin-bottom:30px;
+	}
+}
+
+.content-container {
+	padding-left:0;
+	padding-right:0;
+}
+.content-block {
+	margin-bottom:30px;
+	min-height: 15em;
+
+}
+.inner-content {
+	padding-left:0;
+	padding-right:0;
+	min-height:@min-height;
+	background-color:@background_element;
+	&.accent-content {
+		background-color:@background_element_lighter;
+		min-height:@min-height;
+	}
 }

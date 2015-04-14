@@ -1,0 +1,44 @@
+.warning-block {
+	display:none;
+	background-color:@element_alert;
+	padding:0;
+	margin-left: 15px;
+	margin-bottom: 15px;
+	&.active {
+		display:table;
+	}
+	.warning-count {
+		background-color:@element_alert_lighter;
+		padding: 1.2em;
+		display:table-cell;
+		vertical-align: middle;
+		position: relative;
+		span {
+			display: block;
+			position: absolute;
+			left: 0;
+			top: 30%;
+			right: 0;
+			bottom: 0;
+			margin: auto;
+			text-align: center;
+			font-size: 2.5em;
+		}
+	}
+	.warning-message {
+		display:table-cell;
+		vertical-align: middle;
+		padding:1.5em;
+		p {
+			text-transform: uppercase;
+			font-size: 1.4em;
+			margin-bottom:5px;
+		}
+		span {
+			display:block;
+			text-transform: uppercase;
+			color:@element_alert_text;
+			font-size: 0.8em;
+		}
+	}
+}
