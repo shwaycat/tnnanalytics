@@ -27,11 +27,11 @@ exports.initLocals = function(req, res, next) {
 
   locals.footerLinks = [
     { label: 'Terms/Privacy', type: 'view',     key: 'privacy',       href: '/privacy' },
-    { label: 'Facebook',      type: 'social',   key: 'facebook',      href: '/facebook' },
-    { label: 'Twitter',       type: 'social',   key: 'twitter',       href: '/twitter' },
-    { label: 'Instagram',     type: 'social',   key: 'instagram',     href: '/instagram' },
-    { label: 'Youtube',       type: 'social',   key: 'youtube',       href: '/youtube' },
-    { label: 'Google+',       type: 'social',   key: 'google-plus',   href: '/google-plus' }
+    { label: 'Facebook',      type: 'social',   key: 'facebook',      href: 'https://www.facebook.com/novonordisk' },
+    { label: 'Twitter',       type: 'social',   key: 'twitter',       href: 'https://twitter.com/novonordisk' },
+    { label: 'Instagram',     type: 'social',   key: 'instagram',     href: 'https://instagram.com/novonordisk/' },
+    { label: 'Youtube',       type: 'social',   key: 'youtube',       href: 'https://www.youtube.com/user/novonordisk/custom' },
+    { label: 'Google+',       type: 'social',   key: 'google-plus',   href: 'https://plus.google.com/+novonordisk' }
   ]
 
   locals.user = req.user

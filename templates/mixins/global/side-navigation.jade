@@ -13,42 +13,52 @@ mixin side-navigation
           li.navigation-section(class='navigation-'+item.key+' '+(section == item.key ? 'active' : ''))
             a(href=item.href title=item.label)= item.label
               .navigation-icon
-                .entypo.entypo-phone
+                if item.key == 'dashboard'
+                  .entypo-regular-new.entypo-grid
+                if item.key == 'events'
+                  .entypo.entypo-warning
         if item.type == 'navigation'
           li.navigation-section.navigation-section-title(class='navigation-'+item.key+' '+"icon-"+item.key+' '+(social == item.key ? 'active' : '')+(web == item.key ? 'active' : ''))
             span=item.label
               .navigation-icon
-                .entypo.entypo-phone
+                if item.key == 'view-social'
+                  .entypo.entypo-share
+                if item.key == 'view-analytics'
+                  .entypo.entypo-line-graph
         if item.type == 'sub-link'
           li.navigation-sublink(class='navigation-'+item.key+' '+(section == item.key ? 'active' : ''))
             a(href=item.href title=item.label)= item.label
               .navigation-icon.sublink
                 .entypo.entypo-dot
+      li.navigation-section(class='navigation-signout')
+        a(href='/signout' title='Sign Out') Sign Out
+          .navigation-icon
+            .entypo.entypo-logout
             
-            //- Old Navigation - Kept for safekeeping temporarily
-            //- 
-            //- div(role="navigation").navbar.navbar-default
-            //-   .container-fluid
-            //-     .navbar-header
-            //-       button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
-            //-         span.sr-only Toggle navigation
-            //-         span.icon-bar
-            //-         span.icon-bar
-            //-         span.icon-bar
-            //-       a.navbar-brand(href='/')=site.brand
-            //-     .collapse.navbar-collapse
-            //-       ul.nav.navbar-nav.navbar-left
-            //-         each link in navLinks
-            //-           li(class=(section == link.key ? 'active' : null)): a(href=link.href)= link.label
-            //-       ul.nav.navbar-nav.navbar-right
-            //-         if user
-            //-           if user.canAccessKeystone
-            //-             li: a(href='/keystone') Open Keystone
-            //-           li: a(href='/me').user.hidden-xs
-            //-             img(src=(user.avatarUrl || '/images/avatar.png'), width=27).img-circle
-            //-             =' ' +user.name.first
-            //-           li: a(href='/signout')
-            //-             span.visible-xs Sign out
-            //-             span.entypo.entypo-large.entypo-logout.hidden-xs
-            //-         else
-            //-           li: a(href='/signin', data-from=page.path, data-initial='signin').js-auth-trigger Sign in
+//- Old Navigation - Kept for safekeeping temporarily
+//- 
+//- div(role="navigation").navbar.navbar-default
+//-   .container-fluid
+//-     .navbar-header
+//-       button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+//-         span.sr-only Toggle navigation
+//-         span.icon-bar
+//-         span.icon-bar
+//-         span.icon-bar
+//-       a.navbar-brand(href='/')=site.brand
+//-     .collapse.navbar-collapse
+//-       ul.nav.navbar-nav.navbar-left
+//-         each link in navLinks
+//-           li(class=(section == link.key ? 'active' : null)): a(href=link.href)= link.label
+//-       ul.nav.navbar-nav.navbar-right
+//-         if user
+//-           if user.canAccessKeystone
+//-             li: a(href='/keystone') Open Keystone
+//-           li: a(href='/me').user.hidden-xs
+//-             img(src=(user.avatarUrl || '/images/avatar.png'), width=27).img-circle
+//-             =' ' +user.name.first
+//-           li: a(href='/signout')
+//-             span.visible-xs Sign out
+//-             span.entypo.entypo-large.entypo-logout.hidden-xs
+//-         else
+//-           li: a(href='/signin', data-from=page.path, data-initial='signin').js-auth-trigger Sign in

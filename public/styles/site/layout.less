@@ -77,6 +77,71 @@ header, main, footer {
 header {
   margin-top: 2em;
   padding-bottom: 3em;
+  .header-logo {
+    display:inline-block;
+    width:200px;
+    img {
+      width:100%;
+    }
+  }
+  .header-items {
+    padding:1em 0 0;
+    margin:0;
+    vertical-align: bottom;
+    position: relative;
+    bottom: 0;
+    right: 0;
+    .respond-md({
+      position: absolute;
+      padding:0;
+    });
+    li {
+      display:block;
+      vertical-align: bottom;
+      padding:1em;
+      .respond-md({
+        position: relative;
+        display:inline-block;
+        padding:0.5em 1em;
+      });
+    }
+    .glyphicon-bell {
+      font-size:1.5em;
+    }
+    .events-name {
+      display: inline-block;
+      padding: 0.5em 0 0 1.5em;
+      position: relative;
+      .respond-md ({
+        display:none;
+      });
+    }
+    .event-alert {
+      position: absolute;
+      top: -0.3em;
+      right: -0.3em;
+      background-color:@element_alert_lighter;
+      -webkit-border-radius: 10em;
+      -moz-border-radius: 10em;
+      border-radius: 10em;
+      width: 0.9em;
+      height: 0.9em;
+      span {
+        color: #FFF;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 39%;
+        bottom: 0;
+        margin: auto;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 0;
+        font-size: 0.6em;
+        letter-spacing: -1px;
+      }
+    }
+  }
 }
 
 main {
@@ -92,6 +157,7 @@ footer {
     display:inline-block;
     float:left;
     vertical-align: top;
+    font-size: 0.9em;
   }
   ul {
     float:right;
@@ -101,8 +167,12 @@ footer {
       vertical-align: top;
       .footer-icon {
         font-size: 1.3em;
-        padding-left:0.3em;
-        padding-right:0.3em;
+        padding-left:0.5em;
+        padding-right:0.5em;
+        &.social-new {
+          font-size: 0.7em;
+          padding-top: 0.25em;
+        }
       }
     }
   }
@@ -126,7 +196,9 @@ a, a:hover, a:visited, a:active, a:focus {
 .btn {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
-  border-radius: 0;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
   border: 0;
 }
 .btn:hover, .btn:focus, .btn.focus, .btn:active, .btn.active, .open > .dropdown-toggle.btn {
@@ -138,7 +210,7 @@ a, a:hover, a:visited, a:active, a:focus {
   background-color:@darkBlue;
   border-color:@darkBlue;
   font-size: 1em;
-  &.facebook { background-color:@social_fb_main; } &.twitter { background-color:@social_twitter_main; } &.instagram { background-color:@social_instagram_main; } &.youtube { background-color:@social_youtube_main; } &.google-plus { background-color:@social_googleplus_main; }
+  &.facebook { background-color:@social_fb_main; } &.twitter { background-color:@social_twitter_main; } &.instagram { background-color:@social_instagram_main; } &.youtube { background-color:@social_youtube_main; } &.google-plus { background-color:@social_googleplus_main; } &.analytics-us, &.analytics-all, &.analytics-global, &.events { background-color:@analytics_cta; }
 }
 .btn-default.disabled, .btn-default[disabled], fieldset[disabled] .btn-default, .btn-default.disabled:hover, .btn-default[disabled]:hover, fieldset[disabled] .btn-default:hover, .btn-default.disabled:focus, .btn-default[disabled]:focus, fieldset[disabled] .btn-default:focus, .btn-default.disabled.focus, .btn-default[disabled].focus, fieldset[disabled] .btn-default.focus, .btn-default.disabled:active, .btn-default[disabled]:active, fieldset[disabled] .btn-default:active, .btn-default.disabled.active, .btn-default[disabled].active, fieldset[disabled] .btn-default.active {
   // background-color:$button_disabled;

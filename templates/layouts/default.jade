@@ -1,6 +1,10 @@
-include ../mixins/flash-messages
+include ../mixins/alerts
 include ../mixins/auth/auth-forms
 
+include ../mixins/global/favicons
+
+include ../mixins/global/header
+include ../mixins/global/footer
 include ../mixins/global/side-navigation
 
 html
@@ -11,57 +15,33 @@ html
 
     title= title || site.brand
 
-    link(rel="shortcut icon", href="/favicon.ico", type="image/x-icon")
-    link(href='http://fonts.googleapis.com/css?family=Istok+Web:400,700,400italic,700italic' rel='stylesheet' type='text/css')
+    +favicons
+    
+    link(href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css')
+    //- link(href='//cdn.datatables.net/1.10.6/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css')
     link(href="/styles/site.min.css", rel="stylesheet")
 
     block css
     block head
   body(class=section)
+
+    +alerts
+
     .container-fluid.header-container
-      header
-        .row
-          .col-xs-12.col-sm-6
-            a(href="/" title="Cadence Home")
-              img(src="" alt="Cadence Logo")
-            if user
-              if user.canAccessKeystone
-                li: a(href='/keystone') Open Keystone
-              li: a(href='/me').user.hidden-xs
-                img(src=(user.avatarUrl || '/images/avatar.png'), width=27).img-circle
-                =' ' +user.name.first
-              li: a(href='/signout')
-                span.visible-xs Sign out
-                span.entypo.entypo-large.entypo-logout.hidden-xs
-            else
-              li: a(href='/signin', data-from=page.path, data-initial='signin').js-auth-trigger Sign in
+      +header
 
-    .container-fluid.main-container
-      main
-        .row
-          .col-xs-12.col-md-4.col-lg-3
-            +side-navigation
-          .col-xs-12.col-md-8.col-lg-9.content
-            .row
-              a(href='#').warning-block.col-xs-12.col-lg-9
-                .warning-count
-                  span 01
-                .warning-message
-                  p New Adverse Events(s)
-                  span Go there now
+    if user
+      .container-fluid.main-container
+        main
+          .row
+            .col-xs-12.col-md-4.col-lg-3
+              +side-navigation
+            .col-xs-12.col-md-8.col-lg-9.content
 
-            block content
-  
-    .container-fluid.footer-container
-      footer
-        p &copy; Team Novo Nordisk | 
-          a(href="/privacy" title="Privacy Policy") Privacy Policy
-        ul
-          each link in footerLinks
-            if link.type == 'social'
-              li: a(href=link.href title=link.label)
-                .footer-icon
-                  .entypo-social(class="entypo-"+link.key)
+              block content
+    
+      .container-fluid.footer-container
+        +footer
 
     if !user
       #modal-auth(tabindex="-1", role="dialog", aria-labelledby="signin", aria-hidden="true").modal.fade
@@ -73,9 +53,15 @@ html
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js')
     script(src='/js/lib/bootstrap/bootstrap-3.2.0.min.js')
 
+    script(src='//cdn.datatables.net/1.10.6/js/jquery.dataTables.min.js')
+
     //- TODO Put this in a block JS section for the pages its needed on.
     script(src='/js/ui.js')
 
     include shared/analytics
+
+    script(src='/js/site/functions_general.js')
+    script(src='/js/site/functions_graphs.js')
+    script(src='/js/site/app.js')
 
     block js

@@ -7,5 +7,5 @@ exports = module.exports = function(req, res) {
 
 	locals.section = 'analytics-global';
 
-	view.render('account/placeholder');
+	view.render('account/events');
 };
