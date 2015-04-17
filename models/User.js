@@ -1,7 +1,9 @@
-var keystone = require('keystone'),
-  async = require('async'),
-  crypto = require('crypto'),
-  Types = keystone.Field.Types;
+var keystone = require('keystone')
+  , async = require('async')
+  , crypto = require('crypto')
+  , _ = require('underscore')
+  , request = require('request')
+  , Types = keystone.Field.Types
 
 /**
  * Users Model
@@ -85,32 +87,16 @@ User.add({
 });
 
 
-/** 
+/**
   Pre-save
   =============
 */
 
 User.schema.pre('save', function(next) {
-
-  var member = this;
-
-  async.parallel([
-
-    function(done) {
-
-      var str = member.email.toLowerCase().trim()
-
-      member.gravatar = crypto.createHash('md5').update(str).digest('hex');
-
-      return done();
-
-    }
-    // add another function if needed
-    // , function (done) {}
-  ], next);
-
+  var str = this.email.toLowerCase().trim()
+  this.gravatar = crypto.createHash('md5').update(str).digest('hex')
+  next()
 });
-
 
 
 /**
@@ -120,61 +106,206 @@ User.schema.pre('save', function(next) {
 
 // Link to member
 User.schema.virtual('url').get(function() {
-  return '/member/' + this.key;
-});
+  return '/member/' + this.key
+})
 
 // Provide access to Keystone
 User.schema.virtual('canAccessKeystone').get(function() {
-  return this.isAdmin;
-});
+  return this.isAdmin
+})
 
 // Pull out avatar image
 User.schema.virtual('avatarUrl').get(function() {
-  if (this.services.facebook.isConfigured && this.services.facebook.avatar) return this.services.facebook.avatar;
-  if (this.services.google.isConfigured && this.services.google.avatar) return this.services.google.avatar;
-  if (this.services.twitter.isConfigured && this.services.twitter.avatar) return this.services.twitter.avatar;
-});
+  if (this.services.facebook.isConfigured && this.services.facebook.avatar) {
+    return this.services.facebook.avatar
+  }
+  if (this.services.google.isConfigured && this.services.google.avatar) {
+    return this.services.google.avatar
+  }
+  if (this.services.twitter.isConfigured && this.services.twitter.avatar) {
+    return this.services.twitter.avatar
+  }
+})
 
 // Usernames
 User.schema.virtual('twitterUsername').get(function() {
-  return (this.services.twitter && this.services.twitter.isConfigured) ? this.services.twitter.username : '';
-});
+  return (this.services.twitter && this.services.twitter.isConfigured) ? this.services.twitter.username : ''
+})
+
 
 /**
  * Methods
  * =======
-*/
-
+ */
 User.schema.methods.resetPassword = function(callback) {
+  this.resetPasswordKey = keystone.utils.randomString([16,24])
 
-  var user = this;
-
-  user.resetPasswordKey = keystone.utils.randomString([16,24]);
-
-  user.save(function(err) {
-
-    if (err) return callback(err);
-
-    new keystone.Email('forgotten-password').send({
-      user: user,
-      link: '/reset-password/' + user.resetPasswordKey,
-      subject: 'Reset your '+keystone.get('brand')+' Password',
-      to: user.email,
-      from: {
-        name: keystone.get('brand'),
-        email: keystone.get('brand email')
+  var emailSendOpts = {
+        user: this,
+        link: '/reset-password/' + this.resetPasswordKey,
+        subject: 'Reset your '+keystone.get('brand')+' Password',
+        to: this.email,
+        from: { name: keystone.get('brand'), email: keystone.get('brand email') }
       }
-    }, callback);
 
+  return this.save(function(err) {
+    if (err) {
+      callback(err)
+    } else {
+      (new keystone.Email('forgotten-password')).send(emailSendOpts, callback)
+    }
   });
+}
 
+User.schema.methods.getKeywords = function() {
+  if (this.notifications && this.notifications.keywords) {
+    return _.chain( this.notifications.keywords.trim().split(/\s*,\s*/) )
+      .compact()
+      .uniq()
+      .value()
+  } else {
+    return []
+  }
+}
+
+//TODO paging
+User.schema.methods.getAlertDocuments = function(cb) {
+  /*
+  var orQueries = _.map(user.getKeywords(), function(kw) {
+    return { query: { match_phrase: { doc_text: kw } } }
+  })
+  body: {
+    query: {
+      term: { cadence_user_id: user.id },
+      term: { notified: false }
+    },
+    filter: {
+      or: orQueries
+    }
+  }
+  */
+
+  keystone.elasticsearch.search({
+    index: keystone.get('elasticsearch index'),
+    from: 0,
+    size: 1000000000,
+    body: {
+      filter: {
+        and: [
+          { term: { cadence_user_id: this.id } },
+          { term: { notified: false } }
+        ]
+      },
+      query: {
+        match_phrase: {
+          doc_text: {
+            query: this.getKeywords(),
+            operator: "or"
+          }
+        }
+      }
+    }
+  }, cb)
+}
+
+User.schema.methods.sendNotificationEmail = function(links, callback) {
+  //TODO set the subject and from values via keystone settings
+  (new keystone.Email('notification')).send({
+    subject: 'Cadence Notification',
+    to: this.email,
+    from: {
+      name: 'Cadence',
+      email: 'no-reply@maxmedia.com'
+    },
+    links: links
+  }, function(err, info) {
+    if (err) {
+      console.error("Error sending notification email to %s", user.email)
+    } else {
+      console.info("Sent notification email to %s", user.email)
+    }
+
+    callback(err, info)
+  })
+  //
+}
+
+User.schema.methods.facebookPages = function(callback) {
+  var self = this
+  request({
+    url: 'https://graph.facebook.com/v2.3/me/accounts?access_token=' + user.services.facebook.accessToken,
+    json: true
+  }, function (err, res, body) {
+    if (err) {
+      console.error("Error getting pages for %s\n%s", user.id, body)
+      callback(err, body)
+    } else {
+      callback(null, body.data)
+    }
+  })
+}
+
+/**
+ * Static Methods
+ * ==============
+ */
+User.schema.statics.findConnectedFacebook = function(cb) {
+  return this.find({ 'services.facebook.isConfigured': true }, cb)
+}
+
+User.schema.statics.findConnectedTwitter = function(cb) {
+  return this.find({ 'services.twitter.isConfigured': true }, cb)
+}
+
+User.schema.statics.findConnected = function(sources, cb) {
+  if (cb === undefined && _.isFunction(sources)) {
+    cb = sources
+    sources = ["facebook", "twitter"]
+  }
+
+  return this.find({
+    "$or": _.map(sources, function(s) {
+      var result = {}
+      result['services.' + s + '.isConfigured'] = true
+      return result
+    })
+  }, cb);
+}
+// alias (deprecated)
+User.schema.statics.findConnectedUsers = User.schema.statics.findConnected
+
+User.schema.statics.findWithKeywords = function(cb) {
+  return this.find({
+    "notifications.keywords": {
+      "$exists": true,
+      "$nin": [ null, "" ]
+    }
+  }, cb);
+}
+
+User.schema.statics.findConnectedWithKeywords = function(sources, cb) {
+  if (cb === undefined && _.isFunction(sources)) {
+    cb = sources
+    sources = ["facebook", "twitter"]
+  }
+
+  return this.find({
+    "notifications.keywords": {
+      "$exists": true,
+      "$nin": [ null, "" ]
+    },
+    "$or": _.map(sources, function(s) {
+      var result = {}
+      result['services.' + s + '.isConfigured'] = true
+      return result
+    })
+  }, cb);
 }
 
 
 /**
  * Registration
  * ============
-*/
-
+ */
 User.defaultColumns = 'name, email, twitter, isAdmin';
 User.register();

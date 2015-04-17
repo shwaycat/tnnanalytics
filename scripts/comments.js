@@ -7,7 +7,6 @@ var keystone = require('keystone')
   , Schema = mongoose.Schema
   , elasticsearch = require('elasticsearch')
   , _ = require('underscore')
-  , c = require('../config.json')
 
 keystone.set('emails', '../templates/emails')
 
@@ -86,4 +85,3 @@ async.waterfall([
     process.exit(0)
   }
 })
-
