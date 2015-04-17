@@ -18,7 +18,6 @@ html
     +favicons
     
     link(href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css')
-    //- link(href='//cdn.datatables.net/1.10.6/css/jquery.dataTables.min.css' rel='stylesheet' type='text/css')
     link(href="/styles/site.min.css", rel="stylesheet")
 
     block css
@@ -49,11 +48,17 @@ html
           .modal-content
             +auth-forms({ modal: true, initial: 'signin' })
 
+    //- Libraries
     script(src='/js/lib/jquery/jquery-2.1.1.min.js')
+    script(src='/js/lib/jquery/jquery.timeago.js')
+    script(src='/js/lib/jquery/jquery.transit.min.js')
+
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js')
     script(src='/js/lib/bootstrap/bootstrap-3.2.0.min.js')
-
+      
     script(src='//cdn.datatables.net/1.10.6/js/jquery.dataTables.min.js')
+
+    
 
     //- TODO Put this in a block JS section for the pages its needed on.
     script(src='/js/ui.js')
@@ -61,7 +66,7 @@ html
     include shared/analytics
 
     script(src='/js/site/functions_general.js')
-    script(src='/js/site/functions_graphs.js')
+    script(src='/js/site/functions_data.js')
     script(src='/js/site/app.js')
 
     block js
