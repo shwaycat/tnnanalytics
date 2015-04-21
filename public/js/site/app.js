@@ -2,6 +2,8 @@ $(window).resize(function(){
 
 	compensateFooter();
 
+	routesInit();
+
 });
 
 
@@ -13,5 +15,7 @@ $(function() {
 
 	//Data Functions
 	eventsCloseAll();
+
+	routesInit();
 
 });
