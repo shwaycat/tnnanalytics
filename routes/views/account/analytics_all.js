@@ -5,7 +5,7 @@ exports = module.exports = function(req, res) {
 	var view = new keystone.View(req, res),
 		locals = res.locals;
 
-	locals.section = 'home';
+	locals.section = 'analytics-all';
 
-	view.render('site/index');
+	view.render('account/events');
 };

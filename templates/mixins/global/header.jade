@@ -1,0 +1,19 @@
+mixin header
+  header
+    .row
+      .col-xs-12
+        a.header-logo(href="/" title="Cadence Home")
+          img(src="/images/logo.png" alt="Cadence Logo")
+        ul.header-items
+          li: a(href='/')
+            .glyphicon.glyphicon-bell
+              .event-alert
+                span 10
+            span.events-name Events
+          if user
+            if user.canAccessKeystone
+              li: a(href='/keystone') Keystone
+            li: a(href='/user/'+user.key).user
+              =user.name.first
+          else
+            li: a(href='/signin', data-from=page.path, data-initial='signin').js-auth-trigger Sign in
