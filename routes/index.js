@@ -9,24 +9,24 @@ keystone.pre('routes', middleware.initLocals)
 keystone.pre('render', middleware.flashMessages)
 
 keystone.set('404', function(req, res, next) {
-	res.notfound()
+  res.notfound()
 })
 
 keystone.set('500', function(err, req, res, next) {
-	var title, message
+  var title, message
 
-	if (err instanceof Error){
-		message = err.message
-		err = err.stack
-	}
+  if (err instanceof Error){
+    message = err.message
+    err = err.stack
+  }
 
-	res.err(err, title, message)
+  res.err(err, title, message)
 });
 
 // Import Route Controllers
 var routes = {
-	views: importRoutes('./views'),
-	auth: importRoutes('./auth')
+  views: importRoutes('./views'),
+  auth: importRoutes('./auth')
 }
 
 // Setup Route Bindings
@@ -44,20 +44,20 @@ exports = module.exports = function(app) {
     });
   })
 
-	// Unrestricted/General
-	app.get('/', routes.views.session.signin);
-	app.get('/privacy', routes.views.privacy);
-	app.all('/accounts*', middleware.requireUser);
-	app.all('/user*', middleware.requireUser);
+  // Unrestricted/General
+  app.get('/', routes.views.session.signin);
+  app.get('/privacy', routes.views.privacy);
+  app.all('/accounts*', middleware.requireUser);
+  app.all('/user*', middleware.requireUser);
 
-	// Session
-	app.all('/signin', routes.views.session.signin);
-	app.get('/signout', routes.views.session.signout);
-	app.all('/forgot-password', routes.views.session['forgot-password']);
-	app.all('/reset-password/:key', routes.views.session['reset-password']);
+  // Session
+  app.all('/signin', routes.views.session.signin);
+  app.get('/signout', routes.views.session.signout);
+  app.all('/forgot-password', routes.views.session['forgot-password']);
+  app.all('/reset-password/:key', routes.views.session['reset-password']);
 
-	// User
-	app.all('/user/:uid', routes.views.user.user);
+  // User
+  app.all('/user/:uid', routes.views.user.user);
 
   // Account
   app.all('/accounts/:account_name', routes.views.account.dashboard);
@@ -71,9 +71,8 @@ exports = module.exports = function(app) {
   app.all('/accounts/:account_name/analytics-us', routes.views.account.analytics_us);
   app.all('/accounts/:account_name/events', routes.views.account.events);
 
-	// Auth
-	app.all('/auth/confirm', routes.auth.confirm);
-	app.all('/auth/app', routes.auth.app);
-	app.all('/auth/:service', routes.auth.service);
-
+  // Auth
+  app.all('/auth/confirm', routes.auth.confirm);
+  app.all('/auth/app', routes.auth.app);
+  app.all('/auth/:service', routes.auth.service);
 }
