@@ -22,9 +22,10 @@ var deps = {
 User.add({
   name: { type: Types.Name, required: true, index: true },
   email: { type: Types.Email, required: true, initial: true, index: true },
-  domain: { type: String, hidden: true },
   password: { type: Types.Password, initial: true },
-  resetPasswordKey: { type: String, hidden: true }
+  resetPasswordKey: { type: String, hidden: true },
+  accountName: { type: String, required: true, index: true, initial: true },
+  isAccountRoot: { type: Boolean, default: false }
 }, 'Profile', {
   isPublic: { type: Boolean, default: true },
   twitter: { type: String, width: 'short' },
@@ -98,8 +99,6 @@ User.schema.pre('save', function(next) {
     function(done) {
 
       var str = member.email.toLowerCase().trim()
-
-      member.domain = str.substring(str.lastIndexOf("@") + 1, str.length)
 
       member.gravatar = crypto.createHash('md5').update(str).digest('hex');
 
