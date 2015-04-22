@@ -6,8 +6,22 @@ var keystone = require('keystone')
   , Types = keystone.Field.Types
 
 /**
- * Users Model
- * ===========
+ * User model
+ * @typedef {Object} User
+ * @member {Field~Types~Name} name - human name
+ * @member {Field~Types~Email} email - email address
+ * @member {Field~Types~Password} password - password
+ * @member {String} resetPasswordKey - TODO
+ * @member {String} accountName - account that the user belongs to
+ * @member {Boolean} isAccountRoot - indicates if the user is the top-level/root/main user of the account
+ * @member {Boolean} isPublic - Profile - indicates if the profile is public
+ * @member {String} twitter - Profile - TODO
+ * @member {Field~Types~Url} website - Profile - TODO
+ * @member {String} gravatar - Profile - TODO
+ * @member {Field~Types~Textarea} notifications.keywords - Notifications - comma separated list of keywords/keyphrases for alerting
+ * @member {Boolean} isAdmin - Permissions - TODO
+ * @member {Boolean} isVerified - Permissions - TODO
+ * @member {UserServices} services - hashtable of services by key
  */
 
 var User = new keystone.List('User', {
@@ -34,6 +48,7 @@ User.add({
   website: { type: Types.Url },
   gravatar: { type: String, noedit: true }
 }, 'Notifications', {
+//TODO make keywords top-level, not nested
   notifications: {
     keywords: { type: Types.Textarea, label: 'Keywords'},
   }
@@ -41,7 +56,28 @@ User.add({
   isAdmin: { type: Boolean, label: 'Can Admin ' + keystone.get('brand') },
   isVerified: { type: Boolean, label: 'Has a verified email address' }
 }, 'Services', {
+  /**
+   * User Services object - hashtable of services by key
+   * @typedef {Object} UserServices
+   * @member {UserServices~Facebook} facebook - Facebook
+   * @member {UserServices~Twitter} twitter - Twitter
+   * @member {UserServices~Google} google - Google TODO
+   * @member {UserServices~Instagram} instagram - Instagram TODO
+   * @member {UserServices~Youtube} youtube - Youtube TODO
+   */
   services: {
+    /**
+     * Facebook Service
+     * @typedef {Object} UserServices~Facebook
+     * @member {Boolean} isConfigured -
+     * @member {String} profileId -
+     * @member {String} username -
+     * @member {String} avatar -
+     * @member {String} accessToken -
+     * @member {String} refreshToken -
+     * @member {String} lastPostTime -
+     * @member {String} lastMessageTime -
+    */
     facebook: {
       isConfigured: { type: Boolean, label: 'Facebook has been authenticated' },
 
