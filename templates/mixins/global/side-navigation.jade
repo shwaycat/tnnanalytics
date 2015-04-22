@@ -11,7 +11,7 @@ mixin side-navigation
       each item, index in navLinks
         if item.type == 'link'
           li.navigation-section(class='navigation-'+item.key+' '+(section == item.key ? 'active' : ''))
-            a(href=item.href title=item.label)= item.label
+            a(href='/accounts/'+user.accountName+'/'+item.href title=item.label)= item.label
               .navigation-icon
                 if item.key == 'dashboard'
                   .entypo-regular-new.entypo-grid
@@ -27,7 +27,7 @@ mixin side-navigation
                   .entypo.entypo-line-graph
         if item.type == 'sub-link'
           li.navigation-sublink(class='navigation-'+item.key+' '+(section == item.key ? 'active' : ''))
-            a(href=item.href title=item.label)= item.label
+            a(href='/accounts/'+user.accountName+'/'+item.href title=item.label)= item.label
               .navigation-icon.sublink
                 .entypo.entypo-dot
       li.navigation-section(class='navigation-signout')

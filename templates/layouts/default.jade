@@ -58,6 +58,8 @@ html
       
     script(src='//cdn.datatables.net/1.10.6/js/jquery.dataTables.min.js')
 
+    script(src='/js/lib/d3/d3.min.js')
+
     
 
     //- TODO Put this in a block JS section for the pages its needed on.
@@ -65,8 +67,9 @@ html
 
     include shared/analytics
 
+    script(src='/js/site/_config_paths.js')
     script(src='/js/site/functions_general.js')
-    script(src='/js/site/functions_data.js')
+    script(src='/js/site/functions_events.js')
     script(src='/js/site/functions_d3.js')
     script(src='/js/site/app.js')
 
