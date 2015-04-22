@@ -34,14 +34,11 @@ exports = module.exports = function(app) {
   app.param('account_name', function(req, res, next, accountName) {
     User.model.findOne({ accountName: accountName, isAccountRoot: true }, function(err, user) {
       if (err) {
-        console.log('1')
         next(err)
       } else if (user) {
-        console.log('2')
         req.account = user
         next()
       } else {
-        console.log('3')
         next(new Error('Failed to load account user'));
       }
     });
