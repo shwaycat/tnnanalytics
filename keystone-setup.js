@@ -21,7 +21,7 @@ module.exports = function() {
     'user model': 'User',
     'cookie secret': 'E]ltoJ_R@SwDxa6X,Z>6![Nl>&!1R"%Kw/8LA+r{~tJ5o(z=/.bcIlO(oFq*8_a2',
 
-    // 'mongo': process.env.MONGO_URI,
+    'mongo': process.env.MONGO_URI,
 
     'elasticsearch': process.env.ELASTICSEARCH_URI,
     'elasticsearch index': process.env.ELASTICSEARCH_INDEX,
@@ -39,7 +39,7 @@ module.exports = function() {
   }
 
   if (process.env.COOKIE_SECRET) {
-    keystone.set('cookie secret', url: COOKIE_SECRET)
+    keystone.set('cookie secret', process.env.COOKIE_SECRET)
   }
 
   keystone.import('models');
