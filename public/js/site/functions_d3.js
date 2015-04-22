@@ -11,11 +11,11 @@ function routesInit(){
 	if ($('body.facebook')[0]){
 		console.log('    routesInit: facebook');
 
-		reachGraph(GLOBAL_API_DATA.fakedata1,{
-			selector: '#reach',
-			source: 'facebook',
-			color: '#0000FF',
-		});
+		// reachGraph(GLOBAL_API_DATA.fakedata1,{
+		// 	selector: '#reach',
+		// 	source: 'facebook',
+		// 	color: '#0000FF',
+		// });
 
 		// reachGraph1(GLOBAL_API_DATA.fakedata2,{
 		// 	selector: '#reach1',
@@ -72,146 +72,10 @@ function routesInit(){
 	}
 }
 
-function reachGraph(data, options){
-	// Options Example
-
-	var theData = data;
-	
-	// console.log(theData);
-	// console.log(options);
-
-	if($(options.selector).first().children('svg')[0]){
-		$(options.selector).first().children('svg').remove();
-	}
-
-	var svg = d3.select(options.selector).append('svg');
-
-
-
-	var w = parseInt(svg.style('width'));
-	var h = parseInt(svg.style('height'));
-	var padding = 1;
-
-	svg.selectAll("rect")
-	   .data(theData)
-	   .enter()
-	   .append("rect")
-	   .attr("x", function(d, i) {
-	       return i * (w / theData.length);
-	   })
-	   .attr("y", function(d) {
-	       return h - d*4;  //Height minus data value
-	   })
-	   .attr("width", w / theData.length - padding)
-	   .attr("height", function(d) {
-	       return (d*4);  //Just the data value
-	   })
-	   .attr("fill", function(d) {
-	       return "rgb(0, 0, " + (d * 10) + ")";
-	   });
-
-	svg.selectAll("text")
-		.data(theData)
-		.enter()
-		.append("text")
-		.text(function(d) {
-		  return d;
-		})
-		.attr("x", function(d, i) {
-      return i * (w / theData.length) + (w / theData.length - padding) / 2;
-    })
-		.attr("y", function(d) {
-      return h - (d * 4) + 14;  //15 is now 14
-    })
-		.attr("font-family", "sans-serif")
-		.attr("font-size", "11px")
-		.attr("fill", "white")
-		.attr("text-anchor", "middle");
-
-}
-
-function reachGraph1(data, options){
-	// Options Example
-
-	var theData = data;
-	
-	// console.log(theData);
-	// console.log(options);
-
-	if($(options.selector).first().children('svg')[0]){
-		$(options.selector).first().children('svg').remove();
-	}
-
-	var svg = d3.select(options.selector).append('svg');
-	var w = parseInt(svg.style('width'));
-	var h = parseInt(svg.style('height'));
-	var padding = 30;
-
-	// Scale Functions
-	var xScale = d3.scale.linear()
-		.domain([0, d3.max(theData, function(d) { return d[0]; })])
-		.range([padding, w - padding]);
-
-	var yScale = d3.scale.linear()
-		.domain([0, d3.max(theData, function(d) { return d[1]; })])
-		.range([h - padding, padding]);
-
-	var rScale = d3.scale.linear()
-		.domain([0, d3.max(theData, function(d) { return d[1]; })])
-		.range([2, 5]);
-
-	var xAxis = d3.svg.axis()
-    .scale(xScale)
-    .orient("bottom")
-    .ticks(5);  //Set rough # of ticks
-
-  var yAxis = d3.svg.axis()
-    .scale(yScale)
-    .orient("left")
-    .ticks(5);
-
-  svg.selectAll("circle")
-		.data(theData)
-		.enter()
-		.append("circle")
-		.attr("fill", "white")
-		.attr("cx", function(d) {
-		  return xScale(d[0]);
-		})
-		.attr("cy", function(d) {
-		  return yScale(d[1]);
-		})
-		.attr("r", function(d) {
-		  return rScale(d[1]);
-		});
-
-	svg.append("g")
-		.attr("class", "axis")
-		.attr("transform", "translate(0," + (h - padding) + ")")
-	  .call(xAxis);
-		
-	svg.append("g")
-    .attr("class", "axis")
-    .attr("transform", "translate(" + padding + ",0)")
-    .call(yAxis);
-
-}
-
 
 
 function type(d) {
-
-	var format = d3.time.format("%Y-%m-%d");
-
-	// console.log(d.date);
 	d.date = new Date(d.date);
-
-	// console.log(d.date);
-
-  //d.date = format(d.date);
-
-  console.log(d.date);
-
   d.count = +d.count;
   return d;
 }
@@ -230,7 +94,7 @@ function reachGraph2(data, options){
 	var svg = d3.select(options.selector).append('svg');
 	var width = parseInt(svg.style('width'));
 	var height = parseInt(svg.style('height'));
-	var padding = 30;
+	var padding = 45;
 
 	// Scale Functions
 	// var x = d3.time.scale()
@@ -289,8 +153,10 @@ function reachGraph2(data, options){
   svg.append("g")
       .attr("class", "x axis")
       .attr("stroke-width", "2")
-      .attr("transform", "translate(0," + (height - padding) + ")")
-      .call(xAxis);
+      .attr("transform", "translate(0," + (height - padding/2) + ")")
+      .call(xAxis)
+      .selectAll('text')
+      .attr('dy', padding/1.5);
   svg.append("g")
       .attr("class", "y axis")
       .attr("transform", "translate(" + padding + ",0)")
@@ -305,7 +171,7 @@ function reachGraph2(data, options){
 	svg.append("clipPath")
     .attr("id", "clip")
     .append("rect")
-    .attr("width", width)
+    .attr("width", width - padding)
     .attr("height", height - padding);
 
   svg.append("path")
@@ -319,3 +185,143 @@ function reachGraph2(data, options){
  //    .attr("d", line(theData));
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// function reachGraph(data, options){
+// 	// Options Example
+
+// 	var theData = data;
+	
+// 	// console.log(theData);
+// 	// console.log(options);
+
+// 	if($(options.selector).first().children('svg')[0]){
+// 		$(options.selector).first().children('svg').remove();
+// 	}
+
+// 	var svg = d3.select(options.selector).append('svg');
+
+// 	var w = parseInt(svg.style('width'));
+// 	var h = parseInt(svg.style('height'));
+// 	var padding = 1;
+
+// 	svg.selectAll("rect")
+// 	   .data(theData)
+// 	   .enter()
+// 	   .append("rect")
+// 	   .attr("x", function(d, i) {
+// 	       return i * (w / theData.length);
+// 	   })
+// 	   .attr("y", function(d) {
+// 	       return h - d*4;  //Height minus data value
+// 	   })
+// 	   .attr("width", w / theData.length - padding)
+// 	   .attr("height", function(d) {
+// 	       return (d*4);  //Just the data value
+// 	   })
+// 	   .attr("fill", function(d) {
+// 	       return "rgb(0, 0, " + (d * 10) + ")";
+// 	   });
+
+// 	svg.selectAll("text")
+// 		.data(theData)
+// 		.enter()
+// 		.append("text")
+// 		.text(function(d) {
+// 		  return d;
+// 		})
+// 		.attr("x", function(d, i) {
+//       return i * (w / theData.length) + (w / theData.length - padding) / 2;
+//     })
+// 		.attr("y", function(d) {
+//       return h - (d * 4) + 14;  //15 is now 14
+//     })
+// 		.attr("font-family", "sans-serif")
+// 		.attr("font-size", "11px")
+// 		.attr("fill", "white")
+// 		.attr("text-anchor", "middle");
+
+// }
+
+// function reachGraph1(data, options){
+// 	// Options Example
+
+// 	var theData = data;
+	
+// 	// console.log(theData);
+// 	// console.log(options);
+
+// 	if($(options.selector).first().children('svg')[0]){
+// 		$(options.selector).first().children('svg').remove();
+// 	}
+
+// 	var svg = d3.select(options.selector).append('svg');
+// 	var w = parseInt(svg.style('width'));
+// 	var h = parseInt(svg.style('height'));
+// 	var padding = 30;
+
+// 	// Scale Functions
+// 	var xScale = d3.scale.linear()
+// 		.domain([0, d3.max(theData, function(d) { return d[0]; })])
+// 		.range([padding, w - padding]);
+
+// 	var yScale = d3.scale.linear()
+// 		.domain([0, d3.max(theData, function(d) { return d[1]; })])
+// 		.range([h - padding, padding]);
+
+// 	var rScale = d3.scale.linear()
+// 		.domain([0, d3.max(theData, function(d) { return d[1]; })])
+// 		.range([2, 5]);
+
+// 	var xAxis = d3.svg.axis()
+//     .scale(xScale)
+//     .orient("bottom")
+//     .ticks(5);  //Set rough # of ticks
+
+//   var yAxis = d3.svg.axis()
+//     .scale(yScale)
+//     .orient("left")
+//     .ticks(5);
+
+//   svg.selectAll("circle")
+// 		.data(theData)
+// 		.enter()
+// 		.append("circle")
+// 		.attr("fill", "white")
+// 		.attr("cx", function(d) {
+// 		  return xScale(d[0]);
+// 		})
+// 		.attr("cy", function(d) {
+// 		  return yScale(d[1]);
+// 		})
+// 		.attr("r", function(d) {
+// 		  return rScale(d[1]);
+// 		});
+
+// 	svg.append("g")
+// 		.attr("class", "axis")
+// 		.attr("transform", "translate(0," + (h - padding) + ")")
+// 	  .call(xAxis);
+		
+// 	svg.append("g")
+//     .attr("class", "axis")
+//     .attr("transform", "translate(" + padding + ",0)")
+//     .call(yAxis);
+
+// }
+
