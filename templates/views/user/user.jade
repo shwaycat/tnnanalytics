@@ -22,19 +22,19 @@ block content
               .form-group
                 textarea(name='notifications.keywords', rows=3, placeholder='comma, separated, list, of, keywords').form-control=user.notifications.keywords
               if !user.services.twitter.isConfigured
-                .form-group
+                .form-group.service-connect
                   label.col-sm-2.control-label Twitter
                   a(href='/auth/twitter', title='Connect your Twitter account').btn.btn-twitter
                     span.entypo-social.entypo-twitter
                     |  Connect your Twitter account
               if !user.services.facebook.isConfigured
-                  .form-group
+                  .form-group.service-connect
                       label.col-sm-2.control-label Facebook
                       a(href='/auth/facebook', title='Connect your Facebook account').btn.btn-facebook
                           span.entypo-social.entypo-facebook
                           |  Connect your Facebook account
               //-if !user.services.google.isConfigured
-              //-  .form-group
+              //-  .form-group.service-connect
               //-    label.col-sm-2.control-label Google
               //-    .col-sm-10
               //-      a(href='/auth/google', title='Connect your Google account').btn.btn-google
@@ -45,21 +45,21 @@ block content
               //- if user.services.twitter.isConfigured || user.services.facebook.isConfigured
               //-   hr.line-dashed
               if user.services.twitter.isConfigured
-                .form-group
+                .form-group.service-disconnect
                   label.col-sm-2.control-label Twitter
                   .col-sm-10.text-muted.faux-label
                     span.entypo-social.entypo-twitter
                     |  Your account is connected.
                     a(href='?disconnect=twitter', title='Revoke authorization of your Twitter account')  Disconnect
               //-if user.services.google.isConfigured
-              //-  .form-group
+              //-  .form-group.service-disconnect
               //-    label.col-sm-2.control-label Google
               //-    .col-sm-10.text-muted.faux-label
               //-      span.entypo-social.entypo-google-circles
               //-      |  Your account is connected.
               //-      a(href='?disconnect=google', title='Revoke authorization of your Google account')  Disconnect
               if user.services.facebook.isConfigured
-                .form-group
+                .form-group.service-disconnect
                   label.col-sm-2.control-label Facebook
                   .col-sm-10.text-muted.faux-label
                     span.entypo-social.entypo-facebook
