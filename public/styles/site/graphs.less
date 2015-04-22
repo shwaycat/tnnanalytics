@@ -14,12 +14,13 @@
 		    stroke: @background_element_lighter;
 		    shape-rendering: crispEdges;
 			}
-
 			.axis text {
 		    font-family: sans-serif;
-		    font-size: 1em;
-		    fill:white;
-
+		    font-size: 0.85em;
+		    fill:@table_header_text;
+				.respond-lg({
+					font-size:1em;
+				});
 			}
 			.x.axis .tick {
 				&:nth-child(odd){
@@ -29,18 +30,36 @@
 				}
 			}
 
-			.axis.y .domain {
-				//stroke:@background_element_lighter;
-			}
-
 			path {
 				fill: none;
 			}
-			.area {
-				fill:@graph_temp_color;
+			.containing_line, line.containing_line {
+				stroke: @table_header_text;
 			}
-			.line {
-			}
+		}
+	}
+	&.reach {
+		.area {
+			fill:@reach_area;
+		}
+		.line {
+			stroke:@reach_line;
+		}
+	}
+	&.engagement {
+		.area {
+			fill:@engagement_area;
+		}
+		.line {
+			stroke:@engagement_line;
+		}
+	}
+	&.acquisition {
+		.area {
+			fill:@acquisition_area;
+		}
+		.line {
+			stroke:@acquisition_line;
 		}
 	}
 	
