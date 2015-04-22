@@ -17,4 +17,6 @@ keystone.set('nav', {
   'users': 'users'
 });
 
+require('./logo');
+
 keystone.start();
