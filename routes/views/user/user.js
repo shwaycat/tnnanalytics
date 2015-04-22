@@ -34,7 +34,7 @@ exports = module.exports = function(req, res) {
       }
 
       req.flash('success', serviceName + ' has been successfully disconnected.');
-      return res.redirect('/me');
+      return res.redirect('back');
 
     });
 
@@ -98,6 +98,6 @@ exports = module.exports = function(req, res) {
     callbackURL: process.env.FACEBOOK_CALLBACK_URL
   })});*/
 
-  view.render('site/me');
-  
+  view.render('user/user');
+
 }
