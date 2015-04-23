@@ -11,11 +11,19 @@ function routesInit(){
 	if ($('body.facebook')[0]){
 		console.log('    routesInit: facebook');
 
-		reachGraph2(GLOBAL_API_DATA.fakedata3,{
+		donutGraph(GLOBAL_API_DATA.fakedata4,{
+			selector: '#top_countries',
+			source: 'facebook',
+			color: '',
+		});
+
+		reachGraph(GLOBAL_API_DATA.fakedata3,{
 			selector: '#reach',
 			source: 'facebook',
-			color: GLOBAL_GRAPH_COLORS.reach_line,
+			color: '',
 		});
+
+		testDonut();
 
 	}
 	if ($('body.twitter')[0]){
@@ -66,7 +74,7 @@ function type(d) {
   return d;
 }
 
-function reachGraph2(data, options){
+function reachGraph(data, options){
 	// Options Example
 
 	var theData = data;
@@ -187,4 +195,227 @@ function reachGraph2(data, options){
     .attr("clip-path", "url("+options.selector+"_clip)")
     .attr("d", line(theData));
 
+}
+
+function donutGraph(data, options){
+	// Options Example
+
+	var theData = data;
+
+	var numericalData = function(){
+		var tempArray = [];
+		for (var i = 0; i < theData.length; i++){
+			tempArray[i] = theData[i].value;
+		}
+		return tempArray;
+	}
+
+	console.log(numericalData());
+
+	// If an SVG exists, remove it. This is mostly for redrawing the graph on browser resize.
+	if($(options.selector).first().children('svg')[0]){
+		$(options.selector).first().children('svg').remove();
+	}
+
+	// Gets options in a data attr on the obj. Used to pass Keystone generated data.
+	if ($(options.selector).data('admin-options') != '' || $(options.selector).data('admin-options') != null){
+		options.admin_options = $(options.selector).data('admin-options');
+	} else {
+		options.admin_options = false;
+	}
+
+	// Init a few things.
+	var svg = d3.select(options.selector).append('svg')
+	var width = parseInt(svg.style('width'));
+	var height = parseInt(svg.style('height'));
+	var radius = Math.min(width, height) / 2;
+	var padding = 45;
+ 	//var interpolateType = 'linear';
+
+ 	svg.append("g")
+ 		.attr("class", "slices");
+ 	svg.append("g")
+ 		.attr("class", "labels");
+ 	svg.append("g")
+ 		.attr("class", "lines");
+
+ 	var color = d3.scale.category20();
+
+ 	var pie = d3.layout.pie()
+ 	    .sort(null);
+
+ 	var arc = d3.svg.arc()
+ 	    .innerRadius(radius - 80)
+ 	    .outerRadius(radius - 50);
+
+ 	var outerArc = d3.svg.arc()
+ 		.innerRadius(radius * 0.9)
+ 		.outerRadius(radius * 0.9);
+
+ 	var donut = d3.select(options.selector).select('svg')
+ 		.attr("width", width)
+    .attr("height", height)
+    .append("g")
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+  var path = donut.selectAll("path")
+    	.data(pie(numericalData()))
+    .enter().append("path")
+	    .attr("fill", function(d, i) { return color(i); })
+	    .attr("d", arc);
+
+}
+
+
+
+
+
+
+
+
+function testDonut(ourData){
+	var svg = d3.select("#top_countriestest")
+		.append("svg")
+		.append("g")
+
+	svg.append("g")
+		.attr("class", "slices");
+	svg.append("g")
+		.attr("class", "labels");
+	svg.append("g")
+		.attr("class", "lines");
+
+	var width = 960,
+	    height = 450,
+		radius = Math.min(width, height) / 2;
+
+	var pie = d3.layout.pie()
+		.sort(null)
+		.value(function(d) {
+			return d.value;
+		});
+
+	var arc = d3.svg.arc()
+		.outerRadius(radius * 0.8)
+		.innerRadius(radius * 0.4);
+
+	var outerArc = d3.svg.arc()
+		.innerRadius(radius * 0.9)
+		.outerRadius(radius * 0.9);
+
+	svg.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+	var key = function(d){ return d.data.label; };
+
+	var color = d3.scale.ordinal()
+		.domain(["Lorem ipsum", "dolor sit", "amet", "consectetur", "adipisicing", "elit", "sed", "do", "eiusmod", "tempor", "incididunt"])
+		.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+	function randomData (){
+		var labels = color.domain();
+		return labels.map(function(label){
+			return { label: label, value: Math.random() }
+		});
+	}
+
+	change(GLOBAL_API_DATA.fakedata4);
+
+	d3.select(".randomize")
+		.on("click", function(){
+			change(randomData());
+		});
+	
+
+	function change(data) {
+
+		var randomColor = d3.scale.category20();
+
+		/* ------- PIE SLICES -------*/
+		var slice = svg.select(".slices").selectAll("path.slice")
+			.data(pie(data), key);
+
+		slice.enter()
+			.insert("path")
+			.style("fill", function(d, i) { return randomColor(i); })
+			.attr("class", "slice");
+
+		slice		
+			.transition().duration(1000)
+			.attrTween("d", function(d) {
+				this._current = this._current || d;
+				var interpolate = d3.interpolate(this._current, d);
+				this._current = interpolate(0);
+				return function(t) {
+					return arc(interpolate(t));
+				};
+			})
+
+		slice.exit()
+			.remove();
+
+		/* ------- TEXT LABELS -------*/
+
+		var text = svg.select(".labels").selectAll("text")
+			.data(pie(data), key);
+
+		text.enter()
+			.append("text")
+			.attr("dy", ".35em")
+			.text(function(d) {
+				return d.data.label;
+			});
+		
+		function midAngle(d){
+			return d.startAngle + (d.endAngle - d.startAngle)/2;
+		}
+
+		text.transition().duration(1000)
+			.attrTween("transform", function(d) {
+				this._current = this._current || d;
+				var interpolate = d3.interpolate(this._current, d);
+				this._current = interpolate(0);
+				return function(t) {
+					var d2 = interpolate(t);
+					var pos = outerArc.centroid(d2);
+					pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
+					return "translate("+ pos +")";
+				};
+			})
+			.styleTween("text-anchor", function(d){
+				this._current = this._current || d;
+				var interpolate = d3.interpolate(this._current, d);
+				this._current = interpolate(0);
+				return function(t) {
+					var d2 = interpolate(t);
+					return midAngle(d2) < Math.PI ? "start":"end";
+				};
+			});
+
+		text.exit()
+			.remove();
+
+		/* ------- SLICE TO TEXT POLYLINES -------*/
+
+		var polyline = svg.select(".lines").selectAll("polyline")
+			.data(pie(data), key);
+		
+		polyline.enter()
+			.append("polyline");
+
+		polyline.transition().duration(1000)
+			.attrTween("points", function(d){
+				this._current = this._current || d;
+				var interpolate = d3.interpolate(this._current, d);
+				this._current = interpolate(0);
+				return function(t) {
+					var d2 = interpolate(t);
+					var pos = outerArc.centroid(d2);
+					pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
+					return [arc.centroid(d2), outerArc.centroid(d2), pos];
+				};			
+			});
+		
+		polyline.exit()
+			.remove();
+	};
 }

@@ -12,26 +12,6 @@ function compensateFooter(){
 	}
 }
 
-// Take a set of elements and euqal their heights.
-// function equalHeights(parent, selector){
-// 	if (selector[0] && parent[0]){
-// 		parent.each(function(parentI, parentE){
-// 			var parent = $(this);
-// 			var itemSet = $(this).find(selector);
-// 			var newHeight = 0;
-// 			itemSet.each(function(itemIndex, e){
-// 				if ($(this).height() > newHeight){
-// 					newHeight = $(this).height();
-// 				}
-// 			});
-// 			itemSet.each(function(e, i){
-// 				$(this).height(newHeight);
-// 			});
-// 		})
-
-// 	}
-// }
-
 function eventsTable(){
 	if($('#events-table')[0]){
 		$('#events-table').DataTable({
@@ -40,10 +20,10 @@ function eventsTable(){
 			"dom": 'rtp',
 			"order": [[ 1, 'desc' ]],
 			"oLanguage": {
-		      "oPaginate": {
-		        "sPrevious": "Prev"
-		      }
-		    }
+	      "oPaginate": {
+	        "sPrevious": "Prev"
+	      }
+	    }
 		});
 	}
 }
@@ -57,3 +37,19 @@ function eventsCloseAll(){
 	})
 }
 
+function abbreviateNumber(value) {
+  var newValue = value;
+  if (value >= 1000) {
+    var suffixes = ["", "k", "m", "b","t"];
+    var suffixNum = Math.floor( (""+value).length/3 );
+    var shortValue = '';
+    for (var precision = 2; precision >= 1; precision--) {
+      shortValue = parseFloat( (suffixNum != 0 ? (value / Math.pow(1000,suffixNum) ) : value).toPrecision(precision));
+      var dotLessShortValue = (shortValue + '').replace(/[^a-zA-Z 0-9]+/g,'');
+      if (dotLessShortValue.length <= 2) { break; }
+    }
+    if (shortValue % 1 != 0)  shortNum = shortValue.toFixed(1);
+    newValue = shortValue+suffixes[suffixNum];
+  }
+  return newValue;
+}

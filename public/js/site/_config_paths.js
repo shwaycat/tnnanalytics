@@ -6,7 +6,7 @@ var GLOBAL_API_DATA = {
   instagram: 'TODO data here!',
   google_plus: 'TODO data here!',
   youtube: 'TODO data here!',
-  fakedata1: [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13, 11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ],
+  fakedata1: [ 5, 10, 13, 19, 21, 25, 22, 18, ],
   fakedata2: [
     {
       "date": "2015-01-21T20:29:42.759Z",
@@ -25,13 +25,49 @@ var GLOBAL_API_DATA = {
       "count": "30"
     },
   ],
-  fakedata3: createFakeData()
-}
-
-var GLOBAL_GRAPH_COLORS = {
-  reach_line: 'rgba(0, 159, 218, 0.2)',
-  engagement_line: 'rgba(149, 29, 163, 0.2)',
-  acquisition_main: 'rgba(67, 164, 27, 0.2)'
+  fakedata3: createFakeData(),
+  fakedata4: [
+    {
+      "label": "USA",
+      "value": 79000
+    },
+    {
+      "label": "Canada",
+      "value": 74000
+    },
+    {
+      "label": "Mexico",
+      "value": 23000
+    },
+    {
+      "label": "England",
+      "value": 500
+    },
+    {
+      "label": "Ireland",
+      "value": 40000
+    },
+    {
+      "label": "Germany",
+      "value": 9000
+    },
+    {
+      "label": "Belgium",
+      "value": 43400
+    },
+    {
+      "label": "Russia",
+      "value": 54522
+    },
+    {
+      "label": "Japan",
+      "value": 500
+    },
+    {
+      "label": "China",
+      "value": 323
+    }
+  ]
 }
 
 function createFakeData(){
@@ -46,22 +82,5 @@ function createFakeData(){
     ourArray[i] = { "date": date, "count": count };
   }
   return ourArray;
-}
-
-function abbreviateNumber(value) {
-    var newValue = value;
-    if (value >= 1000) {
-        var suffixes = ["", "k", "m", "b","t"];
-        var suffixNum = Math.floor( (""+value).length/3 );
-        var shortValue = '';
-        for (var precision = 2; precision >= 1; precision--) {
-            shortValue = parseFloat( (suffixNum != 0 ? (value / Math.pow(1000,suffixNum) ) : value).toPrecision(precision));
-            var dotLessShortValue = (shortValue + '').replace(/[^a-zA-Z 0-9]+/g,'');
-            if (dotLessShortValue.length <= 2) { break; }
-        }
-        if (shortValue % 1 != 0)  shortNum = shortValue.toFixed(1);
-        newValue = shortValue+suffixes[suffixNum];
-    }
-    return newValue;
 }
 
