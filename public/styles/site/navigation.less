@@ -1,5 +1,5 @@
 @navigation_padding: 1em 10% 1em 4em;
-@navigation_transition: 0.1s;
+@navigation_transition: 0.05s;
 
 .side-navigation {
   padding-bottom:2em;
@@ -70,10 +70,8 @@
       .transition(@navigation_transition);
     }
     &.active, &:hover {
-      .navigation-icon.sublink {
-        opacity:1;
-        .transition(@navigation_transition);
-      }
+      background-color:@element_alternate_active;
+      .transition(@navigation_transition);
     }
   }
   .navigation-icon {

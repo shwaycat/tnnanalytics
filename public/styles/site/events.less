@@ -1,5 +1,15 @@
 .events-container {
 	overflow:scroll;
+	&.loaded {
+		.dataTables_wrapper {
+			opacity:1;
+			.transition(@section_transition);
+		}
+	}
+	.dataTables_wrapper {
+		opacity:0;
+		.transition(@section_transition);
+	}
 	*, *:hover, *:focus, *:active {
 		outline: 0;
 	}
@@ -57,6 +67,16 @@
 		> tbody > tr,
 		> tfoot > tr {
 			background-color:transparent;
+			&.status-new {
+				background-color:@element_alert;
+				td {
+					font-weight: normal;
+				}
+			}
+			&.status-open {
+				background-color:@element_alternate_active;
+
+			}
 		}
 	}
 	

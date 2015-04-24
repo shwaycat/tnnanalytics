@@ -1,76 +1,6 @@
-// Front End Routes
-
-// This is where you would add certain graphs to certain pages and init them.
-
-function routesInit(){
-	if ($('body.dashboard')[0]){
-		console.log('    routesInit: dashboard');
-
-		
-	}
-	if ($('body.facebook')[0]){
-		console.log('    routesInit: facebook');
-
-		donutGraph(GLOBAL_API_DATA.fakedata4,{
-			selector: '#top_countries',
-			source: 'facebook',
-			color: '',
-		});
-
-		reachGraph(GLOBAL_API_DATA.fakedata3,{
-			selector: '#reach',
-			source: 'facebook',
-			color: '',
-		});
-
-		testDonut(GLOBAL_API_DATA.fakedata4,{
-			selector: '#top_countriestest',
-			source: 'facebook',
-			color: ''
-		});
-
-	}
-	if ($('body.twitter')[0]){
-		console.log('    routesInit: twitter');
-
-				
-	}
-	if ($('body.instagram')[0]){
-		console.log('    routesInit: instagram');
-
-				
-	}
-	if ($('body.youtube')[0]){
-		console.log('    routesInit: youtube');
-
-				
-	}
-	if ($('body.google-plus')[0]){
-		console.log('    routesInit: google-plus');
-
-				
-	}
-	if ($('body.analytics-all')[0]){
-		console.log('    routesInit: analytics-all');
-
-				
-	}
-	if ($('body.analytics-global')[0]){
-		console.log('    routesInit: analytics-global');
-
-				
-	}
-	if ($('body.analytics-us')[0]){
-		console.log('    routesInit: analytics-us');
-
-				
-	}
-	if ($('body.events')[0]){
-		console.log('    routesInit: events');
-
-				
-	}
-}
+///////////////////////////
+// GENERAL D3 FUNCTIONS  //
+///////////////////////////
 
 function type(d) {
 	d.date = new Date(d.date);
@@ -78,7 +8,13 @@ function type(d) {
   return d;
 }
 
-function reachGraph(data, options){
+
+
+///////////////////////////
+//       LINE GRAPH      //
+///////////////////////////
+
+function lineGraph(data, options){
 	// Options Example
 
 	var theData = data;
@@ -195,94 +131,23 @@ function reachGraph(data, options){
 
 	svg.append("path")
     .attr("class", "line")
-    .attr("stroke-width", 2)
+    .attr("stroke-width", 1)
     .attr("clip-path", "url("+options.selector+"_clip)")
     .attr("d", line(theData));
 
-}
-
-function donutGraph(data, options){
-	// Options Example
-
-	var theData = data;
-
-	var numericalData = function(){
-		var tempArray = [];
-		for (var i = 0; i < theData.length; i++){
-			tempArray[i] = theData[i].value;
-		}
-		return tempArray;
-	}
-
-	// If an SVG exists, remove it. This is mostly for redrawing the graph on browser resize.
-	if($(options.selector).first().children('svg')[0]){
-		$(options.selector).first().children('svg').remove();
-	}
-
-	// Gets options in a data attr on the obj. Used to pass Keystone generated data.
-	if ($(options.selector).data('admin-options') != '' || $(options.selector).data('admin-options') != null){
-		options.admin_options = $(options.selector).data('admin-options');
-	} else {
-		options.admin_options = false;
-	}
-
-	// Init a few things.
-	var svg = d3.select(options.selector).append('svg')
-	var width = parseInt(svg.style('width'));
-	var height = parseInt(svg.style('height'));
-	var radius = Math.min(width, height) / 2;
-	var padding = 45;
- 	//var interpolateType = 'linear';
-
- 	svg.append("g")
- 		.attr("class", "slices");
- 	svg.append("g")
- 		.attr("class", "labels");
- 	svg.append("g")
- 		.attr("class", "lines");
-
- 	var color = d3.scale.category20();
-
- 	var pie = d3.layout.pie();
-
- 	var arc = d3.svg.arc()
- 	    .innerRadius(radius - 80)
- 	    .outerRadius(radius - 50);
-
- 	var outerArc = d3.svg.arc()
- 		.innerRadius(radius * 0.9)
- 		.outerRadius(radius * 0.9);
-
- 	var donut = d3.select(options.selector).select('svg')
- 		.attr("width", width)
-    .attr("height", height)
-    .append("g")
-    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-
-  var path = donut.selectAll("path")
-    	.data(pie(numericalData()))
-    .enter().append("path")
-	    .attr("fill", function(d, i) { return color(i); })
-	    .attr("d", arc);
-
+  $(options.selector).sectionLoad();
 }
 
 
 
 
+///////////////////////////
+//    DONUT/PIE GRAPH    //
+///////////////////////////
 
+function donutGraph(ourData, options){
 
-
-
-
-
-
-
-
-
-function testDonut(ourData, options){
-
-	var theData = simplifyData(ourData);
+	var theData = ourData;
 
 	// If an SVG exists, remove it. This is mostly for redrawing the graph on browser resize.
 	if($(options.selector).first().children('svg')[0]){
@@ -302,8 +167,6 @@ function testDonut(ourData, options){
 	var height = parseInt(mainSvg.style('height'));
 	var radius = Math.min(width, height) / 2.3;
 
-	
-
 	var pie = d3.layout.pie()
 		.sort(null)
 		.value(function(d) {
@@ -313,11 +176,9 @@ function testDonut(ourData, options){
 	var arc = d3.svg.arc()
 		.outerRadius(radius * 0.65)
 		.innerRadius(radius * 0.45).startAngle(function(d) { return d.startAngle + Math.PI/7; }).endAngle(function(d) { return d.endAngle + Math.PI/7; });
-
 	var outerArc = d3.svg.arc()
 		.innerRadius(radius * 0.9)
 		.outerRadius(radius * 0.9).startAngle(function(d) { return d.startAngle + Math.PI/7; }).endAngle(function(d) { return d.endAngle + Math.PI/7; });
-
 	var key = function(d){ return d.data.label; };
 
 	svg
@@ -332,57 +193,11 @@ function testDonut(ourData, options){
 	svg
 		.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-	
-
 	change(theData);
 	
 	function change(data) {
 
 		var randomColor = d3.scale.category20();
-
-		
-		$('#hex').bind('blur keydown', function (event) {
-				var el = this;
-				setTimeout(function () {
-					var rgb = [],
-					    $input = $(el),
-					    fail = false,
-					    original = $input.val(),
-					
-					hex = (original+'').replace(/#/, '');
-					
-					if (original.length === 1 && original !== '#') { $input.val('#' + original); }
-					if (hex.length == 3) hex = hex + hex;
-
-					for (var i = 0; i < 6; i+=2) {
-					   rgb.push(parseInt(hex.substr(i,2),16));
-					   fail = fail || rgb[rgb.length - 1].toString() === 'NaN';
-					}
-
-					$('#rgb').val(fail ? '' : 'rgb(' + rgb.join(',') + ')');
-					$('#hsl').val(fail ? '' : 'hsl(' + rgbToHsl.apply(null, rgb).join(',') + ')');
-					   
-					$('body').css('backgroundColor', $('#rgb').val());
-			    }, 13);
-			});
-
-
-
-
-		function saturationControl(hex, opacity, saturationMultiplier){
-			var rgb = [],
-			    fail = false,
-			    color;
-			hex = hex.split('#')[1];
-			if (hex.length == 3){
-				hex = hex + hex;
-			}
-			for (var i = 0; i < 6; i+=2) {
-			   rgb.push(parseInt(saturationMultiplier*parseInt(hex.substr(i,2),16)));
-			   fail = fail || rgb[rgb.length - 1].toString() === 'NaN';
-			}
-			return 'rgba('+rgb.join(',') + ','+opacity+')';
-		}
 
 		/* ------- PIE SLICES -------*/
 		var slice = svg.select(".slices")
@@ -488,4 +303,84 @@ function testDonut(ourData, options){
 			.exit()
 			.remove();
 	};
+
+	$(options.selector).sectionLoad(true);
 }
+
+
+
+
+
+
+
+
+
+
+
+// Old stuff, I will remove later -Nick
+
+// function donutGraph(data, options){
+// 	// Options Example
+
+// 	var theData = data;
+
+// 	var numericalData = function(){
+// 		var tempArray = [];
+// 		for (var i = 0; i < theData.length; i++){
+// 			tempArray[i] = theData[i].value;
+// 		}
+// 		return tempArray;
+// 	}
+
+// 	// If an SVG exists, remove it. This is mostly for redrawing the graph on browser resize.
+// 	if($(options.selector).first().children('svg')[0]){
+// 		$(options.selector).first().children('svg').remove();
+// 	}
+
+// 	// Gets options in a data attr on the obj. Used to pass Keystone generated data.
+// 	if ($(options.selector).data('admin-options') != '' || $(options.selector).data('admin-options') != null){
+// 		options.admin_options = $(options.selector).data('admin-options');
+// 	} else {
+// 		options.admin_options = false;
+// 	}
+
+// 	// Init a few things.
+// 	var svg = d3.select(options.selector).append('svg')
+// 	var width = parseInt(svg.style('width'));
+// 	var height = parseInt(svg.style('height'));
+// 	var radius = Math.min(width, height) / 2;
+// 	var padding = 45;
+//  	//var interpolateType = 'linear';
+
+//  	svg.append("g")
+//  		.attr("class", "slices");
+//  	svg.append("g")
+//  		.attr("class", "labels");
+//  	svg.append("g")
+//  		.attr("class", "lines");
+
+//  	var color = d3.scale.category20();
+
+//  	var pie = d3.layout.pie();
+
+//  	var arc = d3.svg.arc()
+//  	    .innerRadius(radius - 80)
+//  	    .outerRadius(radius - 50);
+
+//  	var outerArc = d3.svg.arc()
+//  		.innerRadius(radius * 0.9)
+//  		.outerRadius(radius * 0.9);
+
+//  	var donut = d3.select(options.selector).select('svg')
+//  		.attr("width", width)
+//     .attr("height", height)
+//     .append("g")
+//     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+//   var path = donut.selectAll("path")
+//     	.data(pie(numericalData()))
+//     .enter().append("path")
+// 	    .attr("fill", function(d, i) { return color(i); })
+// 	    .attr("d", arc);
+
+// }

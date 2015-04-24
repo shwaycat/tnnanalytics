@@ -116,6 +116,15 @@ header {
         display:none;
       });
     }
+    .event-alert-item {
+        .scale(1);
+        display: block;
+        .transition(0.1s);
+        &:hover {
+          .scale(1);
+          .transition(0.1s);
+        }
+    }
     .event-alert {
       position: absolute;
       top: -0.3em;
@@ -126,6 +135,12 @@ header {
       border-radius: 10em;
       width: 0.9em;
       height: 0.9em;
+      .scale(0);
+      .transition(0.4s);
+      &.active {
+        .scale(1);
+        .transition(0.4s);
+      }
       span {
         color: #FFF;
         position: absolute;

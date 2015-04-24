@@ -24,7 +24,8 @@ html
     block head
   body(class=section)
 
-    +alerts
+    if user
+      +alerts
 
     .container-fluid.header-container
       +header
@@ -71,6 +72,7 @@ html
     script(src='/js/site/functions_general.js')
     script(src='/js/site/functions_events.js')
     script(src='/js/site/functions_d3.js')
+    script(src='/js/site/functions_routes.js')
     script(src='/js/site/app.js')
 
     block js
