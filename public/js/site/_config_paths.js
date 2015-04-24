@@ -29,44 +29,49 @@ var GLOBAL_API_DATA = {
   fakedata4: [
     {
       "label": "USA",
-      "value": 79000
+      "value": 50
     },
     {
       "label": "Canada",
-      "value": 74000
+      "value": 1
     },
     {
       "label": "Mexico",
-      "value": 23000
+      "value": 2
     },
     {
       "label": "England",
-      "value": 500
+      "value": 3
     },
     {
       "label": "Ireland",
-      "value": 40000
+      "value": 5
     },
     {
       "label": "Germany",
-      "value": 9000
+      "value": 5
     },
     {
       "label": "Belgium",
-      "value": 43400
+      "value": 5
     },
     {
       "label": "Russia",
-      "value": 54522
+      "value": 5
     },
     {
       "label": "Japan",
-      "value": 500
+      "value": 5
     },
     {
       "label": "China",
-      "value": 323
+      "value": 5
+    },
+    {
+      "label": "TaiWorld",
+      "value": 5
     }
+
   ]
 }
 
@@ -76,11 +81,28 @@ function createFakeData(){
   for (var i = 0; i < index; i++){
     var year = 1971 + i;
     var day = 1971 + i;
-    var date = new Date('2014', '03', '05', '5', i*15);
+    var date = new Date('2014', '03', i*15);
     date = date.toJSON();
     var count = Math.random()*1234234*i + 500;
     ourArray[i] = { "date": date, "count": count };
   }
   return ourArray;
+}
+
+function simplifyData(data){
+  var totalValues = 0,
+      otherObj = { "label": "Other", "value": 0 };
+  for (var i = 0; i < data.length; i++){
+    totalValues += data[i].value;
+  }
+  for (var i = 0; i < data.length; i++){
+    if (data[i].value/totalValues < 0.5) {
+      data.splice(i, 1);
+      otherObj.value += data[i].value;
+    }
+  }
+  data.push(otherObj);
+  return data;
+
 }
 

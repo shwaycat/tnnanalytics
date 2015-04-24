@@ -15,7 +15,7 @@ function compensateFooter(){
 function eventsTable(){
 	if($('#events-table')[0]){
 		$('#events-table').DataTable({
-			"pageLength": 50,
+			"pageLength": 15,
 			"pagingType": "simple_numbers",
 			"dom": 'rtp',
 			"order": [[ 1, 'desc' ]],

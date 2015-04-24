@@ -23,7 +23,11 @@ function routesInit(){
 			color: '',
 		});
 
-		testDonut();
+		testDonut(GLOBAL_API_DATA.fakedata4,{
+			selector: '#top_countriestest',
+			source: 'facebook',
+			color: ''
+		});
 
 	}
 	if ($('body.twitter')[0]){
@@ -210,8 +214,6 @@ function donutGraph(data, options){
 		return tempArray;
 	}
 
-	console.log(numericalData());
-
 	// If an SVG exists, remove it. This is mostly for redrawing the graph on browser resize.
 	if($(options.selector).first().children('svg')[0]){
 		$(options.selector).first().children('svg').remove();
@@ -241,8 +243,7 @@ function donutGraph(data, options){
 
  	var color = d3.scale.category20();
 
- 	var pie = d3.layout.pie()
- 	    .sort(null);
+ 	var pie = d3.layout.pie();
 
  	var arc = d3.svg.arc()
  	    .innerRadius(radius - 80)
@@ -273,21 +274,35 @@ function donutGraph(data, options){
 
 
 
-function testDonut(ourData){
-	var svg = d3.select("#top_countriestest")
-		.append("svg")
-		.append("g")
 
-	svg.append("g")
-		.attr("class", "slices");
-	svg.append("g")
-		.attr("class", "labels");
-	svg.append("g")
-		.attr("class", "lines");
 
-	var width = 960,
-	    height = 450,
-		radius = Math.min(width, height) / 2;
+
+
+
+
+function testDonut(ourData, options){
+
+	var theData = simplifyData(ourData);
+
+	// If an SVG exists, remove it. This is mostly for redrawing the graph on browser resize.
+	if($(options.selector).first().children('svg')[0]){
+		$(options.selector).first().children('svg').remove();
+	}
+
+	// Gets options in a data attr on the obj. Used to pass Keystone generated data.
+	if ($(options.selector).data('admin-options') != '' || $(options.selector).data('admin-options') != null){
+		options.admin_options = $(options.selector).data('admin-options');
+	} else {
+		options.admin_options = false;
+	}
+
+	var mainSvg = d3.select(options.selector).append("svg")
+	var svg = mainSvg.append("g")
+	var width = parseInt(mainSvg.style('width'));
+	var height = parseInt(mainSvg.style('height'));
+	var radius = Math.min(width, height) / 2.3;
+
+	
 
 	var pie = d3.layout.pie()
 		.sort(null)
@@ -296,47 +311,88 @@ function testDonut(ourData){
 		});
 
 	var arc = d3.svg.arc()
-		.outerRadius(radius * 0.8)
-		.innerRadius(radius * 0.4);
+		.outerRadius(radius * 0.65)
+		.innerRadius(radius * 0.45).startAngle(function(d) { return d.startAngle + Math.PI/7; }).endAngle(function(d) { return d.endAngle + Math.PI/7; });
 
 	var outerArc = d3.svg.arc()
 		.innerRadius(radius * 0.9)
-		.outerRadius(radius * 0.9);
-
-	svg.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+		.outerRadius(radius * 0.9).startAngle(function(d) { return d.startAngle + Math.PI/7; }).endAngle(function(d) { return d.endAngle + Math.PI/7; });
 
 	var key = function(d){ return d.data.label; };
 
-	var color = d3.scale.ordinal()
-		.domain(["Lorem ipsum", "dolor sit", "amet", "consectetur", "adipisicing", "elit", "sed", "do", "eiusmod", "tempor", "incididunt"])
-		.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+	svg
+		.append("g")
+		.attr("class", "slices");
+	svg
+		.append("g")
+		.attr("class", "labels");
+	svg
+		.append("g")
+		.attr("class", "lines");
+	svg
+		.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-	function randomData (){
-		var labels = color.domain();
-		return labels.map(function(label){
-			return { label: label, value: Math.random() }
-		});
-	}
-
-	change(GLOBAL_API_DATA.fakedata4);
-
-	d3.select(".randomize")
-		.on("click", function(){
-			change(randomData());
-		});
 	
 
+	change(theData);
+	
 	function change(data) {
 
 		var randomColor = d3.scale.category20();
 
-		/* ------- PIE SLICES -------*/
-		var slice = svg.select(".slices").selectAll("path.slice")
-			.data(pie(data), key);
+		
+		$('#hex').bind('blur keydown', function (event) {
+				var el = this;
+				setTimeout(function () {
+					var rgb = [],
+					    $input = $(el),
+					    fail = false,
+					    original = $input.val(),
+					
+					hex = (original+'').replace(/#/, '');
+					
+					if (original.length === 1 && original !== '#') { $input.val('#' + original); }
+					if (hex.length == 3) hex = hex + hex;
 
-		slice.enter()
+					for (var i = 0; i < 6; i+=2) {
+					   rgb.push(parseInt(hex.substr(i,2),16));
+					   fail = fail || rgb[rgb.length - 1].toString() === 'NaN';
+					}
+
+					$('#rgb').val(fail ? '' : 'rgb(' + rgb.join(',') + ')');
+					$('#hsl').val(fail ? '' : 'hsl(' + rgbToHsl.apply(null, rgb).join(',') + ')');
+					   
+					$('body').css('backgroundColor', $('#rgb').val());
+			    }, 13);
+			});
+
+
+
+
+		function saturationControl(hex, opacity, saturationMultiplier){
+			var rgb = [],
+			    fail = false,
+			    color;
+			hex = hex.split('#')[1];
+			if (hex.length == 3){
+				hex = hex + hex;
+			}
+			for (var i = 0; i < 6; i+=2) {
+			   rgb.push(parseInt(saturationMultiplier*parseInt(hex.substr(i,2),16)));
+			   fail = fail || rgb[rgb.length - 1].toString() === 'NaN';
+			}
+			return 'rgba('+rgb.join(',') + ','+opacity+')';
+		}
+
+		/* ------- PIE SLICES -------*/
+		var slice = svg.select(".slices")
+					.selectAll("path.slice")
+					.data(pie(data), key);
+
+		slice
+			.enter()
 			.insert("path")
-			.style("fill", function(d, i) { return randomColor(i); })
+			.style("fill", function(d, i) { return saturationControl(randomColor(i), '1', 0.75); })
 			.attr("class", "slice");
 
 		slice		
@@ -350,15 +406,18 @@ function testDonut(ourData){
 				};
 			})
 
-		slice.exit()
+		slice
+			.exit()
 			.remove();
 
 		/* ------- TEXT LABELS -------*/
 
-		var text = svg.select(".labels").selectAll("text")
-			.data(pie(data), key);
+		var text = svg.select(".labels")
+					.selectAll("text")
+					.data(pie(data), key);
 
-		text.enter()
+		text
+			.enter()
 			.append("text")
 			.attr("dy", ".35em")
 			.text(function(d) {
@@ -378,7 +437,7 @@ function testDonut(ourData){
 					var d2 = interpolate(t);
 					var pos = outerArc.centroid(d2);
 					pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
-					return "translate("+ pos +")";
+					return "translate("+ pos[0]+","+pos[1]*1.2 +")";
 				};
 			})
 			.styleTween("text-anchor", function(d){
@@ -391,31 +450,42 @@ function testDonut(ourData){
 				};
 			});
 
-		text.exit()
+		text
+			.exit()
 			.remove();
 
 		/* ------- SLICE TO TEXT POLYLINES -------*/
 
-		var polyline = svg.select(".lines").selectAll("polyline")
-			.data(pie(data), key);
+		var polyline = svg.select(".lines")
+					.selectAll("polyline")
+					.data(pie(data), key);
 		
-		polyline.enter()
+		polyline
+			.enter()
 			.append("polyline");
 
 		polyline.transition().duration(1000)
 			.attrTween("points", function(d){
 				this._current = this._current || d;
 				var interpolate = d3.interpolate(this._current, d);
-				this._current = interpolate(0);
+				this._current = interpolate('0');
 				return function(t) {
 					var d2 = interpolate(t);
 					var pos = outerArc.centroid(d2);
 					pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
-					return [arc.centroid(d2), outerArc.centroid(d2), pos];
+					return [
+						arc.centroid(d2)[0]*1.17,
+						arc.centroid(d2)[1]*1.17,
+						outerArc.centroid(d2)[0]*0.95,
+						outerArc.centroid(d2)[1]*1.2,
+						pos[0],
+						pos[1]*1.2
+					];
 				};			
 			});
 		
-		polyline.exit()
+		polyline
+			.exit()
 			.remove();
 	};
 }
