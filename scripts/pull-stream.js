@@ -115,7 +115,7 @@ function handleDirectMessage(user, data, callback) {
     user_name: message.sender.screen_name,
     user_lang: message.sender.lang,
     cadence_user_id: user.id,
-    time_stamp: message.created_at
+    timestamp: new Date(message.created_at)
   });
 
   directMessage.create(function(err, res) {
@@ -146,8 +146,8 @@ function handleMention(user, data, callback) {
     user_name: tweet.user.screen_name,
     user_lang: tweet.user.lang,
     cadence_user_id: user.id,
-    in_reply_to_status_id_str: tweet.in_reply_to_status_id_str,    
-    time_stamp: tweet.created_at
+    in_reply_to_status_id_str: tweet.in_reply_to_status_id_str,
+    timestamp: new Date(tweet.created_at)
   });
 
   mention.create(function(err, res) {
@@ -177,7 +177,7 @@ function handleTweet(user, data, callback) {
     user_name: tweet.user.screen_name,
     user_lang: tweet.user.lang,
     cadence_user_id: user.id,
-    time_stamp: tweet.created_at
+    timestamp: new Date(tweet.created_at)
   });
 
   outgoingTweet.create(function(err, res) {
