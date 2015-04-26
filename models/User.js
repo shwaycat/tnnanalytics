@@ -298,6 +298,7 @@ User.schema.statics.findConnected = function(sources, cb) {
     cb = sources
     sources = ["facebook", "twitter"]
   }
+  if (sources && !_.isArray(sources)) sources = [sources]
 
   return this.find({
     "$or": _.map(sources, function(s) {
