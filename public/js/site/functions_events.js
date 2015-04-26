@@ -5,7 +5,7 @@ var STRING_STATUS_NEW = 'new',
 		STRING_ALERTS_MESSAGE_PLURAL = ' New Adverse Events';
 
 function eventsTable(table){
-	console.log('    Call: eventsTable');
+	globalDebug('    Call: eventsTable');
 
 	if(table != undefined && table[0]){
 		table.DataTable({
@@ -25,7 +25,7 @@ function eventsTable(table){
 }
 
 function eventsTableData(data, table){
-	console.log('    Call: eventsTableData');
+	globalDebug('    Call: eventsTableData');
 
 	if(table != undefined && table[0]){
 		var tableHTML = '';
@@ -63,16 +63,16 @@ function eventsTableData(data, table){
 function eventsCloseAll(){
 	var button = $('.analytics-cta').filter("[data-events-action='close-all']");
 	button.on('click', function(e){
-		console.log('    Call: eventsCloseAll');
+		globalDebug('    Call: eventsCloseAll');
 
 		if (confirm('Are you sure you want to close all Adverse Events?')) {
-		    console.log('TODO: Close All Events');
+		    globalDebug('TODO: Close All Events');
 		}
 	})
 }
 
 function eventsCheckStatus(data){
-	console.log('    Call: eventsCheckStatus');
+	globalDebug('    Call: eventsCheckStatus');
 
 	var events = { "new": [], "open": [], count: 0 }
 	for (var i = 0; i < data.events.length; i++){
@@ -88,7 +88,7 @@ function eventsCheckStatus(data){
 }
 
 function eventsDelegateAlerts(events){
-	console.log('    Call: eventsDelegateAlerts');
+	globalDebug('    Call: eventsDelegateAlerts');
 
 	if (events.count && $('.alerts-block')[0]){
 
