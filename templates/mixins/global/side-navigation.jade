@@ -29,7 +29,7 @@ mixin side-navigation
           li.navigation-sublink(class='navigation-'+item.key+' '+(section == item.key ? 'active' : ''))
             a(href='/accounts/'+user.accountName+'/'+item.href title=item.label)= item.label
               .navigation-icon.sublink
-                .entypo.entypo-dot
+                //- .entypo.entypo-dot
       li.navigation-section(class='navigation-signout')
         a(href='/signout' title='Sign Out') Sign Out
           .navigation-icon

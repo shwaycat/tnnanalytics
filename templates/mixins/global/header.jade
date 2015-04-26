@@ -5,12 +5,12 @@ mixin header
         a.header-logo(href="/" title="Cadence Home")
           img(src="/images/logo.png" alt="Cadence Logo")
         ul.header-items
-          li: a(href='/')
-            .glyphicon.glyphicon-bell
-              .event-alert
-                span 10
-            span.events-name Events
           if user
+            li: a.event-alert-item(href='/accounts/'+user.accountName+'/events')
+              .glyphicon.glyphicon-bell
+                .event-alert
+                  span 10
+              span.events-name Events
             if user.canAccessKeystone
               li: a(href='/keystone') Keystone
             li: a(href='/user/'+user.key).user

@@ -1,97 +1,51 @@
-$.fn.serializeObject = function()
-{
-   var o = {};
-   var a = this.serializeArray();
-   $.each(a, function() {
-       if (o[this.name]) {
-           if (!o[this.name].push) {
-               o[this.name] = [o[this.name]];
-           }
-           o[this.name].push(this.value || '');
-       } else {
-           o[this.name] = this.value || '';
-       }
-   });
-   return o;
-};
+var STRING_STATUS_NEW = 'new',
+		STRING_STATUS_OPEN = 'open',
+		statusClass = '',
+		STRING_ALERTS_MESSAGE = ' New Adverse Event',
+		STRING_ALERTS_MESSAGE_PLURAL = ' New Adverse Events';
 
-String.prototype.capitalizeFirstLetter = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
+function eventsTable(table){
+	console.log('eventsTable');
+
+	if(table != undefined && table[0]){
+		table.DataTable({
+			"pageLength": 15,
+			"pagingType": "simple_numbers",
+			"dom": 'rtp',
+			"order": [[ 1, 'desc' ]],
+			"oLanguage": {
+	      "oPaginate": {
+	        "sPrevious": "Prev"
+	      }
+	    }
+		});
+
+		$('.events-container').sectionLoad();
+	}
 }
 
-var fakeEvents = {
-	"info": "false",
-	"events" : [
-		{
-			"id":"1234",
-			"channel":"facebook",
-			"status":"closed",
-			"creation": "2015-04-17T22:45:04.000Z",
-			"accessed": "2015-04-17T22:45:04.000Z",
-			"link": "http://www.gameofthrones.com"
-		},
-		{
-			"id":"1234",
-			"channel":"twitter",
-			"status":"closed",
-			"creation": "2015-04-17T19:45:04.000Z",
-			"accessed": "2015-04-17T20:45:04.000Z",
-			"link": "http://www.gameofthrones.com"
-		},
-		{
-			"id":"1234",
-			"channel":"instagram",
-			"status":"open",
-			"creation": "2015-04-17T21:45:04.000Z",
-			"accessed": "2015-04-17T21:45:04.000Z",
-			"link": "http://www.gameofthrones.com"
-		},{
-			"id":"1234",
-			"channel":"youtube",
-			"status":"new",
-			"creation": "2015-02-16T22:45:04.000Z",
-			"accessed": "2015-02-16T22:45:04.000Z",
-			"link": "http://www.gameofthrones.com"
-		},{
-			"id":"1234",
-			"channel":"google+",
-			"status":"closed",
-			"creation": "2015-02-17T05:45:04.000Z",
-			"accessed": "2015-02-17T05:45:04.000Z",
-			"link": "http://www.gameofthrones.com"
-		}
-	]
-};
+function eventsTableData(data, table){
+	console.log('eventsTableData');
 
-
-
-function createTableContent(data, table){
-
-	if(table[0]){
-
+	if(table != undefined && table[0]){
 		var tableHTML = '';
-
 		for (var i = 0; i < data.events.length; i++){
+
+			statusClass = '';
 			var currentEvent = data.events[i];
-
-			console.log(i);
-
 			var currentEvent_creation = new Date(currentEvent.creation);
-
 			currentEvent_creation = currentEvent_creation.getFullYear() + '/' + (currentEvent_creation.getMonth() < 10 ? ('0'+currentEvent_creation.getMonth()) : currentEvent_creation.getMonth() ) + '/' + (currentEvent_creation.getDate() < 10 ? ('0'+currentEvent_creation.getDate()) : currentEvent_creation.getDate() );
-
 			var currentEvent_accessed = new Date(currentEvent.accessed);
 			currentEvent_accessed = currentEvent_accessed.getFullYear() + '/' + (currentEvent_accessed.getMonth() < 10 ? ('0'+currentEvent_accessed.getMonth()) : currentEvent_accessed.getMonth() ) + '/' + (currentEvent_accessed.getDate() < 10 ? ('0'+currentEvent_accessed.getDate()) : currentEvent_accessed.getDate() );
 			var currentEvent_accessed_human = $.timeago(currentEvent_accessed);
 
-			var statusHTML = '';
-			if (currentEvent.status == 'new'){
-				statusHTML += 'status-new';
-			} else if (currentEvent.status == 'open'){
-				statusHTML += 'status-open';
+			if (currentEvent.status == STRING_STATUS_NEW){
+				statusClass = 'status-new';
+			} else if (currentEvent.status == STRING_STATUS_OPEN){
+				statusClass = 'status-open';
 			}
 
-			tableHTML += '<tr class="'+statusHTML+'"><td>Checkbox</td>';
+			tableHTML += '<tr data-id="'+currentEvent.id+'"" class="'+statusClass+'"><td>Checkbox</td>';
 			tableHTML += '<td>'+currentEvent_creation+'</td>';
 			tableHTML += '<td>'+currentEvent.channel.capitalizeFirstLetter()+'</td>';
 			tableHTML += '<td>'+currentEvent.status.capitalizeFirstLetter()+'</td>';
@@ -101,39 +55,58 @@ function createTableContent(data, table){
 			tableHTML += '</tr>';
 
 			table.find('tbody').append(tableHTML);
-
 			tableHTML = '';
-			
+		}
+	}
+}
+
+function eventsCloseAll(){
+	var button = $('.analytics-cta').filter("[data-events-action='close-all']");
+	button.on('click', function(e){
+		console.log('eventsCloseAll');
+
+		if (confirm('Are you sure you want to close all Adverse Events?')) {
+		    console.log('TODO: Close All Events');
+		}
+	})
+}
+
+function eventsCheckStatus(data){
+	var events = { "new": [], "open": [], count: 0 }
+	for (var i = 0; i < data.events.length; i++){
+		if (data.events[i].status == STRING_STATUS_NEW){
+			events.new.push(data.events[i]);
+			events.count++;
+		} else if (data.events[i].status == STRING_STATUS_OPEN){
+			events.open.push(data.events[i]);
+			events.count++;
+		}
+	}
+	return events;
+}
+
+function eventsDelegateAlerts(events){
+	if (events.count && $('.alerts-block')[0]){
+
+		if (events.new.length){
+			$('.alerts-block').data('events-new-count', events.new.length)
+			if (events.new.length == 1){
+				$('.alerts-message p').html('1'+STRING_ALERTS_MESSAGE);
+			} else {
+				$('.alerts-message p').html(events.new.length+STRING_ALERTS_MESSAGE_PLURAL);
+			}
+			setTimeout(function(){
+				$('.alerts-block').addClass('active');
+			}, 200);
 		}
 
-		// table.draw();
+		$('.event-alert').data('events-new-count', events.count)
+		$('.event-alert span').html(events.count);
+		setTimeout(function(){
+			$('.event-alert').addClass('active');
+		}, 200);
 
 	}
-
-}
-
-createTableContent(fakeEvents, $('#events-table'));
-
-function createDateAsUTC(date) {
-  return new Date(Date.UTC(
-  	date.getFullYear(),
-  	date.getMonth(),
-  	date.getDate(),
-  	date.getHours(),
-  	date.getMinutes(),
-  	date.getSeconds()
-  ));
-}
-
-function convertDateToUTC(date) { 
-  return new Date(
-  	date.getUTCFullYear(),
-  	date.getUTCMonth(),
-  	date.getUTCDate(),
-  	date.getUTCHours(),
-  	date.getUTCMinutes(),
-  	date.getUTCSeconds()
-  ); 
 }
 
 

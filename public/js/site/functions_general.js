@@ -12,48 +12,90 @@ function compensateFooter(){
 	}
 }
 
-// Take a set of elements and euqal their heights.
-// function equalHeights(parent, selector){
-// 	if (selector[0] && parent[0]){
-// 		parent.each(function(parentI, parentE){
-// 			var parent = $(this);
-// 			var itemSet = $(this).find(selector);
-// 			var newHeight = 0;
-// 			itemSet.each(function(itemIndex, e){
-// 				if ($(this).height() > newHeight){
-// 					newHeight = $(this).height();
-// 				}
-// 			});
-// 			itemSet.each(function(e, i){
-// 				$(this).height(newHeight);
-// 			});
-// 		})
 
-// 	}
-// }
 
-function eventsTable(){
-	if($('#events-table')[0]){
-		$('#events-table').DataTable({
-			"pageLength": 50,
-			"pagingType": "simple_numbers",
-			"dom": 'rtp',
-			"order": [[ 1, 'desc' ]],
-			"oLanguage": {
-		      "oPaginate": {
-		        "sPrevious": "Prev"
-		      }
-		    }
-		});
+
+function abbreviateNumber(value) {
+  var newValue = value;
+  if (value >= 1000) {
+    var suffixes = ["", "k", "m", "b","t"];
+    var suffixNum = Math.floor( (""+value).length/3 );
+    var shortValue = '';
+    for (var precision = 2; precision >= 1; precision--) {
+      shortValue = parseFloat( (suffixNum != 0 ? (value / Math.pow(1000,suffixNum) ) : value).toPrecision(precision));
+      var dotLessShortValue = (shortValue + '').replace(/[^a-zA-Z 0-9]+/g,'');
+      if (dotLessShortValue.length <= 2) { break; }
+    }
+    if (shortValue % 1 != 0)  shortNum = shortValue.toFixed(1);
+    newValue = shortValue+suffixes[suffixNum];
+  }
+  return newValue;
+}
+
+function saturationControl(hex, opacity, saturationMultiplier){
+	var rgb = [],
+	    fail = false,
+	    color;
+	hex = hex.split('#')[1];
+	if (hex.length == 3){
+		hex = hex + hex;
 	}
+	for (var i = 0; i < 6; i+=2) {
+	   rgb.push(parseInt(saturationMultiplier*parseInt(hex.substr(i,2),16)));
+	   fail = fail || rgb[rgb.length - 1].toString() === 'NaN';
+	}
+	return 'rgba('+rgb.join(',') + ','+opacity+')';
 }
 
-function eventsCloseAll(){
-	var button = $('.analytics-cta').filter("[data-events-action='close-all']");
-	button.on('click', function(e){
-		if (confirm('Are you sure you want to close all Adverse Events?')) {
-		    console.log('TODO: Close All Events');
-		}
-	})
+String.prototype.capitalizeFirstLetter = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
 }
 
+$.fn.serializeObject = function()
+{
+  var o = {};
+  var a = this.serializeArray();
+  $.each(a, function() {
+    if (o[this.name]) {
+      if (!o[this.name].push) {
+        o[this.name] = [o[this.name]];
+      }
+      o[this.name].push(this.value || '');
+    } else {
+      o[this.name] = this.value || '';
+    }
+  });
+  return o;
+};
+
+$.fn.sectionLoad = function(reload){
+  var el = this;
+  if (reload){
+     el.removeClass('loaded');
+  }
+  setTimeout(function(){
+    el.addClass('loaded');
+  },300);  
+};
+
+function createDateAsUTC(date) {
+  return new Date(Date.UTC(
+  	date.getFullYear(),
+  	date.getMonth(),
+  	date.getDate(),
+  	date.getHours(),
+  	date.getMinutes(),
+  	date.getSeconds()
+  ));
+}
+
+function convertDateToUTC(date) { 
+  return new Date(
+  	date.getUTCFullYear(),
+  	date.getUTCMonth(),
+  	date.getUTCDate(),
+  	date.getUTCHours(),
+  	date.getUTCMinutes(),
+  	date.getUTCSeconds()
+  ); 
+}

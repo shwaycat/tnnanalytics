@@ -57,9 +57,11 @@ exports = module.exports = function(app) {
   app.all('/reset-password/:key', routes.views.session['reset-password']);
 
   // User
+  app.all('/user', routes.views.user.user);
   app.all('/user/:uid', routes.views.user.user);
 
   // Account
+  app.all('/accounts/:account_name', routes.views.account.dashboard);
   app.all('/accounts/:account_name', routes.views.account.dashboard);
   app.all('/accounts/:account_name/facebook', routes.views.account.facebook);
   app.all('/accounts/:account_name/twitter', routes.views.account.twitter);

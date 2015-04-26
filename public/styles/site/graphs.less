@@ -1,14 +1,23 @@
+@graph_element_transition: 0.1s;
+
 .novo-graph {
 	padding-top: 60%;
 	position: relative;
+	opacity:0;
+	&.loaded {
+		opacity:1;
+		.transition(@section_transition);
+	}
+	svg {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		top:0;
+		left:0;
+		overflow: visible;
+	}
 	&.novo-line-graph {
 		svg {
-			width: 100%;
-			height: 100%;
-			position: absolute;
-			top:0;
-			left:0;
-			overflow: visible;
 			.axis line {
 		    fill: none;
 		    stroke: @background_element_lighter;
@@ -17,7 +26,7 @@
 			.axis text {
 		    font-family: sans-serif;
 		    font-size: 0.85em;
-		    fill:@table_header_text;
+		    fill:@graph_line_light;
 				.respond-lg({
 					font-size:1em;
 				});
@@ -30,11 +39,12 @@
 				}
 			}
 
+
 			path {
 				fill: none;
 			}
 			.containing_line, line.containing_line {
-				stroke: @table_header_text;
+				stroke: @graph_line_light;
 			}
 		}
 	}
@@ -60,6 +70,34 @@
 		}
 		.line {
 			stroke:@acquisition_line;
+		}
+	}
+	&.novo-donut-graph {
+		path.slice{
+			stroke-width:2px;
+			.transition(@graph_element_transition);
+			&:hover {
+				fill:white !important;
+				.transition(@graph_element_transition);
+			}
+		}
+
+		polyline{
+			opacity: .3;
+			stroke: @graph_line_light;
+			stroke-width: 2px;
+			fill: none;
+			.transition(@graph_element_transition);
+			&:hover {
+				stroke: white !important;
+				.transition(@graph_element_transition);
+			}
+		}
+		.labels text {
+			stroke:@pie_label;
+			&:hover {
+				stroke:white !important;
+			}
 		}
 	}
 	

@@ -24,11 +24,20 @@ block content
 	//- 		.inner-content
 	//- 			h4.section-title Section Title
 				
+	.row.content-row
+		.col-xs-12.col-md-12.col-lg-6.content-block
+			.inner-content
+				h4.section-title Top Countries
+				section.novo-graph.novo-donut-graph.reach#top_countries(data-admin-options='{}')
+		.col-xs-12.col-md-12.col-lg-6.content-block
+			.inner-content
+				h4.section-title Blank
+				section.novo-graph.novo-donut-graph.reach#top_countriestest(data-admin-options='{}')
 
 	.row.content-row
 		.col-xs-12.col-md-12.col-lg-12.content-block
 			.inner-content
-				h4.section-title Reach2
+				h4.section-title Reach
 				section.novo-graph.novo-line-graph.reach#reach(data-admin-options='{"timeFormat": "%m/%d/%y"}')
 
 		//- .col-xs-12.col-md-12.col-lg-4.content-container
