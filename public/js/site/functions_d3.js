@@ -145,6 +145,8 @@ function lineGraph(data, options){
 //    DONUT/PIE GRAPH    //
 ///////////////////////////
 
+// TODO: Donut graph labels are still overlapping
+// in some cases, need to fix this later on by QA.
 function donutGraph(ourData, options){
 
 	var theData = ourData;

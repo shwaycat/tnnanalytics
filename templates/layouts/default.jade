@@ -7,6 +7,8 @@ include ../mixins/global/header
 include ../mixins/global/footer
 include ../mixins/global/side-navigation
 
+include ../mixins/accounts/social-graph
+
 html
   head
     meta(charset="utf-8")
@@ -68,8 +70,8 @@ html
 
     include shared/analytics
 
-    script(src='/js/site/_config_paths.js')
     script(src='/js/site/functions_general.js')
+    script(src='/js/site/_config_paths.js')
     script(src='/js/site/functions_events.js')
     script(src='/js/site/functions_d3.js')
     script(src='/js/site/functions_routes.js')

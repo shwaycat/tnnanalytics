@@ -5,59 +5,12 @@ block content
 		.col-xs-12
 			h1.view-title=title
 			a.btn.btn-default.analytics-cta(title=section+" Link" href=socialLinks.twitter)=title+" Page"
-	//- .row.content-row
-	//- 	.col-xs-12.content-block
-	//- 		.col-xs-12.col-lg-9.inner-content
-
-	//- 			h4.section-title Reach
-	//- 			section.novo-graph.novo-line-graph.reach#reach
-
-	//- 		.col-xs-12.col-lg-3.inner-content.accent-content
-					
-	//- .row.content-row
-	//- 	.col-xs-12.col-lg-8.content-block
-	//- 		.inner-content
-	//- 			h4.section-title Reach1
-	//- 			section.reach#reach1
-
-	//- 	.col-xs-12.col-lg-4.content-block
-	//- 		.inner-content
-	//- 			h4.section-title Section Title
-
 	.row.content-row
-		.col-xs-12.col-md-12.col-lg-12.content-block
-			.inner-content
-				h4.section-title=sectionTitles.reach
-				section.novo-graph.novo-line-graph.reach#reach(data-admin-options='{}')
+		+social-graph('reach')
 	.row.content-row
-		.col-xs-12.col-md-12.col-lg-12.content-block
-			.inner-content
-				h4.section-title=sectionTitles.engagement
-				section.novo-graph.novo-line-graph.engagement#engagement(data-admin-options='{}')
+		+social-graph('engagement')
 	.row.content-row
-		.col-xs-12.col-md-12.col-lg-12.content-block
-			.inner-content
-				h4.section-title=sectionTitles.acquisition
-				section.novo-graph.novo-line-graph.acquisition#acquisition(data-admin-options='{}')
-				
+		+social-graph('acquisition')
 	.row.content-row
-		.col-xs-12.col-md-12.col-lg-6.content-block
-			.inner-content
-				h4.section-title=sectionTitles.top_posts
-				section.novo-graph.novo-donut-graph.reach#top_posts(data-admin-options='{}')
-		.col-xs-12.col-md-12.col-lg-6.content-block
-			.inner-content
-				h4.section-title=sectionTitles.top_countries
-				section.novo-graph.novo-donut-graph.reach#top_countries(data-admin-options='{}')
-		
-
-
-		//- .col-xs-12.col-md-12.col-lg-4.content-container
-
-		//- 	.col-xs-12.col-md-6.col-lg-12.content-block
-		//- 		.inner-content
-		//- 			h4.section-title Section Title
-
-		//- 	.col-xs-12.col-md-6.col-lg-12.content-block
-		//- 		.inner-content
-		//- 			h4.section-title Section Title
+		+social-graph('top_posts')
+		+social-graph('top_countries')
