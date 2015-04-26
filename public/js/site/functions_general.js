@@ -12,7 +12,11 @@ function compensateFooter(){
 	}
 }
 
-
+function globalDebug(message){
+  if(globalDebugBool){
+    console.log(message);
+  }
+}
 
 
 function abbreviateNumber(value) {

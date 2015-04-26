@@ -6,6 +6,7 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 
 	locals.section = 'google-plus';
+	locals.title = 'Google Plus';
 
-	view.render('account/placeholder');
+	view.render('account/google-plus');
 };

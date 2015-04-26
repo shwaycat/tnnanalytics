@@ -6,6 +6,7 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 
 	locals.section = 'facebook';
+	locals.title = 'Facebook';
 
 	view.render('account/facebook');
 };

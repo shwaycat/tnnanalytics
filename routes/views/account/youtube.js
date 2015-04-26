@@ -6,6 +6,7 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 
 	locals.section = 'youtube';
+	locals.title = 'Youtube';
 
-	view.render('account/placeholder');
+	view.render('account/youtube');
 };

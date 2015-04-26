@@ -6,6 +6,7 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 
 	locals.section = 'twitter';
+	locals.title = 'Twitter';
 
-	view.render('account/placeholder');
+	view.render('account/twitter');
 };

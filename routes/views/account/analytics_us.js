@@ -6,6 +6,7 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 
 	locals.section = 'analytics-us';
+	locals.title = 'Web Analytics - US';
 
-	view.render('account/events');
+	view.render('account/analytics');
 };

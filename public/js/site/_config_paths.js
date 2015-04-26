@@ -1,80 +1,171 @@
-// Use this to store the paths for the various JSON endpoints. If this is barely used or redundant remove it.
+var globalDebugBool = true;
 
+// Use this to store the paths for the various JSON endpoints. If this is barely used or redundant remove it.
 var GLOBAL_API_DATA = {
-  facebook: 'TODO data here!',
-  twitter: 'TODO data here!',
+  dashboard: {
+    "reach": createFakeData(),
+    "engagement": createFakeData(),
+    "acquisition": createFakeData(),
+    "top_posts": "",
+    "top_countries": [
+      {
+        "label": "USA",
+        "value": 50
+      },
+      {
+        "label": "Canada",
+        "value": 1
+      },
+      {
+        "label": "Mexico",
+        "value": 2
+      },
+      {
+        "label": "England",
+        "value": 3
+      },
+      {
+        "label": "Ireland",
+        "value": 5
+      },
+      {
+        "label": "Germany",
+        "value": 5
+      },
+      {
+        "label": "Belgium",
+        "value": 5
+      },
+      {
+        "label": "Russia",
+        "value": 5
+      },
+      {
+        "label": "Japan",
+        "value": 5
+      },
+      {
+        "label": "China",
+        "value": 5
+      },
+      {
+        "label": "TaiWorld",
+        "value": 5
+      }
+
+    ]
+  },
+  facebook: {
+    "reach": createFakeData(),
+    "engagement": createFakeData(),
+    "acquisition": createFakeData(),
+    "top_posts": "",
+    "top_countries": [
+      {
+        "label": "USA",
+        "value": 50
+      },
+      {
+        "label": "Canada",
+        "value": 1
+      },
+      {
+        "label": "Mexico",
+        "value": 2
+      },
+      {
+        "label": "England",
+        "value": 3
+      },
+      {
+        "label": "Ireland",
+        "value": 5
+      },
+      {
+        "label": "Germany",
+        "value": 5
+      },
+      {
+        "label": "Belgium",
+        "value": 5
+      },
+      {
+        "label": "Russia",
+        "value": 5
+      },
+      {
+        "label": "Japan",
+        "value": 5
+      },
+      {
+        "label": "China",
+        "value": 5
+      },
+      {
+        "label": "TaiWorld",
+        "value": 5
+      }
+
+    ]
+  },
+  twitter: {
+    "reach": createFakeData(),
+    "engagement": createFakeData(),
+    "acquisition": createFakeData(),
+    "top_posts": "",
+    "top_countries": [
+      {
+        "label": "USA",
+        "value": 50
+      },
+      {
+        "label": "Canada",
+        "value": 1
+      },
+      {
+        "label": "Mexico",
+        "value": 2
+      },
+      {
+        "label": "England",
+        "value": 3
+      },
+      {
+        "label": "Ireland",
+        "value": 5
+      },
+      {
+        "label": "Germany",
+        "value": 5
+      },
+      {
+        "label": "Belgium",
+        "value": 5
+      },
+      {
+        "label": "Russia",
+        "value": 5
+      },
+      {
+        "label": "Japan",
+        "value": 5
+      },
+      {
+        "label": "China",
+        "value": 5
+      },
+      {
+        "label": "TaiWorld",
+        "value": 5
+      }
+
+    ]
+  },
   instagram: 'TODO data here!',
   google_plus: 'TODO data here!',
   youtube: 'TODO data here!',
-  fakedata1: [ 5, 10, 13, 19, 21, 25, 22, 18, ],
-  fakedata2: [
-    {
-      "date": "2015-01-21T20:29:42.759Z",
-      "count": "0"
-    },
-    {
-      "date": "2015-02-21T20:29:42.759Z",
-      "count": "30"
-    },
-    {
-      "date": "2015-03-21T20:29:42.759Z",
-      "count": "10"
-    },
-    {
-      "date": "2015-05-21T20:29:42.759Z",
-      "count": "30"
-    },
-  ],
-  fakedata3: createFakeData(),
-  fakedata4: [
-    {
-      "label": "USA",
-      "value": 50
-    },
-    {
-      "label": "Canada",
-      "value": 1
-    },
-    {
-      "label": "Mexico",
-      "value": 2
-    },
-    {
-      "label": "England",
-      "value": 3
-    },
-    {
-      "label": "Ireland",
-      "value": 5
-    },
-    {
-      "label": "Germany",
-      "value": 5
-    },
-    {
-      "label": "Belgium",
-      "value": 5
-    },
-    {
-      "label": "Russia",
-      "value": 5
-    },
-    {
-      "label": "Japan",
-      "value": 5
-    },
-    {
-      "label": "China",
-      "value": 5
-    },
-    {
-      "label": "TaiWorld",
-      "value": 5
-    }
-
-  ],
-  fakeEvents: {
-    "info": "false",
+  events: {
+    "info": false,
     "events" : [
       {
         "id":"1111",
@@ -231,9 +322,11 @@ var GLOBAL_API_DATA = {
 }
 
 // Alterations if needed. This will likely be removed or moved elsewhere.
-GLOBAL_API_DATA.fakedata4 = simplifyData(GLOBAL_API_DATA.fakedata4);
+GLOBAL_API_DATA.dashboard.top_countries = simplifyData(GLOBAL_API_DATA.dashboard.top_countries);
+GLOBAL_API_DATA.facebook.top_countries = simplifyData(GLOBAL_API_DATA.facebook.top_countries);
+GLOBAL_API_DATA.twitter.top_countries = simplifyData(GLOBAL_API_DATA.twitter.top_countries);
 
-
+// Development fake data for line graphs.
 function createFakeData(){
   var ourArray = [];
   var index = 50;
@@ -248,6 +341,10 @@ function createFakeData(){
   return ourArray;
 }
 
+
+// This is used to assimilate data lower than
+// 5% in a donutGraph, removing it and replacing
+// it with Other.
 function simplifyData(data){
   var theData = data;
 
@@ -264,6 +361,6 @@ function simplifyData(data){
   }
   theData.push(otherObj);
   return theData;
-
 }
+
 

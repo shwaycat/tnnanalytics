@@ -6,6 +6,7 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 
 	locals.section = 'instagram';
+	locals.title = 'Instagram';
 
-	view.render('account/placeholder');
+	view.render('account/instagram');
 };

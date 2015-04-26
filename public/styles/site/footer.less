@@ -1,0 +1,33 @@
+footer {
+  padding-top: 2em;
+  padding-bottom: 3em;
+  color:@footer_text;
+  a, a:hover, a:visited, a:active, a:focus { color:@footer_text; }
+  p {
+    display:inline-block;
+    float:left;
+    vertical-align: top;
+    font-size: 0.9em;
+  }
+  ul {
+    float:right;
+    vertical-align: top;
+    li {
+      display:inline-block;
+      vertical-align: top;
+      .footer-icon {
+        font-size: 1.3em;
+        padding-left:0.5em;
+        padding-right:0.5em;
+        &.social-new {
+          font-size: 0.7em;
+          padding-top: 0.25em;
+        }
+      }
+    }
+  }
+}
+
+.footer-container {
+  background-color:@background_site_darker;
+}

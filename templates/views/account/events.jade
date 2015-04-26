@@ -3,8 +3,8 @@ extends ../../layouts/default
 block content
 	.row.content-row
 		.col-xs-12
-			h1.view-title Adverse Events
-			a.btn.btn-default.analytics-cta(class=section data-events-action="close-all") Mark all Closed
+			h1.view-title=title
+			a.btn.btn-default.analytics-cta(data-events-action="close-all") Mark all Closed
 	.row
 		.col-xs-12.events-container
 			table#events-table.table.events-table
