@@ -116,7 +116,8 @@ User.add({
 
       accessToken: { type: String, label: 'Access Token', dependsOn: deps.twitter },
       refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.twitter },
-      sinceId: { type: String, label: 'Since Id', dependsOn: deps.twitter },
+      mentionSinceId: { type: String, label: 'Since Id', dependsOn: deps.twitter },
+      tweetSinceId: { type: String, label: 'Since Id', dependsOn: deps.twitter },
       dmSinceId: { type: String, label: 'Since Id', dependsOn: deps.twitter }
     }
   }
@@ -198,7 +199,7 @@ User.schema.methods.getKeywords = function() {
     return _.chain( this.notifications.keywords.trim().split(/\s*,\s*/) )
       .compact()
       .uniq()
-      .value()
+      .value();
   } else {
     return []
   }
@@ -241,7 +242,7 @@ User.schema.methods.getAlertDocuments = function(cb) {
         }
       }
     }
-  }, cb)
+  }, cb);
 }
 
 User.schema.methods.sendNotificationEmail = function(links, callback) {
@@ -256,12 +257,12 @@ User.schema.methods.sendNotificationEmail = function(links, callback) {
     links: links
   }, function(err, info) {
     if (err) {
-      console.error("Error sending notification email to %s", user.email)
+      console.error("Error sending notification email to %s", user.email);
     } else {
-      console.info("Sent notification email to %s", user.email)
+      console.info("Sent notification email to %s", user.email);
     }
 
-    callback(err, info)
+    callback(err, info);
   })
   //
 }
@@ -273,10 +274,10 @@ User.schema.methods.facebookPages = function(callback) {
     json: true
   }, function (err, res, body) {
     if (err) {
-      console.error("Error getting pages for %s\n%s", user.id, body)
-      callback(err, body)
+      console.error("Error getting pages for %s\n%s", user.id, body);
+      callback(err, body);
     } else {
-      callback(null, body.data)
+      callback(null, body.data);
     }
   })
 }
@@ -286,25 +287,29 @@ User.schema.methods.facebookPages = function(callback) {
  * ==============
  */
 User.schema.statics.findConnectedFacebook = function(cb) {
-  return this.find({ 'services.facebook.isConfigured': true }, cb)
+  return this.find({ 'services.facebook.isConfigured': true }, cb);
 }
 
 User.schema.statics.findConnectedTwitter = function(cb) {
-  return this.find({ 'services.twitter.isConfigured': true }, cb)
+  return this.find({ 'services.twitter.isConfigured': true }, cb);
 }
 
 User.schema.statics.findConnected = function(sources, cb) {
   if (cb === undefined && _.isFunction(sources)) {
-    cb = sources
-    sources = ["facebook", "twitter"]
+    cb = sources;
+    sources = ["facebook", "twitter"];
+  }
+
+  if (!_.isArray(sources)) {
+    sources = [sources];
   }
   if (sources && !_.isArray(sources)) sources = [sources]
 
   return this.find({
     "$or": _.map(sources, function(s) {
-      var result = {}
-      result['services.' + s + '.isConfigured'] = true
-      return result
+      var result = {};
+      result['services.' + s + '.isConfigured'] = true;
+      return result;
     })
   }, cb);
 }
@@ -322,8 +327,8 @@ User.schema.statics.findWithKeywords = function(cb) {
 
 User.schema.statics.findConnectedWithKeywords = function(sources, cb) {
   if (cb === undefined && _.isFunction(sources)) {
-    cb = sources
-    sources = ["facebook", "twitter"]
+    cb = sources;
+    sources = ["facebook", "twitter"];
   }
 
   return this.find({
@@ -332,13 +337,20 @@ User.schema.statics.findConnectedWithKeywords = function(sources, cb) {
       "$nin": [ null, "" ]
     },
     "$or": _.map(sources, function(s) {
-      var result = {}
-      result['services.' + s + '.isConfigured'] = true
-      return result
+      var result = {};
+      result['services.' + s + '.isConfigured'] = true;
+      return result;
     })
   }, cb);
 }
 
+User.schema.statics.findByID = function(id, cb) {
+  return this.find({id: id}, cb);
+}
+
+User.schema.statics.findByEmail = function(email, cb) {
+  return this.find({email: email}, cb);
+}
 
 /**
  * Registration
