@@ -45,7 +45,7 @@ exports = module.exports = function(app) {
   })
 
   // Unrestricted/General
-  app.get('/', routes.views.session.signin);
+  app.get('/', routes.views.index);
   app.get('/privacy', routes.views.privacy);
   app.all('/accounts*', middleware.requireUser);
   app.all('/user*', middleware.requireUser);
