@@ -218,163 +218,167 @@ if ($('body.analytics-us')[0]){
 
       
 }
+if (!$('body.session')[0]){
+  globalDebug('    API Call: events');
 
-globalDebug('    API Call: events');
-GLOBAL_API_DATA.events = {
-  "info": false,
-  "events" : [
-    {
-      "id":"1111",
-      "channel":"facebook",
-      "status":"closed",
-      "creation": "2015-04-23T22:45:04.000Z",
-      "accessed": "2015-04-23T22:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    },
-    {
-      "id":"2222",
-      "channel":"twitter",
-      "status":"closed",
-      "creation": "2015-04-17T19:45:04.000Z",
-      "accessed": "2015-04-17T20:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    },
-    {
-      "id":"3333",
-      "channel":"instagram",
-      "status":"open",
-      "creation": "2015-04-17T21:45:04.000Z",
-      "accessed": "2015-04-17T21:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    },{
-      "id":"4444",
-      "channel":"youtube",
-      "status":"new",
-      "creation": "2015-02-16T22:45:04.000Z",
-      "accessed": "2015-02-16T22:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    },{
-      "id":"5555",
-      "channel":"google+",
-      "status":"closed",
-      "creation": "2015-02-17T05:45:04.000Z",
-      "accessed": "2015-02-17T05:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    },
-    {
-      "id":"6666",
-      "channel":"facebook",
-      "status":"closed",
-      "creation": "2015-04-17T22:45:04.000Z",
-      "accessed": "2015-04-17T22:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    },
-    {
-      "id":"7777",
-      "channel":"twitter",
-      "status":"closed",
-      "creation": "2015-04-17T19:45:04.000Z",
-      "accessed": "2015-04-17T20:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    },
-    {
-      "id":"8888",
-      "channel":"instagram",
-      "status":"open",
-      "creation": "2015-04-17T21:45:04.000Z",
-      "accessed": "2015-04-17T21:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    },{
-      "id":"9999",
-      "channel":"youtube",
-      "status":"new",
-      "creation": "2015-02-16T22:45:04.000Z",
-      "accessed": "2015-02-16T22:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    },{
-      "id":"0000",
-      "channel":"google+",
-      "status":"closed",
-      "creation": "2015-02-17T05:45:04.000Z",
-      "accessed": "2015-02-17T05:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    },{
-      "id":"1212",
-      "channel":"facebook",
-      "status":"closed",
-      "creation": "2015-04-17T22:45:04.000Z",
-      "accessed": "2015-04-17T22:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    },
-    {
-      "id":"1313",
-      "channel":"twitter",
-      "status":"closed",
-      "creation": "2015-04-17T19:45:04.000Z",
-      "accessed": "2015-04-17T20:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    },
-    {
-      "id":"1414",
-      "channel":"instagram",
-      "status":"open",
-      "creation": "2015-04-17T21:45:04.000Z",
-      "accessed": "2015-04-17T21:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    },{
-      "id":"1515",
-      "channel":"youtube",
-      "status":"new",
-      "creation": "2015-02-16T22:45:04.000Z",
-      "accessed": "2015-02-16T22:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    },{
-      "id":"1616",
-      "channel":"google+",
-      "status":"closed",
-      "creation": "2015-02-17T05:45:04.000Z",
-      "accessed": "2015-02-17T05:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    },{
-      "id":"1717",
-      "channel":"facebook",
-      "status":"closed",
-      "creation": "2015-04-17T22:45:04.000Z",
-      "accessed": "2015-04-17T22:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    },
-    {
-      "id":"1818",
-      "channel":"twitter",
-      "status":"closed",
-      "creation": "2015-04-17T19:45:04.000Z",
-      "accessed": "2015-04-17T20:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    },
-    {
-      "id":"1919",
-      "channel":"instagram",
-      "status":"open",
-      "creation": "2015-04-17T21:45:04.000Z",
-      "accessed": "2015-04-17T21:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    },{
-      "id":"2020",
-      "channel":"youtube",
-      "status":"new",
-      "creation": "2015-02-16T22:45:04.000Z",
-      "accessed": "2015-02-16T22:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    },{
-      "id":"2121",
-      "channel":"google+",
-      "status":"closed",
-      "creation": "2015-02-17T05:45:04.000Z",
-      "accessed": "2015-02-17T05:45:04.000Z",
-      "link": "http://www.gameofthrones.com"
-    }
-  ]
-};
+  GLOBAL_API_DATA.events = {
+    "info": false,
+    "events" : [
+      {
+        "id":"1111",
+        "channel":"facebook",
+        "status":"closed",
+        "creation": "2015-04-23T22:45:04.000Z",
+        "accessed": "2015-04-23T22:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      },
+      {
+        "id":"2222",
+        "channel":"twitter",
+        "status":"closed",
+        "creation": "2015-04-17T19:45:04.000Z",
+        "accessed": "2015-04-17T20:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      },
+      {
+        "id":"3333",
+        "channel":"instagram",
+        "status":"open",
+        "creation": "2015-04-17T21:45:04.000Z",
+        "accessed": "2015-04-17T21:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      },{
+        "id":"4444",
+        "channel":"youtube",
+        "status":"new",
+        "creation": "2015-02-16T22:45:04.000Z",
+        "accessed": "2015-02-16T22:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      },{
+        "id":"5555",
+        "channel":"google+",
+        "status":"closed",
+        "creation": "2015-02-17T05:45:04.000Z",
+        "accessed": "2015-02-17T05:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      },
+      {
+        "id":"6666",
+        "channel":"facebook",
+        "status":"closed",
+        "creation": "2015-04-17T22:45:04.000Z",
+        "accessed": "2015-04-17T22:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      },
+      {
+        "id":"7777",
+        "channel":"twitter",
+        "status":"closed",
+        "creation": "2015-04-17T19:45:04.000Z",
+        "accessed": "2015-04-17T20:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      },
+      {
+        "id":"8888",
+        "channel":"instagram",
+        "status":"open",
+        "creation": "2015-04-17T21:45:04.000Z",
+        "accessed": "2015-04-17T21:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      },{
+        "id":"9999",
+        "channel":"youtube",
+        "status":"new",
+        "creation": "2015-02-16T22:45:04.000Z",
+        "accessed": "2015-02-16T22:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      },{
+        "id":"0000",
+        "channel":"google+",
+        "status":"closed",
+        "creation": "2015-02-17T05:45:04.000Z",
+        "accessed": "2015-02-17T05:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      },{
+        "id":"1212",
+        "channel":"facebook",
+        "status":"closed",
+        "creation": "2015-04-17T22:45:04.000Z",
+        "accessed": "2015-04-17T22:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      },
+      {
+        "id":"1313",
+        "channel":"twitter",
+        "status":"closed",
+        "creation": "2015-04-17T19:45:04.000Z",
+        "accessed": "2015-04-17T20:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      },
+      {
+        "id":"1414",
+        "channel":"instagram",
+        "status":"open",
+        "creation": "2015-04-17T21:45:04.000Z",
+        "accessed": "2015-04-17T21:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      },{
+        "id":"1515",
+        "channel":"youtube",
+        "status":"new",
+        "creation": "2015-02-16T22:45:04.000Z",
+        "accessed": "2015-02-16T22:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      },{
+        "id":"1616",
+        "channel":"google+",
+        "status":"closed",
+        "creation": "2015-02-17T05:45:04.000Z",
+        "accessed": "2015-02-17T05:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      },{
+        "id":"1717",
+        "channel":"facebook",
+        "status":"closed",
+        "creation": "2015-04-17T22:45:04.000Z",
+        "accessed": "2015-04-17T22:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      },
+      {
+        "id":"1818",
+        "channel":"twitter",
+        "status":"closed",
+        "creation": "2015-04-17T19:45:04.000Z",
+        "accessed": "2015-04-17T20:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      },
+      {
+        "id":"1919",
+        "channel":"instagram",
+        "status":"open",
+        "creation": "2015-04-17T21:45:04.000Z",
+        "accessed": "2015-04-17T21:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      },{
+        "id":"2020",
+        "channel":"youtube",
+        "status":"new",
+        "creation": "2015-02-16T22:45:04.000Z",
+        "accessed": "2015-02-16T22:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      },{
+        "id":"2121",
+        "channel":"google+",
+        "status":"closed",
+        "creation": "2015-02-17T05:45:04.000Z",
+        "accessed": "2015-02-17T05:45:04.000Z",
+        "link": "http://www.gameofthrones.com"
+      }
+    ]
+  };
+}
+
+
 
 
 

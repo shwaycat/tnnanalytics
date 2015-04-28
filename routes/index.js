@@ -54,6 +54,7 @@ exports = module.exports = function(app) {
   app.all('/signin', routes.views.session.signin);
   app.get('/signout', routes.views.session.signout);
   app.all('/forgot-password', routes.views.session['forgot-password']);
+  app.all('/reset-password/', routes.views.session['reset-password']);
   app.all('/reset-password/:key', routes.views.session['reset-password']);
 
   // User

@@ -46,11 +46,16 @@ html
       .container-fluid.footer-container
         +footer
     else
+
       .container-fluid.main-container
         main
           .row
+            .col-xs-12.col-md-offset-3.col-md-6.col-lg-offset-4.col-lg-4.session-block
+              block session
             .col-xs-12.col-md-offset-3.col-md-6.col-lg-offset-4.col-lg-4
-              block session              
+              block error
+
+
       
       .container-fluid.footer-container
         +footer

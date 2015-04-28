@@ -1,10 +1,11 @@
 extends ../../layouts/default
 
 block session
-	.page-intro
-		h1='Sign into ' + site.brand
+	.session-content
+		
+		a.login-logo(href="/" title="Cadence Home")
+			img(src="/images/logo.png" alt="Cadence Logo")
 		+flash-messages(messages)
-	.page-content
 		+auth-forms({ modal: false, initial: 'signin' })
 
 block js

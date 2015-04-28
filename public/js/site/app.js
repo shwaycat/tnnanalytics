@@ -14,8 +14,10 @@ $(function() {
 	//Data Functions
 	routesInit();
 
-	var eventsObject = eventsCheckStatus(GLOBAL_API_DATA.events);
-	eventsDelegateAlerts(eventsObject);
+	if (!$('body.session')[0]){
+		var eventsObject = eventsCheckStatus(GLOBAL_API_DATA.events);
+		eventsDelegateAlerts(eventsObject);
+	}
 
 	//Front-End Functions
 	compensateFooter();
