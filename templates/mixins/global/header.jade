@@ -15,5 +15,5 @@ mixin header
               li: a(href='/keystone') Keystone
             li: a(href='/user/'+user.key).user
               =user.name.first
-          else
-            li: a(href='/signin', data-from=page.path, data-initial='signin').js-auth-trigger Sign in
+          //- else
+          //-   li: a(href='/signin', data-from=page.path, data-initial='signin').js-auth-trigger Sign in

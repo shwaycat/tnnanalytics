@@ -50,10 +50,18 @@ a, a:hover, a:visited, a:active, a:focus {
   color:@font_color;
 }
 
-.panel {
-  .service-connect, .service-disconnect {
-    a {
-      color: #000;
-    }
+.btn-large  {
+  width: 100%;
+  font-size: 1.25em;
+  padding: 1em;
+}
+
+.element-reveal {
+  display:none;
+  &.active {
+    display:block;
   }
+}
+.element-reveal-link {
+  cursor:pointer;
 }

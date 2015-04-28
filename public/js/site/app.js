@@ -19,5 +19,6 @@ $(function() {
 
 	//Front-End Functions
 	compensateFooter();
+	elementReveal();
 
 });

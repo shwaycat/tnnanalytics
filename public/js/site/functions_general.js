@@ -18,6 +18,20 @@ function globalDebug(message){
   }
 }
 
+function elementReveal(){
+
+  $('.element-reveal-link').on('click',function(e){
+    var clicked = $(this),
+        els = $('.element-reveal'),
+        show = clicked.data('element-reveal-show'),
+        hide = clicked.data('element-reveal-hide');
+
+    els.filter('[data-element-reveal-id="'+show+'"]').addClass('active');
+    els.filter('[data-element-reveal-id="'+hide+'"]').removeClass('active');
+  });
+
+}
+
 
 function abbreviateNumber(value) {
   var newValue = value;
