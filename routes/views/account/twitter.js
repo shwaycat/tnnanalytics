@@ -12,7 +12,7 @@ exports = module.exports = function(req, res) {
 		engagement: "Retweets + Favorite + Replies + Mentions + Direct Messages",
 		acquisition: "Total Followers",
 		top_posts: "Favorites + Replies + Retweets",
-		top_countries: "Based on Engagement. (Shares + Post Likes + Post Comments + Posts + Mentions)"
+		top_countries: "Based on Engagement. (Retweets + Favorite + Replies + Mentions + Direct Messages)"
 	}
 
 	view.render('account/twitter');
