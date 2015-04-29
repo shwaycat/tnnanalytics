@@ -118,7 +118,7 @@ User.add({
       refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.twitter },
       mentionSinceId: { type: String, label: 'Since Id', dependsOn: deps.twitter },
       tweetSinceId: { type: String, label: 'Since Id', dependsOn: deps.twitter },
-      dmSinceId: { type: String, label: 'Since Id', dependsOn: deps.twitter }
+      direct_messageSinceId: { type: String, label: 'Since Id', dependsOn: deps.twitter }
     }
   }
 });

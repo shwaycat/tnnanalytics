@@ -1,33 +1,38 @@
 require('dotenv').load()
 
-var argv = require('minimist')(process.argv.slice(2)),
-    keystone = require('../keystone-setup')(),
-    debug = require('debug')('delete'),
-    User = keystone.list('User'),
-    async = require('async'),
-    _ = require('underscore'),
-    connectES = require('../lib/connect_es');
+var argv = require('minimist')(process.argv.slice(2));
 
-require('../lib/keystone-script')(connectES, function(done) { 
+if(!argv.help) {
+    var keystone = require('../keystone-setup')(),
+        debug = require('debug')('delete'),
+        User = keystone.list('User'),
+        async = require('async'),
+        _ = require('underscore'),
+        connectES = require('../lib/connect_es');
 
-  buildUsers(function(err, users) {
-    debug('POST Build Users: %j', users);
-    if(err) {
-      return done(err);
-    }
 
-    var series = buildSeries();
+  require('../lib/keystone-script')(connectES, function(done) { 
 
-    async.applyEach(series, users, done);
+    buildUsers(function(err, users) {
+
+      if(err) {
+        return done(err);
+      }
+
+      var series = buildSeries();
+
+      async.applyEach(series, users, done);
+
+    });
 
   });
-
-});
+} else {
+  return showHelp();
+}
 
 function buildUsers(callback) {
   if(argv.u) {
     // Perform actions on given user
-    debug("argv.u: %j", argv.u);
     User.model.findByEmail(argv.u, callback);
 
   } else {
@@ -40,12 +45,22 @@ function buildSeries() {
   var series = [];
   if(argv && hasArgs()) {
 
-    // if(argv['twitter-dm']) {
-    //   series.push(deleteTwitterDirectMessages(callback));
-    // }
-
-    if(argv['twitter-mentions']) {
+    if(argv['twitter-all']) {
+      series.push(deleteDocsByType('direct_message'));
       series.push(deleteDocsByType('mention'));
+      series.push(deleteDocsByType('tweet'));
+    } else {
+      if(argv['twitter-direct_messages']) {
+        series.push(deleteDocsByType('direct_message'));
+      }
+
+      if(argv['twitter-mentions']) {
+        series.push(deleteDocsByType('mention'));
+      }
+
+      if(argv['twitter-tweets']) {
+        series.push(deleteDocsByType('tweet'));
+      }
     }
 
     return series;
@@ -120,33 +135,21 @@ function deleteDocsByType(doc_type) {
   }
 }
 
-function deleteTwitterDirectMessages(callback) {
-  keystone.elasticsearch.count({
-    index: keystone.get('elasticsearch index'),
-    body: {
-      query: {
-        term: {doc_type: 'direct_message'}
-      }
-    }
-  }, function(err, response) {
-    if (err == null && response.count > 0) {
-      console.log('Direct Messages To Delete: ' + response.count);
-      keystone.elasticsearch.deleteByQuery({
-        index: keystone.get('elasticsearch index'),
-        body: {
-          query: {
-            term: {doc_type: 'direct_message'}
-          }
-        }
-      }, function (err, response) {
-        callback();
-      })
-    } else if(err != null) {
-      callback(err);
-    } else {
-      console.log('No Direct Messages to Delete');
-      callback();
-    }
-  });
+function showHelp() {
+  console.log('');
+  console.log('');
+  console.log('Usage: node delete.js <commands> <options>');
+  console.log('');
+  console.log('<commands>');
+  console.log('--help                           Show this dialog');
+  console.log('');
+  console.log('--twitter-all                    Delete all Twitter objects and reset all sinceIds');
+  console.log('--twitter-direct_messages        Delete all Twitter direct_messages and reset direct_messagesinceId');
+  console.log('--twitter-mentions               Delete all Twitter mentions and reset mentionSinceId');
+  console.log('--twitter-tweets                 Delete all Twitter tweets and reset tweetSinceId');
+  console.log('');
+  console.log('<options>');
+  console.log('--u <user email>                 Perform commands on specified user.')
+  console.log('');
+  console.log('');  
 }
-

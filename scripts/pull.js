@@ -7,7 +7,7 @@ var keystone = require('../keystone-setup')(),
     _ = require('underscore'),
     connectES = require('../lib/connect_es'),
     sources = {
-      // facebook: require('../lib/sources/facebook')
+      // facebook: require('../lib/sources/facebook'),
       twitter: require('../lib/sources/twitter')
     };
 
@@ -26,7 +26,7 @@ require('../lib/keystone-script')(connectES, function(done) {
         var docType = sourceType[docTypeKey];
 
         async.eachSeries(users, function(user, nextUser) {
-          docType.pull(user, nextUser)
+          docType.pullAll(user, nextUser)
         }, nextDocType)
       });
     }, nextSourceType);
