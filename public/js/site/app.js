@@ -22,5 +22,6 @@ $(function() {
 	//Front-End Functions
 	compensateFooter();
 	elementReveal();
+	$('[data-toggle="tooltip"]').tooltip();
 
 });

@@ -90,13 +90,6 @@ function routesInit(resizeOnce){
 
 		var source = 'twitter';
 
-		// Reach
-		lineGraph(GLOBAL_API_DATA.twitter.reach,{
-			selector: '#reach',
-			source: source,
-			color: '',
-		});
-
 		// Engagement
 		lineGraph(GLOBAL_API_DATA.twitter.engagement,{
 			selector: '#engagement',
