@@ -1,10 +1,10 @@
 require('dotenv').load()
 
-var argv = require('minimist')(process.argv.slice(2));
+var argv = require('minimist')(process.argv.slice(2)),
+    debug = require('debug')('delete');
 
 if(!argv.help) {
     var keystone = require('../keystone-setup')(),
-        debug = require('debug')('delete'),
         User = keystone.list('User'),
         async = require('async'),
         _ = require('underscore'),
@@ -137,10 +137,9 @@ function deleteDocsByType(doc_type) {
 
 function showHelp() {
   console.log('');
+  console.log('Usage: node delete.js <flags> <options>');
   console.log('');
-  console.log('Usage: node delete.js <commands> <options>');
-  console.log('');
-  console.log('<commands>');
+  console.log('<flags>');
   console.log('--help                           Show this dialog');
   console.log('');
   console.log('--twitter-all                    Delete all Twitter objects and reset all sinceIds');
@@ -149,7 +148,6 @@ function showHelp() {
   console.log('--twitter-tweets                 Delete all Twitter tweets and reset tweetSinceId');
   console.log('');
   console.log('<options>');
-  console.log('--u <user email>                 Perform commands on specified user.')
+  console.log('--u <user email>                 Perform actions on specified user.')
   console.log('');
-  console.log('');  
 }
