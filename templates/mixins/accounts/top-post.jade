@@ -1,0 +1,6 @@
+mixin top-post(type, options)
+	.col-xs-12.col-md-12.col-lg-6.content-block
+		.inner-content
+			h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.top_posts)
+				=(section == 'twitter' ? sectionTitles.top_tweet : sectionTitles.top_posts)
+			section.top-post#top_post(data-admin-options=options)

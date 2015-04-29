@@ -29,9 +29,9 @@ function routesInit(resizeOnce){
 			color: '',
 		});
 
-		// Top Posts
-		// topPosts(GLOBAL_API_DATA.dashboard.top_posts,{
-		// 	selector: '#top_posts',
+		// Top Post
+		// topPost(GLOBAL_API_DATA.dashboard.top_post,{
+		// 	selector: '#top_post',
 		// 	source: source,
 		// 	color: '',
 		// });
@@ -70,9 +70,9 @@ function routesInit(resizeOnce){
 			color: '',
 		});
 
-		// Top Posts
-		// topPosts(GLOBAL_API_DATA.facebook.top_posts,{
-		// 	selector: '#top_posts',
+		// Top Post
+		// topPost(GLOBAL_API_DATA.facebook.top_post,{
+		// 	selector: '#top_post',
 		// 	source: source,
 		// 	color: '',
 		// });
@@ -104,9 +104,9 @@ function routesInit(resizeOnce){
 			color: '',
 		});
 
-		// Top Posts
-		// topPosts(GLOBAL_API_DATA.twitter.top_posts,{
-		// 	selector: '#top_posts',
+		// Top Post
+		// topPost(GLOBAL_API_DATA.twitter.top_post,{
+		// 	selector: '#top_post',
 		// 	source: source,
 		// 	color: '',
 		// });

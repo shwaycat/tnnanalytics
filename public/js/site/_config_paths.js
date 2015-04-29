@@ -18,7 +18,7 @@ if ($('body.dashboard')[0]){
     "reach": createFakeData(),
     "engagement": createFakeData(),
     "acquisition": createFakeData(),
-    "top_posts": "",
+    "top_post": "",
     "top_countries": [
       {
         "label": "USA",
@@ -77,7 +77,7 @@ if ($('body.facebook')[0]){
     "reach": createFakeData(),
     "engagement": createFakeData(),
     "acquisition": createFakeData(),
-    "top_posts": "",
+    "top_post": "",
     "top_countries": [
       {
         "label": "USA",
@@ -136,7 +136,7 @@ if ($('body.twitter')[0]){
     "reach": createFakeData(),
     "engagement": createFakeData(),
     "acquisition": createFakeData(),
-    "top_posts": "",
+    "top_post": "",
     "top_countries": [
       {
         "label": "USA",

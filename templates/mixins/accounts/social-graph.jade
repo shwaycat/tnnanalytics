@@ -21,13 +21,6 @@ mixin social-graph(type, options)
 					=sectionTitles.acquisition
 				section.novo-graph.novo-line-graph.acquisition#acquisition(data-admin-options=options)
 
-	if type == 'top_posts'
-		.col-xs-12.col-md-12.col-lg-6.content-block
-			.inner-content
-				h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.top_posts)
-					=(section == 'twitter' ? sectionTitles.top_tweet : sectionTitles.top_posts)
-				section.novo-graph.novo-donut-graph.reach#top_posts(data-admin-options=options)
-
 	if type == 'top_countries'
 		.col-xs-12.col-md-12.col-lg-6.content-block
 			.inner-content
