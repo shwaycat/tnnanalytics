@@ -13,7 +13,7 @@ exports = module.exports = function(req, res) {
 		acquisition: "Total Followers",
 		top_posts: "Favorites + Replies + Retweets",
 		top_countries: "Based on Engagement. (Retweets + Favorite + Replies + Mentions + Direct Messages)"
-	}
+	};
 
 	view.render('account/twitter');
 };

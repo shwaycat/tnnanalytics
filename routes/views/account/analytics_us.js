@@ -7,6 +7,13 @@ exports = module.exports = function(req, res) {
 
 	locals.section = 'analytics-us';
 	locals.title = 'Web Analytics - US';
+	locals.tooltip = {
+		reach: "",
+		engagement: "",
+		acquisition: "",
+		top_posts: "",
+		top_countries: ""
+	};
 
 	view.render('account/analytics');
 };

@@ -227,7 +227,7 @@ if (!$('body.session')[0]){
       {
         "id":"1111",
         "channel":"facebook",
-        "status":"closed",
+        "status":"new",
         "creation": "2015-04-23T22:45:04.000Z",
         "accessed": "2015-04-23T22:45:04.000Z",
         "link": "http://www.gameofthrones.com"
@@ -235,7 +235,7 @@ if (!$('body.session')[0]){
       {
         "id":"2222",
         "channel":"twitter",
-        "status":"closed",
+        "status":"new",
         "creation": "2015-04-17T19:45:04.000Z",
         "accessed": "2015-04-17T20:45:04.000Z",
         "link": "http://www.gameofthrones.com"

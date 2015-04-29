@@ -1,5 +1,12 @@
 var STRING_STATUS_NEW = 'new',
+		STRING_STATUS_NEW_CLASS = 'status-new',
+		STRING_STATUS_NEW_BUTTON = 'Mark Complete',
 		STRING_STATUS_OPEN = 'open',
+		STRING_STATUS_OPEN_CLASS = 'status-open',
+		STRING_STATUS_OPEN_BUTTON = 'Mark Complete',
+		STRING_STATUS_CLOSED = 'closed',
+		STRING_STATUS_CLOSED_CLASS = 'status-closed',
+		STRING_STATUS_CLOSED_BUTTON = 'Mark Incomplete',
 		statusClass = '',
 		STRING_ALERTS_MESSAGE = ' New Adverse Event',
 		STRING_ALERTS_MESSAGE_PLURAL = ' New Adverse Events';
@@ -32,26 +39,53 @@ function eventsTableData(data, table){
 		for (var i = 0; i < data.events.length; i++){
 
 			statusClass = '';
+			actionText = '';
+
+			// Get the Current Event Data
 			var currentEvent = data.events[i];
+			
+			// Creation Date
 			var currentEvent_creation = new Date(currentEvent.creation);
 			currentEvent_creation = currentEvent_creation.getFullYear() + '/' + (currentEvent_creation.getMonth() < 10 ? ('0'+currentEvent_creation.getMonth()) : currentEvent_creation.getMonth() ) + '/' + (currentEvent_creation.getDate() < 10 ? ('0'+currentEvent_creation.getDate()) : currentEvent_creation.getDate() );
+			
+			// Creation Date in MM/DD/YYYY
+			var currentEvent_creation_human = new Date(currentEvent.creation);
+			currentEvent_creation_human = (currentEvent_creation_human.getMonth() < 10 ? ('0'+currentEvent_creation_human.getMonth()) : currentEvent_creation_human.getMonth() )+ '/' + (currentEvent_creation_human.getDate() < 10 ? ('0'+currentEvent_creation_human.getDate()) : currentEvent_creation_human.getDate() ) + '/' + currentEvent_creation_human.getFullYear();
+			
+			// Last Accessed Date
 			var currentEvent_accessed = new Date(currentEvent.accessed);
 			currentEvent_accessed = currentEvent_accessed.getFullYear() + '/' + (currentEvent_accessed.getMonth() < 10 ? ('0'+currentEvent_accessed.getMonth()) : currentEvent_accessed.getMonth() ) + '/' + (currentEvent_accessed.getDate() < 10 ? ('0'+currentEvent_accessed.getDate()) : currentEvent_accessed.getDate() );
+			
+			// Last Accessed Date in TimeAgo format
 			var currentEvent_accessed_human = $.timeago(currentEvent_accessed);
 
+			// Delegates whether an event is new or open
 			if (currentEvent.status == STRING_STATUS_NEW){
-				statusClass = 'status-new';
+
+				statusClass = STRING_STATUS_NEW_CLASS;
+				actionText = STRING_STATUS_NEW_BUTTON;
+
 			} else if (currentEvent.status == STRING_STATUS_OPEN){
-				statusClass = 'status-open';
+
+				statusClass = STRING_STATUS_OPEN_CLASS;
+				actionText = STRING_STATUS_OPEN_BUTTON;
+
+			} else if (currentEvent.status == STRING_STATUS_CLOSED){
+
+				statusClass = STRING_STATUS_CLOSED_CLASS;
+				actionText = STRING_STATUS_CLOSED_BUTTON;
+
 			}
 
-			tableHTML += '<tr data-id="'+currentEvent.id+'"" class="'+statusClass+'"><td>Checkbox</td>';
-			tableHTML += '<td>'+currentEvent_creation+'</td>';
+			// Create the table row with the given data
+			tableHTML += '<tr data-id="'+currentEvent.id+'"" class="'+statusClass+'">';
+			tableHTML += '<td class="event-item-status">'+currentEvent.status.capitalizeFirstLetter()+'</td>';
+			tableHTML += '<td><span class="event-item-robot">'+currentEvent_creation+'</span>'+currentEvent_creation_human+'</td>';
 			tableHTML += '<td>'+currentEvent.channel.capitalizeFirstLetter()+'</td>';
-			tableHTML += '<td>'+currentEvent.status.capitalizeFirstLetter()+'</td>';
 			tableHTML += '<td>'+currentEvent.id+'</td>';
 			tableHTML += '<td><span class="event-item-robot">'+currentEvent_accessed+'</span><span class="event-item-human">'+currentEvent_accessed_human.capitalizeFirstLetter()+'</span></td>';
-			tableHTML += '<td class="event-link-cell"><a href="'+currentEvent.link+'" title="'+currentEvent.channel+' Link">View Post<span class="entypo entypo-chevron-right"></span></td>';
+			tableHTML += '<td><button class="btn btn-default event-action-btn '+statusClass+'">'+actionText+'</td>';
+			tableHTML += '<td class="event-link-cell"><a target="_blank" href="'+currentEvent.link+'" title="'+currentEvent.channel+' Link">View Post<span class="entypo entypo-chevron-right"></span></td>';
 			tableHTML += '</tr>';
 
 			table.find('tbody').append(tableHTML);
@@ -70,6 +104,59 @@ function eventsCloseAll(){
 		}
 	})
 }
+
+function eventsStatusUpdateController(data){
+	$('.event-action-btn').on('click',function(){
+		var clicked = $(this);
+		var row = clicked.parents('tr');
+		var statusItem = row.children('.event-item-status');
+		var eventID = row.data('id');
+		if (clicked.hasClass(STRING_STATUS_NEW_CLASS)){
+
+			row.removeClass(STRING_STATUS_NEW_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
+			clicked.removeClass(STRING_STATUS_NEW_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
+			clicked.html(STRING_STATUS_CLOSED_BUTTON);
+			statusItem.html(STRING_STATUS_CLOSED.capitalizeFirstLetter());
+
+		} else if (clicked.hasClass(STRING_STATUS_OPEN_CLASS)) {
+
+			row.removeClass(STRING_STATUS_OPEN_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
+			clicked.removeClass(STRING_STATUS_OPEN_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
+			clicked.html(STRING_STATUS_CLOSED_BUTTON);
+			statusItem.html(STRING_STATUS_CLOSED.capitalizeFirstLetter());
+
+		} else if (clicked.hasClass(STRING_STATUS_CLOSED_CLASS)) {
+
+			row.removeClass(STRING_STATUS_CLOSED_CLASS).addClass(STRING_STATUS_OPEN_CLASS);
+			clicked.removeClass(STRING_STATUS_CLOSED_CLASS).addClass(STRING_STATUS_OPEN_CLASS);
+			clicked.html(STRING_STATUS_OPEN_BUTTON);
+			statusItem.html(STRING_STATUS_OPEN.capitalizeFirstLetter());
+
+		}
+
+		// TODO: Push updated status here.
+		eventsStatusUpdate(data);
+
+	});
+
+	$('#eventsCloseAll').on('click',function(){
+
+		// TODO: Push updated status here.
+
+		// Then reload page.
+		location.reload();
+
+	});
+
+	
+}
+
+function eventsStatusUpdate(data){
+	console.log("TODO");
+
+	eventsDelegateAlerts(eventsCheckStatus(GLOBAL_API_DATA.events));
+}
+
 
 function eventsCheckStatus(data){
 	globalDebug('    Events Call: eventsCheckStatus');
@@ -93,11 +180,11 @@ function eventsDelegateAlerts(events){
 	if (events.count && $('.alerts-block')[0]){
 
 		if (events.new.length){
-			$('.alerts-block').data('events-new-count', events.new.length)
-			if (events.new.length == 1){
+			$('.alerts-block').data('events-new-count', events.count)
+			if (events.count == 1){
 				$('.alerts-message p').html('1'+STRING_ALERTS_MESSAGE);
 			} else {
-				$('.alerts-message p').html(events.new.length+STRING_ALERTS_MESSAGE_PLURAL);
+				$('.alerts-message p').html(events.count+STRING_ALERTS_MESSAGE_PLURAL);
 			}
 			setTimeout(function(){
 				$('.alerts-block').addClass('active');

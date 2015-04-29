@@ -3,9 +3,9 @@ extends ../../layouts/default
 block content
 	.row.content-row
 		.col-xs-12
-			h1(data-toggle="tooltip" data-trigger="click" data-placement="right" title="Reach, Engagement, Acquisition, Top Posts, and Top Countries.").view-title
+			h1.view-title
 				=title
-			a.btn.btn-default.analytics-cta(title=section+" Link" href=socialLinks.facebook)
+			a.btn.btn-default.page-cta-btn(title=section+" Link" href=socialLinks.facebook)
 				=title+" Page"
 	.row.content-row
 		+social-graph('reach')

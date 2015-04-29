@@ -7,6 +7,13 @@ exports = module.exports = function(req, res) {
 
 	locals.section = 'instagram';
 	locals.title = 'Instagram';
+	locals.tooltip = {
+		reach: "",
+		engagement: "",
+		acquisition: "",
+		top_posts: "",
+		top_countries: ""
+	};
 
 	view.render('account/instagram');
 };

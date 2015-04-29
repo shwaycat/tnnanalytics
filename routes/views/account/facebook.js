@@ -13,7 +13,7 @@ exports = module.exports = function(req, res) {
 		acquisition: "All Page Likes",
 		top_posts: "Likes + Comments + Shares",
 		top_countries: "Based on Engagement. (Shares + Post Likes + Post Comments + Posts + Mentions)"
-	}
+	};
 
 	view.render('account/facebook');
 };

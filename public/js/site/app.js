@@ -22,6 +22,7 @@ $(function() {
 	//Front-End Functions
 	compensateFooter();
 	elementReveal();
+	eventsStatusUpdateController(GLOBAL_API_DATA.events);
 	$('[data-toggle="tooltip"]').tooltip();
 
 });
