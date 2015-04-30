@@ -172,7 +172,8 @@ function dataController(type, apiString, startTime, endTime, options){
         lineGraph(apiObj.data, options);
       } else if (type == 'donut'){
         //apiObj.data = simplifyData(apiObj.data);
-        apiObj.data = simplifyData(fakeTopCountryData);
+        var tempData = fakeTopCountryData;
+        apiObj.data = simplifyData(tempData);
         donutGraph(apiObj.data, options);
       } else if (type == 'top_post'){
         topPost(apiObj.data, options);
