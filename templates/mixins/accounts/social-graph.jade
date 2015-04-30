@@ -1,0 +1,29 @@
+mixin social-graph(type, options)
+
+	if type == 'reach'
+		.col-xs-12.col-md-12.col-lg-12.content-block
+			.inner-content
+				h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.reach)
+					=sectionTitles.reach
+				section.novo-graph.novo-line-graph.reach#reach(data-admin-options=options)
+
+	if type == 'engagement'
+		.col-xs-12.col-md-12.col-lg-12.content-block
+			.inner-content
+				h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.engagement)
+					=sectionTitles.engagement
+				section.novo-graph.novo-line-graph.engagement#engagement(data-admin-options=options)
+
+	if type == 'acquisition'
+		.col-xs-12.col-md-12.col-lg-12.content-block
+			.inner-content
+				h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.acquisition)
+					=sectionTitles.acquisition
+				section.novo-graph.novo-line-graph.acquisition#acquisition(data-admin-options=options)
+
+	if type == 'top_countries'
+		.col-xs-12.col-md-12.col-lg-6.content-block
+			.inner-content
+				h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.top_countries)
+					=sectionTitles.top_countries
+				section.novo-graph.novo-donut-graph.reach#top_countries(data-admin-options=options)

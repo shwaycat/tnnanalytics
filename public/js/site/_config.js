@@ -1,85 +1,239 @@
+var globalDebugBool = true;
+
+var dataErrorClass = '.data-error-container';
+var dataErrorHTML = '<div class="data-error-container"><p>There was an error loading the data for this section. Please <a href="mailto:nlambert@maxmedia.com">email</a> us and let us know you found this error.</p></div>';
+
+var loadingGifClass = '.loading-container';
+var loadingGifHTML = '<div class="loading-container"><img src="/images/loader.gif" /></div>';
+
 // Use this to store the paths for the various JSON endpoints. If this is barely used or redundant remove it.
-
 var GLOBAL_API_DATA = {
-  facebook: 'TODO data here!',
-  twitter: 'TODO data here!',
-  instagram: 'TODO data here!',
-  google_plus: 'TODO data here!',
-  youtube: 'TODO data here!',
-  fakedata1: [ 5, 10, 13, 19, 21, 25, 22, 18, ],
-  fakedata2: [
-    {
-      "date": "2015-01-21T20:29:42.759Z",
-      "count": "0"
-    },
-    {
-      "date": "2015-02-21T20:29:42.759Z",
-      "count": "30"
-    },
-    {
-      "date": "2015-03-21T20:29:42.759Z",
-      "count": "10"
-    },
-    {
-      "date": "2015-05-21T20:29:42.759Z",
-      "count": "30"
-    },
-  ],
-  fakedata3: createFakeData(),
-  fakedata4: [
-    {
-      "label": "USA",
-      "value": 50
-    },
-    {
-      "label": "Canada",
-      "value": 1
-    },
-    {
-      "label": "Mexico",
-      "value": 2
-    },
-    {
-      "label": "England",
-      "value": 3
-    },
-    {
-      "label": "Ireland",
-      "value": 5
-    },
-    {
-      "label": "Germany",
-      "value": 5
-    },
-    {
-      "label": "Belgium",
-      "value": 5
-    },
-    {
-      "label": "Russia",
-      "value": 5
-    },
-    {
-      "label": "Japan",
-      "value": 5
-    },
-    {
-      "label": "China",
-      "value": 5
-    },
-    {
-      "label": "TaiWorld",
-      "value": 5
-    }
+  dashboard : {},
+  facebook: {},
+  twitter: {},
+  instagram: {},
+  google_plus: {},
+  youtube: {},
+  events: {}
+};
 
-  ],
-  fakeEvents: {
-    "info": "false",
+if ($('body.dashboard')[0]){
+  globalDebug('    API Call: dashboard');
+
+  GLOBAL_API_DATA.dashboard = {
+    "reach": createFakeData(),
+    "engagement": createFakeData(),
+    "acquisition": createFakeData(),
+    "top_post": "",
+    "top_countries": [
+      {
+        "label": "USA",
+        "value": 50
+      },
+      {
+        "label": "Canada",
+        "value": 1
+      },
+      {
+        "label": "Mexico",
+        "value": 2
+      },
+      {
+        "label": "England",
+        "value": 3
+      },
+      {
+        "label": "Ireland",
+        "value": 5
+      },
+      {
+        "label": "Germany",
+        "value": 5
+      },
+      {
+        "label": "Belgium",
+        "value": 5
+      },
+      {
+        "label": "Russia",
+        "value": 5
+      },
+      {
+        "label": "Japan",
+        "value": 5
+      },
+      {
+        "label": "China",
+        "value": 5
+      },
+      {
+        "label": "TaiWorld",
+        "value": 5
+      }
+
+    ]
+  };
+  GLOBAL_API_DATA.dashboard.top_countries = simplifyData(GLOBAL_API_DATA.dashboard.top_countries);
+}
+
+if ($('body.facebook')[0]){
+  globalDebug('    API Call: facebook');
+
+  GLOBAL_API_DATA.facebook = {
+    "reach": createFakeData(),
+    "engagement": createFakeData(),
+    "acquisition": createFakeData(),
+    "top_post": "",
+    "top_countries": [
+      {
+        "label": "USA",
+        "value": 50
+      },
+      {
+        "label": "Canada",
+        "value": 1
+      },
+      {
+        "label": "Mexico",
+        "value": 2
+      },
+      {
+        "label": "England",
+        "value": 3
+      },
+      {
+        "label": "Ireland",
+        "value": 5
+      },
+      {
+        "label": "Germany",
+        "value": 5
+      },
+      {
+        "label": "Belgium",
+        "value": 5
+      },
+      {
+        "label": "Russia",
+        "value": 5
+      },
+      {
+        "label": "Japan",
+        "value": 5
+      },
+      {
+        "label": "China",
+        "value": 5
+      },
+      {
+        "label": "TaiWorld",
+        "value": 5
+      }
+
+    ]
+  };
+  GLOBAL_API_DATA.facebook.top_countries = simplifyData(GLOBAL_API_DATA.facebook.top_countries);
+}
+
+if ($('body.twitter')[0]){
+  globalDebug('    API Call: twitter');
+
+  GLOBAL_API_DATA.twitter = {
+    "reach": createFakeData(),
+    "engagement": createFakeData(),
+    "acquisition": createFakeData(),
+    "top_post": "",
+    "top_countries": [
+      {
+        "label": "USA",
+        "value": 50
+      },
+      {
+        "label": "Canada",
+        "value": 1
+      },
+      {
+        "label": "Mexico",
+        "value": 2
+      },
+      {
+        "label": "England",
+        "value": 3
+      },
+      {
+        "label": "Ireland",
+        "value": 5
+      },
+      {
+        "label": "Germany",
+        "value": 5
+      },
+      {
+        "label": "Belgium",
+        "value": 5
+      },
+      {
+        "label": "Russia",
+        "value": 5
+      },
+      {
+        "label": "Japan",
+        "value": 5
+      },
+      {
+        "label": "China",
+        "value": 5
+      },
+      {
+        "label": "TaiWorld",
+        "value": 5
+      }
+
+    ]
+  };
+  GLOBAL_API_DATA.twitter.top_countries = simplifyData(GLOBAL_API_DATA.twitter.top_countries);
+}
+
+if ($('body.instagram')[0]){
+  globalDebug('    API Call: instagram');
+
+      
+}
+if ($('body.youtube')[0]){
+  globalDebug('    API Call: youtube');
+
+      
+}
+if ($('body.google-plus')[0]){
+  globalDebug('    API Call: google-plus');
+
+      
+}
+if ($('body.analytics-all')[0]){
+  globalDebug('    API Call: analytics-all');
+
+      
+}
+if ($('body.analytics-global')[0]){
+  globalDebug('    API Call: analytics-global');
+
+      
+}
+if ($('body.analytics-us')[0]){
+  globalDebug('    API Call: analytics-us');
+
+      
+}
+if (!$('body.session')[0]){
+  globalDebug('    API Call: events');
+
+  GLOBAL_API_DATA.events = {
+    "info": false,
     "events" : [
       {
         "id":"1111",
         "channel":"facebook",
-        "status":"closed",
+        "status":"new",
         "creation": "2015-04-23T22:45:04.000Z",
         "accessed": "2015-04-23T22:45:04.000Z",
         "link": "http://www.gameofthrones.com"
@@ -87,7 +241,7 @@ var GLOBAL_API_DATA = {
       {
         "id":"2222",
         "channel":"twitter",
-        "status":"closed",
+        "status":"new",
         "creation": "2015-04-17T19:45:04.000Z",
         "accessed": "2015-04-17T20:45:04.000Z",
         "link": "http://www.gameofthrones.com"
@@ -227,13 +381,14 @@ var GLOBAL_API_DATA = {
         "link": "http://www.gameofthrones.com"
       }
     ]
-  }
+  };
 }
 
-// Alterations if needed. This will likely be removed or moved elsewhere.
-GLOBAL_API_DATA.fakedata4 = simplifyData(GLOBAL_API_DATA.fakedata4);
 
 
+
+
+// Development fake data for line graphs.
 function createFakeData(){
   var ourArray = [];
   var index = 50;
@@ -248,6 +403,10 @@ function createFakeData(){
   return ourArray;
 }
 
+
+// This is used to assimilate data lower than
+// 5% in a donutGraph, removing it and replacing
+// it with Other.
 function simplifyData(data){
   var theData = data;
 
@@ -264,6 +423,6 @@ function simplifyData(data){
   }
   theData.push(otherObj);
   return theData;
-
 }
+
 

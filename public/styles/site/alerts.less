@@ -1,3 +1,4 @@
+// Top Alert Block for Adverse Events
 .alerts-block {
 	display:block;
 	opacity:0;
@@ -58,3 +59,45 @@
 		}
 	}
 }
+
+// Used on flash messages
+.novo-alert {
+	background-color:transparent;
+	border:0;
+	padding: 0 1.5em;
+	color:#EA8787;
+	font-weight: normal;
+	line-height: 1.2;
+	a, a:hover, a:visited, a:active, a:focus {
+		color:@element_alert_lighter !important;
+	}
+}
+
+// Tooltip Alerts
+.tooltip {
+
+	&.right .tooltip-arrow {
+		border-right-color:@tooltip_bg !important;
+	}
+	&.top .tooltip-arrow {
+		border-top-color:@tooltip_bg !important;
+	}
+	&.left .tooltip-arrow {
+		border-left-color:@tooltip_bg !important;
+	}
+	&.bottom .tooltip-arrow {
+		border-bottom-color:@tooltip_bg !important;
+	}
+
+	.tooltip-inner {
+		background-color:@tooltip_bg;
+		font-size: 1em;
+		padding: 0.3em 0.9em;
+		max-width: 230px;
+		-webkit-border-radius: 0;
+		-moz-border-radius: 0;
+		border-radius: 0;
+	}
+}
+
+

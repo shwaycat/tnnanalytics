@@ -4,7 +4,6 @@ var keystone = require('keystone')
 exports = module.exports = function(req, res) {
 
   if (req.user) {
-    console.log(req.user)
     return res.redirect(req.cookies.target || '/accounts/'+req.user.accountName)
   }
 
@@ -14,7 +13,6 @@ exports = module.exports = function(req, res) {
   locals.section = 'session';
   locals.form = req.body;
 
-  console.log('Sign In Route');
 
   view.on('post', { action: 'signin' }, function(next) {
 
@@ -24,15 +22,10 @@ exports = module.exports = function(req, res) {
     }
 
     var onSuccess = function() {
-      console.log('huh');
-      console.log(req.body.target);
       if (req.body.target && !/signin/.test(req.body.target)) {
-        console.log('[signin] - Set target as [' + req.body.target + '].');
         res.redirect(req.body.target);
-        console.log('why');
       } else {
         res.redirect('/signin');
-        console.log('what');
       }
     }
 

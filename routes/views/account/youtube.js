@@ -6,6 +6,14 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 
 	locals.section = 'youtube';
+	locals.title = 'Youtube';
+	locals.tooltip = {
+		reach: "",
+		engagement: "",
+		acquisition: "",
+		top_posts: "",
+		top_countries: ""
+	};
 
-	view.render('account/placeholder');
+	view.render('account/youtube');
 };

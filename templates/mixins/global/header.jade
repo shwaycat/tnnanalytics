@@ -1,11 +1,11 @@
 mixin header
   header
-    .row
-      .col-xs-12
-        a.header-logo(href="/" title="Cadence Home")
-          img(src="/images/logo.png" alt="Cadence Logo")
-        ul.header-items
-          if user
+    if user
+      .row
+        .col-xs-12
+          a.header-logo(href="/" title="Cadence Home")
+            img(src="/images/logo.png" alt="Cadence Logo")
+          ul.header-items
             li: a.event-alert-item(href='/accounts/'+user.accountName+'/events')
               .glyphicon.glyphicon-bell
                 .event-alert
@@ -15,5 +15,3 @@ mixin header
               li: a(href='/keystone') Keystone
             li: a(href='/user/'+user.key).user
               =user.name.first
-          else
-            li: a(href='/signin', data-from=page.path, data-initial='signin').js-auth-trigger Sign in

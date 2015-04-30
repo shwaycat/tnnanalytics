@@ -1,14 +1,12 @@
-var keystone = require('keystone');
+var keystone = require('keystone')
+  , async = require('async')
 
 exports = module.exports = function(req, res) {
 
-	var view = new keystone.View(req, res),
-		locals = res.locals;
+  if (req.user) {
+    return res.redirect(req.cookies.target || '/accounts/'+req.user.accountName)
+  } else {
+  	return res.redirect('/signin')
+  }
 
-	locals.section = 'home';
-
-	if (req.user) {
-		return res.redirect(req.cookies.target || '/accounts/:accountname' );
-	}
-
-};
+}

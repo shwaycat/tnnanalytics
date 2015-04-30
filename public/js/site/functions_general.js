@@ -12,8 +12,23 @@ function compensateFooter(){
 	}
 }
 
+function globalDebug(message){
+  if(globalDebugBool){
+    console.log(message);
+  }
+}
 
+function elementReveal(){
+  $('.element-reveal-link').on('click',function(e){
+    var clicked = $(this),
+        els = $('.element-reveal'),
+        show = clicked.data('element-reveal-show'),
+        hide = clicked.data('element-reveal-hide');
 
+    els.filter('[data-element-reveal-id="'+show+'"]').addClass('active');
+    els.filter('[data-element-reveal-id="'+hide+'"]').removeClass('active');
+  });
+}
 
 function abbreviateNumber(value) {
   var newValue = value;
@@ -71,31 +86,10 @@ $.fn.serializeObject = function()
 $.fn.sectionLoad = function(reload){
   var el = this;
   if (reload){
-     el.removeClass('loaded');
+    el.removeClass('loaded');
   }
+  el.prev(loadingGifClass).remove();
   setTimeout(function(){
     el.addClass('loaded');
   },300);  
 };
-
-function createDateAsUTC(date) {
-  return new Date(Date.UTC(
-  	date.getFullYear(),
-  	date.getMonth(),
-  	date.getDate(),
-  	date.getHours(),
-  	date.getMinutes(),
-  	date.getSeconds()
-  ));
-}
-
-function convertDateToUTC(date) { 
-  return new Date(
-  	date.getUTCFullYear(),
-  	date.getUTCMonth(),
-  	date.getUTCDate(),
-  	date.getUTCHours(),
-  	date.getUTCMinutes(),
-  	date.getUTCSeconds()
-  ); 
-}

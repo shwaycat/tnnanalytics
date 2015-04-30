@@ -7,5 +7,5 @@ exports = module.exports = function(req, res) {
 
 	locals.section = 'privacy';
 
-	view.render('site/privacy');
+	view.render('privacy');
 };

@@ -10,14 +10,22 @@ exports.initLocals = function(req, res, next) {
 
   var locals = res.locals
 
+  locals.socialLinks = {
+    "facebook": "https://www.facebook.com/novonordisk",
+    "twitter": "https://twitter.com/novonordisk",
+    "instagram": "https://instagram.com/novonordisk/",
+    "youtube": "https://www.youtube.com/user/novonordisk/custom",
+    "googlePlus": "https://plus.google.com/+novonordisk"
+  }
+
   locals.navLinks = [
     { label: 'Dashboard',         type: 'link',             key: 'dashboard',       href: ''},
     { label: 'Social Analytics',  type: 'navigation',       key: 'view-social',     href: false },
     { label: 'Facebook',          type: 'sub-link',         key: 'facebook',        href: 'facebook' },
     { label: 'Twitter',           type: 'sub-link',         key: 'twitter',         href: 'twitter' },
-    { label: 'Instagram',         type: 'sub-link',         key: 'instagram',       href: 'instagram' },
-    { label: 'Youtube',           type: 'sub-link',         key: 'youtube',         href: 'youtube' },
-    { label: 'Google+',           type: 'sub-link',         key: 'google-plus',     href: 'google-plus' },
+    // { label: 'Instagram',         type: 'sub-link',         key: 'instagram',       href: 'instagram' },
+    // { label: 'Youtube',           type: 'sub-link',         key: 'youtube',         href: 'youtube' },
+    // { label: 'Google+',           type: 'sub-link',         key: 'google-plus',     href: 'google-plus' },
     { label: 'Web Analytics',     type: 'navigation',       key: 'view-analytics',  href: false },
     { label: 'All',               type: 'sub-link',         key: 'analytics-all',   href: 'analytics-all' },
     { label: 'Global',            type: 'sub-link',         key: 'analytics-global',href: 'analytics-global' },
@@ -27,12 +35,21 @@ exports.initLocals = function(req, res, next) {
 
   locals.footerLinks = [
     { label: 'Terms/Privacy', type: 'view',     key: 'privacy',       href: '/privacy' },
-    { label: 'Facebook',      type: 'social',   key: 'facebook',      href: 'https://www.facebook.com/novonordisk' },
-    { label: 'Twitter',       type: 'social',   key: 'twitter',       href: 'https://twitter.com/novonordisk' },
-    { label: 'Instagram',     type: 'social',   key: 'instagram',     href: 'https://instagram.com/novonordisk/' },
-    { label: 'Youtube',       type: 'social',   key: 'youtube',       href: 'https://www.youtube.com/user/novonordisk/custom' },
-    { label: 'Google+',       type: 'social',   key: 'google-plus',   href: 'https://plus.google.com/+novonordisk' }
+    { label: 'Facebook',      type: 'social',   key: 'facebook',      href: locals.socialLinks.facebook },
+    { label: 'Twitter',       type: 'social',   key: 'twitter',       href: locals.socialLinks.twitter },
+    { label: 'Instagram',     type: 'social',   key: 'instagram',     href: locals.socialLinks.instagram },
+    { label: 'Youtube',       type: 'social',   key: 'youtube',       href: locals.socialLinks.youtube },
+    { label: 'Google+',       type: 'social',   key: 'google-plus',   href: locals.socialLinks.googlePlus }
   ]
+
+  locals.sectionTitles = {
+    "reach": "Reach",
+    "engagement": "Engagement",
+    "acquisition": "Acquisition",
+    "top_posts": "Top Posts",
+    "top_countries": "Top Countries",
+    "top_tweet": "Top Tweet"
+  }
 
   locals.user = req.user
 

@@ -2,68 +2,158 @@
 //   FRONT END ROUTES    //
 ///////////////////////////
 
-function routesInit(){
+function routesInit(resizeOnce){
 	if ($('body.dashboard')[0]){
-		console.log('    routesInit: dashboard');
+		globalDebug('    routesInit: dashboard');
 
+		var source = 'dashboard';
+
+		// Reach
+		lineGraph(GLOBAL_API_DATA.dashboard.reach,{
+			selector: '#reach',
+			source: source,
+			color: '',
+		});
+
+		// Engagement
+		lineGraph(GLOBAL_API_DATA.dashboard.engagement,{
+			selector: '#engagement',
+			source: source,
+			color: '',
+		});
+
+		// Acquisition
+		lineGraph(GLOBAL_API_DATA.dashboard.acquisition,{
+			selector: '#acquisition',
+			source: source,
+			color: '',
+		});
+
+		// Top Post
+		// topPost(GLOBAL_API_DATA.dashboard.top_post,{
+		// 	selector: '#top_post',
+		// 	source: source,
+		// 	color: '',
+		// });
+
+		// Top Countries
+		donutGraph(GLOBAL_API_DATA.dashboard.top_countries,{
+			selector: '#top_countries',
+			source: source,
+			color: '',
+		});
 		
 	}
 	if ($('body.facebook')[0]){
-		console.log('    routesInit: facebook');
+		globalDebug('    routesInit: facebook');
 
-		donutGraph(GLOBAL_API_DATA.fakedata4,{
-			selector: '#top_countries',
-			source: 'facebook',
-			color: '',
-		});
+		var source = 'facebook';
 
-		lineGraph(GLOBAL_API_DATA.fakedata3,{
+		// Reach
+		lineGraph(GLOBAL_API_DATA.facebook.reach,{
 			selector: '#reach',
-			source: 'facebook',
+			source: source,
 			color: '',
 		});
+
+		// Engagement
+		lineGraph(GLOBAL_API_DATA.facebook.engagement,{
+			selector: '#engagement',
+			source: source,
+			color: '',
+		});
+
+		// Acquisition
+		lineGraph(GLOBAL_API_DATA.facebook.acquisition,{
+			selector: '#acquisition',
+			source: source,
+			color: '',
+		});
+
+		// Top Post
+		topPost(GLOBAL_API_DATA.facebook.top_post,{
+			selector: '#top_post',
+			source: source,
+			color: '',
+		});
+
+		// Top Countries
+		donutGraph(GLOBAL_API_DATA.facebook.top_countries,{
+			selector: '#top_countries',
+			source: source,
+			color: '',
+		});		
 
 	}
 	if ($('body.twitter')[0]){
-		console.log('    routesInit: twitter');
+		globalDebug('    routesInit: twitter');
 
+		var source = 'twitter';
+
+		// Engagement
+		lineGraph(GLOBAL_API_DATA.twitter.engagement,{
+			selector: '#engagement',
+			source: source,
+			color: '',
+		});
+
+		// Acquisition
+		lineGraph(GLOBAL_API_DATA.twitter.acquisition,{
+			selector: '#acquisition',
+			source: source,
+			color: '',
+		});
+
+		// Top Post
+		// topPost(GLOBAL_API_DATA.twitter.top_post,{
+		// 	selector: '#top_post',
+		// 	source: source,
+		// 	color: '',
+		// });
+
+		// Top Countries
+		donutGraph(GLOBAL_API_DATA.twitter.top_countries,{
+			selector: '#top_countries',
+			source: source,
+			color: '',
+		});	
 				
 	}
 	if ($('body.instagram')[0]){
-		console.log('    routesInit: instagram');
+		globalDebug('    routesInit: instagram');
 
 				
 	}
 	if ($('body.youtube')[0]){
-		console.log('    routesInit: youtube');
+		globalDebug('    routesInit: youtube');
 
 				
 	}
 	if ($('body.google-plus')[0]){
-		console.log('    routesInit: google-plus');
+		globalDebug('    routesInit: google-plus');
 
 				
 	}
 	if ($('body.analytics-all')[0]){
-		console.log('    routesInit: analytics-all');
+		globalDebug('    routesInit: analytics-all');
 
 				
 	}
 	if ($('body.analytics-global')[0]){
-		console.log('    routesInit: analytics-global');
+		globalDebug('    routesInit: analytics-global');
 
 				
 	}
 	if ($('body.analytics-us')[0]){
-		console.log('    routesInit: analytics-us');
+		globalDebug('    routesInit: analytics-us');
 
 				
 	}
-	if ($('body.events')[0]){
-		console.log('    routesInit: events');
+	if ($('body.events')[0] && !resizeOnce){
+		globalDebug('    routesInit: events');
 
 		if ($('#events-table')[0]){
-			eventsTableData(GLOBAL_API_DATA.fakeEvents, $('#events-table'));
+			eventsTableData(GLOBAL_API_DATA.events, $('#events-table'));
 			eventsTable($('#events-table'));
 		
 			eventsCloseAll();

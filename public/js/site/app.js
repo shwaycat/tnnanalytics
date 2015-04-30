@@ -4,20 +4,25 @@ $(window).resize(function(){
 	compensateFooter();
 	
 	//Data Functions
-	routesInit();
+	routesInit(true);
 
 });
 
 
 $(function() {
 
-	//Front-End Functions
-	compensateFooter();
-	
 	//Data Functions
 	routesInit();
 
-	var eventsObject = eventsCheckStatus(GLOBAL_API_DATA.fakeEvents);
-	eventsDelegateAlerts(eventsObject);
+	if (!$('body.session')[0]){
+		var eventsObject = eventsCheckStatus(GLOBAL_API_DATA.events);
+		eventsDelegateAlerts(eventsObject);
+	}
+
+	//Front-End Functions
+	compensateFooter();
+	elementReveal();
+	eventsStatusUpdateController(GLOBAL_API_DATA.events);
+	$('[data-toggle="tooltip"]').tooltip();
 
 });

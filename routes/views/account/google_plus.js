@@ -6,6 +6,14 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 
 	locals.section = 'google-plus';
+	locals.title = 'Google Plus';
+	locals.tooltip = {
+		reach: "",
+		engagement: "",
+		acquisition: "",
+		top_posts: "",
+		top_countries: ""
+	};
 
-	view.render('account/placeholder');
+	view.render('account/google-plus');
 };

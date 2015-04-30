@@ -1,7 +1,11 @@
 var keystone = require('keystone'),
-	User = keystone.list('User');
+		User = keystone.list('User');
 
 exports = module.exports = function(req, res) {
+
+	if (req.params.key == undefined || !req.params.key){
+		return res.redirect('/signin');
+	}
 
 	var view = new keystone.View(req, res),
 		locals = res.locals;

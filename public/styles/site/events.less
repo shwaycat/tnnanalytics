@@ -1,3 +1,7 @@
+@events_transition: 0.3s;
+@events_transition_medium: 0.15s;
+@events_transition_short: 0.05s; 
+
 .events-container {
 	overflow:scroll;
 	&.loaded {
@@ -57,7 +61,7 @@
 	}
 }
 .events-table {
-	min-width:768px;
+	min-width:992px;
 	background-color:@background_element;
 	&.dataTable {
 		> thead > tr,
@@ -67,15 +71,29 @@
 		> tbody > tr,
 		> tfoot > tr {
 			background-color:transparent;
+			&:hover {
+				background-color:@background_element_lighter;
+				.transition(@events_transition_short);
+			}
+			.transition(@events_transition);
 			&.status-new {
+				.transition(@events_transition);
 				background-color:@element_alert;
 				td {
 					font-weight: normal;
 				}
+				&:hover {
+					background-color:@element_alert_light;
+					.transition(@events_transition_short);
+				}
 			}
 			&.status-open {
+				.transition(@events_transition);
 				background-color:@element_alternate_active;
-
+				&:hover {
+					background-color:@element_alternate_active_lighter;
+					.transition(@events_transition_short);
+				}
 			}
 		}
 	}
@@ -89,6 +107,7 @@
 		border-color:@background_element_lighter;
 		font-weight:300;
 		padding: 1em 0.5em;
+		vertical-align: middle;
 		&.sorting {
 			.entypo-chevron-up { display: none; }
 			.entypo-chevron-down { display: none; }
@@ -99,11 +118,32 @@
 		&.sorting_desc {
 			.entypo-chevron-down { display: none; }
 		}
+		&.event-item-status {
+			padding:1em 0.5em 1em 1.5em;
+		}
+		&.event-status-cell {
+			padding-left:1.5em;
+		}
 		&.event-link-cell {
 			text-align: left;
 		}
 		.event-item-robot {
 			display:none;
+		}
+		.event-action-btn {
+			width: 70%;
+			&.status-new {
+				background-color:@element_alert_lighter;
+				.transition(@events_transition);
+			}
+			&.status-open {
+				background-color:@element_alert_lighter;
+				.transition(@events_transition);
+			}
+			&.status-closed {
+				background-color:@lightBlue;
+				.transition(@events_transition);
+			}
 		}
 	}
 	thead {
@@ -115,6 +155,11 @@
 				font-weight: 400;
 				padding:0.5em;
 				cursor:pointer;
+				.transition(@events_transition_medium);
+				&:hover, &.sorting_asc, &.sorting_desc {
+					color:@table_header_text_active;
+					.transition(@events_transition_medium);
+				}
 			}
 		}
 	}
