@@ -65,3 +65,47 @@ a, a:hover, a:visited, a:active, a:focus {
 .element-reveal-link {
   cursor:pointer;
 }
+
+.loading-container, .data-error-container {
+  padding: 10em 0;
+  position: relative;
+  opacity:1;
+  &.inactive {
+    opacity:0;
+    height:0;
+    padding:0;
+  }
+  img, p {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+    margin: auto;
+  }
+  p {
+    width: 70%;
+    font-size: 1.2em;
+    line-height: 1.2;
+    top: 37%;
+    a, a:hover, a:visited, a:active, a:focus {
+      color:@element_alert_lighter !important;
+    }
+  }
+}
+.novo-graph {
+  .loading-container, .data-error-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 0;
+  }
+  .data-error-container {
+    height: 22em;
+    width: 100%;
+    z-index: 9000;    
+  }
+}

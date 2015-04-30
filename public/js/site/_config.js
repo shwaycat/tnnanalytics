@@ -1,5 +1,11 @@
 var globalDebugBool = true;
 
+var dataErrorClass = '.data-error-container';
+var dataErrorHTML = '<div class="data-error-container"><p>There was an error loading the data for this section. Please <a href="mailto:nlambert@maxmedia.com">email</a> us and let us know you found this error.</p></div>';
+
+var loadingGifClass = '.loading-container';
+var loadingGifHTML = '<div class="loading-container"><img src="/images/loader.gif" /></div>';
+
 // Use this to store the paths for the various JSON endpoints. If this is barely used or redundant remove it.
 var GLOBAL_API_DATA = {
   dashboard : {},

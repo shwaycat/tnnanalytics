@@ -71,11 +71,11 @@ function routesInit(resizeOnce){
 		});
 
 		// Top Post
-		// topPost(GLOBAL_API_DATA.facebook.top_post,{
-		// 	selector: '#top_post',
-		// 	source: source,
-		// 	color: '',
-		// });
+		topPost(GLOBAL_API_DATA.facebook.top_post,{
+			selector: '#top_post',
+			source: source,
+			color: '',
+		});
 
 		// Top Countries
 		donutGraph(GLOBAL_API_DATA.facebook.top_countries,{

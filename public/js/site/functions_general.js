@@ -19,7 +19,6 @@ function globalDebug(message){
 }
 
 function elementReveal(){
-
   $('.element-reveal-link').on('click',function(e){
     var clicked = $(this),
         els = $('.element-reveal'),
@@ -29,9 +28,7 @@ function elementReveal(){
     els.filter('[data-element-reveal-id="'+show+'"]').addClass('active');
     els.filter('[data-element-reveal-id="'+hide+'"]').removeClass('active');
   });
-
 }
-
 
 function abbreviateNumber(value) {
   var newValue = value;
@@ -89,8 +86,9 @@ $.fn.serializeObject = function()
 $.fn.sectionLoad = function(reload){
   var el = this;
   if (reload){
-     el.removeClass('loaded');
+    el.removeClass('loaded');
   }
+  el.prev(loadingGifClass).remove();
   setTimeout(function(){
     el.addClass('loaded');
   },300);  

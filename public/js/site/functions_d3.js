@@ -15,7 +15,15 @@ function type(d) {
 ///////////////////////////
 
 function lineGraph(data, options){
-	// Options Example
+	// Preload Checks
+	if (!$(options.selector)[0]) return;
+	if (!data || data == undefined || data == null){
+		$(options.selector).before(dataErrorHTML);
+		$(options.selector).remove();
+		return;
+	} else {
+		$(options.selector).before(loadingGifHTML);
+	}
 
 	var theData = data;
 
@@ -135,6 +143,7 @@ function lineGraph(data, options){
     .attr("clip-path", "url("+options.selector+"_clip)")
     .attr("d", line(theData));
 
+
   $(options.selector).sectionLoad();
 }
 
@@ -147,9 +156,18 @@ function lineGraph(data, options){
 
 // TODO: Donut graph labels are still overlapping
 // in some cases, need to fix this later on by QA.
-function donutGraph(ourData, options){
+function donutGraph(data, options){
+	// Preload Checks
+	if (!$(options.selector)[0]) return;
+	if (!data || data == undefined || data == null){
+		$(options.selector).before(dataErrorHTML);
+		$(options.selector).remove();
+		return;
+	} else {
+		$(options.selector).before(loadingGifHTML);
+	}
 
-	var theData = ourData;
+	var theData = data;
 
 	// If an SVG exists, remove it. This is mostly for redrawing the graph on browser resize.
 	if($(options.selector).first().children('svg')[0]){
@@ -199,12 +217,14 @@ function donutGraph(ourData, options){
 	
 	function change(data) {
 
+		var changedData = data;
+
 		var randomColor = d3.scale.category20();
 
 		/* ------- PIE SLICES -------*/
 		var slice = svg.select(".slices")
 					.selectAll("path.slice")
-					.data(pie(data), key);
+					.data(pie(changedData), key);
 
 		slice
 			.enter()
@@ -231,7 +251,7 @@ function donutGraph(ourData, options){
 
 		var text = svg.select(".labels")
 					.selectAll("text")
-					.data(pie(data), key);
+					.data(pie(changedData), key);
 
 		text
 			.enter()
@@ -275,7 +295,7 @@ function donutGraph(ourData, options){
 
 		var polyline = svg.select(".lines")
 					.selectAll("polyline")
-					.data(pie(data), key);
+					.data(pie(changedData), key);
 		
 		polyline
 			.enter()
