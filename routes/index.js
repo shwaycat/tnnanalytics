@@ -26,7 +26,8 @@ keystone.set('500', function(err, req, res, next) {
 // Import Route Controllers
 var routes = {
   views: importRoutes('./views'),
-  auth: importRoutes('./auth')
+  auth: importRoutes('./auth'),
+  api: importRoutes('./api')
 }
 
 // Setup Route Bindings
@@ -78,4 +79,41 @@ exports = module.exports = function(app) {
   app.all('/auth/confirm', routes.auth.confirm);
   app.all('/auth/app', routes.auth.app);
   app.all('/auth/:service', routes.auth.service);
+
+
+  // API
+  app.get('/api*', keystone.middleware.api);
+
+  // Twitter Endpoints 
+  // They all expect query strings with startTime endTime
+  app.get('/api/1.0/twitter/engagement', routes.api.twitter.engagement);
+  app.get('/api/1.0/twitter/acquisition', routes.api.twitter.acquisition);
+  app.get('/api/1.0/twitter/topTweet', routes.api.twitter.topTweet);
+  app.get('/api/1.0/twitter/topCountries', routes.api.twitter.topCountries);
+
+  // Facebook Endpoints
+  // They all expect query strings with startTime endTime
+  app.get('/api/1.0/facebook/engagement', routes.api.facebook.engagement);
+  app.get('/api/1.0/facebook/acquisition', routes.api.facebook.acquisition);
+  app.get('/api/1.0/facebook/reach', routes.api.facebook.reach);
+  app.get('/api/1.0/facebook/topPost', routes.api.facebook.topPost);
+  app.get('/api/1.0/facebook/topCountries', routes.api.facebook.topCountries);
+
+  // Adverse Events
+  // /events expects query strings with page
+  app.get('/api/1.0/events', routes.api.events.index);
+  app.get('/api/1.0/events/summary', routes.api.events.summary);
+
+  // expects a JSON object with an array of IDs and updated statuses
+  app.post('/api/1.0/events/update', routes.api.events.update)
+
+
+
+
+
+
+
+
+
+
 }
