@@ -29,19 +29,19 @@ function routesInit(resizeOnce){
 			color: '',
 		});
 
-		// Top Post
-		// topPost(GLOBAL_API_DATA.dashboard.top_post,{
-		// 	selector: '#top_post',
-		// 	source: source,
-		// 	color: '',
-		// });
-
 		// Top Countries
 		donutGraph(GLOBAL_API_DATA.dashboard.top_countries,{
 			selector: '#top_countries',
 			source: source,
 			color: '',
 		});
+
+		// Top Post
+		// topPost(GLOBAL_API_DATA.dashboard.top_post,{
+		// 	selector: '#top_post',
+		// 	source: source,
+		// 	color: '',
+		// });
 		
 	}
 	if ($('body.facebook')[0]){
@@ -70,19 +70,19 @@ function routesInit(resizeOnce){
 			color: '',
 		});
 
+		// Top Countries
+		donutGraph(GLOBAL_API_DATA.facebook.top_countries,{
+			selector: '#top_countries',
+			source: source,
+			color: '',
+		});
+
 		// Top Post
 		topPost(GLOBAL_API_DATA.facebook.top_post,{
 			selector: '#top_post',
 			source: source,
 			color: '',
 		});
-
-		// Top Countries
-		donutGraph(GLOBAL_API_DATA.facebook.top_countries,{
-			selector: '#top_countries',
-			source: source,
-			color: '',
-		});		
 
 	}
 	if ($('body.twitter')[0]){
@@ -104,9 +104,9 @@ function routesInit(resizeOnce){
 			color: '',
 		});
 
-		// Top Post
-		// topPost(GLOBAL_API_DATA.twitter.top_post,{
-		// 	selector: '#top_post',
+		// Top Tweet
+		// topTweet(GLOBAL_API_DATA.twitter.top_tweet,{
+		// 	selector: '#top_tweet',
 		// 	source: source,
 		// 	color: '',
 		// });

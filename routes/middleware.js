@@ -46,7 +46,7 @@ exports.initLocals = function(req, res, next) {
     "reach": "Reach",
     "engagement": "Engagement",
     "acquisition": "Acquisition",
-    "top_posts": "Top Posts",
+    "top_post": "Top Post",
     "top_countries": "Top Countries",
     "top_tweet": "Top Tweet"
   }

@@ -9,10 +9,10 @@ exports = module.exports = function(req, res) {
 	locals.title = 'Twitter';
 	locals.tooltip = {
 		reach: "Organic + Paid Impressions",
-		engagement: "Retweets + Favorite + Replies + Mentions + Direct Messages",
+		engagement: "Retweets + Favorite + Replies + Mentions",
 		acquisition: "Total Followers",
-		top_posts: "Favorites + Replies + Retweets",
-		top_countries: "Based on Engagement. (Retweets + Favorite + Replies + Mentions + Direct Messages)"
+		top_tweet: "Favorites + Replies + Retweets",
+		top_countries: "Based on Engagement. (Retweets + Favorite + Replies + Mentions)"
 	};
 
 	view.render('account/twitter');

@@ -11,7 +11,7 @@ exports = module.exports = function(req, res) {
 		reach: "Organic + Paid Impressions",
 		engagement: "Shares + Post Likes + Post Comments + Posts + Mentions",
 		acquisition: "All Page Likes",
-		top_posts: "Likes + Comments + Shares",
+		top_post: "Likes + Comments + Shares",
 		top_countries: "Based on Engagement. (Shares + Post Likes + Post Comments + Posts + Mentions)"
 	};
 

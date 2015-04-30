@@ -1,3 +1,4 @@
+// Global Vars
 var globalDebugBool = true;
 
 var dataErrorClass = '.data-error-container';
@@ -6,7 +7,10 @@ var dataErrorHTML = '<div class="data-error-container"><p>There was an error loa
 var loadingGifClass = '.loading-container';
 var loadingGifHTML = '<div class="loading-container"><img src="/images/loader.gif" /></div>';
 
-// Use this to store the paths for the various JSON endpoints. If this is barely used or redundant remove it.
+// Use this to store the API Data.
+// Build to load only the needed objects,
+// and only once per page view.
+
 var GLOBAL_API_DATA = {
   dashboard : {},
   facebook: {},
@@ -83,7 +87,19 @@ if ($('body.facebook')[0]){
     "reach": createFakeData(),
     "engagement": createFakeData(),
     "acquisition": createFakeData(),
-    "top_post": "",
+    "top_post": {
+      "title": "Example Top Post",
+      "creation": "2015-04-23T22:45:04.000Z",
+      "url": "www.gameofthrones.com",
+      "source": "facebook",
+      "image": "https://scontent-atl.xx.fbcdn.net/hphotos-xaf1/v/t1.0-9/379782_987468847479_1864297134_n.jpg?oh=0745e5e24c60e8ddaf269e12c945d0bb&oe=55D16C5C",
+      "video_url": "",
+      "content": "Lorem ipsum lol. Lorem ipsum lol. Lorem ipsum lol. Lorem ipsum lol. Lorem ipsum lol. Lorem ipsum lol. Lorem ipsum lol. Lorem ipsum lol. Lorem ipsum lol.",
+      "engagement": "340",
+      "shares": "432",
+      "comments": "32425",
+      "likes": "241"
+    },
     "top_countries": [
       {
         "label": "USA",
@@ -142,7 +158,7 @@ if ($('body.twitter')[0]){
     "reach": createFakeData(),
     "engagement": createFakeData(),
     "acquisition": createFakeData(),
-    "top_post": "",
+    "top_tweet": "",
     "top_countries": [
       {
         "label": "USA",

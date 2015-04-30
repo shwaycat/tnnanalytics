@@ -11,7 +11,7 @@ exports = module.exports = function(req, res) {
 		reach: "",
 		engagement: "",
 		acquisition: "",
-		top_posts: "",
+		top_post: "",
 		top_countries: ""
 	};
 
