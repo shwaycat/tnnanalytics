@@ -26,7 +26,8 @@ keystone.set('500', function(err, req, res, next) {
 // Import Route Controllers
 var routes = {
   views: importRoutes('./views'),
-  auth: importRoutes('./auth')
+  auth: importRoutes('./auth'),
+  api: importRoutes('./api')
 }
 
 // Setup Route Bindings
@@ -77,4 +78,34 @@ exports = module.exports = function(app) {
   app.all('/auth/confirm', routes.auth.confirm);
   app.all('/auth/app', routes.auth.app);
   app.all('/auth/:service', routes.auth.service);
+
+
+  // API
+  app.get('/api*', keystone.middleware.api);
+
+  // Twitter Endpoints
+  app.get('/api/twitter/engagement/:dateFrom/:dateTo', routes.api.twitter.engagement);
+  app.get('/api/twitter/acquisition/:dateFrom/:dateTo', routes.api.twitter.acquisition);
+  app.get('/api/twitter/topTweet/:dateFrom/:dateTo', routes.api.twitter.topTweet);
+  app.get('/api/twitter/topCountries/:dateFrom/:dateTo', routes.api.twitter.topCountries);
+
+  // Facebook Endpoints
+  app.get('/api/facebook/engagement/:dateFrom/:dateTo', routes.api.facebook.engagement);
+  app.get('/api/facebook/acquisition/:dateFrom/:dateTo', routes.api.facebook.acquisition);
+  app.get('/api/facebook/reach/:dateFrom/:dateTo', routes.api.facebook.reach);
+  app.get('/api/facebook/topPost/:dateFrom/:dateTo', routes.api.facebook.topPost);
+  app.get('/api/facebook/topCountries/:dateFrom/:dateTo', routes.api.facebook.topCountries);
+
+  // Adverse Events
+  app.get('/api/events/adverse', routes.api.events.adverse);
+
+
+
+
+
+
+
+
+
+
 }
