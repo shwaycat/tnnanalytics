@@ -92,10 +92,6 @@
 				}
 			}
 			&.status-closed {
-				// &:hover {
-				// 	background-color:@background_element_lighter;
-				// 	.transition(@events_transition_short);
-				// }
 			}
 		}
 	}
@@ -126,6 +122,7 @@
 		&.event-status-cell {
 			padding-left:1.5em;
 		}
+
 		&.event-link-cell {
 			text-align: left;
 			.entypo {
@@ -157,10 +154,6 @@
 			&.status-closed {
 				background-color:@background_element_lighter;
 				.transition(@events_transition);
-				// &:hover {
-				// 	background-color:@background_element;
-				// 	.transition(@events_transition);
-				// }
 			}
 		}
 	}
@@ -177,6 +170,9 @@
 				&:hover, &.sorting_asc, &.sorting_desc {
 					color:@table_header_text_active;
 					.transition(@events_transition_medium);
+				}
+				&.event-link-cell, &.event-action-cell {
+					cursor:default;
 				}
 			}
 		}

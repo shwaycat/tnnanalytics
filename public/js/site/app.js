@@ -15,14 +15,14 @@ $(function() {
 	routesInit();
 
 	if (!$('body.session')[0]){
-		var eventsObject = eventsCheckStatus(GLOBAL_API_DATA.events);
+		var eventsObject = eventsCheckStatus(fakeEvents);
 		eventsDelegateAlerts(eventsObject);
 	}
 
 	//Front-End Functions
 	compensateFooter();
 	elementReveal();
-	eventsStatusUpdateController(GLOBAL_API_DATA.events);
+	eventsStatusUpdateController(fakeEvents);
 	$('[data-toggle="tooltip"]').tooltip();
 
 });

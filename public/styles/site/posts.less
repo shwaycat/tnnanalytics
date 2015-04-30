@@ -1,4 +1,9 @@
 .top-posts {
+	opacity:0;
+	&.loaded {
+		opacity:1;
+		.transition(@section_transition);
+	}
 
 	//Article Content
 	.post {

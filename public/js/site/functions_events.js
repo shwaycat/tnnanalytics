@@ -8,6 +8,7 @@ var STRING_STATUS_NEW = 'new',
 		STRING_STATUS_CLOSED_CLASS = 'status-closed',
 		STRING_STATUS_CLOSED_BUTTON = 'Mark Incomplete',
 		statusClass = '',
+		statusOrder = 0,
 		STRING_ALERTS_MESSAGE = ' New Adverse Event',
 		STRING_ALERTS_MESSAGE_PLURAL = ' New Adverse Events';
 
@@ -19,7 +20,16 @@ function eventsTable(table){
 			"pageLength": 15,
 			"pagingType": "simple_numbers",
 			"dom": 'rtp',
-			"order": [[ 1, 'desc' ]],
+			"order": [[ 0, 'asc' ]],
+			"columns": [
+			    null,
+			    null,
+			    null,
+			    null,
+			    null,
+			    { "orderable": false },
+			    { "orderable": false }
+			  ],
 			"oLanguage": {
 	      "oPaginate": {
 	        "sPrevious": "Prev"
@@ -40,6 +50,7 @@ function eventsTableData(data, table){
 
 			statusClass = '';
 			actionText = '';
+			statusOrder = 0;
 
 			// Get the Current Event Data
 			var currentEvent = data.events[i];
@@ -64,22 +75,25 @@ function eventsTableData(data, table){
 
 				statusClass = STRING_STATUS_NEW_CLASS;
 				actionText = STRING_STATUS_NEW_BUTTON;
+				statusOrder = 0;
 
 			} else if (currentEvent.status == STRING_STATUS_OPEN){
 
 				statusClass = STRING_STATUS_OPEN_CLASS;
 				actionText = STRING_STATUS_OPEN_BUTTON;
+				statusOrder = 1;
 
 			} else if (currentEvent.status == STRING_STATUS_CLOSED){
 
 				statusClass = STRING_STATUS_CLOSED_CLASS;
 				actionText = STRING_STATUS_CLOSED_BUTTON;
+				statusOrder = 2;
 
 			}
 
 			// Create the table row with the given data
 			tableHTML += '<tr data-id="'+currentEvent.id+'"" class="'+statusClass+'">';
-			tableHTML += '<td class="event-item-status">'+currentEvent.status.capitalizeFirstLetter()+'</td>';
+			tableHTML += '<td class="event-item-status"><span class="event-item-robot">'+statusOrder+'</span>'+currentEvent.status.capitalizeFirstLetter()+'</td>';
 			tableHTML += '<td><span class="event-item-robot">'+currentEvent_creation+'</span>'+currentEvent_creation_human+'</td>';
 			tableHTML += '<td>'+currentEvent.channel.capitalizeFirstLetter()+'</td>';
 			tableHTML += '<td>'+currentEvent.id+'</td>';
