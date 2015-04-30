@@ -4,11 +4,11 @@ block content
 	.row.content-row
 		.col-xs-12
 			h1.view-title=title
-			a.btn.btn-default.page-cta-btn(title=section+" Link" href=socialLinks.twitter)=title+" Page"
+			a.btn.btn-default.page-cta-btn(target="_blank" title=section+" Link" href=socialLinks.twitter)="Launch "+title
+	.row.content-row
+		+top-tweet
+		+social-graph('top_countries')
 	.row.content-row
 		+social-graph('engagement')
 	.row.content-row
 		+social-graph('acquisition')
-	.row.content-row
-		+social-graph('top_posts')
-		+social-graph('top_countries')

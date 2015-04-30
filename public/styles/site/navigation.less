@@ -38,6 +38,16 @@
     a {
       padding: @navigation_padding;
     }
+    &.active {
+      background-color:@element_active;
+      .transition(@navigation_transition);
+      .navigation-icon {
+        background-color:@element_active_lighter;
+        .transition(@navigation_transition);
+      }
+    }
+  }
+  .navigation-section-link {
     &.active, &:hover {
       background-color:@element_active;
       .transition(@navigation_transition);
@@ -46,17 +56,10 @@
         .transition(@navigation_transition);
       }
     }
-    &.adverse-alert, &.adverse-alert:hover {
-      background-color:@element_alert;
-      .transition(@navigation_transition);
-      .navigation-icon {
-        background-color:@element_alert_lighter;
-        .transition(@navigation_transition);
-      }
-    }
   }
   .navigation-section-title {
     span {
+      cursor:default;
       padding: @navigation_padding;
     }
   }
@@ -106,8 +109,12 @@
       }
     }
   }
+
   .navigation-facebook .navigation-icon.sublink div {
       color:@social_fb_main;
+  }
+  .navigation-twitter {
+    border-bottom:0; //REMOVE THIS AND MOVE IT TO LAST SOCIAL PLATFORM IN PHASE 2.
   }
   .navigation-twitter .navigation-icon.sublink div {
       color:@social_twitter_main;
