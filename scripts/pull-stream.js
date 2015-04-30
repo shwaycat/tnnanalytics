@@ -36,12 +36,16 @@ require('../lib/keystone-script')(connectES, function(done) {
           if(data.friends_str || data.friends) {
             debug('Friend List Recived and Ignored');
           } else if (data.direct_message && data.direct_message.sender.id_str != user.services.twitter.profileId) {
+            // Handle a DM
             handleDirectMessage(user, data, handleESError);
           } else if (data.retweeted_status && data.user.id_str != user.services.twitter.profileId) { 
+            // Handle a Retweet no comment
             handleMention(user, data.retweeted_status, handleESError);
           } else if (data.user && data.user.id_str != user.services.twitter.profileId) {
+            // Handle a mention
             handleMention(user, data, handleESError);
           } else if (data.user && data.user.id_str == user.services.twitter.profileId) {
+            // Handle a outgoing Tweet
             handleTweet(user, data, handleESError);
           } else {
             debug('Ignored');
@@ -54,16 +58,9 @@ require('../lib/keystone-script')(connectES, function(done) {
           }
         });
 
-        // NOT NOTIFIED ON EXTERNAL USER
-        stream.on('unfollow', function(data) {          
-          if(data.source.id_str != user.services.twitter.profileId) {
-            console.log('WE LOST A FOLLOWER');
-          }        
-        });
-
         stream.on('favorite', function(data) {
           if(data.source.id_str != user.services.twitter.profileId) {
-            console.log('%s was favorited', data.target_object.id_str);
+            handleFavorite(user, data, handleESError);
           }
         });
 
@@ -83,6 +80,27 @@ require('../lib/keystone-script')(connectES, function(done) {
 
 
 });
+
+// function updateFollowerCount(user, callback) {
+//   if(Math.random() < 0.1) {
+
+//   }
+// }
+
+// function handleFavorite(user, data, callback) {
+//   debug('Handling Favorited Tweet');
+
+//   console.log('%s was favorited', data.target_object.id_str);
+
+//   Tweet = sources.twitter.Tweet;
+//   Tweet.findOne(data.source.id_str, function(err, tweet) {
+//     if(err) return callback(err);
+
+//     // tweet.createDelta('favorite', data.target_object.favorites, TIMESTAMP?, callback);
+//     // updateFollowerCount(data.target, function(whatever?));
+
+//   });
+// }
 
 function handleDirectMessage(user, data, callback) {
   debug('Handling Direct Message');
