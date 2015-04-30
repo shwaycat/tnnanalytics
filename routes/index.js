@@ -84,20 +84,20 @@ exports = module.exports = function(app) {
   app.get('/api*', keystone.middleware.api);
 
   // Twitter Endpoints
-  app.get('/api/twitter/engagement/:dateFrom/:dateTo', routes.api.twitter.engagement);
-  app.get('/api/twitter/acquisition/:dateFrom/:dateTo', routes.api.twitter.acquisition);
-  app.get('/api/twitter/topTweet/:dateFrom/:dateTo', routes.api.twitter.topTweet);
-  app.get('/api/twitter/topCountries/:dateFrom/:dateTo', routes.api.twitter.topCountries);
+  app.get('/api/1.0/twitter/engagement/:dateFrom/:dateTo', routes.api.twitter.engagement);
+  app.get('/api/1.0/twitter/acquisition/:dateFrom/:dateTo', routes.api.twitter.acquisition);
+  app.get('/api/1.0/twitter/topTweet/:dateFrom/:dateTo', routes.api.twitter.topTweet);
+  app.get('/api/1.0/twitter/topCountries/:dateFrom/:dateTo', routes.api.twitter.topCountries);
 
   // Facebook Endpoints
-  app.get('/api/facebook/engagement/:dateFrom/:dateTo', routes.api.facebook.engagement);
-  app.get('/api/facebook/acquisition/:dateFrom/:dateTo', routes.api.facebook.acquisition);
-  app.get('/api/facebook/reach/:dateFrom/:dateTo', routes.api.facebook.reach);
-  app.get('/api/facebook/topPost/:dateFrom/:dateTo', routes.api.facebook.topPost);
-  app.get('/api/facebook/topCountries/:dateFrom/:dateTo', routes.api.facebook.topCountries);
+  app.get('/api/1.0/facebook/engagement/:dateFrom/:dateTo', routes.api.facebook.engagement);
+  app.get('/api/1.0/facebook/acquisition/:dateFrom/:dateTo', routes.api.facebook.acquisition);
+  app.get('/api/1.0/facebook/reach/:dateFrom/:dateTo', routes.api.facebook.reach);
+  app.get('/api/1.0/facebook/topPost/:dateFrom/:dateTo', routes.api.facebook.topPost);
+  app.get('/api/1.0/facebook/topCountries/:dateFrom/:dateTo', routes.api.facebook.topCountries);
 
   // Adverse Events
-  app.get('/api/events/adverse', routes.api.events.adverse);
+  app.get('/api/1.0/events/adverse', routes.api.events.adverse);
 
 
 
