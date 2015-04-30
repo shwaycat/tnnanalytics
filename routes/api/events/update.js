@@ -11,19 +11,19 @@ exports = module.exports = function(req, res) {
 
   // Build Response Here
 
-
+ 
   // Return the response
   view.render(function(err) {
     if (err) return res.apiError('error', err);
 
     return res.apiResponse({
       success: true,
-      type: 'topCountries',
-      source: 'facebook',
+      type: 'events',
+      source: 'all',
       queryString: req.query,
       data: 'Data Goes Here'
     });
  
   });
- 
+  
 }

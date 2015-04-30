@@ -8,11 +8,6 @@ exports = module.exports = function(req, res) {
   var view = new keystone.View(req, res),
       locals = res.locals;
 
-  locals.args = {
-    dateFrom: req.params.dateFrom,
-    dateTo: req.params.dateTo
-  };
-
 
   // Build Response Here
 
@@ -21,12 +16,11 @@ exports = module.exports = function(req, res) {
   view.render(function(err) {
     if (err) return res.apiError('error', err);
 
-    res.apiResponse({
+    return res.apiResponse({
       success: true,
       type: 'engagement',
       source: 'facebook',
-      dateFrom: locals.args.dateFrom,
-      dateTo: locals.args.dateTo,
+      queryString: req.query,
       data: 'Data Goes Here'
     });
 

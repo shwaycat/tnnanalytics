@@ -5,15 +5,12 @@ var keystone = require('keystone'),
 
 exports = module.exports = function(req, res) {
  
-  var locals = res.locals;
-
-  locals.args = {
-    dateFrom: req.params.dateFrom,
-    dateTo: req.params.dateTo
-  };
+  var view = new keystone.View(req, res),
+      locals = res.locals;
 
 
   // Build Response Here
+
 
   // Return the response
   view.render(function(err) {
@@ -23,8 +20,7 @@ exports = module.exports = function(req, res) {
       success: true,
       type: 'topTweet',
       source: 'twitter',
-      dateFrom: locals.args.dateFrom,
-      dateTo: locals.args.dateTo,
+      queryString: req.query,
       data: 'Data Goes Here'
     });
 

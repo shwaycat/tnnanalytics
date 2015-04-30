@@ -83,21 +83,28 @@ exports = module.exports = function(app) {
   // API
   app.get('/api*', keystone.middleware.api);
 
-  // Twitter Endpoints
-  app.get('/api/1.0/twitter/engagement/:dateFrom/:dateTo', routes.api.twitter.engagement);
-  app.get('/api/1.0/twitter/acquisition/:dateFrom/:dateTo', routes.api.twitter.acquisition);
-  app.get('/api/1.0/twitter/topTweet/:dateFrom/:dateTo', routes.api.twitter.topTweet);
-  app.get('/api/1.0/twitter/topCountries/:dateFrom/:dateTo', routes.api.twitter.topCountries);
+  // Twitter Endpoints 
+  // They all expect query strings with startTime endTime
+  app.get('/api/1.0/twitter/engagement', routes.api.twitter.engagement);
+  app.get('/api/1.0/twitter/acquisition', routes.api.twitter.acquisition);
+  app.get('/api/1.0/twitter/topTweet', routes.api.twitter.topTweet);
+  app.get('/api/1.0/twitter/topCountries', routes.api.twitter.topCountries);
 
   // Facebook Endpoints
-  app.get('/api/1.0/facebook/engagement/:dateFrom/:dateTo', routes.api.facebook.engagement);
-  app.get('/api/1.0/facebook/acquisition/:dateFrom/:dateTo', routes.api.facebook.acquisition);
-  app.get('/api/1.0/facebook/reach/:dateFrom/:dateTo', routes.api.facebook.reach);
-  app.get('/api/1.0/facebook/topPost/:dateFrom/:dateTo', routes.api.facebook.topPost);
-  app.get('/api/1.0/facebook/topCountries/:dateFrom/:dateTo', routes.api.facebook.topCountries);
+  // They all expect query strings with startTime endTime
+  app.get('/api/1.0/facebook/engagement', routes.api.facebook.engagement);
+  app.get('/api/1.0/facebook/acquisition', routes.api.facebook.acquisition);
+  app.get('/api/1.0/facebook/reach', routes.api.facebook.reach);
+  app.get('/api/1.0/facebook/topPost', routes.api.facebook.topPost);
+  app.get('/api/1.0/facebook/topCountries', routes.api.facebook.topCountries);
 
   // Adverse Events
-  app.get('/api/1.0/events/adverse', routes.api.events.adverse);
+  // /events expects query strings with page
+  app.get('/api/1.0/events', routes.api.events.index);
+  app.get('/api/1.0/events/summary', routes.api.events.summary);
+
+  // expects a JSON object with an array of IDs and updated statuses
+  app.post('/api/1.0/events/update', routes.api.events.update)
 
 
 
