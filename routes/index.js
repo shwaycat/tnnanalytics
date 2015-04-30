@@ -13,6 +13,7 @@ keystone.set('404', function(req, res, next) {
 })
 
 keystone.set('500', function(err, req, res, next) {
+  console.error(err)
   var title, message
 
   if (err instanceof Error){
@@ -75,16 +76,10 @@ exports = module.exports = function(app) {
   app.all('/accounts/:account_name/analytics-us', routes.views.account.analytics_us);
   app.all('/accounts/:account_name/events', routes.views.account.events);
 
-  // Auth
-  app.all('/auth/confirm', routes.auth.confirm);
-  app.all('/auth/app', routes.auth.app);
-  app.all('/auth/:service', routes.auth.service);
-
-
   // API
   app.get('/api*', keystone.middleware.api);
 
-  // Twitter Endpoints 
+  // Twitter Endpoints
   // They all expect query strings with startTime endTime
   app.get('/api/1.0/twitter/engagement', routes.api.twitter.engagement);
   app.get('/api/1.0/twitter/acquisition', routes.api.twitter.acquisition);
@@ -105,15 +100,8 @@ exports = module.exports = function(app) {
   app.get('/api/1.0/events/summary', routes.api.events.summary);
 
   // expects a JSON object with an array of IDs and updated statuses
-  app.post('/api/1.0/events/update', routes.api.events.update)
+  app.post('/api/1.0/events/update', routes.api.events.update);
 
-
-
-
-
-
-
-
-
-
+  // Auth
+  app.all('/auth/:service', routes.auth.service);
 }
