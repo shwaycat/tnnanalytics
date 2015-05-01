@@ -19,6 +19,50 @@ function topPost(data, options){
 		options.admin_options = false;
 	}
 
+	if(options.source == 'facebook'){
+
+		var post = $(options.selector);
+
+		// Creation Date in MM/DD/YYYY
+		var newDate = new Date(theData.creation);
+		newDate = (newDate.getMonth() < 10 ? ('0'+newDate.getMonth()) : newDate.getMonth() )+ '/' + (newDate.getDate() < 10 ? ('0'+newDate.getDate()) : newDate.getDate() ) + '/' + newDate.getFullYear();
+
+		var newDetailsHTML = '';
+		var newDetails = [[],[],[],[]];
+		newDetails[0][0] = 'Total Engagement';
+		newDetails[0][1] = theData.engagement;
+		newDetails[1][0] = 'Shares';
+		newDetails[1][1] = theData.shares
+		newDetails[2][0] = 'Comments';
+		newDetails[2][1] = theData.comments;
+		newDetails[3][0] = 'Likes';
+		newDetails[3][1] = theData.likes;
+
+		for (var i = 0; i < newDetails.length; i++){
+			newDetailsHTML += '<li><span>';
+			newDetailsHTML += newDetails[i][0];
+			newDetailsHTML += '</span><span>';
+			newDetailsHTML += newDetails[i][1];
+			newDetailsHTML += '</span></li>';
+		}
+
+		post.find('.post-title a')
+			.html(theData.title)
+			.attr('href', theData.url);
+		post.find('.post-content')
+			.html(theData.content);
+		post.find('.post-creation')
+			.html(newDate);
+		post.find('.post-link')
+			.attr('href', theData.url);
+		post.find('.post-image img')
+			.attr('src', theData.image);
+		post.find('.post-details-list')
+			.children().remove();
+		post.find('.post-details-list')
+			.append(newDetailsHTML);
+	}
+
 	$(options.selector).sectionLoad(true);
 	
 }

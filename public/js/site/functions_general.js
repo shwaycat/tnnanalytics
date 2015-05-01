@@ -119,69 +119,111 @@ function createFakeData(){
 // This is used to assimilate data lower than
 // 5% in a donutGraph, removing it and replacing
 // it with Other.
+// function OLDsimplifyData(data){
+//   var theData = data;
+//   var tempData = [];
+
+//   var totalValues = 0,
+//       length = theData.length,
+//       otherObj = { "label": "Other", "value": 0 };
+//   for (var i = 0; i < theData.length; i++){
+//     totalValues += theData[i].value;
+//     tempData[i] = theData[i];
+//   }
+//   for (var i = 0; i < tempData.length; i++){
+//     if (theData[i].value/totalValues < 0.5) {
+//       theData.splice(i, 1);
+//       otherObj.value += theData[i].value;
+//       i--;
+//       length--;
+//     }
+//   }
+//   theData.push(otherObj);
+//   return theData;
+// }
+
 function simplifyData(data){
   var theData = data;
-
-  var totalValues = 0,
+  var newData = [];
+  var totalValues = _.reduce(theData, function(memo, num){ return memo + num.value; }, 0),
       otherObj = { "label": "Other", "value": 0 };
-  for (var i = 0; i < theData.length; i++){
-    totalValues += theData[i].value;
-  }
-  for (var i = 0; i < theData.length; i++){
-    if (theData[i].value/totalValues < 0.5) {
-      theData.splice(i, 1);
-      otherObj.value += theData[i].value;
+
+  _.each(theData, function(datum){
+    if (datum.value/totalValues < 0.06){
+      otherObj.value += datum.value;
+      console.log('  To Other:'+datum.label)
+    } else {
+      newData.push(datum);
     }
-  }
-  theData.push(otherObj);
-  return theData;
+  });
+  newData.push(otherObj);
+  return newData;
+
 }
+
+
 
 // i.e. graphController('line', '/api/1.0/twitter/engagement', '2015-04-17T21:45:04.000Z', '2015-04-17T21:45:04.000Z', {selector: '#engagement'});
 function dataController(type, apiString, startTime, endTime, options){
-  var queryString = apiString + (startTime ? '?startTime='+startTime : '') + (endTime ? '&endTime='+endTime : '');
-  var apiObj = {
-        success: true,
-        source: false,
-        type: false,
-        data: false,
-        startTime: false,
-        endTime: false
-      };
-  var timeObj = {};
-  if (startTime && endTime){
-    apiObj.startTime = startTime;
-    apiObj.endTime = endTime;
-    timeObj = { startTime: startTime, endTime: endTime }
-  }
+  if (!cachedData[type]){
+    var queryString = apiString + (startTime ? '?startTime='+startTime : '') + (endTime ? '&endTime='+endTime : '');
+    var apiObj = {
+          success: true,
+          source: false,
+          type: false,
+          data: false,
+          startTime: false,
+          endTime: false,
+          options: options
+        };
+    var timeObj = {};
+    if (startTime && endTime){
+      apiObj.startTime = startTime;
+      apiObj.endTime = endTime;
+      timeObj = { startTime: startTime, endTime: endTime }
+    }
 
-  $.get(apiString, timeObj )
-    .done(function( data ) {
-      globalDebug('   Ajax SUCCESS!: '+apiString, 'color:green;');
-      apiObj.source = data.source;
-      apiObj.type = data.type;
-      apiObj.data = data.data;
-    })
-    .fail(function( data ) {
-      globalDebug('   Ajax FAILED!: '+apiString, 'color:red;');
-      apiObj = false;
-    })
-    .always(function( data ) {
-      if (type == 'line'){
-        apiObj.data = createFakeData();
-        lineGraph(apiObj.data, options);
-      } else if (type == 'donut'){
-        //apiObj.data = simplifyData(apiObj.data);
-        var tempData = fakeTopCountryData;
-        apiObj.data = simplifyData(tempData);
-        donutGraph(apiObj.data, options);
-      } else if (type == 'top_post'){
-        topPost(apiObj.data, options);
-      } else if (type == 'top_tweet'){
-        topTweet(apiObj.data, options);
-      } else {
-        globalDebug('   GraphController Error: Wrong type entered! Type: '+type+' is not a valid type!', 'color:red;');
-        return;
-      }
-    });
+    $.get(apiString, timeObj )
+      .done(function( data ) {
+        globalDebug('   Ajax SUCCESS!: '+apiString, 'color:green;');
+        apiObj.source = data.source;
+        apiObj.type = data.type;
+        apiObj.data = data.data;
+      })
+      .fail(function( data ) {
+        globalDebug('   Ajax FAILED!: '+apiString, 'color:red;');
+        apiObj = false;
+      })
+      .always(function( data ) {
+        cachedData[type] = apiObj;
+        dataControllerDelegation(type, apiObj);
+      });
+    } else {
+      dataCfontrollerDelegation(type, cachedData[type]);
+    }
+}
+
+function dataControllerDelegation(type, apiObj){
+  if (type == 'line'){
+    apiObj.data = createFakeData();
+    lineGraph(apiObj.data, apiObj.options);
+    
+  } else if (type == 'donut'){
+    //apiObj.data = simplifyData(apiObj.data);
+    var tempData = fakeTopCountryData;
+    apiObj.data = simplifyData(tempData);
+    donutGraph(apiObj.data, apiObj.options);
+
+  } else if (type == 'topPost'){
+    apiObj.data = fakeTopPost;
+    topPost(apiObj.data, apiObj.options);
+
+  } else if (type == 'topTweet'){
+    topTweet(apiObj.data, apiObj.options);
+
+  } else {
+    globalDebug('   GraphController Error: Wrong type entered! Type: '+type+' is not a valid type!', 'color:red;');
+    return;
+
+  }
 }

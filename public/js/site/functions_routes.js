@@ -15,7 +15,7 @@ function routesInit(resizeOnce){
 		dataController('line',     '/api/1.0/facebook/engagement', false, false, {selector: '#engagement'});
 		dataController('line',     '/api/1.0/facebook/acquisition', false, false, {selector: '#acquisition'});
 		dataController('donut',    '/api/1.0/facebook/topCountries', false, false, {selector: '#top_countries'});
-		dataController('top_post', '/api/1.0/facebook/topPost', false, false, {selector: '#top_post'});
+		dataController('topPost', '/api/1.0/facebook/topPost', false, false, {selector: '#top_post', source: 'facebook' });
 
 	}
 	if ($('body.twitter')[0]){
@@ -24,7 +24,7 @@ function routesInit(resizeOnce){
 		dataController('line',      '/api/1.0/twitter/engagement',   false, false, {selector: '#engagement'});
 		dataController('line',      '/api/1.0/twitter/acquisition',  false, false, {selector: '#acquisition'});
 		dataController('donut',     '/api/1.0/twitter/topCountries', false, false, {selector: '#top_countries'});
-		dataController('top_tweet', '/api/1.0/twitter/topTweet',     false, false, {selector: '#top_tweet'});
+		dataController('topTweet', '/api/1.0/twitter/topTweet',     false, false, {selector: '#top_tweet'});
 
 	}
 	if ($('body.instagram')[0]){
