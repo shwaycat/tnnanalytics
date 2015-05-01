@@ -4,19 +4,20 @@ var keystone = require('keystone'),
     elasticsearch = require('elasticsearch');
 
 module.exports = function(done) {
-  var esOpts = {}
+  var esOpts = {};
   if (_.isArray(keystone.get('elasticsearch'))) {
-    esOpts.hosts = keystone.get('elasticsearch')
+    esOpts.hosts = keystone.get('elasticsearch');
   } else if (keystone.get('elasticsearch')) {
-    esOpts.host = keystone.get('elasticsearch')
+    esOpts.host = keystone.get('elasticsearch');
   }
+
   [ "ssl", "maxSockets", "minSockets" ].forEach(function(key) {
     if (keystone.get('elasticsearch '+key)) {
-      esOpts.ssl = keystone.get('elasticsearch '+key)
+      esOpts.ssl = keystone.get('elasticsearch '+key);
     }
-  })
+  });
 
-  var esClient = new elasticsearch.Client(esOpts)
+  var esClient = new elasticsearch.Client(esOpts),
       indexName = keystone.get('elasticsearch index');
 
   async.series({
@@ -40,6 +41,9 @@ module.exports = function(done) {
         index: indexName + '-1',
         name: indexName
       }, callback);
+    },
+    postCreatePause: function(callback) {
+      setTimeout(callback, 2000);
     },
     closeIndex: function(callback) {
       esClient.indices.close({
@@ -165,7 +169,8 @@ module.exports = function(done) {
   }, function(err, results) {
     console.log(results);
     if (err) {
-      console.error(err);
+      throw err; // boom
     }
+    done();
   });
 };
