@@ -53,42 +53,44 @@ module.exports = function(done) {
     addSettings: function(callback) {
       esClient.indices.putSettings({
         index: indexName,
-        mappings: {
-          _default_: {
-            _timestamp: {
-              enabled: true,
-              store: true,
-              ignore_missing: false,
-              path: 'timestamp',
-              format: 'basic_date_time'
-            },
-            properties: {
-              user_id: {
-                type: 'string',
-                index: 'not_analyzed'
+        body: {
+          mappings: {
+            _default_: {
+              _timestamp: {
+                enabled: true,
+                store: true,
+                ignore_missing: false,
+                path: 'timestamp',
+                format: 'basic_date_time'
               },
-              user_name: {
-                type: 'string',
-                index: 'not_analyzed'
-              },
-              user_lang: {
-                type: 'string',
-                index: 'not_analyzed'
-              },
-              cadence_user_id: {
-                type: 'string',
-                index: 'not_analyzed'
-              },
-              doc_source: {
-                type: 'string',
-                index: 'no'
-              },
-              doc_type: {
-                type: 'string',
-                index: 'not_analyzed'
-              },
-              doc_text: {
-                type: 'string'
+              properties: {
+                user_id: {
+                  type: 'string',
+                  index: 'not_analyzed'
+                },
+                user_name: {
+                  type: 'string',
+                  index: 'not_analyzed'
+                },
+                user_lang: {
+                  type: 'string',
+                  index: 'not_analyzed'
+                },
+                cadence_user_id: {
+                  type: 'string',
+                  index: 'not_analyzed'
+                },
+                doc_source: {
+                  type: 'string',
+                  index: 'no'
+                },
+                doc_type: {
+                  type: 'string',
+                  index: 'not_analyzed'
+                },
+                doc_text: {
+                  type: 'string'
+                }
               }
             }
           }
