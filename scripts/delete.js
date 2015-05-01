@@ -46,20 +46,30 @@ function buildSeries() {
   if(argv && hasArgs()) {
 
     if(argv['twitter-all']) {
-      series.push(deleteDocsByType('direct_message'));
-      series.push(deleteDocsByType('mention'));
-      series.push(deleteDocsByType('tweet'));
+      series.push(deleteDocsByType('twitter', 'direct_message'));
+      series.push(deleteDocsByType('twitter', 'mention'));
+      series.push(deleteDocsByType('twitter', 'tweet'));
+      series.push(deleteDocsByType('twitter', 'followerCount'));
+      series.push(deleteDeltasBySource('twitter'));
     } else {
       if(argv['twitter-direct_messages']) {
-        series.push(deleteDocsByType('direct_message'));
+        series.push(deleteDocsByType('twitter', 'direct_message'));
       }
 
       if(argv['twitter-mentions']) {
-        series.push(deleteDocsByType('mention'));
+        series.push(deleteDocsByType('twitter', 'mention'));
       }
 
       if(argv['twitter-tweets']) {
-        series.push(deleteDocsByType('tweet'));
+        series.push(deleteDocsByType('twitter', 'tweet'));
+      }
+
+      if(argv['twitter-followers']) {
+        series.push(deleteDocsByType('twitter', 'followerCount'));
+      }
+
+      if(argv['twitter-deltas']) {
+        series.push(deleteDeltasBySource('twitter'));
       }
     }
 
@@ -99,7 +109,7 @@ function resetUsersLastTime(users, path, callback) {
 
 }
 
-function deleteDocsByType(doc_type) {
+function deleteDocsByType(source, doc_type) {
 
   return function(users, callback) {
     keystone.elasticsearch.deleteByQuery({
@@ -129,9 +139,32 @@ function deleteDocsByType(doc_type) {
         console.log('Delete Failed. Not Resetting Since Id.')
         callback(err);
       } else {
-        resetUsersLastTime(users, 'services.twitter.' + doc_type + 'SinceId', callback);
+        resetUsersLastTime(users, 'services.' + source + '.' + doc_type + 'SinceId', callback);
       }
     });
+  }
+}
+
+function deleteDeltasBySource(source) {
+  return function(users, callback) {
+    keystone.elasticsearch.deleteByQuery({
+        index: keystone.get('elasticsearch index'),
+        body: {
+          query: {
+            match: { 
+              _type: source + "_delta"
+            } 
+          }
+        }
+      }, function(err, results) {
+        if(err) {
+          console.error('Delete Deltas Failed.');
+          callback(err);
+        } else {
+          debug('Deltas Deleted');
+          callback();
+        }
+      });
   }
 }
 
@@ -146,6 +179,8 @@ function showHelp() {
   console.log('--twitter-direct_messages        Delete all Twitter direct_messages and reset direct_messagesinceId');
   console.log('--twitter-mentions               Delete all Twitter mentions and reset mentionSinceId');
   console.log('--twitter-tweets                 Delete all Twitter tweets and reset tweetSinceId');
+  console.log('--twitter-followers              Delete Twitter followers');  
+  console.log('--twitter-deltas                 Delete all Twitter deltas');
   console.log('');
   console.log('<options>');
   console.log('--u <user email>                 Perform actions on specified user.')

@@ -9,7 +9,12 @@ var keystone = require('../keystone-setup')(),
     connectES = require('../lib/connect_es'),
     sources = {
       twitter: require('../lib/sources/twitter')
-    };
+    },
+    Tweet = sources.twitter.Tweet,
+    Mention = sources.twitter.mention,
+    DirectMessage = sources.twitter.direct_message,
+    FollowerCount = require('../lib/sources/twitter/followerCount.js')
+
 
 require('../lib/keystone-script')(connectES, function(done) {
 
@@ -33,6 +38,7 @@ require('../lib/keystone-script')(connectES, function(done) {
         
         stream.on('data', function(data) {
           debug('Data: %j', data);
+
           if(data.friends_str || data.friends) {
             debug('Friend List Recived and Ignored');
           } else if (data.direct_message && data.direct_message.sender.id_str != user.services.twitter.profileId) {
@@ -66,7 +72,7 @@ require('../lib/keystone-script')(connectES, function(done) {
 
         stream.on('unfavorite', function(data) {
           if(data.source.id_str != user.services.twitter.profileId) {
-            console.log('%s was unfavorited', data.target_object.id_str);
+            handleFavorite(user, data, handleESError);
           }
         });
 
@@ -81,42 +87,30 @@ require('../lib/keystone-script')(connectES, function(done) {
 
 });
 
-// function updateFollowerCount(user, callback) {
-//   if(Math.random() < 0.1) {
+function handleFavorite(user, data, callback) {
+  debug('Handling Favorited Tweet');
 
-//   }
-// }
+  console.log('%s was favorited', data.target_object.id_str);
 
-// function handleFavorite(user, data, callback) {
-//   debug('Handling Favorited Tweet');
+  Tweet.findOneWithDelta(data.target_object.id_str, function(err, tweet) {
+    if(err) return callback(err);
 
-//   console.log('%s was favorited', data.target_object.id_str);
+    if(tweet.favorites_count != data.target_object.favorites_count) {
+      tweet.createDelta('favorites_count', data.target_object.favorites_count, callback);
+    } else {
+      callback();
+    }
 
-//   Tweet = sources.twitter.Tweet;
-//   Tweet.findOne(data.source.id_str, function(err, tweet) {
-//     if(err) return callback(err);
-
-//     // tweet.createDelta('favorite', data.target_object.favorites, TIMESTAMP?, callback);
-//     // updateFollowerCount(data.target, function(whatever?));
-
-//   });
-// }
+  });
+}
 
 function handleDirectMessage(user, data, callback) {
   debug('Handling Direct Message');
 
-  var DirectMessage = sources.twitter.direct_message,
       message = data.direct_message,
       directMessage = new DirectMessage(message.id_str);
 
-  _.extend(directMessage, {
-    doc_text: message.text,
-    user_id: message.sender.id_str,
-    user_name: message.sender.screen_name,
-    user_lang: message.sender.lang,
-    cadence_user_id: user.id,
-    timestamp: new Date(message.created_at)
-  });
+  directMessage.populateFields(user, message);
 
   directMessage.create(function(err, res) {
     if (err) {
@@ -135,20 +129,11 @@ function handleDirectMessage(user, data, callback) {
 
 function handleMention(user, data, callback) {
   debug("Handling mention %s", data.id_str);
-  var Mention = sources.twitter.mention,
       tweet = data,
       mention = new Mention(data.id_str);
       
 
-  _.extend(mention, {
-    doc_text: tweet.text,
-    user_id: tweet.user.id_str,
-    user_name: tweet.user.screen_name,
-    user_lang: tweet.user.lang,
-    cadence_user_id: user.id,
-    in_reply_to_status_id_str: tweet.in_reply_to_status_id_str,
-    timestamp: new Date(tweet.created_at)
-  });
+  mention.populateFields(user, tweet);
 
   mention.create(function(err, res) {
     if (err) {
@@ -167,18 +152,10 @@ function handleMention(user, data, callback) {
 
 function handleTweet(user, data, callback) {
   debug("Handling tweet %s", data.id_str);
-  var Tweet = sources.twitter.tweet,
       tweet = data,
       outgoingTweet = new Tweet(tweet.id_str);
 
-  _.extend(outgoingTweet, {
-    doc_text: tweet.text,
-    user_id: tweet.user.id_str,
-    user_name: tweet.user.screen_name,
-    user_lang: tweet.user.lang,
-    cadence_user_id: user.id,
-    timestamp: new Date(tweet.created_at)
-  });
+  tweet.populateFields(user, tweet);
 
   outgoingTweet.create(function(err, res) {
     if (err) {
