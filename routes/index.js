@@ -104,4 +104,5 @@ exports = module.exports = function(app) {
 
   // Auth
   app.all('/auth/:service', routes.auth.service);
-}
+  app.all('/auth/:service/setup', routes.auth.setup);
+};
