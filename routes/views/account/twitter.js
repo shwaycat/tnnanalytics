@@ -11,8 +11,8 @@ exports = module.exports = function(req, res) {
 		reach: "Organic + Paid Impressions",
 		engagement: "Retweets + Favorite + Replies + Mentions + Direct Messages",
 		acquisition: "Total Followers",
-		top_tweet: "Favorites + Replies + Retweets",
-		top_countries: "Based on Engagement. (Retweets + Favorite + Replies + Mentions)"
+		topTweet: "Favorites + Replies + Retweets",
+		topCountries: "Based on Engagement. (Retweets + Favorite + Replies + Mentions)"
 	};
 
 	view.render('account/twitter');

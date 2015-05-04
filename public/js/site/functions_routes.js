@@ -4,61 +4,66 @@
 
 function routesInit(resizeOnce){
 	if ($('body.dashboard')[0]){
-		globalDebug('    routesInit: dashboard');
+		globalDebug('   Route: Dashboard', 'color:gray;');
 
 		
 	}
 	if ($('body.facebook')[0]){
-		globalDebug('    routesInit: facebook');
+		globalDebug('   Route: Facebook', 'color:gray;');
 
-		dataController('line',     '/api/1.0/facebook/reach', false, false, {selector: '#reach'});
-		dataController('line',     '/api/1.0/facebook/engagement', false, false, {selector: '#engagement'});
-		dataController('line',     '/api/1.0/facebook/acquisition', false, false, {selector: '#acquisition'});
-		dataController('donut',    '/api/1.0/facebook/topCountries', false, false, {selector: '#top_countries'});
-		dataController('top_post', '/api/1.0/facebook/topPost', false, false, {selector: '#top_post'});
+		dataController('line',      'reach', '/api/1.0/facebook/reach',               false, false, {selector: '#reach', source: 'facebook'});
+		dataController('line',      'engagement', '/api/1.0/facebook/engagement',     false, false, {selector: '#engagement', source: 'facebook'});
+		dataController('line',      'acquisition', '/api/1.0/facebook/acquisition',   false, false, {selector: '#acquisition', source: 'facebook'});
+		dataController('donut',     'topCountries', '/api/1.0/facebook/topCountries', false, false, {selector: '#topCountries', source: 'facebook'});
+		if (!resizeOnce){
+			dataController('topPost', 'topPost', '/api/1.0/facebook/topPost',           false, false, {selector: '#topPost', source: 'facebook' });
+		}
+		
 
 	}
 	if ($('body.twitter')[0]){
-		globalDebug('    routesInit: twitter');
+		globalDebug('   Route: Twitter', 'color:gray;');
 
-		dataController('line',      '/api/1.0/twitter/engagement',   false, false, {selector: '#engagement'});
-		dataController('line',      '/api/1.0/twitter/acquisition',  false, false, {selector: '#acquisition'});
-		dataController('donut',     '/api/1.0/twitter/topCountries', false, false, {selector: '#top_countries'});
-		dataController('top_tweet', '/api/1.0/twitter/topTweet',     false, false, {selector: '#top_tweet'});
+		dataController('line',      'engagement', '/api/1.0/twitter/engagement',   false, false, {selector: '#engagement'});
+		dataController('line',      'acquisition', '/api/1.0/twitter/acquisition',  false, false, {selector: '#acquisition'});
+		dataController('donut',     'topCountries', '/api/1.0/twitter/topCountries', false, false, {selector: '#topCountries'});
+		if (!resizeOnce){
+			dataController('topTweet', 'topTweet', '/api/1.0/twitter/topTweet',     false, false, {selector: '#topTweet'});
+		}
 
 	}
 	if ($('body.instagram')[0]){
-		globalDebug('    routesInit: instagram');
+		globalDebug('   Route: Instagram', 'color:gray;');
 
 				
 	}
 	if ($('body.youtube')[0]){
-		globalDebug('    routesInit: youtube');
+		globalDebug('   Route: Youtube', 'color:gray;');
 
 				
 	}
 	if ($('body.google-plus')[0]){
-		globalDebug('    routesInit: google-plus');
+		globalDebug('   Route: Google-Plus', 'color:gray;');
 
 				
 	}
 	if ($('body.analytics-all')[0]){
-		globalDebug('    routesInit: analytics-all');
+		globalDebug('   Route: Analytics-All', 'color:gray;');
 
 				
 	}
 	if ($('body.analytics-global')[0]){
-		globalDebug('    routesInit: analytics-global');
+		globalDebug('   Route: Analytics-Global', 'color:gray;');
 
 				
 	}
 	if ($('body.analytics-us')[0]){
-		globalDebug('    routesInit: analytics-us');
+		globalDebug('   Route: Analytics-Us', 'color:gray;');
 
 				
 	}
 	if ($('body.events')[0] && !resizeOnce){
-		//globalDebug('    routesInit: events');
+		globalDebug('   Route: Events', 'color:gray;');
 
 		if ($('#events-table')[0]){
 			eventsTableData(fakeEvents, $('#events-table'));

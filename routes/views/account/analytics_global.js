@@ -11,8 +11,8 @@ exports = module.exports = function(req, res) {
 		reach: "",
 		engagement: "",
 		acquisition: "",
-		top_post: "",
-		top_countries: ""
+		topPost: "",
+		topCountries: ""
 	};
 
 	view.render('account/analytics');

@@ -25,7 +25,17 @@ function lineGraph(data, options){
 		$(options.selector).before(loadingGifHTML);
 	}
 
-	var theData = data;
+	var theData = data,
+			svg = false,
+			width = false,
+			height = false,
+			x = false,
+			y = false,
+			xAxis = false,
+			yAxis = false,
+			xAxisTicks = false,
+			area = false,
+			line = false;
 
 	// If an SVG exists, remove it. This is mostly for redrawing the graph on browser resize.
 	if($(options.selector).first().children('svg')[0]){
@@ -40,22 +50,28 @@ function lineGraph(data, options){
 	}
 
 	// Init a few things.
-	var svg = d3.select(options.selector).append('svg');
-	var width = parseInt(svg.style('width'));
-	var height = parseInt(svg.style('height'));
+	svg = d3.select(options.selector).append('svg');
+	width = parseInt(svg.style('width'));
+	height = parseInt(svg.style('height'));
 	var padding = 45;
  	var interpolateType = 'linear';
 
  	// Setup our x/y d3 functions and axes.
-  var x = d3.time.scale()
-  		.domain([d3.min(theData, function(d) { d = type(d); return d.date; }), d3.max(theData, function(d) { d = type(d); return d.date; })])
-  		.range([padding*2, width - padding*2]),
-      y = d3.scale.linear()
-      .domain([0, d3.max(theData, function(d) { d = type(d); return d.count; })])
-      .range([height - padding*2, padding/2]),
-      xAxis = d3.svg.axis().scale(x).ticks(13).tickSize(-height+padding).tickSubdivide(true).orient("bottom"),
-      yAxis = d3.svg.axis().scale(y).ticks(7).tickSubdivide(true).orient("left").tickFormat(function(d) { return abbreviateNumber(d); }),
-      xAxisTicks = d3.svg.axis().scale(x).ticks(9).tickFormat('').tickSize(-height+padding).tickSubdivide(true).orient("bottom")
+  x = d3.time.scale()
+	  		.domain([d3.min(theData, function(d) {
+  				d = type(d); return d.date;
+  			}), d3.max(theData, function(d) {
+  				d = type(d); return d.date;
+  			})])
+	  		.range([padding*2, width - padding*2]);
+  y = d3.scale.linear()
+      .domain([0, d3.max(theData, function(d) {
+    		d = type(d); return d.count;
+    	})])
+      .range([height - padding*2, padding/2]);
+  xAxis = d3.svg.axis().scale(x).ticks(13).tickSize(-height+padding).tickSubdivide(true).orient("bottom");
+  yAxis = d3.svg.axis().scale(y).ticks(7).tickSubdivide(true).orient("left").tickFormat(function(d) { return abbreviateNumber(d); });
+  xAxisTicks = d3.svg.axis().scale(x).ticks(9).tickFormat('').tickSize(-height+padding).tickSubdivide(true).orient("bottom");
 
   // Alternative tick format: tickFormat(options.admin_options ? d3.time.format(options.admin_options.timeFormat) : d3.time.format("%d/%m/%y"))
 
@@ -184,7 +200,7 @@ function donutGraph(data, options){
 	var mainSvg = d3.select(options.selector).append("svg")
 	var svg = mainSvg.append("g")
 	var width = parseInt(mainSvg.style('width'));
-	var height = parseInt(mainSvg.style('height'));
+	var height = Math.round(parseInt(mainSvg.style('height'))*0.6);
 	var radius = Math.min(width, height) / 2.3;
 
 	var pie = d3.layout.pie()
@@ -195,10 +211,10 @@ function donutGraph(data, options){
 
 	var arc = d3.svg.arc()
 		.outerRadius(radius * 0.65)
-		.innerRadius(radius * 0.45).startAngle(function(d) { return d.startAngle + Math.PI/7; }).endAngle(function(d) { return d.endAngle + Math.PI/7; });
+		.innerRadius(radius * 0.45);//.startAngle(function(d) { return d.startAngle + Math.PI/7; }).endAngle(function(d) { return d.endAngle + Math.PI/7; });
 	var outerArc = d3.svg.arc()
 		.innerRadius(radius * 0.9)
-		.outerRadius(radius * 0.9).startAngle(function(d) { return d.startAngle + Math.PI/7; }).endAngle(function(d) { return d.endAngle + Math.PI/7; });
+		.outerRadius(radius * 0.9);//.startAngle(function(d) { return d.startAngle + Math.PI/7; }).endAngle(function(d) { return d.endAngle + Math.PI/7; });
 	var key = function(d){ return d.data.label; };
 
 	svg

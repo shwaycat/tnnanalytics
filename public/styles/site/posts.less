@@ -14,17 +14,19 @@
 	//Article Image
 	.post-image {
 		width:100%;
-		max-height:10em;
+		min-height: 10em;
 		background-color:black;
 		margin-top: 1em;
 		margin-bottom: 1em;
 		.clearfix();
 		img {
+			max-width: 100%;
 			height:auto;
 			width:auto;
 			margin:auto;
 			text-align: center;
 			display:block;
+			max-height: 15em;
 		}
 	}
 
@@ -56,9 +58,10 @@
 	.post-link {
 		display:block;
 		position: absolute;
-		bottom:0.75em;
-		right:2.5em;
+		bottom:0;
+		right:0;
 		span {
+			padding:0.3em 0.4em 0.05em;
 			font-size: 5em;
 		}
 	}

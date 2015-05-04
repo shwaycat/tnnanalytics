@@ -13,7 +13,7 @@ var STRING_STATUS_NEW = 'new',
 		STRING_ALERTS_MESSAGE_PLURAL = ' New Adverse Events';
 
 function eventsTable(table){
-	globalDebug('    Events Call: eventsTable');
+	globalDebug('   Events Call: eventsTable', 'color:purple;');
 
 	if(table != undefined && table[0]){
 		table.DataTable({
@@ -42,7 +42,7 @@ function eventsTable(table){
 }
 
 function eventsTableData(data, table){
-	globalDebug('    Events Call: eventsTableData');
+	globalDebug('   Events Call: eventsTableData', 'color:purple;');
 
 	if(table != undefined && table[0]){
 		var tableHTML = '';
@@ -111,7 +111,7 @@ function eventsTableData(data, table){
 function eventsCloseAll(){
 	var button = $('.analytics-cta').filter("[data-events-action='close-all']");
 	button.on('click', function(e){
-		globalDebug('    Events Call: eventsCloseAll');
+		globalDebug('    Events Call: eventsCloseAll', 'color:purple;');
 
 		if (confirm('Are you sure you want to close all Adverse Events?')) {
 		    globalDebug('TODO: Close All Events');
@@ -149,6 +149,7 @@ function eventsStatusUpdateController(data){
 		}
 
 		// TODO: Push updated status here.
+		globalDebug('    Events Call: '+eventId+' Updated', 'color:purple;');
 		eventsStatusUpdate(data);
 
 	});
@@ -173,7 +174,7 @@ function eventsStatusUpdate(data){
 
 
 function eventsCheckStatus(data){
-	globalDebug('    Events Call: eventsCheckStatus');
+	globalDebug('   Events Call: eventsCheckStatus', 'color:purple;');
 
 	var events = { "new": [], "open": [], count: 0 }
 	for (var i = 0; i < data.events.length; i++){
@@ -189,7 +190,7 @@ function eventsCheckStatus(data){
 }
 
 function eventsDelegateAlerts(events){
-	globalDebug('    Events Call: eventsDelegateAlerts');
+	globalDebug('   Events Call: eventsDelegateAlerts', 'color:purple;');
 
 	if (events.count && $('.alerts-block')[0]){
 
