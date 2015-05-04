@@ -158,7 +158,12 @@ function createFakeData(){
 
 function simplifyData(data){
   var theData = data;
-  var newData = [];
+  var newData = {
+    "data": [],
+    "data_all": [],
+    "data_other": []
+  };
+  newData
   var totalValues = _.reduce(theData, function(memo, num){ return memo + num.value; }, 0),
       otherObj = { "label": "Other", "value": 0, "percent": 0 };
 
@@ -166,14 +171,39 @@ function simplifyData(data){
     if (datum.value/totalValues < 0.06){
       otherObj.value += datum.value;
       otherObj.percent = Math.round( (otherObj.value*100/totalValues) *100 )/100 + '%';
+      datum.percent = Math.round( (datum.value*100/totalValues) *100 )/100 + '%';
+      newData.data_all.push(datum);
+      newData.data_other.push(datum);
     } else {
       datum.percent = Math.round( (datum.value*100/totalValues) *100 )/100 + '%';
-      newData.push(datum);
+      newData.data_all.push(datum);
+      newData.data.push(datum);
     }
   });
-  newData.push(otherObj);
-
+  newData.data.push(otherObj);
   return newData;
+}
+
+function donutOtherList(data, options){
+  var theData = data;
+
+  var post = $(options.selector).next('.novo-data-list');
+  var newDetailsHTML = '';
+
+  for (var i = 0; i < theData.length; i++){
+    newDetailsHTML += '<li><span>';
+    newDetailsHTML += theData[i].label;
+    newDetailsHTML += '</span><span>';
+    newDetailsHTML += theData[i].percent;
+    newDetailsHTML += '</span></li>';
+  }
+
+  post.find('.data-list')
+    .children().remove();
+  post.find('.data-list')
+    .append(newDetailsHTML);
+
+  console.log(newDetailsHTML);
 
 }
 
@@ -187,8 +217,8 @@ function donutPercents(){
       .attr('class','active')
       .siblings()
       .removeAttr('class', 'active');
-
   });
+
 }
 
 function statsDelegation(summary, options){
@@ -296,7 +326,8 @@ function dataControllerDelegation(sectionType, apiObj){
     //apiObj.data = simplifyData(apiObj.data);
     var tempData = fakeTopCountryData;
     apiObj.data = simplifyData(tempData);
-    donutGraph(apiObj.data, apiObj.options);
+    donutOtherList(apiObj.data.data_other, apiObj.options);
+    donutGraph(apiObj.data.data, apiObj.options);
 
   } else if (sectionType == 'topPost'){
     apiObj.data = fakeTopPost;
