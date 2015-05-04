@@ -20,6 +20,7 @@ require('../lib/keystone-script')(connectES, function(done) {
       console.info("Pulling from %s:%s", sourceKey, docTypeKey);
 
       User.model.findConnected(sourceKey, function(err, users) {
+
         if (err) {
           return nextDocType(err);
         }
@@ -27,8 +28,10 @@ require('../lib/keystone-script')(connectES, function(done) {
         var docType = sourceType[docTypeKey];
 
         async.eachSeries(users, function(user, nextUser) {
-          FollowerCount.pull(user, function() { console.log('?'); });
-          // docType.pullAll(user, nextUser)
+          // FollowerCount.pull(user, function() { console.log('?'); });
+                  debug(user.services.twitter);
+
+          docType.pullAll(user, nextUser);
   
         }, nextDocType)
       });
