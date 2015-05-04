@@ -3,8 +3,8 @@
 ///////////////////////////
 
 function type(d) {
-	d.date = new Date(d.date);
-  d.count = +d.count;
+	d.key = new Date(d.key);
+  d.value = +d.value;
   return d;
 }
 
@@ -59,14 +59,14 @@ function lineGraph(data, options){
  	// Setup our x/y d3 functions and axes.
   x = d3.time.scale()
 	  		.domain([d3.min(theData, function(d) {
-  				d = type(d); return d.date;
+  				d = type(d); return d.key;
   			}), d3.max(theData, function(d) {
-  				d = type(d); return d.date;
+  				d = type(d); return d.key;
   			})])
 	  		.range([padding*2, width - padding*2]);
   y = d3.scale.linear()
       .domain([0, d3.max(theData, function(d) {
-    		d = type(d); return d.count;
+    		d = type(d); return d.value;
     	})])
       .range([height - padding*2, padding/2]);
   xAxis = d3.svg.axis().scale(x).ticks(13).tickSize(-height+padding).tickSubdivide(true).orient("bottom");
@@ -79,15 +79,15 @@ function lineGraph(data, options){
   // Area Function
   var area = d3.svg.area()
       .interpolate(interpolateType)
-      .x(function(d) { return x(d.date); })
+      .x(function(d) { return x(d.key); })
       .y0(height - padding*2)
-      .y1(function(d) {  return y(d.count) });
+      .y1(function(d) {  return y(d.value) });
 
   // Line Function
   var line = d3.svg.line()
     .interpolate(interpolateType)
-    .x(function(d) { d = type(d); return x(d.date); })
-    .y(function(d) { d = type(d); return y(d.count); });
+    .x(function(d) { d = type(d); return x(d.key); })
+    .y(function(d) { d = type(d); return y(d.value); });
 
   // Group Elements for Axes and Text
 

@@ -110,7 +110,7 @@ function createFakeData(){
     var date = new Date('2014', '03', i*15);
     date = date.toJSON();
     var count = Math.random()*1234234*i + 500;
-    ourArray[i] = { "date": date, "count": count };
+    ourArray[i] = { "key": date, "value": count };
   }
   return ourArray;
 }
