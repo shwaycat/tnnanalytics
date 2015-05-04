@@ -197,6 +197,19 @@ var fakeTopPost = {
       "likes": "241"
     };
 
+var fakeTopTweet = {
+      "title": "Example Top Tweet",
+      "creation": "2015-04-23T22:45:04.000Z",
+      "url": "http://www.gameofthrones.com",
+      "image": "https://scontent-atl.xx.fbcdn.net/hphotos-xaf1/v/t1.0-9/379782_987468847479_1864297134_n.jpg?oh=0745e5e24c60e8ddaf269e12c945d0bb&oe=55D16C5C",
+      "video_url": "",
+      "content": "Brunch yr street art, Shoreditch organic mustache roof party umami DIY master cleanse. Cray cred Schlitz before they sold out tofu disrupt. Letterpress cred selvage, gluten-free craft beer post-ironic stumptown tofu trust fund pug four loko Austin lomo. Small batch roof party quinoa, pickled biodiesel photo booth asymmetrical flexitarian. Jean shorts XOXO distillery, chillwave pickled blog flannel viral. Brunch synth post-ironic Pinterest. Swag Blue Bottle put a bird on it paleo, lumbersexual fap salvia readymade kogi street art aesthetic asymmetrical Neutra retro selfies.",
+      "engagement": "340",
+      "favorites": "432",
+      "replies": "32425",
+      "retweets": "241"
+    };
+
 
 var fakeTopCountryData = [
       {

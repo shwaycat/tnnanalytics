@@ -160,6 +160,7 @@ function lineGraph(data, options){
     .attr("d", line(theData));
 
 
+  statsDelegation(data, options);
   $(options.selector).sectionLoad(false);
 }
 

@@ -191,6 +191,62 @@ function donutPercents(){
   });
 }
 
+function statsDelegation(summary, options){
+  if (!summary || summary == undefined || summary == null){
+    return;
+  }
+
+  var theSummary = summary,
+      statsString = '',
+      statsStringOpen,
+      statsStringClose,
+      statStringOpen,
+      statStringMid,
+      statStringClose,
+      columnSize;
+
+  if (theSummary.length == 1){
+    columnSize = 12;
+  }
+  if (theSummary.length == 2){
+    columnSize = 6;
+  }
+  if (theSummary.length == 3){
+    columnSize = 4;
+  }
+  if (theSummary.length == 4){
+    columnSize = 3;
+  }
+  if (theSummary.length == 5){
+    columnSize = 15;
+  }
+  if (theSummary.length == 6){
+    columnSize = 2;
+  } else {
+    columnSize = 1;
+  }
+
+  statsStringOpen = '<ul class="novo-graph-stats">';
+  statStringOpen = '<li class="col-xs-12 col-md-'+columnSize+'"><div class="stat"><span>';
+  statStringMid = '</span><span>';
+  statStringClose = '</span></li>';
+  statsStringClose = '</ul>';
+
+  statsString += statsStringOpen;
+
+  // for (var i = 0; i < theSummary.length; i++){
+  //   statsString += statStringOpen;
+
+  //   statsString += statStringMid;
+
+  //   statsString += statStringClose;
+  // }
+
+  statsString += statsStringClose;
+
+  $(options.selector).after(statsString);
+}
+
 // i.e. graphController('line', '/api/1.0/twitter/engagement', '2015-04-17T21:45:04.000Z', '2015-04-17T21:45:04.000Z', {selector: '#engagement'});
 function dataController(sectionType, type, apiString, startTime, endTime, options){
   if (!cachedData[type]){
@@ -247,6 +303,7 @@ function dataControllerDelegation(sectionType, apiObj){
     topPost(apiObj.data, apiObj.options);
 
   } else if (sectionType == 'topTweet'){
+    apiObj.data = fakeTopTweet;
     topTweet(apiObj.data, apiObj.options);
 
   } else {
