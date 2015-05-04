@@ -21,7 +21,12 @@ if(!argv.help) {
 
       var series = buildSeries();
 
-      async.applyEach(series, users, done);
+      if(series) {
+        async.applyEach(series, users, done);
+      } else {
+        console.log('No arguments supplied. Exiting.')
+        done();
+      }
 
     });
 
@@ -128,9 +133,10 @@ function deleteDocsByType(source, doc_type) {
       }
     }, function(err, results) {
       if(err) {
-        console.log('Delete Failed. Not Resetting Since Id.')
+        console.log('Delete %s - %s Failed.', source, doc_type);
         callback(err);
       } else {
+        console.log('Deleted %s - %s for users: %j', source, doc_type, _.pluck(users, 'id'));
         callback();
       }
     });
@@ -153,7 +159,7 @@ function deleteDeltasBySource(source) {
         console.error('Delete Deltas Failed.');
         callback(err);
       } else {
-        debug('Deltas Deleted');
+        console.log('Deleted %s - deltas for users: %j', source, _.pluck(users, 'id'));
         callback();
       }
     });

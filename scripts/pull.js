@@ -28,10 +28,7 @@ require('../lib/keystone-script')(connectES, function(done) {
         var docType = sourceType[docTypeKey];
 
         async.eachSeries(users, function(user, nextUser) {
-          // FollowerCount.pull(user, function() { console.log('?'); return nextUser(); });
-
           docType.pullAll(user, nextUser);
-  
         }, nextDocType)
       });
     }, nextSourceType);
