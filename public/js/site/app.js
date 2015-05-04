@@ -14,6 +14,7 @@ $(function() {
 	//Data Functions
 	routesInit();
 
+
 	if (!$('body.session')[0]){
 		var eventsObject = eventsCheckStatus(fakeEvents);
 		eventsDelegateAlerts(eventsObject);

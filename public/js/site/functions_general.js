@@ -52,6 +52,41 @@ function abbreviateNumber(value) {
   return newValue;
 }
 
+function equalHeightPairs(){
+  $('.equal-height-block-1').each(function(){
+    var left = $(this);
+    var leftChild = left.find('.inner-content');
+    var right = left.next('.equal-height-block-2');
+    var rightChild = right.find('.inner-content');
+    var control, controlHeight, varied, variedHeight;
+
+    leftChild.removeAttr('style');
+    rightChild.removeAttr('style');
+
+    var leftHeight = parseInt(leftChild.css('height'));
+    var rightHeight = parseInt(rightChild.css('height'));
+
+    if (left[0] && right[0]){
+      
+      if (leftHeight > rightHeight){
+        control = left;
+        controlHeight = leftHeight;
+        varied = right;
+        variedHeight = rightHeight
+
+        varied.find('.inner-content').css('height', controlHeight);
+      } else if (leftHeight < rightHeight) {
+        control = right;
+        controlHeight = rightHeight;
+        varied = left;
+        variedHeight = leftHeight;
+
+        varied.find('.inner-content').css('height', controlHeight);
+      }
+    }
+  })
+}
+
 function saturationControl(hex, opacity, saturationMultiplier){
 	var rgb = [],
 	    fail = false,
@@ -88,15 +123,20 @@ $.fn.serializeObject = function()
   return o;
 };
 
-$.fn.sectionLoad = function(reload){
+$.fn.sectionLoad = function(reload, eh){
   var el = this;
   if (reload){
     el.removeClass('loaded');
   }
   el.prev(loadingGifClass).remove();
+  
   setTimeout(function(){
     el.addClass('loaded');
-  },300);  
+    if (eh){
+      equalHeightPairs();
+    }
+  },300);
+
 };
 
 

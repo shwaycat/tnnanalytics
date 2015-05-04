@@ -63,7 +63,7 @@ function topPost(data, options){
 			.append(newDetailsHTML);
 	}
 
-	$(options.selector).sectionLoad(true);
+	$(options.selector).sectionLoad(true, true);
 	
 }
 
@@ -88,6 +88,6 @@ function topTweet(data, options){
 		options.admin_options = false;
 	}
 
-	$(options.selector).sectionLoad(true);
+	$(options.selector).sectionLoad(true, true);
 	
 }

@@ -160,7 +160,7 @@ function lineGraph(data, options){
     .attr("d", line(theData));
 
 
-  $(options.selector).sectionLoad();
+  $(options.selector).sectionLoad(false);
 }
 
 
@@ -342,5 +342,5 @@ function donutGraph(data, options){
 			.remove();
 	};
 
-	$(options.selector).sectionLoad(true);
+	$(options.selector).sectionLoad(true, true);
 }
