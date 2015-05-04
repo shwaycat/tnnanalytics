@@ -5,10 +5,10 @@ mixin topPost(type, options)
 				=sectionTitles.topPost
 			section.top-posts.top-post#topPost(data-admin-options=options)
 				article.post
-					h3.post-title: a
+					h3.post-title: a(target="_blank")
 					p.post-content
 					span.post-creation 4-20-2348
-					a.post-link: span.entypo.entypo-chevron-right
+					a(target="_blank").post-link: span.entypo.entypo-chevron-right
 				section.post-image: img
 				section.post-details
 					h3.post-title-details Details
