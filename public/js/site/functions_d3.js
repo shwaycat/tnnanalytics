@@ -209,6 +209,12 @@ function donutGraph(data, options){
 			return d.value;
 		});
 
+	var findPercents = d3.layout.pie()
+		.sort(null)
+		.value(function(d) {
+			return d.percent;
+		});
+
 	var arc = d3.svg.arc()
 		.outerRadius(radius * 0.65)
 		.innerRadius(radius * 0.45);//.startAngle(function(d) { return d.startAngle + Math.PI/7; }).endAngle(function(d) { return d.endAngle + Math.PI/7; });
@@ -225,6 +231,9 @@ function donutGraph(data, options){
 		.attr("class", "labels");
 	svg
 		.append("g")
+		.attr("class", "percent");
+	svg
+		.append("g")
 		.attr("class", "lines");
 	svg
 		.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
@@ -239,14 +248,16 @@ function donutGraph(data, options){
 
 		/* ------- PIE SLICES -------*/
 		var slice = svg.select(".slices")
-					.selectAll("path.slice")
+					.selectAll("path")
 					.data(pie(changedData), key);
 
 		slice
 			.enter()
 			.insert("path")
-			.style("fill", function(d, i) { return saturationControl(randomColor(i), '1', 0.75); })
-			.attr("class", "slice");
+			.attr("data-label", function(d){
+				return d.data.label;
+			})
+			.style("fill", function(d, i) { return saturationControl(randomColor(i), '1', 0.75); });
 
 		slice		
 			.transition().duration(1000)
@@ -273,6 +284,9 @@ function donutGraph(data, options){
 			.enter()
 			.append("text")
 			.attr("dy", ".35em")
+			.attr("data-label", function(d){
+				return d.data.label;
+			})
 			.text(function(d) {
 				return d.data.label;
 			});
@@ -307,6 +321,24 @@ function donutGraph(data, options){
 			.exit()
 			.remove();
 
+		/* ------- TEXT PERCENT -------*/
+		var percents = svg.select(".percent")
+					.selectAll("text")
+					.data(findPercents(changedData));
+
+		percents
+			.enter()
+			.append("text")
+			.attr("dy", ".35em")
+			.attr("text-anchor","middle")
+			.attr("data-label", function(d){
+				return d.data.label;
+			})
+			.text(function(d) {
+				return d.data.percent;
+			});
+
+
 		/* ------- SLICE TO TEXT POLYLINES -------*/
 
 		var polyline = svg.select(".lines")
@@ -315,7 +347,10 @@ function donutGraph(data, options){
 		
 		polyline
 			.enter()
-			.append("polyline");
+			.append("polyline")
+			.attr("data-label", function(d){
+				return d.data.label;
+			});
 
 		polyline.transition().duration(1000)
 			.attrTween("points", function(d){
@@ -343,4 +378,5 @@ function donutGraph(data, options){
 	};
 
 	$(options.selector).sectionLoad(true, true);
+	donutPercents();
 }

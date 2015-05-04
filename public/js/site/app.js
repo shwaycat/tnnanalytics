@@ -25,5 +25,6 @@ $(function() {
 	elementReveal();
 	eventsStatusUpdateController(fakeEvents);
 	$('[data-toggle="tooltip"]').tooltip();
+	
 
 });

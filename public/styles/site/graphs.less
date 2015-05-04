@@ -80,11 +80,11 @@
 			height: 100%;
 			padding-top: 20%;
 		}
-
-		path.slice{
+		
+		.slices path {
 			stroke-width:2px;
 			.transition(@graph_element_transition);
-			&:hover {
+			&:hover, &.active {
 				fill:white !important;
 				.transition(@graph_element_transition);
 			}
@@ -96,15 +96,22 @@
 			stroke-width: 2px;
 			fill: none;
 			.transition(@graph_element_transition);
-			&:hover {
+			&:hover, &.active {
 				stroke: white !important;
 				.transition(@graph_element_transition);
 			}
 		}
 		.labels text {
 			stroke:@pie_label;
-			&:hover {
+			&:hover, &.active {
 				stroke:white !important;
+			}
+		}
+		.percent text {
+			fill: none;
+			font-size: 1.3em;
+			&.active {
+				fill: white;
 			}
 		}
 	}

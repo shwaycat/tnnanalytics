@@ -160,21 +160,36 @@ function simplifyData(data){
   var theData = data;
   var newData = [];
   var totalValues = _.reduce(theData, function(memo, num){ return memo + num.value; }, 0),
-      otherObj = { "label": "Other", "value": 0 };
+      otherObj = { "label": "Other", "value": 0, "percent": 0 };
 
   _.each(theData, function(datum){
     if (datum.value/totalValues < 0.06){
       otherObj.value += datum.value;
+      otherObj.percent = Math.round( (otherObj.value*100/totalValues) *100 )/100 + '%';
     } else {
+      datum.percent = Math.round( (datum.value*100/totalValues) *100 )/100 + '%';
       newData.push(datum);
     }
   });
   newData.push(otherObj);
+
   return newData;
 
 }
 
+function donutPercents(){
 
+  $('[data-label]').on('click, mouseover', function(){
+    var label = $(this).data('label');
+    $('.novo-donut-graph g')
+      .children()
+      .filter('[data-label="'+label+'"]')
+      .attr('class','active')
+      .siblings()
+      .removeAttr('class', 'active');
+
+  });
+}
 
 // i.e. graphController('line', '/api/1.0/twitter/engagement', '2015-04-17T21:45:04.000Z', '2015-04-17T21:45:04.000Z', {selector: '#engagement'});
 function dataController(sectionType, type, apiString, startTime, endTime, options){
