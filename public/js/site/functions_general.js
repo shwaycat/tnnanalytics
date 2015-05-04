@@ -1,6 +1,6 @@
 function compensateFooter(){
 	if($('.footer-container')[0]){
-		var windowHeight = document.documentElement.clientHeight;
+		var windowHeight = window.innerHeight;
 		var mainHeight = parseInt($('.main-container').css('height'));
 		var headerHeight = parseInt($('.header-container').css('height'));
 		var footerHeight = parseInt($('.footer-container').css('height'));
