@@ -45,39 +45,25 @@ function buildSeries() {
   var series = [];
   if(argv && hasArgs()) {
 
-    if(argv['twitter-all']) {
-      series.push(deleteDocsByType('twitter', 'direct_message'));
-      series.push(deleteDocsByType('twitter', 'mention'));
-      series.push(deleteDocsByType('twitter', 'tweet'));
-      series.push(deleteDocsByType('twitter', 'followerCount'));
-      series.push(deleteDeltasBySource('twitter'));
-    } else {
-      if(argv['twitter-direct_messages']) {
+      if(argv['twitter-direct_messages'] || argv['twitter-all']) {
         series.push(deleteDocsByType('twitter', 'direct_message'));
       }
 
-      if(argv['twitter-mentions']) {
+      if(argv['twitter-mentions'] || argv['twitter-all']) {
         series.push(deleteDocsByType('twitter', 'mention'));
       }
 
-      if(argv['twitter-tweets']) {
+      if(argv['twitter-tweets'] || argv['twitter-all']) {
         series.push(deleteDocsByType('twitter', 'tweet'));
       }
 
-      if(argv['twitter-followers']) {
+      if(argv['twitter-followers'] || argv['twitter-all']) {
         series.push(deleteDocsByType('twitter', 'followerCount'));
       }
 
-      if(argv['twitter-deltas']) {
+      if(argv['twitter-deltas'] || argv['twitter-all']) {
         series.push(deleteDeltasBySource('twitter'));
       }
-
-      if(argv['twitter-reset-sinceIDs']) {
-        series.push(resetUsersLastTime('services.twitter.tweetSinceId'));
-        series.push(resetUsersLastTime('services.twitter.mentionSinceId'));
-        series.push(resetUsersLastTime('services.twitter.direct_messageSinceId'));
-      }
-    }
 
     return series;
 
@@ -99,22 +85,22 @@ function hasArgs() {
   }
 }
 
-function resetUsersLastTime(path) {
-  return function(users, callback) {
-    debug("resetting %s for users", path);
+// function resetUsersLastTime(path) {
+//   return function(users, callback) {
+//     debug("resetting %s for users", path);
 
-    var resetQuery = {};
-    resetQuery[path] = null;
+//     var resetQuery = {};
+//     resetQuery[path] = null;
 
-    User.model.update({
-      '_id': {'$in': _.pluck(users, '_id')}
-      },
-      { '$set': resetQuery },
-      { multi : true },
-      callback);
-  }
+//     User.model.update({
+//       '_id': {'$in': _.pluck(users, '_id')}
+//       },
+//       { '$set': resetQuery },
+//       { multi : true },
+//       callback);
+//   }
 
-}
+// }
 
 function deleteDocsByType(source, doc_type) {
   return function(users, callback) {
@@ -145,8 +131,7 @@ function deleteDocsByType(source, doc_type) {
         console.log('Delete Failed. Not Resetting Since Id.')
         callback(err);
       } else {
-        console.log('services.' + source + '.' + doc_type + 'SinceId');
-        resetUsersLastTime(users, 'services.' + source + '.' + doc_type + 'SinceId', callback);
+        callback();
       }
     });
   }
@@ -188,7 +173,6 @@ function showHelp() {
   console.log('--twitter-tweets                 Delete all Twitter tweets and reset tweetSinceId');
   console.log('--twitter-followers              Delete Twitter followers');  
   console.log('--twitter-deltas                 Delete all Twitter deltas');
-  console.log('--twitter-reset-sinceIDs         Reset all SinceIds and delete nothing');
   console.log('');
   console.log('<options>');
   console.log('--u <user email>                 Perform actions on specified user.')
