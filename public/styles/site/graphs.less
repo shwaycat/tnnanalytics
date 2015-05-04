@@ -74,6 +74,13 @@
 		}
 	}
 	&.novo-donut-graph {
+		padding-top:100%;
+
+		svg {
+			height: 100%;
+			padding-top: 20%;
+		}
+
 		path.slice{
 			stroke-width:2px;
 			.transition(@graph_element_transition);
@@ -83,7 +90,7 @@
 			}
 		}
 
-		polyline{
+		polyline {
 			opacity: .3;
 			stroke: @graph_line_light;
 			stroke-width: 2px;

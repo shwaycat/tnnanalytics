@@ -11,20 +11,25 @@ function routesInit(resizeOnce){
 	if ($('body.facebook')[0]){
 		globalDebug('   Route: Facebook', 'color:gray;');
 
-		dataController('line',     '/api/1.0/facebook/reach', false, false, {selector: '#reach'});
-		dataController('line',     '/api/1.0/facebook/engagement', false, false, {selector: '#engagement'});
-		dataController('line',     '/api/1.0/facebook/acquisition', false, false, {selector: '#acquisition'});
-		dataController('donut',    '/api/1.0/facebook/topCountries', false, false, {selector: '#top_countries'});
-		dataController('topPost', '/api/1.0/facebook/topPost', false, false, {selector: '#top_post', source: 'facebook' });
+		dataController('line',      'reach', '/api/1.0/facebook/reach',               false, false, {selector: '#reach', source: 'facebook'});
+		dataController('line',      'engagement', '/api/1.0/facebook/engagement',     false, false, {selector: '#engagement', source: 'facebook'});
+		dataController('line',      'acquisition', '/api/1.0/facebook/acquisition',   false, false, {selector: '#acquisition', source: 'facebook'});
+		dataController('donut',     'topCountries', '/api/1.0/facebook/topCountries', false, false, {selector: '#topCountries', source: 'facebook'});
+		if (!resizeOnce){
+			dataController('topPost', 'topPost', '/api/1.0/facebook/topPost',           false, false, {selector: '#topPost', source: 'facebook' });
+		}
+		
 
 	}
 	if ($('body.twitter')[0]){
 		globalDebug('   Route: Twitter', 'color:gray;');
 
-		dataController('line',      '/api/1.0/twitter/engagement',   false, false, {selector: '#engagement'});
-		dataController('line',      '/api/1.0/twitter/acquisition',  false, false, {selector: '#acquisition'});
-		dataController('donut',     '/api/1.0/twitter/topCountries', false, false, {selector: '#top_countries'});
-		dataController('topTweet', '/api/1.0/twitter/topTweet',     false, false, {selector: '#top_tweet'});
+		dataController('line',      'engagement', '/api/1.0/twitter/engagement',   false, false, {selector: '#engagement'});
+		dataController('line',      'acquisition', '/api/1.0/twitter/acquisition',  false, false, {selector: '#acquisition'});
+		dataController('donut',     'topCountries', '/api/1.0/twitter/topCountries', false, false, {selector: '#topCountries'});
+		if (!resizeOnce){
+			dataController('topTweet', 'topTweet', '/api/1.0/twitter/topTweet',     false, false, {selector: '#topTweet'});
+		}
 
 	}
 	if ($('body.instagram')[0]){

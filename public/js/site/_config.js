@@ -201,23 +201,23 @@ var fakeTopPost = {
 var fakeTopCountryData = [
       {
         "label": "USA",
-        "value": 5320
+        "value": 23
       },
       {
         "label": "Canada",
-        "value": 1423
+        "value": 34
       },
       {
         "label": "Mexico",
-        "value": 2324
+        "value": 34
       },
       {
         "label": "England",
-        "value": 3423
+        "value": 43
       },
       {
         "label": "Ireland",
-        "value": 2341
+        "value": 1539
       },
       {
         "label": "Germany",
@@ -225,7 +225,7 @@ var fakeTopCountryData = [
       },
       {
         "label": "Belgium",
-        "value": 2345
+        "value": 1599
       },
       {
         "label": "Russia",
@@ -241,7 +241,7 @@ var fakeTopCountryData = [
       },
       {
         "label": "TaiWorld",
-        "value": 5432
+        "value": 434
       }
 
     ]

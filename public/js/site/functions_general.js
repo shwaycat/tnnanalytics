@@ -116,32 +116,6 @@ function createFakeData(){
 }
 
 
-// This is used to assimilate data lower than
-// 5% in a donutGraph, removing it and replacing
-// it with Other.
-// function OLDsimplifyData(data){
-//   var theData = data;
-//   var tempData = [];
-
-//   var totalValues = 0,
-//       length = theData.length,
-//       otherObj = { "label": "Other", "value": 0 };
-//   for (var i = 0; i < theData.length; i++){
-//     totalValues += theData[i].value;
-//     tempData[i] = theData[i];
-//   }
-//   for (var i = 0; i < tempData.length; i++){
-//     if (theData[i].value/totalValues < 0.5) {
-//       theData.splice(i, 1);
-//       otherObj.value += theData[i].value;
-//       i--;
-//       length--;
-//     }
-//   }
-//   theData.push(otherObj);
-//   return theData;
-// }
-
 function simplifyData(data){
   var theData = data;
   var newData = [];
@@ -151,7 +125,6 @@ function simplifyData(data){
   _.each(theData, function(datum){
     if (datum.value/totalValues < 0.06){
       otherObj.value += datum.value;
-      console.log('  To Other:'+datum.label)
     } else {
       newData.push(datum);
     }
@@ -164,7 +137,7 @@ function simplifyData(data){
 
 
 // i.e. graphController('line', '/api/1.0/twitter/engagement', '2015-04-17T21:45:04.000Z', '2015-04-17T21:45:04.000Z', {selector: '#engagement'});
-function dataController(type, apiString, startTime, endTime, options){
+function dataController(sectionType, type, apiString, startTime, endTime, options){
   if (!cachedData[type]){
     var queryString = apiString + (startTime ? '?startTime='+startTime : '') + (endTime ? '&endTime='+endTime : '');
     var apiObj = {
@@ -196,33 +169,33 @@ function dataController(type, apiString, startTime, endTime, options){
       })
       .always(function( data ) {
         cachedData[type] = apiObj;
-        dataControllerDelegation(type, apiObj);
+        dataControllerDelegation(sectionType, apiObj);
       });
-    } else {
-      dataCfontrollerDelegation(type, cachedData[type]);
-    }
+  } else {
+    dataControllerDelegation(sectionType, cachedData[type]);
+  }
 }
 
-function dataControllerDelegation(type, apiObj){
-  if (type == 'line'){
+function dataControllerDelegation(sectionType, apiObj){
+  if (sectionType == 'line'){
     apiObj.data = createFakeData();
     lineGraph(apiObj.data, apiObj.options);
     
-  } else if (type == 'donut'){
+  } else if (sectionType == 'donut'){
     //apiObj.data = simplifyData(apiObj.data);
     var tempData = fakeTopCountryData;
     apiObj.data = simplifyData(tempData);
     donutGraph(apiObj.data, apiObj.options);
 
-  } else if (type == 'topPost'){
+  } else if (sectionType == 'topPost'){
     apiObj.data = fakeTopPost;
     topPost(apiObj.data, apiObj.options);
 
-  } else if (type == 'topTweet'){
+  } else if (sectionType == 'topTweet'){
     topTweet(apiObj.data, apiObj.options);
 
   } else {
-    globalDebug('   GraphController Error: Wrong type entered! Type: '+type+' is not a valid type!', 'color:red;');
+    globalDebug('   GraphController Error: Wrong sectionType entered! Type: '+sectionType+' is not a valid sectionType!', 'color:red;');
     return;
 
   }
