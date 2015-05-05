@@ -9,7 +9,8 @@ var keystone = require('../keystone-setup')(),
     sources = {
       // facebook: require('../lib/sources/facebook'),
       twitter: require('../lib/sources/twitter')
-    };
+    },
+    FollowerCount = require('../lib/sources/twitter/followerCount');
 
 require('../lib/keystone-script')(connectES, function(done) {
   async.eachSeries(_.keys(sources), function(sourceKey, nextSourceType) {
@@ -19,6 +20,7 @@ require('../lib/keystone-script')(connectES, function(done) {
       console.info("Pulling from %s:%s", sourceKey, docTypeKey);
 
       User.model.findConnected(sourceKey, function(err, users) {
+
         if (err) {
           return nextDocType(err);
         }
@@ -26,9 +28,12 @@ require('../lib/keystone-script')(connectES, function(done) {
         var docType = sourceType[docTypeKey];
 
         async.eachSeries(users, function(user, nextUser) {
-          docType.pullAll(user, nextUser)
+          docType.pullAll(user, nextUser);
         }, nextDocType)
       });
     }, nextSourceType);
   }, done);
 });
+
+//[ { message: 'Rate limit exceeded', code: 88 } ]
+

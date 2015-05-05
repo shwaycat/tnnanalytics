@@ -21,7 +21,12 @@ if(!argv.help) {
 
       var series = buildSeries();
 
-      async.applyEach(series, users, done);
+      if(series) {
+        async.applyEach(series, users, done);
+      } else {
+        console.log('No arguments supplied. Exiting.')
+        done();
+      }
 
     });
 
@@ -45,23 +50,25 @@ function buildSeries() {
   var series = [];
   if(argv && hasArgs()) {
 
-    if(argv['twitter-all']) {
-      series.push(deleteDocsByType('direct_message'));
-      series.push(deleteDocsByType('mention'));
-      series.push(deleteDocsByType('tweet'));
-    } else {
-      if(argv['twitter-direct_messages']) {
-        series.push(deleteDocsByType('direct_message'));
+      if(argv['twitter-direct_messages'] || argv['twitter-all']) {
+        series.push(deleteDocsByType('twitter', 'direct_message'));
       }
 
-      if(argv['twitter-mentions']) {
-        series.push(deleteDocsByType('mention'));
+      if(argv['twitter-mentions'] || argv['twitter-all']) {
+        series.push(deleteDocsByType('twitter', 'mention'));
       }
 
-      if(argv['twitter-tweets']) {
-        series.push(deleteDocsByType('tweet'));
+      if(argv['twitter-tweets'] || argv['twitter-all']) {
+        series.push(deleteDocsByType('twitter', 'tweet'));
       }
-    }
+
+      if(argv['twitter-followers'] || argv['twitter-all']) {
+        series.push(deleteDocsByType('twitter', 'followerCount'));
+      }
+
+      if(argv['twitter-deltas'] || argv['twitter-all']) {
+        series.push(deleteDeltasBySource('twitter'));
+      }
 
     return series;
 
@@ -83,24 +90,24 @@ function hasArgs() {
   }
 }
 
-function resetUsersLastTime(users, path, callback) {
-  
-  debug("resetting %s for users", path);
+// function resetUsersLastTime(path) {
+//   return function(users, callback) {
+//     debug("resetting %s for users", path);
 
-  var resetQuery = {};
-  resetQuery[path] = null;
+//     var resetQuery = {};
+//     resetQuery[path] = null;
 
-  User.model.update({
-    '_id': {'$in': _.pluck(users, '_id')}
-    },
-    { '$set': resetQuery },
-    { multi : true },
-    callback);
+//     User.model.update({
+//       '_id': {'$in': _.pluck(users, '_id')}
+//       },
+//       { '$set': resetQuery },
+//       { multi : true },
+//       callback);
+//   }
 
-}
+// }
 
-function deleteDocsByType(doc_type) {
-
+function deleteDocsByType(source, doc_type) {
   return function(users, callback) {
     keystone.elasticsearch.deleteByQuery({
       index: keystone.get('elasticsearch index'),
@@ -126,10 +133,34 @@ function deleteDocsByType(doc_type) {
       }
     }, function(err, results) {
       if(err) {
-        console.log('Delete Failed. Not Resetting Since Id.')
+        console.log('Delete %s - %s Failed.', source, doc_type);
         callback(err);
       } else {
-        resetUsersLastTime(users, 'services.twitter.' + doc_type + 'SinceId', callback);
+        console.log('Deleted %s - %s for users: %j', source, doc_type, _.pluck(users, 'id'));
+        callback();
+      }
+    });
+  }
+}
+
+function deleteDeltasBySource(source) {
+  return function(users, callback) {
+    keystone.elasticsearch.deleteByQuery({
+      index: keystone.get('elasticsearch index'),
+      body: {
+        query: {
+          match: { 
+            _type: source + "_delta"
+          } 
+        }
+      }
+    }, function(err, results) {
+      if(err) {
+        console.error('Delete Deltas Failed.');
+        callback(err);
+      } else {
+        console.log('Deleted %s - deltas for users: %j', source, _.pluck(users, 'id'));
+        callback();
       }
     });
   }
@@ -146,6 +177,8 @@ function showHelp() {
   console.log('--twitter-direct_messages        Delete all Twitter direct_messages and reset direct_messagesinceId');
   console.log('--twitter-mentions               Delete all Twitter mentions and reset mentionSinceId');
   console.log('--twitter-tweets                 Delete all Twitter tweets and reset tweetSinceId');
+  console.log('--twitter-followers              Delete Twitter followers');  
+  console.log('--twitter-deltas                 Delete all Twitter deltas');
   console.log('');
   console.log('<options>');
   console.log('--u <user email>                 Perform actions on specified user.')

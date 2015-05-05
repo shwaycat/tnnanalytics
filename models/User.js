@@ -115,10 +115,7 @@ User.add({
       avatar: { type: String, label: 'Image', dependsOn: deps.twitter },
 
       accessToken: { type: String, label: 'Access Token', dependsOn: deps.twitter },
-      refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.twitter },
-      mentionSinceId: { type: String, label: 'Since Id', dependsOn: deps.twitter },
-      tweetSinceId: { type: String, label: 'Since Id', dependsOn: deps.twitter },
-      direct_messageSinceId: { type: String, label: 'Since Id', dependsOn: deps.twitter }
+      refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.twitter }
     }
   }
 });
