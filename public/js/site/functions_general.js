@@ -350,7 +350,14 @@ function dataController(sectionType, type, apiString, dateObj, options){
         apiObj = false;
       })
       .always(function( data ) {
-        cachedData[type] = apiObj;
+        if (type == 'topCountries'){
+          apiObj.data = simplifyData(apiObj.data);
+          cachedData[type] = apiObj;
+        } else {
+          cachedData[type] = apiObj;
+        }
+        
+
         dataControllerDelegation(sectionType, apiObj);
       });
   } else {
@@ -363,7 +370,6 @@ function dataControllerDelegation(sectionType, apiObj){
     lineGraph(apiObj.data, apiObj.options);
     
   } else if (sectionType == 'donut'){
-    apiObj.data = simplifyData(apiObj.data);
     donutList(apiObj.data.data_all, apiObj.options, true);
     donutList(apiObj.data.data_other, apiObj.options);
     donutGraph(apiObj.data.data, apiObj.options);
