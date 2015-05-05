@@ -1,25 +1,19 @@
-function compensateFooter(){
-	if($('.footer-container')[0]){
-		var windowHeight = window.innerHeight;
-		var mainHeight = parseInt($('.main-container').css('height'));
-		var headerHeight = parseInt($('.header-container').css('height'));
-		var footerHeight = parseInt($('.footer-container').css('height'));
-		var newHeight = (mainHeight+headerHeight+footerHeight);
-		if (newHeight < windowHeight) {
-			newHeight = ((windowHeight - newHeight) + newHeight) - headerHeight - footerHeight;
-			$('.main-container').css('height', newHeight);
-		}
-	}
-}
+//////////////////////////////////////////////
+//// Front End Functions
+//// - Used for altering css and styles.
+//////////////////////////////////////////////
 
-function globalDebug(message, css){
-  if(globalDebugBool){
-    if (css){
-      console.log('%c '+message, css);
-    } else {
-      console.log(message);
+function compensateFooter(){
+  if($('.footer-container')[0]){
+    var windowHeight = window.innerHeight;
+    var mainHeight = parseInt($('.main-container').css('height'));
+    var headerHeight = parseInt($('.header-container').css('height'));
+    var footerHeight = parseInt($('.footer-container').css('height'));
+    var newHeight = (mainHeight+headerHeight+footerHeight);
+    if (newHeight < windowHeight) {
+      newHeight = ((windowHeight - newHeight) + newHeight) - headerHeight - footerHeight;
+      $('.main-container').css('height', newHeight);
     }
-    
   }
 }
 
@@ -33,23 +27,6 @@ function elementReveal(){
     els.filter('[data-element-reveal-id="'+show+'"]').addClass('active');
     els.filter('[data-element-reveal-id="'+hide+'"]').removeClass('active');
   });
-}
-
-function abbreviateNumber(value) {
-  var newValue = value;
-  if (value >= 1000) {
-    var suffixes = ["", "k", "m", "b","t"];
-    var suffixNum = Math.floor( (""+value).length/3 );
-    var shortValue = '';
-    for (var precision = 2; precision >= 1; precision--) {
-      shortValue = parseFloat( (suffixNum != 0 ? (value / Math.pow(1000,suffixNum) ) : value).toPrecision(precision));
-      var dotLessShortValue = (shortValue + '').replace(/[^a-zA-Z 0-9]+/g,'');
-      if (dotLessShortValue.length <= 2) { break; }
-    }
-    if (shortValue % 1 != 0)  shortNum = shortValue.toFixed(1);
-    newValue = shortValue+suffixes[suffixNum];
-  }
-  return newValue;
 }
 
 function equalHeightPairs(){
@@ -87,19 +64,85 @@ function equalHeightPairs(){
   })
 }
 
+
+
+
+
+
+
+
+//////////////////////////////////////////////
+//// Development Functions
+//////////////////////////////////////////////
+
+function globalDebug(message, css){
+  if(globalDebugBool){
+    if (css){
+      console.log('%c '+message, css);
+    } else {
+      console.log(message);
+    }
+    
+  }
+}
+
+function createFakeData(){
+  var ourArray = [];
+  var index = 50;
+  for (var i = 0; i < index; i++){
+    var year = 1971 + i;
+    var day = 1971 + i;
+    var date = new Date('2014', '03', i*15);
+    date = date.toJSON();
+    var count = Math.random()*1234234*i + 500;
+    ourArray[i] = { "key": date, "value": count };
+  }
+  return ourArray;
+}
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////
+//// Data Functions
+//// - Helpers and functions for adjusting
+////   data.
+//////////////////////////////////////////////
+
+function abbreviateNumber(value) {
+  var newValue = value;
+  if (value >= 1000) {
+    var suffixes = ["", "k", "m", "b","t"];
+    var suffixNum = Math.floor( (""+value).length/3 );
+    var shortValue = '';
+    for (var precision = 2; precision >= 1; precision--) {
+      shortValue = parseFloat( (suffixNum != 0 ? (value / Math.pow(1000,suffixNum) ) : value).toPrecision(precision));
+      var dotLessShortValue = (shortValue + '').replace(/[^a-zA-Z 0-9]+/g,'');
+      if (dotLessShortValue.length <= 2) { break; }
+    }
+    if (shortValue % 1 != 0)  shortNum = shortValue.toFixed(1);
+    newValue = shortValue+suffixes[suffixNum];
+  }
+  return newValue;
+}
+
 function saturationControl(hex, opacity, saturationMultiplier){
-	var rgb = [],
-	    fail = false,
-	    color;
-	hex = hex.split('#')[1];
-	if (hex.length == 3){
-		hex = hex + hex;
-	}
-	for (var i = 0; i < 6; i+=2) {
-	   rgb.push(parseInt(saturationMultiplier*parseInt(hex.substr(i,2),16)));
-	   fail = fail || rgb[rgb.length - 1].toString() === 'NaN';
-	}
-	return 'rgba('+rgb.join(',') + ','+opacity+')';
+  var rgb = [],
+      fail = false,
+      color;
+  hex = hex.split('#')[1];
+  if (hex.length == 3){
+    hex = hex + hex;
+  }
+  for (var i = 0; i < 6; i+=2) {
+     rgb.push(parseInt(saturationMultiplier*parseInt(hex.substr(i,2),16)));
+     fail = fail || rgb[rgb.length - 1].toString() === 'NaN';
+  }
+  return 'rgba('+rgb.join(',') + ','+opacity+')';
 }
 
 String.prototype.capitalizeFirstLetter = function() {
@@ -123,6 +166,20 @@ $.fn.serializeObject = function()
   return o;
 };
 
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////
+//// Graph/Section Helper Functions
+//// - Helpers and functions to support D3
+////   graphs, and other social sections.
+//////////////////////////////////////////////
+
 $.fn.sectionLoad = function(reload, eh){
   var el = this;
   if (reload){
@@ -138,23 +195,6 @@ $.fn.sectionLoad = function(reload, eh){
   },300);
 
 };
-
-
-// Development fake data for line graphs.
-function createFakeData(){
-  var ourArray = [];
-  var index = 50;
-  for (var i = 0; i < index; i++){
-    var year = 1971 + i;
-    var day = 1971 + i;
-    var date = new Date('2014', '03', i*15);
-    date = date.toJSON();
-    var count = Math.random()*1234234*i + 500;
-    ourArray[i] = { "key": date, "value": count };
-  }
-  return ourArray;
-}
-
 
 function simplifyData(data){
   var theData = data;
@@ -184,7 +224,7 @@ function simplifyData(data){
   return newData;
 }
 
-function donutOtherList(data, options, hidden){
+function donutList(data, options, hidden){
   var theData = data;
   var post;
   var newDetailsHTML = '';
@@ -208,11 +248,9 @@ function donutOtherList(data, options, hidden){
     .children().remove();
   post.find('.data-list')
     .append(newDetailsHTML);
-
 }
 
 function donutPercents(){
-
   $('[data-label]').on('click, mouseover', function(){
     var label = $(this).data('label');
     $('.novo-donut-graph g')
@@ -222,7 +260,6 @@ function donutPercents(){
       .siblings()
       .removeAttr('class', 'active');
   });
-
 }
 
 function statsDelegation(summary, options){
@@ -281,10 +318,10 @@ function statsDelegation(summary, options){
   $(options.selector).after(statsString);
 }
 
-// i.e. graphController('line', '/api/1.0/twitter/engagement', '2015-04-17T21:45:04.000Z', '2015-04-17T21:45:04.000Z', {selector: '#engagement'});
-function dataController(sectionType, type, apiString, startTime, endTime, options){
+// i.e. graphController('line', '/api/1.0/twitter/engagement', {startTime: '2015-04-17T21:45:04.000Z', endTime:'2015-04-17T21:45:04.000Z'}, {selector: '#engagement'});
+function dataController(sectionType, type, apiString, dateObj, options){
   if (!cachedData[type]){
-    var queryString = apiString + (startTime ? '?startTime='+startTime : '') + (endTime ? '&endTime='+endTime : '');
+    var queryString = apiString + '?startTime='+dateObj.startTime + '&endTime='+dateObj.endTime;
     var apiObj = {
           success: true,
           source: false,
@@ -295,10 +332,10 @@ function dataController(sectionType, type, apiString, startTime, endTime, option
           options: options
         };
     var timeObj = {};
-    if (startTime && endTime){
-      apiObj.startTime = startTime;
-      apiObj.endTime = endTime;
-      timeObj = { startTime: startTime, endTime: endTime }
+    if (dateObj){
+      apiObj.startTime = dateObj.startTime;
+      apiObj.endTime = dateObj.endTime;
+      timeObj = dateObj;
     }
 
     $.get(apiString, timeObj )
@@ -330,8 +367,8 @@ function dataControllerDelegation(sectionType, apiObj){
     //apiObj.data = simplifyData(apiObj.data);
     var tempData = fakeTopCountryData;
     apiObj.data = simplifyData(tempData);
-    donutOtherList(apiObj.data.data_all, apiObj.options, true);
-    donutOtherList(apiObj.data.data_other, apiObj.options);
+    donutList(apiObj.data.data_all, apiObj.options, true);
+    donutList(apiObj.data.data_other, apiObj.options);
     donutGraph(apiObj.data.data, apiObj.options);
 
   } else if (sectionType == 'topPost'){
@@ -348,3 +385,166 @@ function dataControllerDelegation(sectionType, apiObj){
 
   }
 }
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////
+//// Date Functions
+//// - Functions related to date selection,
+////   and cookies.
+//////////////////////////////////////////////
+
+Date.prototype.monthNames = [
+  "January", "February", "March",
+  "April", "May", "June",
+  "July", "August", "September",
+  "October", "November", "December"
+];
+
+Date.prototype.getMonthName = function() {
+  return this.monthNames[this.getMonth()];
+};
+Date.prototype.getShortMonthName = function () {
+  return this.getMonthName().substr(0, 3);
+};
+
+function dateCookie(){
+
+  // Cookie Use
+  // $.cookie(cookieName, default_date, { expires: cookieExp, path: cookiePath });
+  // $.cookie('novo_date', '{"startTime": "", "endTime": ""}', { expires: 1, path: '/' });
+
+  // Set Start Date to a month ago.
+  var startTime = new Date();
+  startTime.setMonth(startTime.getMonth() - 1);
+  startTime = startTime.toJSON();
+
+  // Set End Date to now.
+  var endTime = new Date();
+  endTime = endTime.toJSON();
+
+  var default_date = {
+    "startTime": startTime,
+    "endTime": endTime
+  };
+  default_date = JSON.stringify(default_date);
+  var dateObj = false;
+
+  // Create or get the cookie.
+  if ($.cookie(cookieName) != undefined){
+    dateObj = JSON.parse($.cookie(cookieName));
+    globalDebug('   Cookie Exists', 'color:brown;');
+  } else {
+    $.cookie(cookieName, default_date, { expires: cookieExp, path: cookiePath });
+    dateObj = JSON.parse($.cookie(cookieName));
+    globalDebug('   Cookie Created', 'color:brown;');
+  }
+
+  return dateObj;
+
+}
+
+function dateClearIt(){
+  if ($.cookie(cookieName) != undefined){
+    $.removeCookie(cookieName, { path: cookiePath });
+    return 'Date Cookie Cleared!';
+  } else {
+    return 'No Cookie To Clear!';
+  }
+}
+
+$.fn.dateDelegate = function(startTime, endTime){
+  var el = this;
+  var date = {
+    "startTime": startTime,
+    "endTime": endTime
+  };
+  date = JSON.stringify(date);
+  el.data().dateTime = date; 
+};
+
+function dateController(){
+
+  var dateObj = currentSelectedDate,
+      now,
+      today,
+      yesterday,
+      lastWeek,
+      lastMonth,
+      startTime,
+      endTime,
+      startTime_human = '',
+      endTime_human = '';
+
+  startTime = new Date(dateObj.startTime);
+  endTime = new Date(dateObj.endTime);
+
+  startTime_human += startTime.getMonthName();
+  startTime_human += ' ';
+  startTime_human += startTime.getDate();
+  startTime_human += ' ';
+  startTime_human += startTime.getFullYear();
+
+  endTime_human += endTime.getMonthName();
+  endTime_human += ' ';
+  endTime_human += endTime.getDate();
+  endTime_human += ' ';
+  endTime_human += endTime.getFullYear();
+
+  
+  now = new Date();
+  now = now.toJSON();
+
+  today = new Date();
+  today.setHours(0,0,0,0);
+  today = today.toJSON();
+
+  yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  yesterday.setHours(0,0,0,0);
+  yesterday = yesterday.toJSON();
+
+  lastWeek = new Date();
+  lastWeek.setDate(lastWeek.getDate() - 7);
+  lastWeek.setHours(0,0,0,0);
+  lastWeek = lastWeek.toJSON();
+
+  lastMonth = new Date();
+  lastMonth.setMonth(lastMonth.getMonth() - 1);
+  lastMonth.setHours(0,0,0,0);
+  lastMonth = lastMonth.toJSON();
+
+  $('[data-date-selector="today"]').dateDelegate(today, now);
+  $('[data-date-selector="yesterday"]').dateDelegate(yesterday, now);
+  $('[data-date-selector="lastWeek"]').dateDelegate(lastWeek, now);
+  $('[data-date-selector="lastMonth"]').dateDelegate(lastMonth, now);
+
+  $('#dateDropdown').find('span').first().html(startTime_human);
+  $('#dateDropdown').find('span').last().html(endTime_human);
+
+  dateActions();
+
+}
+
+function dateActions(custom){
+  if (custom) {
+
+  } else {
+    $('.date-selector').on('click',function(e){
+      var clicked = $(this);
+      var dateObj = clicked.data().dateTime;
+      $.cookie(cookieName, dateObj, { expires: cookieExp, path: cookiePath });
+      setTimeout(function(){
+        location.reload();
+      },100);
+    });
+  }
+}
+
+
+

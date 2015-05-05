@@ -11,12 +11,12 @@ function routesInit(resizeOnce){
 	if ($('body.facebook')[0]){
 		globalDebug('   Route: Facebook', 'color:gray;');
 
-		dataController('line',      'reach', '/api/1.0/facebook/reach',               false, false, {selector: '#reach', source: 'facebook'});
-		dataController('line',      'engagement', '/api/1.0/facebook/engagement',     false, false, {selector: '#engagement', source: 'facebook'});
-		dataController('line',      'acquisition', '/api/1.0/facebook/acquisition',   false, false, {selector: '#acquisition', source: 'facebook'});
-		dataController('donut',     'topCountries', '/api/1.0/facebook/topCountries', false, false, {selector: '#topCountries', source: 'facebook'});
+		dataController('line',      'reach', '/api/1.0/facebook/reach',               currentSelectedDate, {selector: '#reach', source: 'facebook'});
+		dataController('line',      'engagement', '/api/1.0/facebook/engagement',     currentSelectedDate, {selector: '#engagement', source: 'facebook'});
+		dataController('line',      'acquisition', '/api/1.0/facebook/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'facebook'});
+		dataController('donut',     'topCountries', '/api/1.0/facebook/topCountries', currentSelectedDate, {selector: '#topCountries', source: 'facebook'});
 		if (!resizeOnce){
-			dataController('topPost', 'topPost', '/api/1.0/facebook/topPost',           false, false, {selector: '#topPost', source: 'facebook' });
+			dataController('topPost', 'topPost', '/api/1.0/facebook/topPost',           currentSelectedDate, {selector: '#topPost', source: 'facebook' });
 		}
 		
 
@@ -24,11 +24,11 @@ function routesInit(resizeOnce){
 	if ($('body.twitter')[0]){
 		globalDebug('   Route: Twitter', 'color:gray;');
 
-		dataController('line',      'engagement', '/api/1.0/twitter/engagement',   false, false, {selector: '#engagement', source: 'twitter'});
-		dataController('line',      'acquisition', '/api/1.0/twitter/acquisition',  false, false, {selector: '#acquisition', source: 'twitter'});
-		dataController('donut',     'topCountries', '/api/1.0/twitter/topCountries', false, false, {selector: '#topCountries', source: 'twitter'});
+		dataController('line',      'engagement', '/api/1.0/twitter/engagement',   currentSelectedDate, {selector: '#engagement', source: 'twitter'});
+		dataController('line',      'acquisition', '/api/1.0/twitter/acquisition',  currentSelectedDate, {selector: '#acquisition', source: 'twitter'});
+		dataController('donut',     'topCountries', '/api/1.0/twitter/topCountries', currentSelectedDate, {selector: '#topCountries', source: 'twitter'});
 		if (!resizeOnce){
-			dataController('topTweet', 'topTweet', '/api/1.0/twitter/topTweet',     false, false, {selector: '#topTweet', source: 'twitter'});
+			dataController('topTweet', 'topTweet', '/api/1.0/twitter/topTweet',     currentSelectedDate, {selector: '#topTweet', source: 'twitter'});
 		}
 
 	}
