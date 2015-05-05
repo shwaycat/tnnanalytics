@@ -11,7 +11,7 @@ exports.create = {
   User: [
     { 'name.first': 'Admin',
       'name.last': 'User',
-      email: 'cadence@maxmedia.com',
+      email: 'novo-cadence@maxmedia.com',
       password: 'password',
       isAdmin: true,
       accountName: 'maxmedia',
