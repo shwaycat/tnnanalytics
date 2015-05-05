@@ -53,8 +53,8 @@ require('../lib/keystone-script')(connectES, function(done) {
             // Handle a outgoing Tweet
             handleTweet(user, data, handleESError);
           } else {
-            debug('Ignored');
-            debug('Data: %j', data);
+            console.warn('Ignored Data: %j', data);
+            sendSNS(data);
           }
         });
        
@@ -76,8 +76,13 @@ require('../lib/keystone-script')(connectES, function(done) {
           }
         });
 
+        stream.on('warning', function(data) {
+          console.log(data);
+        });
+
         stream.on('error', function(error) {
-          debug(error);
+          console.error(error);
+          sendSNS(error);
           throw error;
         });
       });
@@ -87,11 +92,20 @@ require('../lib/keystone-script')(connectES, function(done) {
 
 });
 
+function sendSNS(data) {
+  // DO IT TONIGHT
+  // SUBJECT?
+  // [cadence] Unhandled Twitter Stream Event
+}
+
 function handleFavorite(user, data, callback) {
   debug('Handling Favorited Tweet');
 
   console.log('%s was favorited', data.target_object.id_str);
-
+  // Add one to fix "off by 1 error"
+  if(data && data.target_object) {
+    data.target_object.favorite_count++;
+  }
   Tweet.process(user, data.target_object, callback);
 }
 
@@ -99,12 +113,19 @@ function handleUnfavorite(user, data, callback) {
   debug('Handling Unfavorited Tweet');
 
   console.log('%s was unfavorited', data.target_object.id_str);
-
+  // Subtract one to fix "off by 1 error"
+  if(data && data.target_object) {
+    data.target_object.favorite_count--;
+  }
   Tweet.process(user, data.target_object, callback);
 }
 
 function handleFollow(user, twitterUser, callback) {
   console.log('Handle Follow');
+  // Add one to fix "off by 1 error"
+  if(twitterUser) {
+    twitterUser.followers_count++;
+  }
   FollowerCount.process(user, twitterUser, callback);
 }
 
