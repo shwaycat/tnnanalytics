@@ -17,6 +17,8 @@ FACEBOOK_CALLBACK_URL=http://cadence.local.mxmcloud.com:3000/auth/facebook?cb
 AWS_REGION=us-east-1
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
+AWS_SNS_TOPIC_ARN=
+AWS_SNS_SUBJECT_PREFIX=[Cadence-Dev]
 ```
 
 Notes:
