@@ -360,13 +360,10 @@ function dataController(sectionType, type, apiString, dateObj, options){
 
 function dataControllerDelegation(sectionType, apiObj){
   if (sectionType == 'line'){
-    apiObj.data = createFakeData();
     lineGraph(apiObj.data, apiObj.options);
     
   } else if (sectionType == 'donut'){
-    //apiObj.data = simplifyData(apiObj.data);
-    var tempData = fakeTopCountryData;
-    apiObj.data = simplifyData(tempData);
+    apiObj.data = simplifyData(apiObj.data);
     donutList(apiObj.data.data_all, apiObj.options, true);
     donutList(apiObj.data.data_other, apiObj.options);
     donutGraph(apiObj.data.data, apiObj.options);
