@@ -10,10 +10,10 @@ var keystone = require('../keystone-setup')(),
     sources = {
       twitter: require('../lib/sources/twitter')
     },
-    Tweet = sources.twitter.Tweet,
+    Tweet = sources.twitter.tweet,
     Mention = sources.twitter.mention,
     DirectMessage = sources.twitter.direct_message,
-    FollowerCount = require('../lib/sources/twitter/followerCount.js')
+    FollowerCount = sources.twitter.followerCount;
 
 
 require('../lib/keystone-script')(connectES, function(done) {
@@ -37,8 +37,6 @@ require('../lib/keystone-script')(connectES, function(done) {
         debug('Stream started for user id %s', user.services.twitter.profileId);
         
         stream.on('data', function(data) {
-          debug('Data: %j', data);
-
           if(data.friends_str || data.friends) {
             debug('Friend List Recived and Ignored');
           } else if (data.direct_message && data.direct_message.sender.id_str != user.services.twitter.profileId) {
@@ -46,7 +44,8 @@ require('../lib/keystone-script')(connectES, function(done) {
             handleDirectMessage(user, data, handleESError);
           } else if (data.retweeted_status && data.user.id_str != user.services.twitter.profileId) { 
             // Handle a Retweet no comment
-            handleMention(user, data.retweeted_status, handleESError);
+            handleMention(user, data, handleESError);
+            handleTweet(user, data.retweeted_status, handleESError);
           } else if (data.user && data.user.id_str != user.services.twitter.profileId) {
             // Handle a mention
             handleMention(user, data, handleESError);
@@ -55,12 +54,13 @@ require('../lib/keystone-script')(connectES, function(done) {
             handleTweet(user, data, handleESError);
           } else {
             debug('Ignored');
+            debug('Data: %j', data);
           }
         });
        
         stream.on('follow', function(data) {
           if(data.source.id_str != user.services.twitter.profileId) {
-            console.log('NEW FOLLOWER');
+            handleFollow(user, data.target, handleESError);
           }
         });
 
@@ -72,7 +72,7 @@ require('../lib/keystone-script')(connectES, function(done) {
 
         stream.on('unfavorite', function(data) {
           if(data.source.id_str != user.services.twitter.profileId) {
-            handleFavorite(user, data, handleESError);
+            handleUnfavorite(user, data, handleESError);
           }
         });
 
@@ -92,84 +92,40 @@ function handleFavorite(user, data, callback) {
 
   console.log('%s was favorited', data.target_object.id_str);
 
-  Tweet.findOneWithDelta(data.target_object.id_str, function(err, tweet) {
-    if(err) return callback(err);
+  Tweet.process(user, data.target_object, callback);
+}
 
-    if(tweet.favorites_count != data.target_object.favorites_count) {
-      tweet.createDelta('favorites_count', data.target_object.favorites_count, callback);
-    } else {
-      callback();
-    }
+function handleUnfavorite(user, data, callback) {
+  debug('Handling Unfavorited Tweet');
 
-  });
+  console.log('%s was unfavorited', data.target_object.id_str);
+
+  Tweet.process(user, data.target_object, callback);
+}
+
+function handleFollow(user, twitterUser, callback) {
+  console.log('Handle Follow');
+  FollowerCount.process(user, twitterUser, callback);
 }
 
 function handleDirectMessage(user, data, callback) {
   debug('Handling Direct Message');
+  var message = data.direct_message;
+  DirectMessage.process(user, message, callback);
 
-      message = data.direct_message,
-      directMessage = new DirectMessage(message.id_str);
-
-  directMessage.populateFields(user, message);
-
-  directMessage.create(function(err, res) {
-    if (err) {
-      if(res.status == 409) {
-        debug('duplicate direct message');
-        callback();
-      } else {
-        callback(err);
-      }
-    } else {
-      debug("created direct_message %s", directMessage.id);
-      callback();
-    }
-  });
 }
 
 function handleMention(user, data, callback) {
   debug("Handling mention %s", data.id_str);
-      tweet = data,
-      mention = new Mention(data.id_str);
-      
-
-  mention.populateFields(user, tweet);
-
-  mention.create(function(err, res) {
-    if (err) {
-      if(res.status == 409) {
-        debug('duplicate mention');
-        callback(null, res);
-      } else {
-        callback(err);
-      }
-    } else {
-      debug("created mention %s", mention.id);        
-      return callback();
-    }
-  })
+  var mention = data;
+  console.log(mention);
+  Mention.process(user, mention, callback);
 }
 
 function handleTweet(user, data, callback) {
   debug("Handling tweet %s", data.id_str);
-      tweet = data,
-      outgoingTweet = new Tweet(tweet.id_str);
-
-  tweet.populateFields(user, tweet);
-
-  outgoingTweet.create(function(err, res) {
-    if (err) {
-      if(res.status == 409) {
-        debug('duplicate tweet');
-        callback();
-      } else {
-        callback();
-      }
-    } else {
-      debug("created tweet %s", outgoingTweet.id);
-      return callback();
-    }
-  });
+  var tweet = data;
+  Tweet.process(user, tweet, callback);
 }
 
 function handleESError(err) {

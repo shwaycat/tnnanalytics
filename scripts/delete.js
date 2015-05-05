@@ -137,7 +137,7 @@ function deleteDocsByType(source, doc_type) {
         callback(err);
       } else {
         console.log('Deleted %s - %s for users: %j', source, doc_type, _.pluck(users, 'id'));
-        callback();
+        callback(err, results);
       }
     });
   }
