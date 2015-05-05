@@ -184,11 +184,17 @@ function simplifyData(data){
   return newData;
 }
 
-function donutOtherList(data, options){
+function donutOtherList(data, options, hidden){
   var theData = data;
-
-  var post = $(options.selector).next('.novo-data-list');
+  var post;
   var newDetailsHTML = '';
+
+  if (hidden){
+    //Used for displaying all data in print.
+    post = $(options.selector).siblings('.novo-data-list-print');
+  } else {
+    post = $(options.selector).siblings('.novo-data-list-normal');
+  }
 
   for (var i = 0; i < theData.length; i++){
     newDetailsHTML += '<li><span>';
@@ -202,8 +208,6 @@ function donutOtherList(data, options){
     .children().remove();
   post.find('.data-list')
     .append(newDetailsHTML);
-
-  console.log(newDetailsHTML);
 
 }
 
@@ -326,6 +330,7 @@ function dataControllerDelegation(sectionType, apiObj){
     //apiObj.data = simplifyData(apiObj.data);
     var tempData = fakeTopCountryData;
     apiObj.data = simplifyData(tempData);
+    donutOtherList(apiObj.data.data_all, apiObj.options, true);
     donutOtherList(apiObj.data.data_other, apiObj.options);
     donutGraph(apiObj.data.data, apiObj.options);
 

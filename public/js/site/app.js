@@ -8,7 +8,6 @@ $(window).resize(function(){
 
 });
 
-
 $(function() {
 
 	//Data Functions
