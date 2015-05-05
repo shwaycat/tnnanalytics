@@ -14,9 +14,34 @@ TWITTER_CALLBACK_URL=http://cadence.local.mxmcloud.com:3000/auth/twitter?cb
 FACEBOOK_APP_ID=
 FACEBOOK_APP_SECRET=
 FACEBOOK_CALLBACK_URL=http://cadence.local.mxmcloud.com:3000/auth/facebook?cb
+AWS_REGION=us-east-1
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
 ```
 
 Notes:
 * `TWITTER_API_*` and `FACBOOK_APP_*` must be defined to interact with the services.
 * `COOKIE_SECRET` is a default for development only.  Feel free to change as desired.
 * `REDIS_URI` is commented out since it is optional.
+
+## Amazon Web Services
+
+Users:
+
+* Development: `novo-cadence-dev` - Access Key ID: `AKIAISHGGE7TMXOHUAXQ`
+* Production: `novo-cadence` - Access Key ID: `AKIAITGZ3GOCFBSYLSGQ`
+
+### Amazon SNS Topics
+
+Application errors, warnings, alerts, etc:
+
+* `arn:aws:sns:us-east-1:357664586544:novo-cadence-dev`
+* `arn:aws:sns:us-east-1:357664586544:novo-cadence`
+
+AWS SES notifications:
+
+* `arn:aws:sns:us-east-1:357664586544:novo-cadence-email`
+
+### Amazon SES
+
+The domain `cadence.novo.mxmcloud.com` is configured for sending.
