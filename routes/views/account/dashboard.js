@@ -6,6 +6,7 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 
 	locals.section = 'dashboard';
+	locals.showDates = true;
 	locals.title = 'Dashboard';
 	locals.tooltip = {
 		reach: "",

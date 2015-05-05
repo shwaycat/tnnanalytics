@@ -10,9 +10,10 @@ $(window).resize(function(){
 
 $(function() {
 
-	dateController();
-
 	//Data Functions
+	if($('.date-container')[0]){
+		dateController();
+	}
 	routesInit();
 
 	if (!$('body.session')[0]){

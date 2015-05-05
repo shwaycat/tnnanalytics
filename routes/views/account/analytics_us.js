@@ -6,6 +6,7 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 
 	locals.section = 'analytics-us';
+	locals.showDates = true;
 	locals.title = 'Web Analytics - US';
 	locals.tooltip = {
 		reach: "",

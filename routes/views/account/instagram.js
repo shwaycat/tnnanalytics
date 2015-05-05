@@ -6,6 +6,7 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 
 	locals.section = 'instagram';
+	locals.showDates = true;
 	locals.title = 'Instagram';
 	locals.tooltip = {
 		reach: "",

@@ -24,8 +24,10 @@ var cookieName = 'novo_date',
 
 $.cookie.json = true;
 
-var currentSelectedDate = dateCookie();
-
+var currentSelectedDate;
+if($('.date-container')[0]){
+  currentSelectedDate = dateCookie();
+}
 
 
 
