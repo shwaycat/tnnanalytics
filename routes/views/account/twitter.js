@@ -6,6 +6,7 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 
 	locals.section = 'twitter';
+	locals.showDates = true;
 	locals.title = 'Twitter';
 	locals.tooltip = {
 		reach: "Organic + Paid Impressions",

@@ -18,9 +18,16 @@ var cachedData = {
       'topCountries': false
     };
 
+var cookieName = 'novo_date',
+    cookieExp = 1,
+    cookiePath = '/';
 
+$.cookie.json = true;
 
-
+var currentSelectedDate;
+if($('.date-container')[0]){
+  currentSelectedDate = dateCookie();
+}
 
 
 

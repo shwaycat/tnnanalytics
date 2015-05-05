@@ -1,0 +1,25 @@
+mixin date
+  section.date-container
+    .dropdown.novo-dropdown
+      button.dropdown-toggle(type="button" id="dateDropdown" data-toggle="dropdown" aria-expanded="true")
+        span
+        |   -  
+        span
+        .entypo.entypo-chevron-thin-down
+      ul.dropdown-menu.dropdown-menu-right(role="menu" aria-labelledby="dateDropdown")
+        .arrow-left
+        li
+          a.date-selector(role="menuitem" tabindex="-1" data-date-selector='today')
+            | Today
+        li
+          a.date-selector(role="menuitem" tabindex="-1" data-date-selector='yesterday')
+            | Yesterday
+        li
+          a.date-selector(role="menuitem" tabindex="-1" data-date-selector='lastWeek')
+            | Last Week
+        li
+          a.date-selector(role="menuitem" tabindex="-1" data-date-selector='lastMonth')
+            | Last Month
+        li
+          a(role="menuitem" tabindex="-1" data-date-selector='custom')
+            | Custom

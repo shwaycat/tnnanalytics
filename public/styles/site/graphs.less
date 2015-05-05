@@ -139,8 +139,31 @@
 	
 }
 
-.donut-block {
-	.inner-content {
-		//height: 100%;
+.novo-data-list {
+	padding: .75em 2.5em;
+	&.novo-data-list-print {
+		display:none;
+	}
+	.data-list-title {
+		font-weight: 300;
+		padding: 0 0 0.5em;
+		margin:0;
+	}
+	li {
+		padding:0.5em 0;
+		vertical-align: middle;
+		display:block;
+		span {
+			font-size:1.25em;
+			&:first-child {
+				text-align: left;
+				float:left;
+			}
+			&:last-child {
+				text-align: right;
+				float:right;
+			}
+		}
+		.clearfix();
 	}
 }

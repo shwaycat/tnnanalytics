@@ -8,12 +8,13 @@ $(window).resize(function(){
 
 });
 
-
 $(function() {
 
 	//Data Functions
+	if($('.date-container')[0]){
+		dateController();
+	}
 	routesInit();
-
 
 	if (!$('body.session')[0]){
 		var eventsObject = eventsCheckStatus(fakeEvents);

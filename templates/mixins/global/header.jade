@@ -6,6 +6,8 @@ mixin header
           a.header-logo(href="/" title="Cadence Home")
             img(src="/images/logo.png" alt="Cadence Logo")
           ul.header-items
+            if showDates
+              li: +date
             li: a.event-alert-item(href='/accounts/'+user.accountName+'/events')
               .glyphicon.glyphicon-bell
                 .event-alert

@@ -7,6 +7,7 @@ include ../mixins/global/favicons
 include ../mixins/global/header
 include ../mixins/global/footer
 include ../mixins/global/side-navigation
+include ../mixins/global/date
 
 include ../mixins/accounts/social-graph
 include ../mixins/accounts/top-posts
@@ -23,6 +24,7 @@ html
     
     link(href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css')
     link(href="/styles/site.min.css", rel="stylesheet")
+    link(href="/styles/print.min.css", rel="stylesheet" media="print")
 
     block css
     block head
@@ -71,6 +73,7 @@ html
     script(src='/js/lib/jquery/jquery-2.1.1.min.js')
     script(src='/js/lib/jquery/jquery.timeago.js')
     script(src='/js/lib/jquery/jquery.transit.min.js')
+    script(src='/js/lib/jquery/jquery.cookie.js')
 
     script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js')
     script(src='/js/lib/bootstrap/bootstrap-3.2.0.min.js')

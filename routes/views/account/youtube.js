@@ -6,6 +6,7 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 
 	locals.section = 'youtube';
+	locals.showDates = true;
 	locals.title = 'Youtube';
 	locals.tooltip = {
 		reach: "",
