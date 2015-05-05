@@ -1,14 +1,14 @@
 mixin topPost(type, options)
-	.col-xs-12.col-md-12.col-lg-6.content-block
+	.col-xs-12.col-md-12.col-lg-6.content-block.post-block.equal-height-block-1
 		.inner-content
 			h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.topPost)
 				=sectionTitles.topPost
 			section.top-posts.top-post#topPost(data-admin-options=options)
 				article.post
-					h3.post-title: a
+					h3.post-title: a(target="_blank")
 					p.post-content
-					span.post-creation 4-20-2348
-					a.post-link: span.entypo.entypo-chevron-right
+					span.post-creation
+					a(target="_blank").post-link: span.entypo.entypo-chevron-right
 				section.post-image: img
 				section.post-details
 					h3.post-title-details Details
@@ -16,9 +16,17 @@ mixin topPost(type, options)
 
 
 mixin topTweet(type, options)
-	.col-xs-12.col-md-12.col-lg-6.content-block
+	.col-xs-12.col-md-12.col-lg-6.content-block.post-block.equal-height-block-1
 		.inner-content
 			h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.topTweet)
 				=sectionTitles.topTweet
 			section.top-posts.top-tweet#topTweet(data-admin-options=options)
-				p lol
+				article.post
+					h3.post-title: a(target="_blank")
+					p.post-content
+					span.post-creation
+					a(target="_blank").post-link: span.entypo.entypo-chevron-right
+				section.post-image: img
+				section.post-details
+					h3.post-title-details Details
+					ul.post-details-list

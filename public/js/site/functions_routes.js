@@ -24,11 +24,11 @@ function routesInit(resizeOnce){
 	if ($('body.twitter')[0]){
 		globalDebug('   Route: Twitter', 'color:gray;');
 
-		dataController('line',      'engagement', '/api/1.0/twitter/engagement',   false, false, {selector: '#engagement'});
-		dataController('line',      'acquisition', '/api/1.0/twitter/acquisition',  false, false, {selector: '#acquisition'});
-		dataController('donut',     'topCountries', '/api/1.0/twitter/topCountries', false, false, {selector: '#topCountries'});
+		dataController('line',      'engagement', '/api/1.0/twitter/engagement',   false, false, {selector: '#engagement', source: 'twitter'});
+		dataController('line',      'acquisition', '/api/1.0/twitter/acquisition',  false, false, {selector: '#acquisition', source: 'twitter'});
+		dataController('donut',     'topCountries', '/api/1.0/twitter/topCountries', false, false, {selector: '#topCountries', source: 'twitter'});
 		if (!resizeOnce){
-			dataController('topTweet', 'topTweet', '/api/1.0/twitter/topTweet',     false, false, {selector: '#topTweet'});
+			dataController('topTweet', 'topTweet', '/api/1.0/twitter/topTweet',     false, false, {selector: '#topTweet', source: 'twitter'});
 		}
 
 	}

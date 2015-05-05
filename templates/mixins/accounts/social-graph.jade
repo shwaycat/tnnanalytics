@@ -6,6 +6,23 @@ mixin social-graph(type, options)
 				h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.reach)
 					=sectionTitles.reach
 				section.novo-graph.novo-line-graph.reach#reach(data-admin-options=options)
+				//- ul.novo-graph-stats
+				//- 	li.col-xs-12.col-md-3
+				//- 		.stat
+				//- 			span 2345
+				//- 			span tweet replies
+				//- 	li.col-xs-12.col-md-3
+				//- 		.stat
+				//- 			span 2345
+				//- 			span tweet replies
+				//- 	li.col-xs-12.col-md-3
+				//- 		.stat
+				//- 			span 2345
+				//- 			span tweet replies
+				//- 	li.col-xs-12.col-md-3
+				//- 		.stat
+				//- 			span 2345
+				//- 			span tweet replies
 
 	if type == 'engagement'
 		.col-xs-12.col-md-12.col-lg-12.content-block
@@ -22,8 +39,8 @@ mixin social-graph(type, options)
 				section.novo-graph.novo-line-graph.acquisition#acquisition(data-admin-options=options)
 
 	if type == 'topCountries'
-		.col-xs-12.col-md-12.col-lg-6.content-block
+		.col-xs-12.col-md-12.col-lg-6.content-block.donut-block.equal-height-block-2
 			.inner-content
-				h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.top_countries)
-					=sectionTitles.top_countries
+				h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.topCountries)
+					=sectionTitles.topCountries
 				section.novo-graph.novo-donut-graph.reach#topCountries(data-admin-options=options)

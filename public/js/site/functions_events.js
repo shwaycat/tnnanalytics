@@ -37,7 +37,7 @@ function eventsTable(table){
 	    }
 		});
 
-		$('.events-container').sectionLoad();
+		$('.events-container').sectionLoad(false);
 	}
 }
 
