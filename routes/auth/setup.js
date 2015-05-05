@@ -1,5 +1,4 @@
-var util = require('util'),
-    _ = require('underscore'),
+var _ = require('underscore'),
     debug = require('debug')('cadence:auth:setup'),
     keystone = require('keystone'),
     authServices = require('../../lib/auth');
@@ -20,24 +19,26 @@ module.exports = function(req, res, next) {
   });
 
   view.on('post', { action: 'auth.setup' }, function(nextPost) {
-    var serviceData = _.omit(req.body, 'action');
-    debug("Service selected: %j", serviceData);
+    debug("Request body: %j", req.body);
+    var keyPrefix = 'services.' + req.params.service + '.',
+        serviceData = _.omit(req.body, 'action');
 
     _.each(serviceData, function(val, key) {
-      req.user.set(util.format("services.%s.%s", req.params.service, key), val);
-      req.user.save(function(err) {
-        if (err) return nextPost(err);
-        req.flash('success', 'Your changes have been saved.');
-        if (req.cookies.target) {
-          var targetURL = req.cookies.target;
-          debug('redirecting to target %s', targetURL);
-          res.cookie('target', undefined);
-          res.redirect(targetURL);
-        } else {
-          debug('redirecting to account home');
-          res.redirect('/accounts/'+req.user.accountName);
-        }
-      });
+      req.user.set(keyPrefix + key, val);
+    });
+
+    req.user.save(function(err) {
+      if (err) return nextPost(err);
+      req.flash('success', 'Your changes have been saved.');
+      if (req.cookies.target) {
+        var targetURL = req.cookies.target;
+        debug('redirecting to target %s', targetURL);
+        res.cookie('target', undefined);
+        res.redirect(targetURL);
+      } else {
+        debug('redirecting to account home');
+        res.redirect('/accounts/'+req.user.accountName);
+      }
     });
   });
 
