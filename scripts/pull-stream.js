@@ -13,7 +13,9 @@ var keystone = require('../keystone-setup')(),
     Tweet = sources.twitter.tweet,
     Mention = sources.twitter.mention,
     DirectMessage = sources.twitter.direct_message,
-    FollowerCount = sources.twitter.followerCount;
+    FollowerCount = sources.twitter.followerCount,
+    AWS = require('aws-sdk'),
+    sns = new AWS.SNS();
 
 
 require('../lib/keystone-script')(connectES, function(done) {
@@ -54,7 +56,7 @@ require('../lib/keystone-script')(connectES, function(done) {
             handleTweet(user, data, handleESError);
           } else {
             console.warn('Ignored Data: %j', data);
-            sendSNS(data);
+            sendSNS("ignore", data);
           }
         });
        
@@ -76,14 +78,10 @@ require('../lib/keystone-script')(connectES, function(done) {
           }
         });
 
-        stream.on('warning', function(data) {
-          console.log(data);
-        });
-
         stream.on('error', function(error) {
           console.error(error);
-          sendSNS(error);
-          throw error;
+          sendSNS("error", error);
+          // throw error;
         });
       });
     });
@@ -92,10 +90,33 @@ require('../lib/keystone-script')(connectES, function(done) {
 
 });
 
-function sendSNS(data) {
-  // DO IT TONIGHT
-  // SUBJECT?
-  // [cadence] Unhandled Twitter Stream Event
+function sendSNS(type, data) {
+  var subject = ''
+  if(type == 'ignore') {
+    subject = 'Ignored Data'
+  } if (type == 'esError') {
+    subject = 'Elastic Search Error';
+  } else {
+    subject = 'Alert/Error/Warning';
+  }
+
+  var params = {
+    Message: JSON.stringify(data), /* required */
+    MessageAttributes: {
+      default: {
+        DataType: 'String', /* required */
+        StringValue: '????'
+      },
+    },
+    MessageStructure: 'String',
+    Subject: process.env.AWS_SNS_SUBJECT_PREFIX + subject,
+    TopicArn: process.env.AWS_SNS_TOPIC_ARN
+  };
+
+  sns.publish(params, function(err, data) {
+    if (err) console.log(err, err.stack); // an error occurred
+    else     console.log(data);           // successful response
+  });
 }
 
 function handleFavorite(user, data, callback) {
@@ -152,5 +173,6 @@ function handleTweet(user, data, callback) {
 function handleESError(err) {
   if(err) {
     console.error(err);
+    sendSNS('esError', err);
   }
 }
