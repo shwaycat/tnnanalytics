@@ -26,10 +26,10 @@ exports.initLocals = function(req, res, next) {
     // { label: 'Instagram',         type: 'sub-link',         key: 'instagram',       href: 'instagram' },
     // { label: 'Youtube',           type: 'sub-link',         key: 'youtube',         href: 'youtube' },
     // { label: 'Google+',           type: 'sub-link',         key: 'google-plus',     href: 'google-plus' },
-    { label: 'Web Analytics',     type: 'navigation',       key: 'view-analytics',  href: false },
-    { label: 'All',               type: 'sub-link',         key: 'analytics-all',   href: 'analytics-all' },
-    { label: 'Global',            type: 'sub-link',         key: 'analytics-global',href: 'analytics-global' },
-    { label: 'US',                type: 'sub-link',         key: 'analytics-us',    href: 'analytics-us' },
+    // { label: 'Web Analytics',     type: 'navigation',       key: 'view-analytics',  href: false },
+    // { label: 'All',               type: 'sub-link',         key: 'analytics-all',   href: 'analytics-all' },
+    // { label: 'Global',            type: 'sub-link',         key: 'analytics-global',href: 'analytics-global' },
+    // { label: 'US',                type: 'sub-link',         key: 'analytics-us',    href: 'analytics-us' },
     { label: 'Adverse Events',    type: 'link',             key: 'events',          href: 'events' }
   ]
 
