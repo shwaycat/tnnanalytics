@@ -59,11 +59,11 @@ function eventsTableData(data, table){
 			var currentEvent = data.events[i];
 			
 			// Creation Date
-			var currentEvent_creation = new Date(currentEvent.createdAt);
+			var currentEvent_creation = new Date(currentEvent.timestamp);
 			currentEvent_creation = currentEvent_creation.getFullYear() + '/' + (currentEvent_creation.getMonth() < 10 ? ('0'+currentEvent_creation.getMonth()) : currentEvent_creation.getMonth() ) + '/' + (currentEvent_creation.getDate() < 10 ? ('0'+currentEvent_creation.getDate()) : currentEvent_creation.getDate() );
 			
 			// Creation Date in MM/DD/YYYY
-			var currentEvent_creation_human = new Date(currentEvent.createdAt);
+			var currentEvent_creation_human = new Date(currentEvent.timestamp);
 			currentEvent_creation_human = (currentEvent_creation_human.getMonth() < 10 ? ('0'+currentEvent_creation_human.getMonth()) : currentEvent_creation_human.getMonth() )+ '/' + (currentEvent_creation_human.getDate() < 10 ? ('0'+currentEvent_creation_human.getDate()) : currentEvent_creation_human.getDate() ) + '/' + currentEvent_creation_human.getFullYear();
 			
 			// Last Accessed Date
