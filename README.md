@@ -19,6 +19,7 @@ AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
 AWS_SNS_TOPIC_ARN=
 AWS_SNS_SUBJECT_PREFIX=[Cadence-Dev]
+PDOMAIN=http://cadence.local.mxmcloud.com:3000
 ```
 
 Notes:
@@ -47,3 +48,7 @@ AWS SES notifications:
 ### Amazon SES
 
 The domain `cadence.novo.mxmcloud.com` is configured for sending.
+
+
+### PDOMAIN
+This variable should be the hostname of the server you are on and that you want outgoing emails to link back to.
