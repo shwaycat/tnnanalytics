@@ -9,8 +9,7 @@ var keystone = require('../keystone-setup')(),
     sources = {
       // facebook: require('../lib/sources/facebook'),
       twitter: require('../lib/sources/twitter')
-    },
-    FollowerCount = require('../lib/sources/twitter/followerCount');
+    };
 
 require('../lib/keystone-script')(connectES, function(done) {
   async.eachSeries(_.keys(sources), function(sourceKey, nextSourceType) {
