@@ -5,7 +5,7 @@ var keystone = require('keystone'),
     Types = keystone.Field.Types;
     AWS = require('aws-sdk'),
     ses = new AWS.SES(),
-    jade = require('../node_modules/keystone/node_modules/jade'),
+    jade = require('jade'),
     hostname = process.env.PDOMAIN;
 
 /**
