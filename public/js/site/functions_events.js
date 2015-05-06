@@ -125,6 +125,7 @@ function eventsStatusUpdateController(data){
 		var row = clicked.parents('tr');
 		var statusItem = row.children('.event-item-status');
 		var eventID = row.data('id');
+
 		if (clicked.hasClass(STRING_STATUS_NEW_CLASS)){
 
 			row.removeClass(STRING_STATUS_NEW_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
@@ -147,9 +148,8 @@ function eventsStatusUpdateController(data){
 			statusItem.html(STRING_STATUS_OPEN.capitalizeFirstLetter());
 
 		}
-
 		// TODO: Push updated status here.
-		globalDebug('    Events Call: '+eventId+' Updated', 'color:purple;');
+		globalDebug('   Events Call: ' + eventID + ' Updated', 'color:purple;');
 		eventsStatusUpdate(data);
 
 	});
@@ -169,7 +169,7 @@ function eventsStatusUpdateController(data){
 function eventsStatusUpdate(data){
 	console.log("TODO");
 
-	eventsDelegateAlerts(eventsCheckStatus(GLOBAL_API_DATA.events));
+	eventsDelegateAlerts(eventsCheckStatus(fakeEvents));
 }
 
 
