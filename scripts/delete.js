@@ -1,7 +1,7 @@
 require('dotenv').load()
 
 var argv = require('minimist')(process.argv.slice(2)),
-    debug = require('debug')('delete');
+    debug = require('debug')('cadence:delete');
 
 if(!argv.help) {
     var keystone = require('../keystone-setup')(),
