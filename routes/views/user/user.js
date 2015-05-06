@@ -51,7 +51,7 @@ exports = module.exports = function(req, res) {
     if(req.body['name.first'] != '' && req.body['name.last'] != '') {
 
       req.user.getUpdateHandler(req).process(req.body, {
-        fields: 'name, notifications.keywords',
+        fields: 'name, keywords',
         flashErrors: true
       }, function(err) {
 

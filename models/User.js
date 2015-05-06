@@ -17,7 +17,7 @@ var keystone = require('keystone'),
  * @member {String} resetPasswordKey - TODO
  * @member {String} accountName - account that the user belongs to
  * @member {Boolean} isAccountRoot - indicates if the user is the top-level/root/main user of the account
- * @member {Field~Types~Textarea} notifications.keywords - Notifications - comma separated list of keywords/keyphrases for alerting
+ * @member {Field~Types~Textarea} keywords - Notifications - comma separated list of keywords/keyphrases for alerting
  * @member {Boolean} isAdmin - Permissions - TODO
  * @member {UserServices} services - hashtable of services by key
  */
@@ -40,12 +40,8 @@ User.add({
   resetPasswordKey: { type: String, hidden: true },
   accountName: { type: String, required: true, index: true, initial: true },
   isAccountRoot: { type: Boolean, "default": false },
-  wasNew: { type: Boolean, default: true, hidden: true }
-}, 'Notifications', {
-  //TODO make keywords top-level, not nested
-  notifications: {
-    keywords: { type: Types.Textarea, label: 'Keywords'}
-  }
+  wasNew: { type: Boolean, default: true, hidden: true },
+  keywords: { type: Types.Textarea, label: 'Keywords'}
 }, 'Permissions', {
   isAdmin: { type: Boolean, label: 'Can Admin ' + keystone.get('brand') }
 }, 'Services', {
@@ -148,8 +144,8 @@ User.schema.methods.resetPassword = function(callback) {
 };
 
 User.schema.methods.getKeywords = function() {
-  if (this.notifications && this.notifications.keywords) {
-    return _.chain( this.notifications.keywords.trim().split(/\s*,\s*/) )
+  if (this.keywords) {
+    return _.chain( this.keywords.trim().split(/\s*,\s*/) )
       .compact()
       .uniq()
       .value();
@@ -159,65 +155,95 @@ User.schema.methods.getKeywords = function() {
 };
 
 //TODO paging
-User.schema.methods.getAlertDocuments = function(cb) {
-  /*
-  var orQueries = _.map(user.getKeywords(), function(kw) {
-    return { query: { match_phrase: { doc_text: kw } } }
-  })
-  body: {
-    query: {
-      term: { cadence_user_id: user.id },
-      term: { notified: false }
-    },
-    filter: {
-      or: orQueries
-    }
-  }
-  */
-
-  keystone.elasticsearch.search({
-    index: keystone.get('elasticsearch index'),
-    from: 0,
-    size: 1000000000,
-    body: {
-      filter: {
-        and: [
-          { term: { cadence_user_id: this.id } },
-          { term: { notified: false } }
-        ]
-      },
-      query: {
-        match_phrase: {
-          doc_text: {
-            query: this.getKeywords(),
-            operator: "or"
+User.schema.methods.getAlertDocuments = function(callback) {
+  if(this.getKeywords().length > 0) {
+    keystone.elasticsearch.search({
+      index: keystone.get('elasticsearch index'),
+      from: 0,
+      size: 1000000000,
+      body:  {
+        filter: {
+          and: [
+            { term: { cadence_user_id: this.id } },
+            { 
+              not: {
+                term: { isNotified: "exists" }
+              }
+            }
+          ]
+        },
+        query: {
+          match_phrase: {
+            doc_text: {
+              query: this.getKeywords(),
+              operator: "or"
+            }
           }
         }
       }
-    }
-  }, cb);
+    }, callback);
+  } else {
+    callback();
+  }
 };
 
 User.schema.methods.sendNotificationEmail = function(links, callback) {
   var self = this;
-  //TODO set the subject and from values via keystone settings
-  (new keystone.Email('notification')).send({
-    subject: 'Cadence Notification',
-    to: this.email,
-    from: {
-      name: 'Cadence',
-      email: 'no-reply@maxmedia.com'
-    },
-    links: links
-  }, function(err, info) {
-    if (err) {
-      console.error("Error sending notification email to %s", self.email);
-    } else {
-      console.info("Sent notification email to %s", self.email);
-    }
 
-    callback(err, info);
-  });
+  var html = jade.renderFile('templates/emails/notification.jade', {
+      filename: 'templates/emails/forgotten-password.jade',
+      username: self.name.full,
+      host: hostname,
+      links: links,
+    });  
+    var params = {
+      Destination: { 
+        ToAddresses: [
+          self.email
+        ]
+      },
+      Message: {
+        Body: {
+          Html: {
+            Data: html
+          }
+        },
+        Subject: { 
+          Data: 'Cadence Notification'
+        }
+      },
+      Source: 'no-reply@cadence.novo.mxmcloud.com',
+      ReplyToAddresses: [
+        'no-reply@cadence.novo.mxmcloud.com',
+      ],
+      ReturnPath: 'no-reply@cadence.novo.mxmcloud.com'
+    };
+    
+    ses.sendEmail(params, function(err, data) {
+      if (err) callback(err, err.stack); // an error occurred
+      else     callback();               // successful response
+    });
+
+
+
+
+  // (new keystone.Email('notification')).send({
+  //   subject: 'Cadence Notification',
+  //   to: this.email,
+  //   from: {
+  //     name: 'Cadence',
+  //     email: 'no-reply@maxmedia.com'
+  //   },
+  //   links: links
+  // }, function(err, info) {
+  //   if (err) {
+  //     console.error("Error sending notification email to %s", self.email);
+  //   } else {
+  //     console.info("Sent notification email to %s", self.email);
+  //   }
+
+  //   callback(err, info);
+  // });
 };
 
 User.schema.methods.facebookPages = function(callback) {
@@ -254,6 +280,10 @@ User.schema.statics.findConnectedGoogle = function(callback) {
   return this.find({ 'services.google.isConfigured': true }, callback);
 };
 
+User.schema.statics.findAccountRoots = function(callback) {
+  return this.find({ 'isAccountRoot' : true }, callback);
+}
+
 User.schema.statics.findConnected = function(sources, callback) {
   if (callback === undefined && _.isFunction(sources)) {
     callback = sources;
@@ -281,7 +311,7 @@ User.schema.statics.findConnectedUsers = User.schema.statics.findConnected;
 
 User.schema.statics.findWithKeywords = function(callback) {
   return this.find({
-    "notifications.keywords": {
+    "keywords": {
       "$exists": true,
       "$nin": [ null, "" ]
     }
@@ -295,7 +325,7 @@ User.schema.statics.findConnectedWithKeywords = function(sources, callback) {
   }
 
   return this.find({
-    "notifications.keywords": {
+    "keywords": {
       "$exists": true,
       "$nin": [ null, "" ]
     },
@@ -378,11 +408,11 @@ function sendAccountEmail(user, isNewUser, callback) {
           Data: 'Cadence Account Information'
         }
       },
-      Source: 'admin@cadence.novo.mxmcloud.com',
+      Source: 'no-reply@cadence.novo.mxmcloud.com',
       ReplyToAddresses: [
-        'admin@cadence.novo.mxmcloud.com',
+        'no-reply@cadence.novo.mxmcloud.com',
       ],
-      ReturnPath: 'admin@cadence.novo.mxmcloud.com'
+      ReturnPath: 'no-reply@cadence.novo.mxmcloud.com'
     };
     
     ses.sendEmail(params, function(err, data) {
