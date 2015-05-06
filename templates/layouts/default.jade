@@ -9,6 +9,7 @@ include ../mixins/global/footer
 include ../mixins/global/side-navigation
 include ../mixins/global/date
 
+include ../mixins/accounts/events
 include ../mixins/accounts/social-graph
 include ../mixins/accounts/top-posts
 
@@ -50,6 +51,8 @@ html
         +footer
 
       +dateModal
+      +eventsCloseAll
+      +eventsGeneralModal
     else
 
       .container-fluid.main-container

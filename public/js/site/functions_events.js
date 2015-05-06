@@ -109,13 +109,10 @@ function eventsTableData(data, table){
 }
 
 function eventsCloseAll(){
-	var button = $('.analytics-cta').filter("[data-events-action='close-all']");
-	button.on('click', function(e){
+	$('#eventsCloseAll').on('click', function(e){
 		globalDebug('    Events Call: eventsCloseAll', 'color:purple;');
 
-		if (confirm('Are you sure you want to close all Adverse Events?')) {
-		    globalDebug('TODO: Close All Events');
-		}
+		// Todo close all events AJAX.
 	})
 }
 
