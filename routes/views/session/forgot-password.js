@@ -9,7 +9,7 @@ exports = module.exports = function(req, res) {
 	view.on('post', { action: 'forgot-password' }, function(next) {
 
 		if (!req.body.email) {
-			req.flash('error', "Please enter an email address.");
+			req.flash('warning', "Please enter an email address.");
 			return next();
 		}
 
@@ -18,7 +18,7 @@ exports = module.exports = function(req, res) {
 				return next(err);
 			} 
 			if (!user) {
-				req.flash('error', "Sorry, we don't recognise that email address.");
+				req.flash('warning', "Sorry, we don't recognise that email address.");
 				return next();
 			}
 			user.resetPassword(function(err) {

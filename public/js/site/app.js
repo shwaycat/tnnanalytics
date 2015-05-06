@@ -27,5 +27,8 @@ $(function() {
 	eventsStatusUpdateController(fakeEvents);
 	$('[data-toggle="tooltip"]').tooltip();
 	
+	if($('.alert-warning').length > 0) {
+		showErrors();
+	}
 
 });

@@ -15,7 +15,7 @@ exports = module.exports = function(req, res) {
 		User.model.findOne().where('resetPasswordKey', req.params.key).exec(function(err, user) {
 			if (err) return next(err);
 			if (!user) {
-				req.flash('error', "Sorry, that reset password key isn't valid.");
+				req.flash('warning', "Sorry, that reset password key isn't valid.");
 				return res.redirect('/forgot-password');
 			}
 			locals.found = user;
@@ -27,12 +27,12 @@ exports = module.exports = function(req, res) {
 	view.on('post', { action: 'reset-password' }, function(next) {
 
 		if (!req.body.password || !req.body.password_confirm) {
-			req.flash('error', "Please enter, and confirm your new password.");
+			req.flash('warning', "Please enter, and confirm your new password.");
 			return next();
 		}
 
 		if (req.body.password != req.body.password_confirm) {
-			req.flash('error', 'Please make sure both passwords match.');
+			req.flash('warning', 'Please make sure both passwords match.');
 			return next();
 		}
 
