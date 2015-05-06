@@ -259,6 +259,9 @@ function donutPercents(){
       .attr('class','active')
       .siblings()
       .removeAttr('class', 'active');
+
+    globalDebug('hover or click on slice ' + label);
+
   });
 }
 
