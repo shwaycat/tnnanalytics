@@ -499,7 +499,6 @@ function dateController(){
   endTime_human += ' ';
   endTime_human += endTime.getFullYear();
 
-  
   now = new Date();
   now = now.toJSON();
 
@@ -530,21 +529,69 @@ function dateController(){
   $('#dateDropdown').find('span').first().html(startTime_human);
   $('#dateDropdown').find('span').last().html(endTime_human);
 
+  $('[data-date-selection="startTime"]').html(startTime_human);
+  $('[data-date-selection="endTime"]').html(endTime_human);
+
   dateActions();
+  dateCalendar(['dateCalendarStart', 'dateCalendarEnd'], dateObj);
 
 }
 
 function dateActions(custom){
-  if (custom) {
 
-  } else {
-    $('.date-selector').on('click',function(e){
-      var clicked = $(this);
-      var dateObj = clicked.data().dateTime;
-      $.cookie(cookieName, dateObj, { expires: cookieExp, path: cookiePath });
-      setTimeout(function(){
-        location.reload();
-      },100);
+  $('.date-selector').on('click',function(e){
+    var clicked = $(this);
+    var dateObj = clicked.data().dateTime;
+    $.cookie(cookieName, dateObj, { expires: cookieExp, path: cookiePath });
+    setTimeout(function(){
+      location.reload();
+    },100);
+  });
+
+  $('#dateCustomSubmit').on('click',function(e){
+
+    var clicked = $(this);
+    var startTime = $('[data-date-selection="dateCalendarStart"]').data().dateTime;
+    var endTime = $('[data-date-selection="dateCalendarEnd"]').data().dateTime;
+    var dateObj = { "startTime": startTime, "endTime": endTime };
+
+    if (startTime != undefined && endTime != undefined){
+      var startTimeDate = new Date(startTime);
+      var endTimeDate = new Date(endTime);
+
+      if (startTimeDate < endTimeDate){
+        dateObj = JSON.stringify(dateObj);
+        $.cookie(cookieName, dateObj, { expires: cookieExp, path: cookiePath });
+        setTimeout(function(){
+          location.reload();
+        },100);
+      } else {
+        console.log('number mismatch');
+      }
+    } else {
+      console.log('Missing Date!');
+    }
+  });
+
+}
+
+function dateCalendar(selectorArray, dateObj){
+  var current = new Date();
+  for (var i = 0; i < selectorArray.length; i++){
+    $('#'+selectorArray[i]).DatePicker({
+      flat: true,
+      format: 'B d Y',
+      date: [dateObj.startTime,dateObj.endTime],
+      current: current,
+      calendars: 1,
+      starts: 1,
+      onChange: function(formatted, dateObj){
+        console.log(formatted);
+        console.log(dateObj);
+        var selector = $(this).parent().attr('id');
+        $('[data-date-selection="'+selector+'"]').html(formatted).addClass('selected');
+        $('[data-date-selection="'+selector+'"]').data().dateTime = dateObj.toJSON();
+      }
     });
   }
 }

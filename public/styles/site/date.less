@@ -1,0 +1,73 @@
+@transition_modal_short: 0.15s;
+
+.modal {
+	.modal-dialog {
+		margin: 15em auto;
+		width: 90%;
+		.respond-md({
+		  width: 50%;
+		});
+		button {
+			outline:0 !important;
+		}
+		.modal-content {
+			-webkit-border-radius: 0;
+			-moz-border-radius: 0;
+			border-radius: 0;
+			background-color:@background_element;
+		}
+		.modal-header {
+			border-bottom:0;
+			padding: 0.75em;
+			button {
+				font-size: 1.2em;
+				text-shadow: 0 0 0 rgba(0,0,0,0);
+				opacity: 1;
+				color:@gray;
+				height: 2em;
+				margin-top: 0;
+				.transition(@transition_modal_short);
+				&:hover {
+					.transition(@transition_modal_short);
+					color:@lightGray;
+				}
+			}
+			.section-title {
+				padding: 0.25em;
+			}
+		}
+		.modal-footer {
+			border-top:0;
+			padding: 1em 15px 1.5em;
+			button {
+				width: 6em;
+				font-size: 1.15em;
+				margin-left: 0.5em;
+			}
+		}
+		.modal-body {
+			padding: 0.75em 0.75em 2em;
+			.date-selection {
+				display: block;
+				position: absolute;
+				right: 1em;
+				bottom: 0;
+				font-size: 1.2em;
+
+			}
+		}
+	}
+}
+
+
+
+.datepicker {
+	width: 100% !important;
+	height: 13em !important;
+	.datepickerContainer table {
+		width: 100%;
+	}
+	.datepickerBorderT, .datepickerBorderB, .datepickerBorderL, .datepickerBorderR, .datepickerBorderTL, .datepickerBorderTR, .datepickerBorderBL, .datepickerBorderBR {
+		background:none;
+	}
+}

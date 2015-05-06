@@ -23,48 +23,49 @@ block content
           .form-group(class=validationErrors.email ? 'has-error' : null)
             label(for='email') Email
             input(id='email' type='email', name='email', value=user.email, placeholder='Email').form-control
-          .form-group
-            label(for='keywords') Keywords
-            textarea(id='keywords' name='notifications.keywords', rows=3, placeholder='comma, separated, list, of, keywords').form-control=user.notifications.keywords
-          
-          .form-group
-            label.sr-only Twitter
-            if !user.services.twitter.isConfigured
-              a(href='/auth/twitter', title='Connect your Twitter account').btn.btn-social-connect.btn-twitter
-                span.connection-icon.entypo-social.entypo-twitter
-                span.connection-text Connect your Twitter account
-            if user.services.twitter.isConfigured
-              .social-connect
-                span.connection-icon.entypo-social.entypo-twitter
-                span.connection-text Your account is connected.
-              a(href='?disconnect=twitter', title='Revoke authorization of your Twitter account').btn.btn-social-connect.btn-twitter
-                span.connection-text Disconnect
+          if user.isAccountRoot
+            .form-group
+              label(for='keywords') Keywords
+              textarea(id='keywords' name='notifications.keywords', rows=3, placeholder='comma, separated, list, of, keywords').form-control=user.notifications.keywords
+            
+            .form-group
+              label.sr-only Twitter
+              if !user.services.twitter.isConfigured
+                a(href='/auth/twitter', title='Connect your Twitter account').btn.btn-social-connect.btn-twitter
+                  span.connection-icon.entypo-social.entypo-twitter
+                  span.connection-text Connect your Twitter account
+              if user.services.twitter.isConfigured
+                .social-connect
+                  span.connection-icon.entypo-social.entypo-twitter
+                  span.connection-text Your account is connected.
+                a(href='?disconnect=twitter', title='Revoke authorization of your Twitter account').btn.btn-social-connect.btn-twitter
+                  span.connection-text Disconnect
 
-          .form-group
-            label.sr-only Facebook
-            if !user.services.facebook.isConfigured
-              a(href='/auth/facebook', title='Connect your Facebook account').btn.btn-social-connect.btn-facebook
-                span.connection-icon.entypo-social.entypo-facebook
-                span.connection-text Connect your Facebook account
-            if user.services.facebook.isConfigured
-              .social-connect
-                span.connection-icon.entypo-social.entypo-facebook
-                span.connection-text Your account is connected.
-              a(href='?disconnect=facebook', title='Revoke authorization of your Facebook account').btn.btn-social-connect.btn-facebook
-                span.connection-text Disconnect
+            .form-group
+              label.sr-only Facebook
+              if !user.services.facebook.isConfigured
+                a(href='/auth/facebook', title='Connect your Facebook account').btn.btn-social-connect.btn-facebook
+                  span.connection-icon.entypo-social.entypo-facebook
+                  span.connection-text Connect your Facebook account
+              if user.services.facebook.isConfigured
+                .social-connect
+                  span.connection-icon.entypo-social.entypo-facebook
+                  span.connection-text Your account is connected.
+                a(href='?disconnect=facebook', title='Revoke authorization of your Facebook account').btn.btn-social-connect.btn-facebook
+                  span.connection-text Disconnect
 
-          .form-group
-            label.sr-only Google    
-            if !user.services.google.isConfigured
-              a(href='/auth/google', title='Connect your Google account').btn.btn-social-connect.btn-google
-                span.connection-icon.entypo-social.entypo-google-circles
-                span.connection-text Connect your Google account
-            if user.services.google.isConfigured
-              .social-connect
-                span.connection-icon.entypo-social.entypo-google-circles
-                span.connection-text Your account is connected.
-              a(href='?disconnect=google' title='Revoke authorization of your Google account').btn.btn-social-connect.btn-google
-                span.connection-text Disconnect
+            .form-group
+              label.sr-only Google    
+              if !user.services.google.isConfigured
+                a(href='/auth/google', title='Connect your Google account').btn.btn-social-connect.btn-google
+                  span.connection-icon.entypo-social.entypo-google-circles
+                  span.connection-text Connect your Google account
+              if user.services.google.isConfigured
+                .social-connect
+                  span.connection-icon.entypo-social.entypo-google-circles
+                  span.connection-text Your account is connected.
+                a(href='?disconnect=google' title='Revoke authorization of your Google account').btn.btn-social-connect.btn-google
+                  span.connection-text Disconnect
 
           .form-actions
             button(type='submit', data-loading-text="Saving...").btn.btn-default.btn-large Save Profile

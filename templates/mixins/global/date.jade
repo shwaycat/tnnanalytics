@@ -21,5 +21,28 @@ mixin date
           a.date-selector(role="menuitem" tabindex="-1" data-date-selector='lastMonth')
             | Last Month
         li
-          a(role="menuitem" tabindex="-1" data-date-selector='custom')
+          a(role="menuitem" tabindex="-1" data-date-selector='custom' data-toggle="modal" data-target="#dateModal")
             | Custom
+
+mixin dateModal
+  .modal.fade#dateModal(tabindex="-1" role="dialog" aria-labelledby="dateModal" aria-hidden="true")
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button(type="button" class="close" data-dismiss="modal" aria-label="Close")
+            span(aria-hidden="true").entypo-regular-new.entypo-circle-with-cross
+          h4.section-title Custom Date Range
+        .modal-body
+          section.date-calendars.row
+            .col-xs-12.col-sm-6
+              #dateCalendarStart
+            .col-xs-12.col-sm-6
+              #dateCalendarEnd
+          section.date-selection
+            span(data-date-selection="dateCalendarStart" data-date-time=null)
+            |   -  
+            span(data-date-selection="dateCalendarEnd" data-date-time=null)
+          
+        .modal-footer
+          button.btn.btn-default(type="button" data-dismiss="modal") Close
+          button#dateCustomSubmit.btn.btn-default(type="button") Submit
