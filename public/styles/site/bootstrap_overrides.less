@@ -1,3 +1,5 @@
+@transition_button: 0.1s;
+
 .btn {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -14,20 +16,34 @@
 .btn-default, .btn-default:visited {
   color:#fff;
   background-color:@lightBlue;
+  .transition(@transition_button);
   border-color:@lightBlue;
   font-size: 1em;
   font-weight:300;
   outline: 0 !important;
   &.facebook { background-color:@social_fb_main; } &.twitter { background-color:@social_twitter_main; } &.instagram { background-color:@social_instagram_main; } &.youtube { background-color:@social_youtube_main; } &.google-plus { background-color:@social_googleplus_main; } &.analytics-us, &.analytics-all, &.analytics-global, &.events { background-color:@analytics_cta; }
 }
+
+.btn-danger, .btn-danger:visited {
+  background-color:@element_alert_lighter;
+  .transition(@transition_button);
+}
+
 .btn-default.disabled, .btn-default[disabled], fieldset[disabled] .btn-default, .btn-default.disabled:hover, .btn-default[disabled]:hover, fieldset[disabled] .btn-default:hover, .btn-default.disabled:focus, .btn-default[disabled]:focus, fieldset[disabled] .btn-default:focus, .btn-default.disabled.focus, .btn-default[disabled].focus, fieldset[disabled] .btn-default.focus, .btn-default.disabled:active, .btn-default[disabled]:active, fieldset[disabled] .btn-default:active, .btn-default.disabled.active, .btn-default[disabled].active, fieldset[disabled] .btn-default.active {
   // background-color:$button_disabled;
   // border-color:$button_disabled;
 }
 .btn-default:hover, .btn-default:focus, .btn-default.focus, .btn-default:active, .btn-default.active, .open > .dropdown-toggle.btn-default {
   color: #fff !important;
-  background-color: @lightBlue;
+  background-color: @element_active_lighter_highlight;
+  .transition(@transition_button);
 }
+
+.btn-danger:hover, .btn-danger:focus, .btn-danger.focus, .btn-danger:active, .btn-danger.active, .open > .dropdown-toggle.btn-danger {
+  background-color:@element_alert_lighter_highlight;
+  .transition(@transition_button);
+}
+
 
 // If you need 5 columns..
 .col-xs-15 {

@@ -3,6 +3,30 @@
 //// - Used for altering css and styles.
 //////////////////////////////////////////////
 
+function browserVersion() {
+    var ua = window.navigator.userAgent;
+    if (ua.indexOf("Trident/7.0") > 0)
+        return 11; //IE
+    else if (ua.indexOf("Trident/6.0") > 0)
+        return 10; //IE
+    else if (ua.indexOf("Trident/5.0") > 0)
+        return 9; //IE
+    else if (ua.indexOf("Firefox/34") > 0){
+      return 50; //Firefox 34
+    } else if (ua.indexOf("Firefox/3") > 0){
+      return 51; //Firefox Any
+    } else if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1){
+      return 70;
+    } else {
+      return 0;  //None
+    }
+}
+
+function attachBrowserVersion(){
+  var version = browserVersion();
+  $('html').addClass('browser-'+browserVersion());
+} 
+
 function compensateFooter(){
   if($('.footer-container')[0]){
     var windowHeight = window.innerHeight;
@@ -208,7 +232,7 @@ function simplifyData(data){
       otherObj = { "label": "Other", "value": 0, "percent": 0 };
 
   _.each(theData, function(datum){
-    if (datum.value/totalValues < 0.06){
+    if (datum.value/totalValues < 0.08){
       otherObj.value += datum.value;
       otherObj.percent = Math.round( (otherObj.value*100/totalValues) *100 )/100 + '%';
       datum.percent = Math.round( (datum.value*100/totalValues) *100 )/100 + '%';

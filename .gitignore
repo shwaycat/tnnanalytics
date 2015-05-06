@@ -41,3 +41,5 @@ doc/
 /log/*
 /tmp/*
 !.gitkeep
+
+public/styles/site.min.css

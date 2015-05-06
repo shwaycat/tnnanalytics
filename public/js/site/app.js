@@ -22,6 +22,7 @@ $(function() {
 	}
 
 	//Front-End Functions
+	attachBrowserVersion();
 	compensateFooter();
 	elementReveal();
 	eventsStatusUpdateController(fakeEvents);

@@ -19,7 +19,7 @@ exports.initLocals = function(req, res, next) {
   }
 
   locals.navLinks = [
-    { label: 'Dashboard',         type: 'link',             key: 'dashboard',       href: ''},
+    // { label: 'Dashboard',         type: 'link',             key: 'dashboard',       href: ''},
     { label: 'Social Analytics',  type: 'navigation',       key: 'view-social',     href: false },
     { label: 'Facebook',          type: 'sub-link',         key: 'facebook',        href: 'facebook' },
     { label: 'Twitter',           type: 'sub-link',         key: 'twitter',         href: 'twitter' },
