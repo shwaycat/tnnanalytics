@@ -13,8 +13,8 @@ mixin eventsCloseAll
           button.btn.btn-default(type="button" data-dismiss="modal") Cancel
           button#eventsCloseAll.btn.btn-default.btn-danger(type="button") Submit
 
-mixin eventsGeneralModal
-  .modal.fade#eventsGeneralModal(tabindex="-1" role="dialog" aria-labelledby="eventsGeneralModal" aria-hidden="true")
+mixin eventsDirectMessageModal
+  .modal.fade#eventsDirectMessageModal(tabindex="-1" role="dialog" aria-labelledby="eventsDirectMessageModal" aria-hidden="true")
     .modal-dialog
       .modal-content
         .modal-header
@@ -22,7 +22,6 @@ mixin eventsGeneralModal
             span(aria-hidden="true").entypo-regular-new.entypo-circle-with-cross
           h4.section-title Close All Events
         .modal-body
-          
+          p There is not a link to this Direct Message, instead you can go to your account profile page by clicking the button below.
         .modal-footer
-          button.btn.btn-default(type="button" data-dismiss="modal") Cancel
-          button#dateCustomSubmit.btn.btn-default(type="button") Submit
+          a#eventsDirectMessageButton.btn.btn-default Twitter Account Page

@@ -9,6 +9,7 @@ var STRING_STATUS_NEW = 'new',
 		STRING_STATUS_CLOSED_BUTTON = 'Mark Incomplete',
 		statusClass = '',
 		statusOrder = 0,
+		urlHtml = '',
 		STRING_ALERTS_MESSAGE = ' New Adverse Event',
 		STRING_ALERTS_MESSAGE_PLURAL = ' New Adverse Events';
 
@@ -37,6 +38,7 @@ function eventsTable(table){
 	    }
 		});
 
+		eventsDirectMessage();
 		$('.events-container').sectionLoad(false);
 	}
 }
@@ -51,6 +53,7 @@ function eventsTableData(data, table){
 			statusClass = '';
 			actionText = '';
 			statusOrder = 0;
+			urlHtml = '';
 
 			// Get the Current Event Data
 			var currentEvent = data.events[i];
@@ -91,6 +94,12 @@ function eventsTableData(data, table){
 
 			}
 
+			if (currentEvent.doc_type == 'direct_message') {
+				urlHtml = '<a data-toggle="modal" data-events-url='+currentEvent.url+' data-events-has-modal="true" data-target="#eventsDirectMessageModal">View DM'
+			} else {
+				urlHtml = '<a target="_blank" href="'+currentEvent.url+'" title="'+currentEvent.source+' Link">View Post'
+			}
+
 			// Create the table row with the given data
 			tableHTML += '<tr data-id="'+currentEvent.id+'"" class="'+statusClass+'">';
 			tableHTML += '<td class="event-item-status"><span class="event-item-robot">'+statusOrder+'</span>'+currentEvent.alertState.capitalizeFirstLetter()+'</td>';
@@ -99,13 +108,21 @@ function eventsTableData(data, table){
 			tableHTML += '<td>'+currentEvent.id+'</td>';
 			tableHTML += '<td><span class="event-item-robot">'+currentEvent_accessed+'</span><span class="event-item-human">'+currentEvent_accessed_human.capitalizeFirstLetter()+'</span></td>';
 			tableHTML += '<td><button class="btn btn-default event-action-btn '+statusClass+'">'+actionText+'</td>';
-			tableHTML += '<td class="event-link-cell"><a target="_blank" href="'+currentEvent.url+'" title="'+currentEvent.source+' Link">View Post<span class="entypo entypo-chevron-right"></span></td>';
+			tableHTML += '<td class="event-link-cell">'+urlHtml+'<span class="entypo entypo-chevron-right"></span></td>';
 			tableHTML += '</tr>';
 
 			table.find('tbody').append(tableHTML);
 			tableHTML = '';
 		}
 	}
+}
+
+function eventsDirectMessage(){
+	$('[data-events-has-modal="true"]').on('click', function(){
+		var url = $(this).data('events-url');
+		$('#eventsDirectMessageButton').attr('href', url);
+	})
+	
 }
 
 function eventsCloseAll(){

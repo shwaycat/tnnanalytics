@@ -122,7 +122,9 @@
 		&.event-status-cell {
 			padding-left:1.5em;
 		}
-
+		a {
+			cursor:pointer;
+		}
 		&.event-link-cell {
 			text-align: left;
 			.entypo {
@@ -181,11 +183,15 @@
 	
 }
 
-#eventsCloseAllModal {
+#eventsCloseAllModal, #eventsDirectMessageModal {
 	.modal-body {
 		p {
 			text-align: center;
 			font-size:1.15em;
+			line-height: 1.4;
+			width: 70%;
+			margin: auto;
+			margin-bottom:0;
 		}
 	}
 	.modal-footer {
