@@ -1,7 +1,7 @@
 require('dotenv').load()
 
 var keystone = require('../keystone-setup')(),
-    debug = require('debug')('pull'),
+    debug = require('debug')('cadence:pull'),
     User = keystone.list('User'),
     async = require('async'),
     _ = require('underscore'),
