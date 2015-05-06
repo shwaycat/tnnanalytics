@@ -3,6 +3,23 @@
 	margin-bottom:0;
 	.form-group {
 		margin-bottom: 1.5em;
+
+ 		.error-message {
+		  float: right;
+		  padding: 5px 7px 7px;
+		  background: @lightRed;
+		  font-size: 0.8em;
+		  display:none;
+		}
+
+		&.error:not(.never-error) {
+			.error-message {
+				display:block;
+			}
+			input {
+				border:1px solid @lightRed;
+			}
+		}
 	}
 	label {
 		font-weight:300;
@@ -11,6 +28,10 @@
 	}
 	input[type="text"] {
 
+	}
+	input[disabled] {
+		background:@background_element;
+		padding:0;
 	}
 	textarea {
 		max-width: 100%;

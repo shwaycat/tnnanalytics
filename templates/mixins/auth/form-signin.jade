@@ -11,9 +11,11 @@ mixin form-signin(args)
         .form-group
           label(for='signin-email') Email
           input(type='email', name='email', placeholder='Email', id='signin-email', value=locals.form ? locals.form.email : null).form-control.form-control--first
+          span.error-message Enter your Email
         .form-group
           label(for='signin-password') Password
           input(type='password', name='password', placeholder='Password', id='signin-password', value='').form-control.form-control--last
+          span.error-message Enter your Password
         .form-group
           label.sr-only Forgot Password
           a(href=args.modal ? js : '/forgot-password', rel=args.modal ? 'modal-pane' : null, data-modal-pane=args.modal ? 'password' : null)

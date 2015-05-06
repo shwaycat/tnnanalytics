@@ -7,7 +7,7 @@ exports = module.exports = function(req, res) {
   var view = new keystone.View(req, res),
     locals = res.locals;
 
-  locals.section = 'me';
+  locals.section = 'user';
   locals.page.title = locals.site.brand + ' Settings';
 
   /*/
@@ -27,9 +27,10 @@ exports = module.exports = function(req, res) {
     }
 
     req.user.save(function(err) {
+      locals.flashForm = 'profile.details';
 
       if (err) {
-        req.flash('success', 'The service could not be disconnected, please try again.');
+        req.flash('error', 'The service could not be disconnected, please try again.');
         return next();
       }
 
@@ -45,19 +46,27 @@ exports = module.exports = function(req, res) {
   /*/
   view.on('post', { action: 'profile.details' }, function(next) {
 
-    req.user.getUpdateHandler(req).process(req.body, {
-      fields: 'name, email, notifications.keywords',
-      flashErrors: true
-    }, function(err) {
+    locals.flashForm = 'profile.details';
 
-      if (err) {
+    if(req.body['name.first'] != '' && req.body['name.last'] != '') {
+
+      req.user.getUpdateHandler(req).process(req.body, {
+        fields: 'name, notifications.keywords',
+        flashErrors: true
+      }, function(err) {
+
+        if (err) {
+          return next();
+        }
+
+        req.flash('success', 'Your changes have been saved.');
         return next();
-      }
 
-      req.flash('success', 'Your changes have been saved.');
+      });
+    } else {
+      req.flash('warning', 'details');
       return next();
-
-    });
+    }
 
   });
 
@@ -66,10 +75,10 @@ exports = module.exports = function(req, res) {
   /*/
   view.on('post', { action: 'profile.password' }, function(next) {
 
-    console.log('post!')
+    locals.flashForm = 'profile.password';
 
     if (!req.body.password || !req.body.password_confirm) {
-      req.flash('error', 'Please enter a password.');
+      req.flash('warning', 'password');
       console.log('no password detected');
       return next();
     }

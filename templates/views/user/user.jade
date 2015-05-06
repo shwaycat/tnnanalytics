@@ -10,36 +10,38 @@ block content
       .session-content
         h4.session-title Hi #{user.name.first}, these are your settings.
         
-        //- p #{credentials}  
+        if(flashForm == 'profile.details')
+          +flash-messages(messages)
         form(method='post', autocomplete='off', novalidate).session-form
           input(type='hidden', name='action', value='profile.details')
           input(type='hidden', name=csrf_token_key, value=csrf_token_value)
           .form-group(class=validationErrors.name ? 'has-error' : null)
             label(for='firstName') First Name
             input(id='firstName' type='text', name='name.first', value=user.name.first, placeholder='First Name').form-control
+            span.error-message Enter your First Name
           .form-group(class=validationErrors.name ? 'has-error' : null)
             label(for='lastName') Last Name
             input(id='lastName' type='text', name='name.last', value=user.name.last, placeholder='Last Name').form-control
-          .form-group(class=validationErrors.email ? 'has-error' : null)
+            span.error-message Enter your Last Name
+          .form-group(class=validationErrors.email ? 'has-error' : null).never-error
             label(for='email') Email
-            input(id='email' type='email', name='email', value=user.email, placeholder='Email').form-control
-          if user.isAccountRoot
-            .form-group
-              label(for='keywords') Keywords
-              textarea(id='keywords' name='notifications.keywords', rows=3, placeholder='comma, separated, list, of, keywords').form-control=user.notifications.keywords
-            
-            .form-group
-              label.sr-only Twitter
-              if !user.services.twitter.isConfigured
-                a(href='/auth/twitter', title='Connect your Twitter account').btn.btn-social-connect.btn-twitter
-                  span.connection-icon.entypo-social.entypo-twitter
-                  span.connection-text Connect your Twitter account
-              if user.services.twitter.isConfigured
-                .social-connect
-                  span.connection-icon.entypo-social.entypo-twitter
-                  span.connection-text Your account is connected.
-                a(href='?disconnect=twitter', title='Revoke authorization of your Twitter account').btn.btn-social-connect.btn-twitter
-                  span.connection-text Disconnect
+            input(id='email' type='email', name='email', value=user.email, placeholder='Email' disabled="disabled").form-control
+          .form-group
+            label(for='keywords') Keywords
+            textarea(id='keywords' name='notifications.keywords', rows=3, placeholder='comma, separated, list, of, keywords').form-control=user.notifications.keywords
+          
+          .form-group
+            label.sr-only Twitter
+            if !user.services.twitter.isConfigured
+              a(href='/auth/twitter', title='Connect your Twitter account').btn.btn-social-connect.btn-twitter
+                span.connection-icon.entypo-social.entypo-twitter
+                span.connection-text Connect your Twitter account
+            if user.services.twitter.isConfigured
+              .social-connect
+                span.connection-icon.entypo-social.entypo-twitter
+                span.connection-text Your account is connected.
+              a(href='?disconnect=twitter', title='Revoke authorization of your Twitter account').btn.btn-social-connect.btn-twitter
+                span.connection-text Disconnect
 
             .form-group
               label.sr-only Facebook
@@ -73,6 +75,8 @@ block content
     .col-xs-12.col-md-12.col-lg-6.session-block
       .session-content
         h4.session-title Change Password
+        if(flashForm == 'profile.password')
+          +flash-messages(messages)
         form(method='post', autocomplete='off').session-form
 
           section(data-element-reveal-id="change-password-show").element-reveal.active
@@ -84,8 +88,10 @@ block content
             .form-group
               label(for='change-passwordNew') New Password
               input(type='password', name='password', placeholder='New Password', id='change-passwordNew').form-control
-            .form-group
+              span.error-message Enter your New Password
+            .form-group.clearfix
               label(for='change-passwordConfirm') Confirm Password
-              input(type='password', name='password_confirm', placeholder='Confirm Password', id='signin-passwordConfirm').form-control
+              input(type='password', name='password_confirm', placeholder='Confirm Password', id='change-passwordConfirm').form-control
+              span.error-message Confirm your New Password
             .form-group
               button(type='submit', data-loading-text="Changing...").btn.btn-default.btn-large Change

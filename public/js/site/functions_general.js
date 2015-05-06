@@ -599,4 +599,28 @@ function dateCalendar(selectorArray, dateObj){
 }
 
 
+//////////////////////////////////////////////
+//// Validations
+//////////////////////////////////////////////
+function showErrors() {
+  var warning = $('.alert-warning').text().trim();
+
+  if(warning == 'password') {
+    $('#change-passwordNew').parent().addClass('error');
+    $('#change-passwordConfirm').parent().addClass('error');
+    $('.element-reveal-link').click();
+  } else if (warning == 'details') {
+    $('#firstName').parent().addClass('error');
+    $('#lastName').parent().addClass('error');
+  } else {
+    $('.form-group').addClass('error');    
+  }
+
+  $('.alert-warning').hide();
+}
+
+
+
+
+
 
