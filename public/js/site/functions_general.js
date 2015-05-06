@@ -593,10 +593,12 @@ function dateActions(custom){
           location.reload();
         },100);
       } else {
-        console.log('number mismatch');
+        $('.datepickerContainer').addClass('datepickerWarning');
+        $('[data-date-selection="mismatch"]').addClass('active');
       }
     } else {
-      console.log('Missing Date!');
+      $('.datepickerContainer').addClass('datepickerWarning');
+      $('[data-date-selection="missingdate"]').addClass('active');
     }
   });
 
@@ -613,6 +615,9 @@ function dateCalendar(selectorArray, dateObj){
       calendars: 1,
       starts: 1,
       onChange: function(formatted, dateObj){
+        $('.datepickerContainer').removeClass('datepickerWarning');
+        $('[data-date-selection="missingdate"]').removeClass('active');
+        $('[data-date-selection="mismatch"]').removeClass('active');
         var selector = $(this).parent().attr('id');
         if (dateObj == 'Invalid Date'){
           globalDebug('   Invalid Date', 'color:red;');

@@ -42,6 +42,11 @@ mixin dateModal
               #dateCalendarEnd
               .date-selection
                 span(data-date-selection="dateCalendarEnd" data-date-time=null) - 
+            .col-xs-12
+              span.date-selection-warning(data-date-selection="missingdate")
+                | Please select a date from each calendar.
+              span.date-selection-warning(data-date-selection="mismatch")
+                | Invalid dates. Please choose dates in chronological order. 
         .modal-footer
           button.btn.btn-default(type="button" data-dismiss="modal") Close
           button#dateCustomSubmit.btn.btn-default(type="button") Submit
