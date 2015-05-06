@@ -53,7 +53,7 @@ function elementReveal(){
   });
 }
 
-function equalHeightPairs(){
+function equalHeightPairs(breakpoint){
   $('.equal-height-block-1').each(function(){
     var left = $(this);
     var leftChild = left.find('.inner-content');
@@ -64,28 +64,31 @@ function equalHeightPairs(){
     leftChild.removeAttr('style');
     rightChild.removeAttr('style');
 
-    var leftHeight = parseInt(leftChild.css('height'));
-    var rightHeight = parseInt(rightChild.css('height'));
+    var windowWidth = window.innerWidth;
+    if(windowWidth >= breakpoint){
+      var leftHeight = parseInt(leftChild.css('height'));
+      var rightHeight = parseInt(rightChild.css('height'));
 
-    if (left[0] && right[0]){
-      
-      if (leftHeight > rightHeight){
-        control = left;
-        controlHeight = leftHeight;
-        varied = right;
-        variedHeight = rightHeight
+      if (left[0] && right[0]){
+        
+        if (leftHeight > rightHeight){
+          control = left;
+          controlHeight = leftHeight;
+          varied = right;
+          variedHeight = rightHeight
 
-        varied.find('.inner-content').css('height', controlHeight);
-      } else if (leftHeight < rightHeight) {
-        control = right;
-        controlHeight = rightHeight;
-        varied = left;
-        variedHeight = leftHeight;
+          varied.find('.inner-content').css('height', controlHeight);
+        } else if (leftHeight < rightHeight) {
+          control = right;
+          controlHeight = rightHeight;
+          varied = left;
+          variedHeight = leftHeight;
 
-        varied.find('.inner-content').css('height', controlHeight);
+          varied.find('.inner-content').css('height', controlHeight);
+        }
       }
     }
-  })
+  });
 }
 
 
@@ -214,7 +217,7 @@ $.fn.sectionLoad = function(reload, eh){
   setTimeout(function(){
     el.addClass('loaded');
     if (eh){
-      equalHeightPairs();
+      equalHeightPairs(1200);
     }
   },300);
 
