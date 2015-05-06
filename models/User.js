@@ -3,6 +3,10 @@ var keystone = require('keystone'),
     _ = require('underscore'),
     request = require('request'),
     Types = keystone.Field.Types;
+    AWS = require('aws-sdk'),
+    ses = new AWS.SES(),
+    jade = require('../node_modules/keystone/node_modules/jade'),
+    hostname = process.env.PDOMAIN;
 
 /**
  * User model
@@ -35,7 +39,8 @@ User.add({
   password: { type: Types.Password, initial: true },
   resetPasswordKey: { type: String, hidden: true },
   accountName: { type: String, required: true, index: true, initial: true },
-  isAccountRoot: { type: Boolean, "default": false }
+  isAccountRoot: { type: Boolean, "default": false },
+  wasNew: { type: Boolean, default: true, hidden: true }
 }, 'Notifications', {
   //TODO make keywords top-level, not nested
   notifications: {
@@ -309,6 +314,82 @@ User.schema.statics.findByID = function(id, callback) {
 User.schema.statics.findByEmail = function(email, callback) {
   return this.find({email: email}, callback);
 };
+
+User.schema.pre('save', function(next) {
+  this.wasNew = this.isNew;
+  next();
+});
+
+User.schema.post('save', function() {
+
+  var self = this;
+  if(self.wasNew) {
+    
+    self.resetPasswordKey = keystone.utils.randomString([16,24]);
+    self.wasNew = false;
+
+    self.save(function(err) {
+      if(err) return callback(err);
+
+      sendAccountEmail(self, true);
+    });
+  }
+
+});
+
+User.schema.methods.resetPassword = function(callback) {
+
+  var self = this;
+  self.resetPasswordKey = keystone.utils.randomString([16,24]);
+
+  self.save(function(err) {
+    if(err) return callback(err);
+
+    sendAccountEmail(self, false, callback);
+  });
+
+};
+
+function sendAccountEmail(user, isNewUser, callback) {
+  if ('function' !== typeof callback) {
+    callback = function() {};
+  }
+
+  var html = jade.renderFile('templates/emails/forgotten-password.jade', {
+      filename: 'templates/emails/forgotten-password.jade',
+      username: user.name.full,
+      host: hostname,
+      link: '/reset-password/' + user.resetPasswordKey,
+      newUser: isNewUser
+    });  
+    var params = {
+      Destination: { 
+        ToAddresses: [
+          user.email
+        ]
+      },
+      Message: {
+        Body: {
+          Html: {
+            Data: html
+          }
+        },
+        Subject: { 
+          Data: 'Cadence Account Information'
+        }
+      },
+      Source: 'admin@cadence.novo.mxmcloud.com',
+      ReplyToAddresses: [
+        'admin@cadence.novo.mxmcloud.com',
+      ],
+      ReturnPath: 'admin@cadence.novo.mxmcloud.com'
+    };
+    
+    ses.sendEmail(params, function(err, data) {
+      if (err) callback(err, err.stack); // an error occurred
+      else     callback();               // successful response
+    });
+}
 
 /**
  * Registration
