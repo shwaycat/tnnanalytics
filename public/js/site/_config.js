@@ -41,7 +41,7 @@ var fakeEvents = {
         "id":"1111",
         "source":"facebook",
         "alertState":"new",
-        "createdAt": "2015-04-23T22:45:04.000Z",
+        "timestamp": "2015-04-23T22:45:04.000Z",
         "alertStateUpdatedAt": "2015-04-23T22:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "blah"
@@ -50,7 +50,7 @@ var fakeEvents = {
         "id":"2222",
         "source":"twitter",
         "alertState":"new",
-        "createdAt": "2015-04-17T19:45:04.000Z",
+        "timestamp": "2015-04-17T19:45:04.000Z",
         "alertStateUpdatedAt": "2015-04-17T20:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "blah"
@@ -59,7 +59,7 @@ var fakeEvents = {
         "id":"3333",
         "source":"instagram",
         "alertState":"open",
-        "createdAt": "2015-04-17T21:45:04.000Z",
+        "timestamp": "2015-04-17T21:45:04.000Z",
         "alertStateUpdatedAt": "2015-04-17T21:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "blah"
@@ -67,7 +67,7 @@ var fakeEvents = {
         "id":"4444",
         "source":"youtube",
         "alertState":"new",
-        "createdAt": "2015-02-16T22:45:04.000Z",
+        "timestamp": "2015-02-16T22:45:04.000Z",
         "alertStateUpdatedAt": "2015-02-16T22:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "direct_message"
@@ -75,7 +75,7 @@ var fakeEvents = {
         "id":"5555",
         "source":"google+",
         "alertState":"closed",
-        "createdAt": "2015-02-17T05:45:04.000Z",
+        "timestamp": "2015-02-17T05:45:04.000Z",
         "alertStateUpdatedAt": "2015-02-17T05:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "direct_message"
@@ -84,7 +84,7 @@ var fakeEvents = {
         "id":"6666",
         "source":"facebook",
         "alertState":"closed",
-        "createdAt": "2015-04-17T22:45:04.000Z",
+        "timestamp": "2015-04-17T22:45:04.000Z",
         "alertStateUpdatedAt": "2015-04-17T22:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "blah"
@@ -93,7 +93,7 @@ var fakeEvents = {
         "id":"7777",
         "source":"twitter",
         "alertState":"closed",
-        "createdAt": "2015-04-17T19:45:04.000Z",
+        "timestamp": "2015-04-17T19:45:04.000Z",
         "alertStateUpdatedAt": "2015-04-17T20:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "direct_message"
@@ -102,7 +102,7 @@ var fakeEvents = {
         "id":"8888",
         "source":"instagram",
         "alertState":"open",
-        "createdAt": "2015-04-17T21:45:04.000Z",
+        "timestamp": "2015-04-17T21:45:04.000Z",
         "alertStateUpdatedAt": "2015-04-17T21:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "blah"
@@ -110,7 +110,7 @@ var fakeEvents = {
         "id":"9999",
         "source":"youtube",
         "alertState":"new",
-        "createdAt": "2015-02-16T22:45:04.000Z",
+        "timestamp": "2015-02-16T22:45:04.000Z",
         "alertStateUpdatedAt": "2015-02-16T22:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "blah"
@@ -118,7 +118,7 @@ var fakeEvents = {
         "id":"0000",
         "source":"google+",
         "alertState":"closed",
-        "createdAt": "2015-02-17T05:45:04.000Z",
+        "timestamp": "2015-02-17T05:45:04.000Z",
         "alertStateUpdatedAt": "2015-02-17T05:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "blah"
@@ -126,7 +126,7 @@ var fakeEvents = {
         "id":"1212",
         "source":"facebook",
         "alertState":"closed",
-        "createdAt": "2015-04-17T22:45:04.000Z",
+        "timestamp": "2015-04-17T22:45:04.000Z",
         "alertStateUpdatedAt": "2015-04-17T22:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "blah"
@@ -135,7 +135,7 @@ var fakeEvents = {
         "id":"1313",
         "source":"twitter",
         "alertState":"closed",
-        "createdAt": "2015-04-17T19:45:04.000Z",
+        "timestamp": "2015-04-17T19:45:04.000Z",
         "alertStateUpdatedAt": "2015-04-17T20:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "blah"
@@ -144,7 +144,7 @@ var fakeEvents = {
         "id":"1414",
         "source":"instagram",
         "alertState":"open",
-        "createdAt": "2015-04-17T21:45:04.000Z",
+        "timestamp": "2015-04-17T21:45:04.000Z",
         "alertStateUpdatedAt": "2015-04-17T21:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "blah"
@@ -152,7 +152,7 @@ var fakeEvents = {
         "id":"1515",
         "source":"youtube",
         "alertState":"new",
-        "createdAt": "2015-02-16T22:45:04.000Z",
+        "timestamp": "2015-02-16T22:45:04.000Z",
         "alertStateUpdatedAt": "2015-02-16T22:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "blah"
@@ -160,7 +160,7 @@ var fakeEvents = {
         "id":"1616",
         "source":"google+",
         "alertState":"closed",
-        "createdAt": "2015-02-17T05:45:04.000Z",
+        "timestamp": "2015-02-17T05:45:04.000Z",
         "alertStateUpdatedAt": "2015-02-17T05:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "blah"
@@ -168,7 +168,7 @@ var fakeEvents = {
         "id":"1717",
         "source":"facebook",
         "alertState":"closed",
-        "createdAt": "2015-04-17T22:45:04.000Z",
+        "timestamp": "2015-04-17T22:45:04.000Z",
         "alertStateUpdatedAt": "2015-04-17T22:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "blah"
@@ -177,7 +177,7 @@ var fakeEvents = {
         "id":"1818",
         "source":"twitter",
         "alertState":"closed",
-        "createdAt": "2015-04-17T19:45:04.000Z",
+        "timestamp": "2015-04-17T19:45:04.000Z",
         "alertStateUpdatedAt": "2015-04-17T20:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "blah"
@@ -186,7 +186,7 @@ var fakeEvents = {
         "id":"1919",
         "source":"instagram",
         "alertState":"open",
-        "createdAt": "2015-04-17T21:45:04.000Z",
+        "timestamp": "2015-04-17T21:45:04.000Z",
         "alertStateUpdatedAt": "2015-04-17T21:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "blah"
@@ -194,7 +194,7 @@ var fakeEvents = {
         "id":"2020",
         "source":"youtube",
         "alertState":"new",
-        "createdAt": "2015-02-16T22:45:04.000Z",
+        "timestamp": "2015-02-16T22:45:04.000Z",
         "alertStateUpdatedAt": "2015-02-16T22:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "blah"
@@ -202,7 +202,7 @@ var fakeEvents = {
         "id":"2121",
         "source":"google+",
         "alertState":"closed",
-        "createdAt": "2015-02-17T05:45:04.000Z",
+        "timestamp": "2015-02-17T05:45:04.000Z",
         "alertStateUpdatedAt": "2015-02-17T05:45:04.000Z",
         "url": "http://www.gameofthrones.com",
         "doc_type": "blah"

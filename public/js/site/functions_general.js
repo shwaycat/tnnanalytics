@@ -53,7 +53,7 @@ function elementReveal(){
   });
 }
 
-function equalHeightPairs(){
+function equalHeightPairs(breakpoint){
   $('.equal-height-block-1').each(function(){
     var left = $(this);
     var leftChild = left.find('.inner-content');
@@ -64,28 +64,31 @@ function equalHeightPairs(){
     leftChild.removeAttr('style');
     rightChild.removeAttr('style');
 
-    var leftHeight = parseInt(leftChild.css('height'));
-    var rightHeight = parseInt(rightChild.css('height'));
+    var windowWidth = window.innerWidth;
+    if(windowWidth >= breakpoint){
+      var leftHeight = parseInt(leftChild.css('height'));
+      var rightHeight = parseInt(rightChild.css('height'));
 
-    if (left[0] && right[0]){
-      
-      if (leftHeight > rightHeight){
-        control = left;
-        controlHeight = leftHeight;
-        varied = right;
-        variedHeight = rightHeight
+      if (left[0] && right[0]){
+        
+        if (leftHeight > rightHeight){
+          control = left;
+          controlHeight = leftHeight;
+          varied = right;
+          variedHeight = rightHeight
 
-        varied.find('.inner-content').css('height', controlHeight);
-      } else if (leftHeight < rightHeight) {
-        control = right;
-        controlHeight = rightHeight;
-        varied = left;
-        variedHeight = leftHeight;
+          varied.find('.inner-content').css('height', controlHeight);
+        } else if (leftHeight < rightHeight) {
+          control = right;
+          controlHeight = rightHeight;
+          varied = left;
+          variedHeight = leftHeight;
 
-        varied.find('.inner-content').css('height', controlHeight);
+          varied.find('.inner-content').css('height', controlHeight);
+        }
       }
     }
-  })
+  });
 }
 
 
@@ -214,7 +217,7 @@ $.fn.sectionLoad = function(reload, eh){
   setTimeout(function(){
     el.addClass('loaded');
     if (eh){
-      equalHeightPairs();
+      equalHeightPairs(1200);
     }
   },300);
 
@@ -590,10 +593,12 @@ function dateActions(custom){
           location.reload();
         },100);
       } else {
-        console.log('number mismatch');
+        $('.datepickerContainer').addClass('datepickerWarning');
+        $('[data-date-selection="mismatch"]').addClass('active');
       }
     } else {
-      console.log('Missing Date!');
+      $('.datepickerContainer').addClass('datepickerWarning');
+      $('[data-date-selection="missingdate"]').addClass('active');
     }
   });
 
@@ -610,6 +615,9 @@ function dateCalendar(selectorArray, dateObj){
       calendars: 1,
       starts: 1,
       onChange: function(formatted, dateObj){
+        $('.datepickerContainer').removeClass('datepickerWarning');
+        $('[data-date-selection="missingdate"]').removeClass('active');
+        $('[data-date-selection="mismatch"]').removeClass('active');
         var selector = $(this).parent().attr('id');
         if (dateObj == 'Invalid Date'){
           globalDebug('   Invalid Date', 'color:red;');

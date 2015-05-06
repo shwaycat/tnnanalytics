@@ -54,6 +54,18 @@
 		}
 		.modal-body {
 			padding: 0.75em 1.75em 2em;
+			.date-selection-warning {
+				display:none;
+				color:@element_alert_lighter_highlight;
+				font-weight: normal;
+				text-align: center;
+				font-size: 1.2em;
+				width: 80%;
+				margin: auto;
+				&.active {
+					display:block;
+				}
+			}
 			.date-calendars {
 				.clearfix();
 			}
@@ -82,6 +94,9 @@
 	  left: 0 !important;
 	  padding: 2em;
 	  background-color:@background_element_lighter;
+	  &.datepickerWarning {
+	  	border:2px solid @element_alert_lighter;
+	  }
 		table {
 			width: 100%;
 
