@@ -36,13 +36,12 @@ mixin dateModal
           section.date-calendars.row
             .col-xs-12.col-sm-6
               #dateCalendarStart
+              .date-selection
+                span(data-date-selection="dateCalendarStart" data-date-time=null) - 
             .col-xs-12.col-sm-6
               #dateCalendarEnd
-          section.date-selection
-            span(data-date-selection="dateCalendarStart" data-date-time=null)
-            |   -  
-            span(data-date-selection="dateCalendarEnd" data-date-time=null)
-          
+              .date-selection
+                span(data-date-selection="dateCalendarEnd" data-date-time=null) - 
         .modal-footer
           button.btn.btn-default(type="button" data-dismiss="modal") Close
           button#dateCustomSubmit.btn.btn-default(type="button") Submit

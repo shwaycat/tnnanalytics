@@ -490,13 +490,13 @@ function dateController(){
   startTime_human += startTime.getMonthName();
   startTime_human += ' ';
   startTime_human += startTime.getDate();
-  startTime_human += ' ';
+  startTime_human += ', ';
   startTime_human += startTime.getFullYear();
 
   endTime_human += endTime.getMonthName();
   endTime_human += ' ';
   endTime_human += endTime.getDate();
-  endTime_human += ' ';
+  endTime_human += ', ';
   endTime_human += endTime.getFullYear();
 
   now = new Date();
@@ -580,17 +580,19 @@ function dateCalendar(selectorArray, dateObj){
   for (var i = 0; i < selectorArray.length; i++){
     $('#'+selectorArray[i]).DatePicker({
       flat: true,
-      format: 'B d Y',
+      format: 'B d, Y',
       date: [dateObj.startTime,dateObj.endTime],
       current: current,
       calendars: 1,
       starts: 1,
       onChange: function(formatted, dateObj){
-        console.log(formatted);
-        console.log(dateObj);
         var selector = $(this).parent().attr('id');
-        $('[data-date-selection="'+selector+'"]').html(formatted).addClass('selected');
-        $('[data-date-selection="'+selector+'"]').data().dateTime = dateObj.toJSON();
+        if (dateObj == 'Invalid Date'){
+          globalDebug('   Invalid Date', 'color:red;');
+        } else {
+          $('[data-date-selection="'+selector+'"]').html(formatted).addClass('selected');
+          $('[data-date-selection="'+selector+'"]').data().dateTime = dateObj.toJSON();
+        }        
       }
     });
   }
