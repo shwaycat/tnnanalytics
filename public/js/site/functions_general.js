@@ -350,7 +350,14 @@ function dataController(sectionType, type, apiString, dateObj, options){
         apiObj = false;
       })
       .always(function( data ) {
-        cachedData[type] = apiObj;
+        if (type == 'topCountries'){
+          apiObj.data = simplifyData(apiObj.data);
+          cachedData[type] = apiObj;
+        } else {
+          cachedData[type] = apiObj;
+        }
+        
+
         dataControllerDelegation(sectionType, apiObj);
       });
   } else {
@@ -363,7 +370,6 @@ function dataControllerDelegation(sectionType, apiObj){
     lineGraph(apiObj.data, apiObj.options);
     
   } else if (sectionType == 'donut'){
-    apiObj.data = simplifyData(apiObj.data);
     donutList(apiObj.data.data_all, apiObj.options, true);
     donutList(apiObj.data.data_other, apiObj.options);
     donutGraph(apiObj.data.data, apiObj.options);
@@ -484,16 +490,15 @@ function dateController(){
   startTime_human += startTime.getMonthName();
   startTime_human += ' ';
   startTime_human += startTime.getDate();
-  startTime_human += ' ';
+  startTime_human += ', ';
   startTime_human += startTime.getFullYear();
 
   endTime_human += endTime.getMonthName();
   endTime_human += ' ';
   endTime_human += endTime.getDate();
-  endTime_human += ' ';
+  endTime_human += ', ';
   endTime_human += endTime.getFullYear();
 
-  
   now = new Date();
   now = now.toJSON();
 
@@ -524,21 +529,71 @@ function dateController(){
   $('#dateDropdown').find('span').first().html(startTime_human);
   $('#dateDropdown').find('span').last().html(endTime_human);
 
+  $('[data-date-selection="startTime"]').html(startTime_human);
+  $('[data-date-selection="endTime"]').html(endTime_human);
+
   dateActions();
+  dateCalendar(['dateCalendarStart', 'dateCalendarEnd'], dateObj);
 
 }
 
 function dateActions(custom){
-  if (custom) {
 
-  } else {
-    $('.date-selector').on('click',function(e){
-      var clicked = $(this);
-      var dateObj = clicked.data().dateTime;
-      $.cookie(cookieName, dateObj, { expires: cookieExp, path: cookiePath });
-      setTimeout(function(){
-        location.reload();
-      },100);
+  $('.date-selector').on('click',function(e){
+    var clicked = $(this);
+    var dateObj = clicked.data().dateTime;
+    $.cookie(cookieName, dateObj, { expires: cookieExp, path: cookiePath });
+    setTimeout(function(){
+      location.reload();
+    },100);
+  });
+
+  $('#dateCustomSubmit').on('click',function(e){
+
+    var clicked = $(this);
+    var startTime = $('[data-date-selection="dateCalendarStart"]').data().dateTime;
+    var endTime = $('[data-date-selection="dateCalendarEnd"]').data().dateTime;
+    var dateObj = { "startTime": startTime, "endTime": endTime };
+
+    if (startTime != undefined && endTime != undefined){
+      var startTimeDate = new Date(startTime);
+      var endTimeDate = new Date(endTime);
+
+      if (startTimeDate < endTimeDate){
+        dateObj = JSON.stringify(dateObj);
+        $.cookie(cookieName, dateObj, { expires: cookieExp, path: cookiePath });
+        setTimeout(function(){
+          location.reload();
+        },100);
+      } else {
+        console.log('number mismatch');
+      }
+    } else {
+      console.log('Missing Date!');
+    }
+  });
+
+}
+
+function dateCalendar(selectorArray, dateObj){
+  var current = new Date();
+  for (var i = 0; i < selectorArray.length; i++){
+    $('#'+selectorArray[i]).DatePicker({
+      flat: true,
+      format: 'B d, Y',
+      date: [dateObj.startTime,dateObj.endTime],
+      current: current,
+      calendars: 1,
+      starts: 1,
+      onChange: function(formatted, dateObj){
+        var selector = $(this).parent().attr('id');
+        if (dateObj == 'Invalid Date'){
+          globalDebug('   Invalid Date', 'color:red;');
+        } else {
+          $('[data-date-selection="'+selector+'"]').html(formatted).addClass('selected');
+          $('[data-date-selection="'+selector+'"]').data().dateTime = dateObj.toJSON();
+        }        
+      }
     });
   }
 }
