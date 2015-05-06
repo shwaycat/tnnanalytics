@@ -18,9 +18,6 @@ exports = module.exports = function(req, res) {
   if(req.query.endTime) {
     endTime = new Date(req.query.endTime);
   }
-  console.log(startTime.toString());
-  console.log(endTime.toString());
-
   
   var dataReturn = [];
   var timeHolder = startTime;
@@ -31,6 +28,19 @@ exports = module.exports = function(req, res) {
       "value": Math.floor(Math.random() * 500)
     });
   }
+
+  var randomPercents = [];
+  var randomNumbers = [];
+  for(i=0; i<5; i++) {
+    randomNumbers.push(Math.floor(Math.random() * 10));
+  }
+  var randomTotal = _.reduce(randomNumbers, function(memo, num){ return memo + num; }, 0)
+
+
+  for(i=0; i<randomNumbers.length; i++) {
+    randomPercents.push(randomNumbers[i] / randomTotal);
+  }
+  
 
   // Build Response Here
   // DATA = Array of Key (Date) value pairs.
@@ -44,7 +54,14 @@ exports = module.exports = function(req, res) {
       type: 'engagement',
       source: 'twitter',
       queryString: req.query,
-      data: dataReturn
+      data: dataReturn,
+      summary: {
+        "totalFavorites" : Math.round(_.reduce(dataReturn, function(memo, cur){ return memo + cur.value; }, 0) * (randomPercents[0])),
+        "totalRetweets" : Math.round(_.reduce(dataReturn, function(memo, cur){ return memo + cur.value; }, 0) * (randomPercents[1])),
+        "totalMentions" : Math.round(_.reduce(dataReturn, function(memo, cur){ return memo + cur.value; }, 0) * (randomPercents[2])),
+        "totalReplies" : Math.round(_.reduce(dataReturn, function(memo, cur){ return memo + cur.value; }, 0) * (randomPercents[3])),
+        "totalDirectMentions" : Math.round(_.reduce(dataReturn, function(memo, cur){ return memo + cur.value; }, 0) * (randomPercents[4]))
+      }
     });
 
   });

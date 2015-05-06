@@ -43,7 +43,10 @@ exports = module.exports = function(req, res) {
       type: 'acquisition',
       source: 'twitter',
       queryString: req.query,
-      data: dataReturn
+      data: dataReturn,
+      summary: {
+        "totalFollowers" : dataReturn[dataReturn.length-1]['value']
+      }
     });
 
   });
