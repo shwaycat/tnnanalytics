@@ -17,45 +17,65 @@ exports = module.exports = function(req, res) {
     }
 
     if(args.all) {
-      keystone.elasticsearch.search({
-        index: keystone.get('elasticsearch index'),
-        body: {
-          "query": {
-            "filtered": {
-              "filter": {
-                "or": {
-                  "filters": [
-                    { "term": { "alertState": "open"} },
-                    { "term": { "alertState": "new" } }
-                  ]
+      var size = 100,
+          from = 0,
+          total = 0,
+          docs = [];
+
+      async.doWhilst(function(callback) {
+        keystone.elasticsearch.search({
+          index: keystone.get('elasticsearch index'),
+          size: size,
+          from: from,
+          body: {
+            "query": {
+              "filtered": {
+                "filter": {
+                  "or": {
+                    "filters": [
+                      { "term": { "alertState": "open"} },
+                      { "term": { "alertState": "new" } }
+                    ]
+                  }
                 }
               }
             }
           }
-        }
-      }, function(err, response) {
+        }, function(err, response) {
+          if(err) return res.apiResponse({"error": err});
+          var hits = mxm.objTry(response, 'hits', 'hits');
+          if(hits && hits.length) {
+            docs = docs.concat(hits);
+
+            total = response.hits.total;
+            from += size;
+            callback();
+          } else {
+            callback(new Error('No Hits in ES'));
+          }
+        });
+      },
+      function() {
+        return (from + size) <= total;
+      },
+      function(err) {
         if(err) return res.apiResponse({"error": err});
-        var hits = mxm.objTry(response, 'hits', 'hits');
-        if(hits && hits.length) {
-          docs = [];
-          docs = hits;
+ 
+        bulkUpdate(args, docs, function(err) {
+          if(err) return res.apiResponse({"error": err});
 
-          bulkUpdate(args, docs, function(err) {
-            if(err) return res.apiResponse({"error": err});
-
-            return res.apiResponse({
-              success: true,
-              type: "alerts update",
-              ids: _.pluck(docs,'_id'),
-              all: true
-            });
+          return res.apiResponse({
+            success: true,
+            type: "alerts update",
+            ids: _.pluck(docs,'_id'),
+            all: true
           });
-        } else {
-          return res.apiResponse({"error": 'All Not Possible'});
-        }
+        });
       });
-    } else {
 
+
+    } else {
+      console.log(from);
       bulkUpdate(args, docs, function(err) {
         if(err) return res.apiResponse({"error": err});
 

@@ -22,8 +22,8 @@ exports = module.exports = function(req, res) {
 
   keystone.elasticsearch.search({
     index: keystone.get('elasticsearch index'),
-    "size": size,
-    "from": (page-1) * size,
+    size: size,
+    from: (page-1) * size,
     body: {
       "query": {
         "filtered": {
