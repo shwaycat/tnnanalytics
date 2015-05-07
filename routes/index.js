@@ -76,7 +76,7 @@ exports = module.exports = function(app) {
   app.all('/accounts/:account_name/events', routes.views.account.events);
 
   // API
-  app.get('/api*', keystone.middleware.api);
+  app.all('/api*', keystone.middleware.api);
 
   // Twitter Endpoints
   // They all expect query strings with startTime endTime
@@ -94,12 +94,12 @@ exports = module.exports = function(app) {
   app.get('/api/1.0/facebook/topCountries', routes.api.facebook.topCountries);
 
   // Adverse Events
-  // /events expects query strings with page
-  app.get('/api/1.0/events', routes.api.events.index);
-  app.get('/api/1.0/events/summary', routes.api.events.summary);
+  // /alerts expects query strings with page
+  app.get('/api/1.0/alerts', routes.api.alerts.index);
+  app.get('/api/1.0/alerts/summary', routes.api.alerts.summary);
 
   // expects a JSON object with an array of IDs and updated statuses
-  app.post('/api/1.0/events/update', routes.api.events.update);
+  app.post('/api/1.0/alerts/update', routes.api.alerts.update);
 
   // Auth
   app.all('/auth/:service', routes.auth.service);

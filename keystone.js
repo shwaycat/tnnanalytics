@@ -2,7 +2,8 @@
 // customising the .env file in your project's root folder.
 require('dotenv').load()
 
-var keystone = require('./keystone-setup')()
+var keystone = require('./keystone-setup')(),
+    connectES = require('./lib/connect_es');
 
 keystone.set('locals', {
   _: require('underscore'),
@@ -10,6 +11,10 @@ keystone.set('locals', {
   utils: keystone.utils,
   editable: keystone.content.editable
 });
+
+connectES(function(err) {
+  if (err) throw err;
+})
 
 keystone.set('routes', require('./routes'));
 

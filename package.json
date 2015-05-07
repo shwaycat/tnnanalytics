@@ -19,7 +19,7 @@
     "passport-twitter": "^1.0.3",
     "request": "^2.53.0",
     "twitter": "^1.2.5",
-    "underscore": "~1.7.0"
+    "underscore": "^1.7.0"
   },
   "devDependencies": {
     "gulp": "~3.7.0",
