@@ -208,30 +208,15 @@ function eventsStatusUpdate(postObj){
 function eventsCheckStatus(data){
 	globalDebug('   Events Call: eventsCheckStatus', 'color:purple;');
 
-	var fakesummarydata = {
-	    "success": true,
-	    "type": "alert summary",
-	    "source": "all",
-	    "data": {
-	        "closed": 2,
-	        "new": 1,
-	        "open": 1
-	    }
-	}
-
-	var apiString = '/api/1.0/events/summary',
+	var apiString = '/api/1.0/alerts/summary',
 			apiObj = {
 				"success": false,
 				"type": false,
 				"source": "all",
-				"data": {
-					"closed": 0,
-					"new": 0,
-					"open": 0
-				}
+				"data": {}
 			};
 	$.get(apiString, function( data ) {
-		data = fakesummarydata;
+		
 		apiObj.success = data.success;
 		apiObj.type = data.type;
 		apiObj.source = data.source;
@@ -261,7 +246,7 @@ function eventsDelegateAlerts(apiObj){
 
 	if (apiObj.success && $('.alerts-block')[0] && (apiObj.data.new || apiObj.data.open) ){
 
-		count = apiObj.data.new + apiObj.data.open;
+		count = (apiObj.data.new ? apiObj.data.new : 0) + (apiObj.data.open ? apiObj.data.open : 0);
 
 		if (count){
 			$('.alerts-block').data('events-count', count)
@@ -270,17 +255,13 @@ function eventsDelegateAlerts(apiObj){
 			} else {
 				$('.alerts-message p').html(count+STRING_ALERTS_MESSAGE_PLURAL);
 			}
+			$('.event-alert').data('events-count', count)
+			$('.event-alert span').html(count);
 			setTimeout(function(){
+				$('.event-alert').addClass('active');
 				$('.alerts-block').addClass('active');
 			}, 200);
 		}
-
-		$('.event-alert').data('events-count', count)
-		$('.event-alert span').html(count);
-		setTimeout(function(){
-			$('.event-alert').addClass('active');
-		}, 200);
-
 	} else {
 		$('.event-alert').data('events-count', count);
 		$('.event-alert').removeClass('active');
