@@ -14,65 +14,83 @@ var STRING_STATUS_NEW = 'new',
 		STRING_ALERTS_MESSAGE_PLURAL = ' New or Open Adverse Events';
 		STRING_CLOSEALL_ERROR = 'There was a error with the request.'
 
-function eventsTable(table){
+function eventsTableController(apiString, table){
 	globalDebug('   Events Call: eventsTable', 'color:purple;');
 
-	if(table != undefined && table[0]){
-		table.DataTable({
-			"pageLength": 15,
-			"pagingType": "simple_numbers",
-			"dom": 'rtp',
-			"order": [[ 0, 'asc' ]],
-			"columns": [
-			    null,
-			    null,
-			    null,
-			    null,
-			    null,
-			    { "orderable": false },
-			    { "orderable": false }
-			  ],
-			"oLanguage": {
-	      "oPaginate": {
-	        "sPrevious": "Prev"
-	      }
-	    }
-		});
+	var	apiObj = {
+				"data": [],
+				"page": 0,
+				"pageSize": 0,
+				"total": 0,
+				"source": "all",
+				"success": false,
+				"type": ""
+			};
+	$.get(apiString, function( data ) {
+		
+		apiObj.data = data.data;
+		apiObj.page = data.page;
+		apiObj.source = data.source;
+		apiObj.success = data.success;
+		apiObj.type = data.type;
 
-		eventsDirectMessage();
-		$('.events-container').sectionLoad(false);
-	}
+		globalDebug('   Ajax SUCCESS!: '+apiString, 'color:green;');
+	})
+	.fail(function( data ) {
+	  globalDebug('   Ajax FAILED!: '+apiString, 'color:red;');
+	  apiObj = false;
+	})
+	.always(function( data ) {
+		if (apiObj.success && apiObj.data.length && apiObj.page){
+
+			eventsTableData(apiObj, table)
+			
+		}
+	});
 }
 
-function eventsTableData(data, table){
+function eventsTableData(apiObj, table){
 	globalDebug('   Events Call: eventsTableData', 'color:purple;');
 
 	if(table != undefined && table[0]){
 		var tableHTML = '';
-		for (var i = 0; i < data.events.length; i++){
+		for (var i = 0; i < apiObj.data.length; i++){
 
 			statusClass = '';
 			actionText = '';
 			statusOrder = 0;
 			urlHtml = '';
 
+			var currentEvent,
+					currentEvent_creation,
+					currentEvent_creation_human,
+					currentEvent_accessed,
+					currentEvent_accessed_human;
+
 			// Get the Current Event Data
-			var currentEvent = data.events[i];
+			currentEvent = apiObj.data[i];
 			
 			// Creation Date
-			var currentEvent_creation = new Date(currentEvent.timestamp);
-			currentEvent_creation = currentEvent_creation.getFullYear() + '/' + (currentEvent_creation.getMonth() < 10 ? ('0'+currentEvent_creation.getMonth()) : currentEvent_creation.getMonth() ) + '/' + (currentEvent_creation.getDate() < 10 ? ('0'+currentEvent_creation.getDate()) : currentEvent_creation.getDate() );
+			currentEvent_creation = new Date(currentEvent.timestamp);
+			currentEvent_creation = currentEvent_creation.getFullYear() + '/' + (currentEvent_creation.getMonth()+1 < 10 ? ('0'+(currentEvent_creation.getMonth()+1)) : currentEvent_creation.getMonth()+1 ) + '/' + (currentEvent_creation.getDate() < 10 ? ('0'+currentEvent_creation.getDate()) : currentEvent_creation.getDate() );
 			
 			// Creation Date in MM/DD/YYYY
-			var currentEvent_creation_human = new Date(currentEvent.timestamp);
-			currentEvent_creation_human = (currentEvent_creation_human.getMonth() < 10 ? ('0'+currentEvent_creation_human.getMonth()) : currentEvent_creation_human.getMonth() )+ '/' + (currentEvent_creation_human.getDate() < 10 ? ('0'+currentEvent_creation_human.getDate()) : currentEvent_creation_human.getDate() ) + '/' + currentEvent_creation_human.getFullYear();
+			currentEvent_creation_human = new Date(currentEvent.timestamp);
+			currentEvent_creation_human = (currentEvent_creation_human.getMonth()+1 < 10 ? ('0'+(currentEvent_creation_human.getMonth()+1)) : currentEvent_creation_human.getMonth()+1 )+ '/' + (currentEvent_creation_human.getDate() < 10 ? ('0'+currentEvent_creation_human.getDate()) : currentEvent_creation_human.getDate() ) + '/' + currentEvent_creation_human.getFullYear();
 			
-			// Last Accessed Date
-			var currentEvent_accessed = new Date(currentEvent.alertStateUpdatedAt);
-			currentEvent_accessed = currentEvent_accessed.getFullYear() + '/' + (currentEvent_accessed.getMonth() < 10 ? ('0'+currentEvent_accessed.getMonth()) : currentEvent_accessed.getMonth() ) + '/' + (currentEvent_accessed.getDate() < 10 ? ('0'+currentEvent_accessed.getDate()) : currentEvent_accessed.getDate() );
 			
-			// Last Accessed Date in TimeAgo format
-			var currentEvent_accessed_human = $.timeago(currentEvent_accessed);
+			if (currentEvent.alertStateUpdatedAt) {
+				// Last Accessed Date
+				currentEvent_accessed = new Date(currentEvent.alertStateUpdatedAt);
+				currentEvent_accessed = currentEvent_accessed.getFullYear() + '/' + (currentEvent_accessed.getMonth()+1 < 10 ? ('0'+(currentEvent_accessed.getMonth()+1)) : currentEvent_accessed.getMonth()+1 ) + '/' + (currentEvent_accessed.getDate() < 10 ? ('0'+currentEvent_accessed.getDate()) : currentEvent_accessed.getDate() );
+				
+				// Last Accessed Date in TimeAgo format
+				currentEvent_accessed_human = $.timeago(currentEvent_accessed);
+			} else {
+				currentEvent_accessed = '';
+				currentEvent_accessed_human = '';
+			}
+			
 
 			// Delegates whether an event is new or open
 			if (currentEvent.alertState == STRING_STATUS_NEW){
@@ -98,15 +116,15 @@ function eventsTableData(data, table){
 			if (currentEvent.doc_type == 'direct_message') {
 				urlHtml = '<a data-toggle="modal" data-events-url='+currentEvent.url+' data-events-has-modal="true" data-target="#eventsDirectMessageModal">View DM'
 			} else {
-				urlHtml = '<a target="_blank" href="'+currentEvent.url+'" title="'+currentEvent.source+' Link">View Post'
+				urlHtml = '<a target="_blank" href="'+currentEvent.url+'" title="'+currentEvent._type+' Link">View'
 			}
 
 			// Create the table row with the given data
-			tableHTML += '<tr data-id="'+currentEvent.id+'"" class="'+statusClass+'">';
+			tableHTML += '<tr data-id="'+currentEvent._id+'"" class="'+statusClass+'">';
 			tableHTML += '<td class="event-item-status"><span class="event-item-robot">'+statusOrder+'</span>'+currentEvent.alertState.capitalizeFirstLetter()+'</td>';
 			tableHTML += '<td><span class="event-item-robot">'+currentEvent_creation+'</span>'+currentEvent_creation_human+'</td>';
-			tableHTML += '<td>'+currentEvent.source.capitalizeFirstLetter()+'</td>';
-			tableHTML += '<td>'+currentEvent.id+'</td>';
+			tableHTML += '<td>'+currentEvent._type.capitalizeFirstLetter()+'</td>';
+			tableHTML += '<td>'+currentEvent._id+'</td>';
 			tableHTML += '<td><span class="event-item-robot">'+currentEvent_accessed+'</span><span class="event-item-human">'+currentEvent_accessed_human.capitalizeFirstLetter()+'</span></td>';
 			tableHTML += '<td><button class="btn btn-default event-action-btn '+statusClass+'">'+actionText+'</td>';
 			tableHTML += '<td class="event-link-cell">'+urlHtml+'<span class="entypo entypo-chevron-right"></span></td>';
@@ -114,8 +132,34 @@ function eventsTableData(data, table){
 
 			table.find('tbody').append(tableHTML);
 			tableHTML = '';
+
+			setTimeout(function(){
+				eventsTableDraw($('#events-table'));
+			},1);
 		}
 	}
+}
+
+function eventsTableDraw(table){
+
+	table.DataTable({
+		"paging": false,
+		"dom": 'rtp',
+		"order": [[ 0, 'asc' ]],
+		"columns": [
+	    null,
+	    null,
+	    null,
+	    null,
+	    null,
+	    { "orderable": false },
+	    { "orderable": false }
+	  ]
+	});
+
+	eventsDirectMessage();
+	$('.events-container').sectionLoad(false);
+
 }
 
 function eventsDirectMessage(){

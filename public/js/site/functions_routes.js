@@ -66,14 +66,12 @@ function routesInit(resizeOnce){
 	if ($('body.events')[0] && !resizeOnce){
 		globalDebug('   Route: Events', 'color:gray;');
 
-		if ($('#events-table')[0]){
-			
+		eventsTableController('/api/1.0/alerts/', $('#events-table'));
 
-			eventsTableData(fakeEvents, $('#events-table'));
-			eventsTable($('#events-table'));
+		//eventsTableData(fakeEvents, $('#events-table'));
+		//eventsTable($('#events-table'));
 
-			eventsTableUpdateController(fakeEvents);
-		}
+		eventsTableUpdateController(fakeEvents);
 		
 	}
 	if (!$('body.session')[0]){
