@@ -317,22 +317,22 @@ function statsDelegation(summary, options){
 
   if(options.source == 'twitter'){
     if(options.selector == '#engagement'){
-      columnSize = 6;
+      columnSize = 'col-lg-6';
     } else if (options.selector == '#acquisition'){
-      columnSize = 12;
+      columnSize = 'col-lg-offset-6 col-lg-6';
     }
   } else if(options.source == 'facebook'){
     if(options.selector == '#engagement'){
-      columnSize = 4;
+      columnSize = 'col-lg-6';
     } else if (options.selector == '#acquisition'){
-      columnSize = 1;
+      columnSize = 'col-lg-6';
     } else if (options.selector == '#reach'){
-      columnSize = 1;
+      columnSize = 'col-lg-6';
     }
   }
 
   statsStringOpen = '<ul class="novo-graph-stats">';
-  statStringOpen = '<li class="col-xs-12  col-lg-'+columnSize+' col-md-6"><div class="stat"><span>';
+  statStringOpen = '<li class="col-xs-12 '+columnSize+' col-md-6"><div class="stat"><span>';
   statStringMid = '</span><span>';
   statStringClose = '</span></li>';
   statsStringClose = '</ul>';
@@ -376,9 +376,9 @@ function statsDelegation(summary, options){
     } else if (options.selector == '#acquisition'){
 
       statsString += statStringOpen;
-      statsString += summary.totalFollowers
-      statsString += statStringMid;
       statsString += "Followers"
+      statsString += statStringMid;
+      statsString += summary.totalFollowers
       statsString += statStringClose;
 
     }

@@ -21,6 +21,9 @@
 			span:last-child {
 				text-align: right;
 			}
+			span:first-child {
+				color:@whiteOff;
+			}
 			span {
 				display: table-cell;
 			  vertical-align: bottom;
@@ -63,7 +66,7 @@
 		    font-size: 0.85em;
 		    fill:@graph_line_light;
 				.respond-lg({
-					font-size:1em;
+					font-size: 0.9em;;
 				});
 			}
 			.x.axis .tick {
@@ -171,6 +174,7 @@
 			&:first-child {
 				text-align: left;
 				float:left;
+				color:@whiteOff;
 			}
 			&:last-child {
 				text-align: right;
