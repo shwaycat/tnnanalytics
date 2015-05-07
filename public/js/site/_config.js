@@ -240,48 +240,52 @@ var fakeTopTweet = {
 
 var fakeTopCountryData = [
       {
+        "label": "sdf",
+        "value": 100
+      },
+      {
         "label": "USA",
-        "value": 23
+        "value": 100
       },
       {
         "label": "Canada",
-        "value": 34
+        "value": 100
       },
       {
         "label": "Mexico",
-        "value": 34
+        "value": 100
       },
       {
         "label": "England",
-        "value": 43
+        "value": 100
       },
       {
         "label": "Ireland",
-        "value": 1539
+        "value": 100
       },
       {
         "label": "Germany",
-        "value": 1234
+        "value": 100
       },
       {
         "label": "Belgium",
-        "value": 1599
+        "value": 100
       },
       {
         "label": "Russia",
-        "value": 5723
+        "value": 100
       },
       {
         "label": "Japan",
-        "value": 9674
+        "value": 100
       },
       {
         "label": "China",
-        "value": 5234
+        "value": 100
       },
       {
         "label": "TaiWorld",
-        "value": 434
+        "value": 100
       }
 
     ]

@@ -235,7 +235,7 @@ function simplifyData(data){
       otherObj = { "label": "Other", "value": 0, "percent": 0 };
 
   _.each(theData, function(datum){
-    if (datum.value/totalValues < 0.08){
+    if (datum.value/totalValues < 0.08 && datum.value/totalValues > 0.01){
       otherObj.value += datum.value;
       otherObj.percent = Math.round( (otherObj.value*100/totalValues) *100 )/100 + '%';
       datum.percent = Math.round( (datum.value*100/totalValues) *100 )/100 + '%';
@@ -247,7 +247,10 @@ function simplifyData(data){
       newData.data.push(datum);
     }
   });
-  newData.data.push(otherObj);
+  if (otherObj.value > 0){
+    newData.data.push(otherObj);
+  }
+
   return newData;
 }
 
@@ -263,18 +266,24 @@ function donutList(data, options, hidden){
     post = $(options.selector).siblings('.novo-data-list-normal');
   }
 
-  for (var i = 0; i < theData.length; i++){
-    newDetailsHTML += '<li><span>';
-    newDetailsHTML += theData[i].label;
-    newDetailsHTML += '</span><span>';
-    newDetailsHTML += theData[i].percent;
-    newDetailsHTML += '</span></li>';
+  if (theData.length) {
+    for (var i = 0; i < theData.length; i++){
+      newDetailsHTML += '<li><span>';
+      newDetailsHTML += theData[i].label;
+      newDetailsHTML += '</span><span>';
+      newDetailsHTML += theData[i].percent;
+      newDetailsHTML += '</span></li>';
+    }
+
+    post.find('.data-list')
+      .children().remove();
+    post.find('.data-list')
+      .append(newDetailsHTML);
+  } else {
+    post.remove();
   }
 
-  post.find('.data-list')
-    .children().remove();
-  post.find('.data-list')
-    .append(newDetailsHTML);
+  
 }
 
 function donutPercents(){
@@ -378,7 +387,8 @@ function dataController(sectionType, type, apiString, dateObj, options){
       })
       .always(function( data ) {
         if (type == 'topCountries'){
-          apiObj.data = simplifyData(apiObj.data);
+          //apiObj.data = simplifyData(apiObj.data);
+          apiObj.data = simplifyData(fakeTopCountryData);
           cachedData[type] = apiObj;
         } else {
           cachedData[type] = apiObj;
@@ -527,7 +537,10 @@ function dateController(){
   endTime_human += endTime.getFullYear();
 
   now = new Date();
+  now.setMinutes(0,0,0);
+  now.setHours(now.getHours() - 1);
   now = now.toJSON();
+  console.log(now);
 
   today = new Date();
   today.setHours(0,0,0,0);
