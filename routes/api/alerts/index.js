@@ -14,7 +14,8 @@ exports = module.exports = function(req, res) {
       locals = res.locals,
       page = req.query.page,
       size = 15,
-      user = req.user;
+      user = req.user,
+      total = 0;
 
   if(!page) {
     page = 1;
@@ -52,6 +53,7 @@ exports = module.exports = function(req, res) {
         emailLinkObject = DOC.emailLinkObject({user: user});
 
         alert.url = emailLinkObject.href;
+        total = response.hits.total
 
         data.push(alert);
       }
@@ -64,6 +66,8 @@ exports = module.exports = function(req, res) {
       type: 'alerts',
       page: page,
       source: 'all',
+      pageSize: size,
+      total: total,
       data: data
     });
 
