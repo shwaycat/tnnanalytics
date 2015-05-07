@@ -16,16 +16,13 @@ $(function() {
 	}
 	routesInit();
 
-	if (!$('body.session')[0]){
-		var eventsObject = eventsCheckStatus(fakeEvents);
-		eventsDelegateAlerts(eventsObject);
-	}
+	
 
 	//Front-End Functions
 	attachBrowserVersion();
 	compensateFooter();
 	elementReveal();
-	eventsStatusUpdateController(fakeEvents);
+	
 	$('[data-toggle="tooltip"]').tooltip();
 	
 	if($('.alert-warning').length > 0) {

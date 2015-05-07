@@ -3,6 +3,7 @@
 ///////////////////////////
 
 function routesInit(resizeOnce){
+
 	if ($('body.dashboard')[0]){
 		globalDebug('   Route: Dashboard', 'color:gray;');
 
@@ -66,11 +67,16 @@ function routesInit(resizeOnce){
 		globalDebug('   Route: Events', 'color:gray;');
 
 		if ($('#events-table')[0]){
+			
+
 			eventsTableData(fakeEvents, $('#events-table'));
 			eventsTable($('#events-table'));
-		
-			eventsCloseAll();
+
+			eventsTableUpdateController(fakeEvents);
 		}
 		
+	}
+	if (!$('body.session')[0]){
+		eventsCheckStatus();
 	}
 }
