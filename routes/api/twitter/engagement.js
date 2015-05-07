@@ -22,10 +22,10 @@ exports = module.exports = function(req, res) {
   var dataReturn = [];
   var timeHolder = startTime;
   while(timeHolder < endTime) {
-    timeHolder.setDate(timeHolder.getDate() + 1);
+    timeHolder.setHours(timeHolder.getHours() + 1);
     dataReturn.push( { 
       "key": timeHolder.toJSON(),
-      "value": Math.floor(Math.random() * 500)
+      "value": Math.floor(Math.random() * 10)
     });
   }
 

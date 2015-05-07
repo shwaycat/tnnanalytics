@@ -12,16 +12,24 @@ footer {
   ul {
     float:right;
     vertical-align: top;
+    display:table;
     li {
-      display:inline-block;
-      vertical-align: bottom;
+      display: table-cell;
+      vertical-align: middle;
+      a {
+        display: table-cell;
+        vertical-align: middle;
+        -moz-osx-font-smoothing: grayscale;
+      }
       .footer-icon {
         font-size: 1.3em;
         padding-left:0.5em;
         padding-right:0.5em;
+        -moz-osx-font-smoothing: grayscale;
         &.social-new {
           font-size: 0.7em;
           padding-top: 0.25em;
+          -moz-osx-font-smoothing: grayscale;
         }
       }
     }

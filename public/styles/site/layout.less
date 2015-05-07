@@ -179,3 +179,36 @@ a, a:hover, a:visited, a:active, a:focus {
     }
   }
 }
+
+@preprint_width: 8in;
+.pre-print {
+  body {
+    width:@preprint_width !important;
+    max-width:@preprint_width !important;
+    min-width:@preprint_width !important;
+  }
+  .alerts-block {
+    display:none;
+  }
+  .header-container {
+    display:none;
+  }
+  .side-navigation-container {
+    display:none;
+  }
+  .footer-container {
+    display:none;
+  }
+  .content {
+    width:100%;
+  }
+  .content-block {
+    width:100%;
+  }
+  .content-row, .header-container {//, .top-posts .post {
+    height:10.25in !important;
+  }
+  .content-row-title {
+    height:auto !important;
+  }
+}

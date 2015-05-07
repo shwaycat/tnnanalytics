@@ -10,15 +10,11 @@
   a[href]:after {
      content: "";
   }
-  .header-items, .footer-container, #modal-auth, nav, .page-cta-btn {
+  .header-container {
     display:none;
   }
-  .header-logo {
-    background-color:black !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-    padding:2em;
-    width:30% !important;
+  .header-items, .footer-container, #modal-auth, nav, .page-cta-btn {
+    display:none;
   }
   svg {
     max-width:100%;
@@ -33,6 +29,18 @@
     .inner-content {
       height:auto !important;
     }
+  }
+  .novo-donut-graph {
+    padding-bottom:80%;
+  }
+  .content-row, .header-container {//, .top-posts .post {
+    height:10.5in !important;
+  }
+  .content-row-title {
+    height:auto !important;
+  }
+  .top-posts .post-image, .top-posts .post-details {
+    //height: 8in !important;
   }
   .novo-graph.novo-donut-graph .labels text {
     stroke: #000;

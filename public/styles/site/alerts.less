@@ -1,6 +1,6 @@
 // Top Alert Block for Adverse Events
 .alerts-block {
-	display:block;
+	display:table;
 	opacity:0;
 	height: 0;
 	background-color:@element_alert;
@@ -22,30 +22,26 @@
 		.transition(0.2s);
 	}
 	.alerts-icon {
-		padding: 0em;
-		width: 3em;
-		display: inline-block;
-		vertical-align: middle;
-		position: relative;
-		margin: auto;
-		text-align: center;
-		height: 100%;
+		padding: 0;
+	  display: table-cell;
+	  vertical-align: middle;
+	  position: relative;
+	  margin: auto;
+	  text-align: right;
+	  height: 100%;
+	  width: 45%;
 		span {
 			display: block;
-			position: absolute;
-			left: 0;
-			top: 25%;
-			right: 0;
-			bottom: 0;
-			margin: auto;
-			text-align: center;
-			font-size: 5em;
+			text-align: right;
+  		font-size: 5em;
 		}
 	}
 	.alerts-message {
-		display: inline-block;
+		display: table-cell;
 	  vertical-align: middle;
 	  padding: 1.5em;
+	  width: 55%;
+	  text-align: left;
 		p {
 			text-transform: uppercase;
 			font-size: 1.4em;
