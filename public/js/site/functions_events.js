@@ -340,7 +340,7 @@ function eventsStatusUpdate(postObj, row, clicked, statusItem, accessedItem, pos
 					location.reload();
 				}, 500);
 			} else {
-				eventsCheckStatus();
+				
 
 				if (postClicked) {
 
@@ -375,7 +375,10 @@ function eventsStatusUpdate(postObj, row, clicked, statusItem, accessedItem, pos
 					}
 
 				}
-
+				setTimeout(function(){
+					eventsCheckStatus();
+				},3000);
+				
 				
 				var newTime = new Date();
 				newTime = $.timeago(newTime);
@@ -396,7 +399,7 @@ function eventsStatusUpdate(postObj, row, clicked, statusItem, accessedItem, pos
 }
 
 
-function eventsCheckStatus(data){
+function eventsCheckStatus(){
 	globalDebug('   Events Call: eventsCheckStatus', 'color:purple;');
 
 	var apiString = '/api/1.0/alerts/summary',
