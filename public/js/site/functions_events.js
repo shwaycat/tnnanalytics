@@ -318,7 +318,7 @@ function eventsTableUpdateController(){
 	$('#eventsCloseAll').on('click',function(){
 		globalDebug('   Events Call: eventsCloseAll', 'color:purple;');
 		var postObj = {
-	    "alertState": "new",
+	    "alertState": "closed",
 	    "all": true
 		}
 		eventsStatusUpdate(postObj);
@@ -435,7 +435,6 @@ function eventsCheckStatus(){
 
 function eventsDelegateAlerts(apiObj){
 	globalDebug('   Events Call: eventsDelegateAlerts', 'color:purple;');
-
 	var count = 0;
 
 	if (apiObj.success && $('.alerts-block')[0] && (apiObj.data.new || apiObj.data.open) ){
@@ -457,8 +456,10 @@ function eventsDelegateAlerts(apiObj){
 			}, 200);
 		}
 	} else {
+
 		$('.event-alert').data('events-count', count);
 		$('.event-alert').removeClass('active');
+		$('.alerts-block').removeClass('active');
 	}
 }
 

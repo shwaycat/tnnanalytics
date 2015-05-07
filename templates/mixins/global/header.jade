@@ -12,7 +12,6 @@ mixin header
               .glyphicon.glyphicon-bell
                 .event-alert
                   span 10
-              span.events-name Events
             if user.canAccessKeystone
               li: a(href='/keystone') Keystone
             li: a(href='/user/'+user.key).user
