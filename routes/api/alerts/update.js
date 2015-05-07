@@ -26,8 +26,7 @@ exports = module.exports = function(req, res) {
                 "or": {
                   "filters": [
                     { "term": { "alertState": "open"} },
-                    { "term": { "alertState": "new" } },
-                    { "term": { "alertState": "closed" } }
+                    { "term": { "alertState": "new" } }
                   ]
                 }
               }
