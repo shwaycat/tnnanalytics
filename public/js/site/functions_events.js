@@ -92,10 +92,11 @@ function eventsTableData(apiObj, table){
 			if (currentEvent.alertStateUpdatedAt) {
 				// Last Accessed Date
 				currentEvent_accessed = new Date(currentEvent.alertStateUpdatedAt);
+				currentEvent_accessed_human = $.timeago(currentEvent_accessed);
 				currentEvent_accessed = currentEvent_accessed.getFullYear() + '/' + (currentEvent_accessed.getMonth()+1 < 10 ? ('0'+(currentEvent_accessed.getMonth()+1)) : currentEvent_accessed.getMonth()+1 ) + '/' + (currentEvent_accessed.getDate() < 10 ? ('0'+currentEvent_accessed.getDate()) : currentEvent_accessed.getDate() );
 				
 				// Last Accessed Date in TimeAgo format
-				currentEvent_accessed_human = $.timeago(currentEvent_accessed);
+				
 			} else {
 				currentEvent_accessed = '';
 				currentEvent_accessed_human = '';
@@ -130,14 +131,14 @@ function eventsTableData(apiObj, table){
 			}
 
 			// Create the table row with the given data
-			tableHTML += '<tr data-id="'+currentEvent._id+'"" class="'+statusClass+'">';
+			tableHTML += '<tr data-status="'+currentEvent.alertState+'" data-type="'+currentEvent._type+'" data-id="'+currentEvent._id+'"" class="'+statusClass+'">';
 			tableHTML += '<td class="event-item-status"><span class="event-item-robot">'+statusOrder+'</span>'+currentEvent.alertState.capitalizeFirstLetter()+'</td>';
 			tableHTML += '<td><span class="event-item-robot">'+currentEvent_creation+'</span>'+currentEvent_creation_human+'</td>';
 			tableHTML += '<td>'+currentEvent._type.capitalizeFirstLetter()+'</td>';
 			tableHTML += '<td>'+currentEvent._id+'</td>';
-			tableHTML += '<td><span class="event-item-robot">'+currentEvent_accessed+'</span><span class="event-item-human">'+currentEvent_accessed_human.capitalizeFirstLetter()+'</span></td>';
+			tableHTML += '<td class="event-item-accessed"><span class="event-item-robot">'+currentEvent_accessed+'</span><span class="event-item-human">'+currentEvent_accessed_human.capitalizeFirstLetter()+'</span></td>';
 			tableHTML += '<td><button class="btn btn-default event-action-btn '+statusClass+'">'+actionText+'</td>';
-			tableHTML += '<td class="event-link-cell">'+urlHtml+'<span class="entypo entypo-chevron-right"></span></td>';
+			tableHTML += '<td class="event-item-link event-link-cell">'+urlHtml+'<span class="entypo entypo-chevron-right"></span></td>';
 			tableHTML += '</tr>';
 
 		}
@@ -173,7 +174,7 @@ function eventsTableDraw(table, paginationHTML){
 		$('#events-table_wrapper').append(paginationHTML);
 	}
 	
-
+	eventsTableUpdateController();
 	eventsDirectMessage();
 	$('.events-container').sectionLoad(false);
 
@@ -253,87 +254,152 @@ function eventsDirectMessage(){
 	})
 }
 
-function eventsTableUpdateController(data){
-	$('.event-action-btn').on('click',function(){
-		var clicked = $(this);
-		var row = clicked.parents('tr');
-		var statusItem = row.children('.event-item-status');
-		var eventID = row.data('id');
+function eventsTableUpdateController(){
+	$('.event-action-btn, .event-item-link').on('click',function(){
+		var clicked = $(this),
+		    row = clicked.parents('tr'),
+		    statusItem = row.find('.event-item-status'),
+		    accessedItem = row.find('.event-item-accessed'),
+		    eventID = row.data('id'),
+		    eventType = row.data('type'),
+		    eventStatus = row.data('status'),
+		    eventStatusButton = row.find('.event-action-btn'),
+		    alertState,
+		    postObj = {};
 
-		if (clicked.hasClass(STRING_STATUS_NEW_CLASS)){
+		if (clicked.hasClass('event-item-link')){
 
-			row.removeClass(STRING_STATUS_NEW_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
-			clicked.removeClass(STRING_STATUS_NEW_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
-			clicked.html(STRING_STATUS_CLOSED_BUTTON);
-			statusItem.html(STRING_STATUS_CLOSED.capitalizeFirstLetter());
+			if (eventStatus == STRING_STATUS_NEW){
 
-		} else if (clicked.hasClass(STRING_STATUS_OPEN_CLASS)) {
+				postObj = {
+					"docs": [
+						{
+							"_type": eventType,
+							"_id": eventID
+						}
+					],
+					"alertState": "open"
+				};
 
-			row.removeClass(STRING_STATUS_OPEN_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
-			clicked.removeClass(STRING_STATUS_OPEN_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
-			clicked.html(STRING_STATUS_CLOSED_BUTTON);
-			statusItem.html(STRING_STATUS_CLOSED.capitalizeFirstLetter());
+				eventsStatusUpdate(postObj, row, eventStatusButton, statusItem, accessedItem, true);
+					
+			}
 
-		} else if (clicked.hasClass(STRING_STATUS_CLOSED_CLASS)) {
+		} else {
 
-			row.removeClass(STRING_STATUS_CLOSED_CLASS).addClass(STRING_STATUS_OPEN_CLASS);
-			clicked.removeClass(STRING_STATUS_CLOSED_CLASS).addClass(STRING_STATUS_OPEN_CLASS);
-			clicked.html(STRING_STATUS_OPEN_BUTTON);
-			statusItem.html(STRING_STATUS_OPEN.capitalizeFirstLetter());
+			if (clicked.hasClass(STRING_STATUS_NEW_CLASS)){
+				alertState = STRING_STATUS_CLOSED;
+			} else if (clicked.hasClass(STRING_STATUS_OPEN_CLASS)) {
+				alertState = STRING_STATUS_CLOSED;
+			} else if (clicked.hasClass(STRING_STATUS_CLOSED_CLASS)) {
+				alertState = STRING_STATUS_OPEN;
+			}
+
+			postObj = {
+				"docs": [
+					{
+						"_type": eventType,
+						"_id": eventID
+					}
+				],
+				"alertState": alertState
+			};
+
+			eventsStatusUpdate(postObj, row, clicked, statusItem, accessedItem);
 
 		}
+
+		
 		// TODO: Push updated status here.
 		globalDebug('   Events Call: ' + eventID + ' Updated', 'color:purple;');
-		eventsStatusUpdate(data);
 
 	});
 
 	$('#eventsCloseAll').on('click',function(){
 		globalDebug('   Events Call: eventsCloseAll', 'color:purple;');
-
 		var postObj = {
-			
+	    "alertState": "closed",
+	    "all": true
 		}
-		eventsStatusUpdate(postObj)
-		
-
+		eventsStatusUpdate(postObj);
 	});
-
 	
 }
 
-function eventsStatusUpdate(postObj){
-	var apiString = "/api/1.0/events/update";
-	console.log('1')
-	console.log(postObj);
-	$.post(apiString, function( postObj ) {
-  	console.log('2')
-  	console.log(postObj);
-	})
+function eventsStatusUpdate(postObj, row, clicked, statusItem, accessedItem, postClicked){
+	var apiString = "/api/1.0/alerts/update";
+	var success = false;
+
+	$.post(apiString, postObj)
 	.done(function(data) {
-		console.log('3')
-		console.log(data);
 		globalDebug('   Ajax SUCCESS!: '+apiString, 'color:green;');
+
+		if (data.success) {
+			if (postObj.all){
+				setTimeout(function(){
+					location.reload();
+				}, 500);
+			} else {
+				
+
+				if (postClicked) {
+
+					row.removeClass(STRING_STATUS_NEW_CLASS).addClass(STRING_STATUS_OPEN_CLASS);
+					clicked.removeClass(STRING_STATUS_NEW_CLASS).addClass(STRING_STATUS_OPEN_CLASS);
+					clicked.html(STRING_STATUS_OPEN_BUTTON);
+					statusItem.html(STRING_STATUS_OPEN.capitalizeFirstLetter());
+
+				} else {
+
+					if (clicked.hasClass(STRING_STATUS_NEW_CLASS)) {
+
+						row.removeClass(STRING_STATUS_NEW_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
+						clicked.removeClass(STRING_STATUS_NEW_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
+						clicked.html(STRING_STATUS_CLOSED_BUTTON);
+						statusItem.html(STRING_STATUS_CLOSED.capitalizeFirstLetter());
+
+					} else if (clicked.hasClass(STRING_STATUS_OPEN_CLASS)) {
+
+						row.removeClass(STRING_STATUS_OPEN_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
+						clicked.removeClass(STRING_STATUS_OPEN_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
+						clicked.html(STRING_STATUS_CLOSED_BUTTON);
+						statusItem.html(STRING_STATUS_CLOSED.capitalizeFirstLetter());
+
+					} else if (clicked.hasClass(STRING_STATUS_CLOSED_CLASS)) {
+
+						row.removeClass(STRING_STATUS_CLOSED_CLASS).addClass(STRING_STATUS_OPEN_CLASS);
+						clicked.removeClass(STRING_STATUS_CLOSED_CLASS).addClass(STRING_STATUS_OPEN_CLASS);
+						clicked.html(STRING_STATUS_OPEN_BUTTON);
+						statusItem.html(STRING_STATUS_OPEN.capitalizeFirstLetter());
+
+					}
+
+				}
+				setTimeout(function(){
+					eventsCheckStatus();
+				},3000);
+				
+				
+				var newTime = new Date();
+				newTime = $.timeago(newTime);
+				accessedItem.children('.event-item-human').html(newTime);
+
+			}
+		}
   })
 	.fail(function( data ) {
-		console.log('4')
-		console.log(postObj);
 	  globalDebug('   Ajax FAILED!: '+apiString, 'color:red;');
 	})
 	.always(function( data ) {
-		console.log('5')
-		console.log(postObj);
-		if (postObj.all){
-			location.reload();
-		} else {
-			eventsCheckStatus();
-		}
+		if (data.error){
+			globalDebug('   Ajax SUCCESS, however POST returned an error: '+data.error, 'color:red;');
+		}	
 	});
 
 }
 
 
-function eventsCheckStatus(data){
+function eventsCheckStatus(){
 	globalDebug('   Events Call: eventsCheckStatus', 'color:purple;');
 
 	var apiString = '/api/1.0/alerts/summary',
