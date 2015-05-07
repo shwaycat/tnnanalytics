@@ -17,13 +17,20 @@ exports = module.exports = function(req, res) {
       "query": {
         "filtered": {
           "filter": {
-            "exists": { "field": "alertState" }
+            "and": {
+              "filters": [
+                {"exists": { "field": "alertState" } },
+                {"term": { "cadence_user_id": user.id } }
+              ]
+            }
           }
         }
       },
       "aggs": {
         "alertStates": {
-          "terms": {"field": "alertState"}
+          "terms": {
+            "field": "alertState"
+          }
         }
       }
     }

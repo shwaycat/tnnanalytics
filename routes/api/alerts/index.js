@@ -29,7 +29,7 @@ exports = module.exports = function(req, res) {
       "query": {
         "filtered": {
           "filter": {
-            "exists": { "field": "alertState" }
+            "exists": { "field": "alertState" },
           }
         }
       }
