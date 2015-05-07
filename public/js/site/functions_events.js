@@ -318,7 +318,7 @@ function eventsTableUpdateController(){
 	$('#eventsCloseAll').on('click',function(){
 		globalDebug('   Events Call: eventsCloseAll', 'color:purple;');
 		var postObj = {
-	    "alertState": "closed",
+	    "alertState": "new",
 	    "all": true
 		}
 		eventsStatusUpdate(postObj);
