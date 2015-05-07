@@ -17,6 +17,14 @@ var cachedData = {
       'topTweet': false,
       'topCountries': false
     };
+var cachedSummary = {
+      'engagement': false,
+      'acquisition': false,
+      'reach': false,
+      'topPost': false,
+      'topTweet': false,
+      'topCountries': false
+    };
 
 var cookieName = 'novo_date',
     cookieExp = 1,

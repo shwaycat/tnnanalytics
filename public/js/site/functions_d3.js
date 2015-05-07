@@ -159,9 +159,8 @@ function lineGraph(data, options){
     .attr("clip-path", "url("+options.selector+"_clip)")
     .attr("d", line(theData));
 
-
-  statsDelegation(data, options);
-  $(options.selector).sectionLoad(false);
+  statsDelegation(data.summary, options);
+  $(options.selector).sectionLoad(true);
 }
 
 
