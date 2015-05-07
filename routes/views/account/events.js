@@ -6,7 +6,7 @@ exports = module.exports = function(req, res) {
 		locals = res.locals;
 
 	locals.section = 'events';
-	locals.showDates = true;
+	locals.showDates = false;
 	locals.title = 'Adverse Events';
 
 	view.render('account/events');

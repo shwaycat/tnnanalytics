@@ -3,6 +3,7 @@
 ///////////////////////////
 
 function routesInit(resizeOnce){
+
 	if ($('body.dashboard')[0]){
 		globalDebug('   Route: Dashboard', 'color:gray;');
 
@@ -65,12 +66,15 @@ function routesInit(resizeOnce){
 	if ($('body.events')[0] && !resizeOnce){
 		globalDebug('   Route: Events', 'color:gray;');
 
-		if ($('#events-table')[0]){
-			eventsTableData(fakeEvents, $('#events-table'));
-			eventsTable($('#events-table'));
+		eventsTableController('/api/1.0/alerts/'+queryStringPage(), $('#events-table'));
+
+		//eventsTableData(fakeEvents, $('#events-table'));
+		//eventsTable($('#events-table'));
+
+		eventsTableUpdateController(fakeEvents);
 		
-			eventsCloseAll();
-		}
-		
+	}
+	if (!$('body.session')[0]){
+		eventsCheckStatus();
 	}
 }

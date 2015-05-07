@@ -193,6 +193,19 @@ $.fn.serializeObject = function()
   return o;
 };
 
+function queryStringPage(){
+  var query = window.location.search;
+  if (query != '' && query != null && query != undefined && query){
+    if (query.indexOf("?page=") != -1 && (query.split("?page=").length == 2)){
+      return query;
+    } else {
+      return '';
+    }
+  } else {
+    return '';
+  }
+}
+
 
 
 
@@ -297,14 +310,17 @@ function donutPercents(){
       .removeAttr('class', 'active');
   });
 }
-
+var asdf = 0;
 function statsDelegation(summary, options){
   if (!summary || summary == undefined || summary == null){
     return;
   }
 
-  var theSummary = summary,
-      statsString = '',
+  $(options.selector).next('.novo-graph-stats').remove();
+
+  
+
+  var statsString = '',
       statsStringOpen,
       statsStringClose,
       statStringOpen,
@@ -312,46 +328,133 @@ function statsDelegation(summary, options){
       statStringClose,
       columnSize;
 
-  if (theSummary.length == 1){
-    columnSize = 12;
-  }
-  if (theSummary.length == 2){
-    columnSize = 6;
-  }
-  if (theSummary.length == 3){
-    columnSize = 4;
-  }
-  if (theSummary.length == 4){
-    columnSize = 3;
-  }
-  if (theSummary.length == 5){
-    columnSize = 15;
-  }
-  if (theSummary.length == 6){
-    columnSize = 2;
-  } else {
-    columnSize = 1;
+  if(options.source == 'twitter'){
+    if(options.selector == '#engagement'){
+      columnSize = 'col-lg-6';
+    } else if (options.selector == '#acquisition'){
+      columnSize = 'col-lg-offset-6 col-lg-6';
+    }
+  } else if(options.source == 'facebook'){
+    if(options.selector == '#engagement'){
+      columnSize = 'col-lg-6';
+    } else if (options.selector == '#acquisition'){
+      columnSize = 'col-lg-6';
+    } else if (options.selector == '#reach'){
+      columnSize = 'col-lg-6';
+    }
   }
 
   statsStringOpen = '<ul class="novo-graph-stats">';
-  statStringOpen = '<li class="col-xs-12 col-md-'+columnSize+'"><div class="stat"><span>';
+  statStringOpen = '<li class="col-xs-12 '+columnSize+' col-md-6"><div class="stat"><span>';
   statStringMid = '</span><span>';
   statStringClose = '</span></li>';
   statsStringClose = '</ul>';
 
   statsString += statsStringOpen;
 
-  // for (var i = 0; i < theSummary.length; i++){
-  //   statsString += statStringOpen;
+  if (options.source == 'twitter'){
 
-  //   statsString += statStringMid;
+    if (options.selector == '#engagement'){
 
-  //   statsString += statStringClose;
-  // }
+      statsString += statStringOpen;
+      statsString += "Favorites"
+      statsString += statStringMid;
+      statsString += summary.totalFavorites
+      statsString += statStringClose;
+
+      statsString += statStringOpen;
+      statsString += "Retweets"
+      statsString += statStringMid;
+      statsString += summary.totalRetweets
+      statsString += statStringClose;
+
+      statsString += statStringOpen;
+      statsString += "Mentions"
+      statsString += statStringMid;
+      statsString += summary.totalMentions
+      statsString += statStringClose;
+
+      statsString += statStringOpen;
+      statsString += "Replies"
+      statsString += statStringMid;
+      statsString += summary.totalReplies
+      statsString += statStringClose;
+
+      statsString += statStringOpen;
+      statsString += "Direct Messages"
+      statsString += statStringMid;
+      statsString += summary.totalDirectMentions
+      statsString += statStringClose;
+
+    } else if (options.selector == '#acquisition'){
+
+      statsString += statStringOpen;
+      statsString += "Followers"
+      statsString += statStringMid;
+      statsString += summary.totalFollowers
+      statsString += statStringClose;
+
+    }
+    
+  } else if (options.source == 'facebook'){
+    
+    if (options.selector == '#engagement'){
+
+      // statsString += statStringOpen;
+      // statsString += summary.totalFavorites
+      // statsString += statStringMid;
+      // statsString += "Favorites"
+      // statsString += statStringClose;
+
+      // statsString += statStringOpen;
+      // statsString += summary.totalRetweets
+      // statsString += statStringMid;
+      // statsString += "Retweets"
+      // statsString += statStringClose;
+
+      // statsString += statStringOpen;
+      // statsString += summary.totalMentions
+      // statsString += statStringMid;
+      // statsString += "Mentions"
+      // statsString += statStringClose;
+
+      // statsString += statStringOpen;
+      // statsString += summary.totalReplies
+      // statsString += statStringMid;
+      // statsString += "Replies"
+      // statsString += statStringClose;
+
+      // statsString += statStringOpen;
+      // statsString += summary.totalDirectMentions
+      // statsString += statStringMid;
+      // statsString += "Direct Mentions"
+      // statsString += statStringClose;
+
+    } else if (options.selector == '#acquisition'){
+
+      // statsString += statStringOpen;
+      // statsString += summary.totalFollowers
+      // statsString += statStringMid;
+      // statsString += "Followers"
+      // statsString += statStringClose;
+
+    } else if (options.selector == '#reach'){
+
+      // statsString += statStringOpen;
+      // statsString += summary.totalFollowers
+      // statsString += statStringMid;
+      // statsString += "Followers"
+      // statsString += statStringClose;
+
+    }
+
+  }
 
   statsString += statsStringClose;
 
+
   $(options.selector).after(statsString);
+  $(options.selector).next('.novo-graph-stats').sectionLoad(false);
 }
 
 // i.e. graphController('line', '/api/1.0/twitter/engagement', {startTime: '2015-04-17T21:45:04.000Z', endTime:'2015-04-17T21:45:04.000Z'}, {selector: '#engagement'});
@@ -363,6 +466,7 @@ function dataController(sectionType, type, apiString, dateObj, options){
           source: false,
           type: false,
           data: false,
+          summary: false,
           startTime: false,
           endTime: false,
           options: options
@@ -380,6 +484,7 @@ function dataController(sectionType, type, apiString, dateObj, options){
         apiObj.source = data.source;
         apiObj.type = data.type;
         apiObj.data = data.data;
+        apiObj.summary = data.summary;
       })
       .fail(function( data ) {
         globalDebug('   Ajax FAILED!: '+apiString, 'color:red;');
@@ -393,7 +498,6 @@ function dataController(sectionType, type, apiString, dateObj, options){
         } else {
           cachedData[type] = apiObj;
         }
-        
 
         dataControllerDelegation(sectionType, apiObj);
       });
@@ -405,6 +509,7 @@ function dataController(sectionType, type, apiString, dateObj, options){
 function dataControllerDelegation(sectionType, apiObj){
   if (sectionType == 'line'){
     lineGraph(apiObj.data, apiObj.options);
+    statsDelegation(apiObj.summary, apiObj.options);
     
   } else if (sectionType == 'donut'){
     donutList(apiObj.data.data_all, apiObj.options, true);
@@ -540,7 +645,6 @@ function dateController(){
   now.setMinutes(0,0,0);
   now.setHours(now.getHours() - 1);
   now = now.toJSON();
-  console.log(now);
 
   today = new Date();
   today.setHours(0,0,0,0);
