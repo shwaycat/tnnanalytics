@@ -29,4 +29,8 @@ $(function() {
 		showErrors();
 	}
 
+	setInterval(function(){
+		eventsCheckStatus();
+	}, 60000);
+
 });
