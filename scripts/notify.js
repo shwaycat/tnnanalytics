@@ -62,7 +62,6 @@ require('../lib/keystone-script')(connectES, function(done) {
         });
       });
     }, function(err) {
-      console.log('ERR: %s', err);
         if (err) return errorHandling.sendSNS("error", err, err.stack, done);
         else done();
     });
