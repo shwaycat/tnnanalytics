@@ -38,12 +38,7 @@ exports = module.exports = function(req, res) {
         var hits = mxm.objTry(response, 'hits', 'hits');
         if(hits && hits.length) {
           docs = [];
-          docs = _.each(hits, function(obj, index, list) {
-            list[index] = {
-              id: obj._id,
-              doc_type: obj._type
-            };
-          });
+          docs = hits;
 
           bulkUpdate(args, docs, function(err) {
             if(err) return res.apiResponse({"error": err});
@@ -51,7 +46,7 @@ exports = module.exports = function(req, res) {
             return res.apiResponse({
               success: true,
               type: "alerts update",
-              ids: _.pluck(docs,'id'),
+              ids: _.pluck(docs,'_id'),
               all: true
             });
           });
@@ -67,7 +62,7 @@ exports = module.exports = function(req, res) {
         return res.apiResponse({
           success: true,
           type: "alerts update",
-          ids: _.pluck(docs,'id')
+          ids: _.pluck(docs,'_id')
         });
       });
     }
@@ -87,8 +82,8 @@ function bulkUpdate(args, docs, callback) {
     bulkUpdates.push({ 
         update: {
           _index: keystone.get('elasticsearch index'),
-          _type: doc.doc_type,
-          _id: doc.id
+          _type: doc._type,
+          _id: doc._id
         }
       },
       {

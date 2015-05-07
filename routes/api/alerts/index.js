@@ -41,12 +41,13 @@ exports = module.exports = function(req, res) {
 
     if(_.isArray(alerts)) {
       for(i=0;i<alerts.length;i++) {
-        alert = {};
-        alert = _.pick(alerts[i]['_source'], "sourceName", "doc_source", "doc_type", "cadence_user_id", "user_id", "timestamp", "alertState", "alertStateUpdatedAt");
-        alert.id = alerts[i]['_id'];
+
+        _source = _.pick(alerts[i]['_source'], "sourceName", "doc_source", "doc_type", "cadence_user_id", "user_id", "timestamp", "alertState", "alertStateUpdatedAt")
+        alert = _.pick(alerts[i], "_id", "_type");
+        alert = _.extend(alert, _source);
 
         DOCTYPE = sources[alert.doc_source][alert.doc_type];
-        DOC = new DOCTYPE(alert.id, alerts[i]['_source']);
+        DOC = new DOCTYPE(alert._id, alerts[i]['_source']);
 
         emailLinkObject = DOC.emailLinkObject({user: user});
 
