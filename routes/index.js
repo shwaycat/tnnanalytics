@@ -76,7 +76,7 @@ exports = module.exports = function(app) {
   app.all('/accounts/:account_name/events', routes.views.account.events);
 
   // API
-  app.get('/api*', keystone.middleware.api);
+  app.all('/api*', keystone.middleware.api);
 
   // Twitter Endpoints
   // They all expect query strings with startTime endTime
