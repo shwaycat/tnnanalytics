@@ -17,6 +17,8 @@ var STRING_STATUS_NEW = 'new',
 function eventsTableController(apiString, table){
 	globalDebug('   Events Call: eventsTable', 'color:purple;');
 
+
+
 	var	apiObj = {
 				"data": [],
 				"page": 0,
@@ -46,6 +48,9 @@ function eventsTableController(apiString, table){
 			eventsTableData(apiObj, table)
 			
 		}
+		if (apiObj.data.length == 0){
+			$('.events-no-data-warning').addClass('active')
+		}
 	});
 }
 
@@ -53,7 +58,12 @@ function eventsTableData(apiObj, table){
 	globalDebug('   Events Call: eventsTableData', 'color:purple;');
 
 	if(table != undefined && table[0]){
-		var tableHTML = '';
+		var tableHTML = '',
+				paginationHTML = '',
+				page = apiObj.page,
+				pageSize = apiObj.pageSize,
+				total = apiObj.total;
+
 		for (var i = 0; i < apiObj.data.length; i++){
 
 			statusClass = '';
@@ -116,7 +126,7 @@ function eventsTableData(apiObj, table){
 			if (currentEvent.doc_type == 'direct_message') {
 				urlHtml = '<a data-toggle="modal" data-events-url='+currentEvent.url+' data-events-has-modal="true" data-target="#eventsDirectMessageModal">View DM'
 			} else {
-				urlHtml = '<a target="_blank" href="'+currentEvent.url+'" title="'+currentEvent._type+' Link">View'
+				urlHtml = '<a target="_blank" href="'+currentEvent.url+'" title="'+currentEvent._type+' Link">View Event'
 			}
 
 			// Create the table row with the given data
@@ -130,17 +140,19 @@ function eventsTableData(apiObj, table){
 			tableHTML += '<td class="event-link-cell">'+urlHtml+'<span class="entypo entypo-chevron-right"></span></td>';
 			tableHTML += '</tr>';
 
-			table.find('tbody').append(tableHTML);
-			tableHTML = '';
-
-			setTimeout(function(){
-				eventsTableDraw($('#events-table'));
-			},1);
 		}
+
+		table.find('tbody').append(tableHTML);
+		tableHTML = '';
+
+		paginationHTML = eventsTablePagination(page, pageSize, total);
+
+		eventsTableDraw($('#events-table'), paginationHTML);
+
 	}
 }
 
-function eventsTableDraw(table){
+function eventsTableDraw(table, paginationHTML){
 
 	table.DataTable({
 		"paging": false,
@@ -157,9 +169,81 @@ function eventsTableDraw(table){
 	  ]
 	});
 
+	if($('#events-table_wrapper')[0]){
+		$('#events-table_wrapper').append(paginationHTML);
+	}
+	
+
 	eventsDirectMessage();
 	$('.events-container').sectionLoad(false);
 
+}
+
+function eventsTablePagination(page, pageSize, total){
+	if (total > pageSize){
+		var paginateHTML = '<div class="dataTables_paginate paging_simple_numbers" id="events-table_paginate">',
+				extended = false,
+				ifFirst = '',
+				ifLast = '',
+				totalPages = false,
+				prevHref = '',
+				nextHref = '';
+
+		totalPages = Math.ceil(total/pageSize);
+		if (totalPages > 7) {
+			extended = true;
+		}
+		if (page == 1){
+			ifFirst = 'disabled';
+		} else {
+			prevHref = 'href="?page='+(page-1)+'"';
+		}
+		if (page == totalPages){
+			ifLast = 'disabled';
+		} else {
+			nextHref = 'href="?page='+(page+1)+'"';
+		}
+
+		if (extended) {
+			paginateHTML += '<a href="?page=1" class="paginate_button first '+ifFirst+'">First</a>';
+		}
+		
+		paginateHTML += '<a '+prevHref+' class="paginate_button previous '+ifFirst+'">Prev</a><span>';
+		
+		var i = 1,
+				offset = 1,
+				max = 8;
+
+		if (extended && page > 4 && (page < totalPages-2)) {
+			offset = page-3;
+			max = 7+offset;
+		}
+		if (extended && (page >= totalPages-2)) {
+			offset = totalPages - 6;
+			max = offset+7;
+		}
+
+		for (i = offset; i < max; i++) {
+			var current = '';
+			if (i == page){
+				current = 'current';
+			}
+			paginateHTML += '<a href="?page='+i+'" class="paginate_button '+current+'" aria-controls="events-table" data-dt-idx="1" tabindex="0">'+i+'</a>';
+		}
+		
+		paginateHTML += '</span><a '+nextHref+' class="paginate_button next '+ifLast+'">Next</a>';
+		
+		if (extended) {
+			paginateHTML += '<a href="?page='+totalPages+'" class="paginate_button last '+ifLast+'">Last</a>';
+		}
+		
+		paginateHTML += '</div>';
+		
+		return paginateHTML;
+
+	} else {
+		return '';
+	}
 }
 
 function eventsDirectMessage(){

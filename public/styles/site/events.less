@@ -12,6 +12,17 @@
 			.transition(@section_transition);
 		}
 	}
+	.events-no-data-warning {
+		font-size: 1.5em;
+		text-align: center;
+		display:none;
+		&.active {
+			display:block;
+		}
+		a {
+			color:@lightBlue;
+		}
+	}
 	.dataTables_wrapper {
 		opacity:0;
 		.transition(@section_transition);
@@ -31,6 +42,9 @@
 			font-size: 1.2em;
 			vertical-align: bottom;
 		}
+	}
+	.paginate_button:hover {
+		background-color:@lightBlue;
 	}
 	.paginate_button.disabled {
 		color: #6D6E70;

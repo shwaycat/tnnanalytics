@@ -193,6 +193,19 @@ $.fn.serializeObject = function()
   return o;
 };
 
+function queryStringPage(){
+  var query = window.location.search;
+  if (query != '' && query != null && query != undefined && query){
+    if (query.indexOf("?page=") != -1 && (query.split("?page=").length == 2)){
+      return query;
+    } else {
+      return '';
+    }
+  } else {
+    return '';
+  }
+}
+
 
 
 

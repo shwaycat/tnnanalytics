@@ -66,7 +66,7 @@ function routesInit(resizeOnce){
 	if ($('body.events')[0] && !resizeOnce){
 		globalDebug('   Route: Events', 'color:gray;');
 
-		eventsTableController('/api/1.0/alerts/', $('#events-table'));
+		eventsTableController('/api/1.0/alerts/'+queryStringPage(), $('#events-table'));
 
 		//eventsTableData(fakeEvents, $('#events-table'));
 		//eventsTable($('#events-table'));
