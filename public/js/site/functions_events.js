@@ -29,7 +29,6 @@ function eventsTableController(apiString, table){
 				"type": ""
 			};
 	$.get(apiString, function( data ) {
-		console.log(data);
 		apiObj.data = data.data;
 		apiObj.page = parseInt(data.page);
 		apiObj.pageSize = parseInt(data.pageSize);

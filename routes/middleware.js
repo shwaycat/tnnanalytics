@@ -46,9 +46,12 @@ exports.initLocals = function(req, res, next) {
     "reach": "Reach",
     "engagement": "Engagement",
     "acquisition": "Acquisition",
-    "topPost": "Top Post",
+    "topFacebookPost": "Top Post",
     "topCountries": "Top Countries",
-    "topTweet": "Top Tweet"
+    "topTweet": "Top Tweet",
+    "topInstagramPost": "Top Instagram Post",
+    "topGooglePost": "Top Google Post",
+    "topYoutubeVideo": "Top Youtube Video"
   }
 
   locals.user = req.user

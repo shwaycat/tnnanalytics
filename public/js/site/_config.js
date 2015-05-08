@@ -3,7 +3,7 @@ var globalDebugBool = true;
 var eventsCheckStatusOnInterval = true;
 
 var dataErrorClass = '.data-error-container';
-var dataErrorHTML = '<div class="data-error-container"><p>There was an error loading the data for this section. Please <a href="mailto:nlambert@maxmedia.com">email</a> us and let us know you found this error.</p></div>';
+var dataErrorHTML = '<div class="data-error-container"><p>There was an error loading the data for this section.</p></div>';
 
 var loadingGifClass = '.loading-container';
 var loadingGifHTML = '<div class="loading-container"><img src="/images/loader.gif" /></div>';
@@ -14,16 +14,22 @@ var cachedData = {
       'engagement': false,
       'acquisition': false,
       'reach': false,
-      'topPost': false,
+      'topFacebookPost': false,
       'topTweet': false,
+      'topInstagramPost': false,
+      'topGooglePost': false,
+      'topYoutubeVideo': false,
       'topCountries': false
     };
 var cachedSummary = {
       'engagement': false,
       'acquisition': false,
       'reach': false,
-      'topPost': false,
+      'topFacebookPost': false,
       'topTweet': false,
+      'topInstagramPost': false,
+      'topGooglePost': false,
+      'topYoutubeVideo': false,
       'topCountries': false
     };
 

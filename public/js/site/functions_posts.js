@@ -1,8 +1,8 @@
-function topPost(data, options){
+function topFacebookPost(data, options, success){
 
 	// Preload Checks
 	if (!$(options.selector)[0]) return;
-	if (!data || data == undefined || data == null){
+	if (!data || data == undefined || data == null || !success){
 		$(options.selector).before(dataErrorHTML);
 		$(options.selector).remove();
 		return;
@@ -55,8 +55,13 @@ function topPost(data, options){
 			.html(newDate);
 		post.find('.post-link')
 			.attr('href', theData.url);
-		post.find('.post-image img')
-			.attr('src', theData.image);
+		if (theData.image){
+			post.find('.post-image img')
+				.attr('src', theData.image);
+		} else {
+			post.find('.post-image')
+				remove();
+		}
 		post.find('.post-details-list')
 			.children().remove();
 		post.find('.post-details-list')
@@ -71,12 +76,13 @@ function topTweet(data, options){
 
 	// Preload Checks
 	if (!$(options.selector)[0]) return;
-	if (!data || data == undefined || data == null){
+	if (!data || data == undefined || data == null || !data.success){
 		$(options.selector).before(dataErrorHTML);
 		$(options.selector).remove();
 		return;
 	} else {
-		$(options.selector).before(loadingGifHTML);
+		//For Top Tweets, because oembed takes a while, I am loading this in the dataController
+		//$(options.selector).before(loadingGifHTML);
 	}
 
 	var theData = data;
@@ -124,5 +130,8 @@ function topTweet(data, options){
 	}
 
 	$(options.selector).sectionLoad(true, true);
+	setTimeout(function(){
+		 equalHeightPairs(1200);
+	},500);
 	
 }

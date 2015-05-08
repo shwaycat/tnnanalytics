@@ -12,7 +12,7 @@ exports = module.exports = function(req, res) {
 		reach: "",
 		engagement: "",
 		acquisition: "",
-		topPost: "",
+		topYoutubeVideo: "",
 		topCountries: ""
 	};
 

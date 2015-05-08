@@ -295,17 +295,12 @@ function simplifyData(data){
   return newData;
 }
 
-function donutList(data, options, hidden){
+function donutList(data, options){
   var theData = data;
   var post;
   var newDetailsHTML = '';
 
-  if (hidden){
-    //Used for displaying all data in print.
-    post = $(options.selector).siblings('.novo-data-list-print');
-  } else {
-    post = $(options.selector).siblings('.novo-data-list-normal');
-  }
+  post = $(options.selector).siblings('.novo-data-list');
 
   if (theData.length) {
     for (var i = 0; i < theData.length; i++){
@@ -488,7 +483,7 @@ function dataController(sectionType, type, apiString, dateObj, options){
   if (!cachedData[type]){
     var queryString = apiString + '?startTime='+dateObj.startTime + '&endTime='+dateObj.endTime;
     var apiObj = {
-          success: true,
+          success: false,
           source: false,
           type: false,
           data: false,
@@ -504,20 +499,22 @@ function dataController(sectionType, type, apiString, dateObj, options){
       apiObj.endTime = dateObj.endTime;
       timeObj = dateObj;
     }
-
-    $.get(apiString, timeObj )
+    if (type == 'topTweet'){
+      $(options.selector).before(loadingGifHTML);
+    }
+    $.get(apiString, timeObj)
       .done(function( data ) {
         globalDebug('   Ajax SUCCESS!: '+apiString, 'color:green;');
+        apiObj.success = data.success;
         apiObj.source = data.source;
         apiObj.type = data.type;
         apiObj.data = data.data;
         apiObj.oembed = data.oembed;
         apiObj.summary = data.summary;
-        //console.log(data);
+        console.log(data);
       })
       .fail(function( data ) {
         globalDebug('   Ajax FAILED!: '+apiString, 'color:red;');
-        apiObj = false;
       })
       .always(function( data ) {
         if (type == 'topCountries'){
@@ -536,20 +533,30 @@ function dataController(sectionType, type, apiString, dateObj, options){
 
 function dataControllerDelegation(sectionType, apiObj){
   if (sectionType == 'line'){
-    lineGraph(apiObj.data, apiObj.options);
-    statsDelegation(apiObj.summary, apiObj.options);
+    lineGraph(apiObj.data, apiObj.options, apiObj.success);
+    statsDelegation(apiObj.summary, apiObj.options, apiObj.success);
     
   } else if (sectionType == 'donut'){
-    donutList(apiObj.data.data_list, apiObj.options);
-    donutGraph(apiObj.data.data, apiObj.options);
+    donutList(apiObj.data.data_list, apiObj.options, apiObj.success);
+    donutGraph(apiObj.data.data, apiObj.options, apiObj.success);
 
-  } else if (sectionType == 'topPost'){
+  } else if (sectionType == 'topFacebookPost'){
     apiObj.data = fakeTopPost;
-    topPost(apiObj.data, apiObj.options);
+    topFacebookPost(apiObj.data, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'topTweet'){
     topTweet(apiObj, apiObj.options);
 
+  } else if (sectionType == 'topInstagramPost'){
+    topInstagramPost(apiObj, apiObj.options);
+
+  } else if (sectionType == 'topGooglePost'){
+    topGooglePost(apiObj, apiObj.options);
+
+  } else if (sectionType == 'topYoutubeVideo'){
+    topYoutubeVideo(apiObj, apiObj.options);
+
+  
   } else {
     globalDebug('   GraphController Error: Wrong sectionType entered! Type: '+sectionType+' is not a valid sectionType!', 'color:red;');
     return;
