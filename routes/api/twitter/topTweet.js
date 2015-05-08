@@ -1,6 +1,7 @@
 var keystone = require('keystone'),
     _ = require('underscore'),
     async = require('async'),
+    debug = require('debug')("cadence:api:topTweet"),
     request = require('request'),
     mxm = require('../../../lib/mxm-utils');
     Tweet = require('../../../lib/sources/twitter/tweet'),
@@ -30,6 +31,8 @@ exports = module.exports = function(req, res) {
 
   keystone.elasticsearch.search({
     index: keystone.get('elasticsearch index'),
+    from: 0,
+    size: 1000000000,
     body: {
       "query": {
         "filtered": {
@@ -84,7 +87,8 @@ exports = module.exports = function(req, res) {
         if(!scoredTweets || scoredTweets.length == 0) return res.apiError({"error": 'Error in async?'});
 
         max = _.max(scoredTweets, function(tweet) { return tweet.score; });
-        
+
+console.log(max);        
         if(!max) return res.apiError({"error": "Something went way wrong."})
           keystone.elasticsearch.get({
             index: keystone.get('elasticsearch index'),
@@ -93,7 +97,10 @@ exports = module.exports = function(req, res) {
           }, function(err, tweet) {
             if(err) return res.apiError({"error": "Failed in ES.get"});
 
-            if(!tweet.oembed) {
+            console.log(tweet);
+
+            if(!tweet._source.oembed) {
+              debug("GO GET IT!");
               async.series([
                 function(next) {
                   request({
@@ -111,8 +118,8 @@ exports = module.exports = function(req, res) {
                 function(next) {
                   keystone.elasticsearch.update({
                     index: keystone.get('elasticsearch index'),
-                    type: 'tweet',
-                    id: tweet.id,
+                    type: 'twitter',
+                    id: tweet._id,
                     body: {
                       doc: {
                         oembed: JSON.stringify(tweet.oembed)
@@ -138,15 +145,15 @@ exports = module.exports = function(req, res) {
 
               });
             } else {
+              debug("IT WAS CACHED");
               dataReturn = {
                 success: true,
                 type: 'topTweet',
                 source: 'twitter',
                 queryString: req.query,
                 data: max,
-                oembed: JSON.parse(tweet.oembed)
+                oembed: JSON.parse(tweet._source.oembed)
               }
-
               return res.apiResponse(dataReturn);
 
             }
