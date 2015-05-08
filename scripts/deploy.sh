@@ -73,5 +73,7 @@ run ln -s "$APP_ROOT/releases/$rel_tag" current
 ###
 # Restart
 run sudo /opt/passenger/bin/passenger-config restart-app "$APP_ROOT/current"
+run 'kill `cat tmp/pids/stream-twitter.pid`'
+run 'nohup node scripts/stream-twitter.js &>log/stream-twitter.log & echo $! >tmp/pids/stream-twitter.pid'
 
 notify_slack "Finished deployment: $rel_tag to $ENVIRONMENT"
