@@ -55,12 +55,12 @@ exports = module.exports = function(req, res) {
                 },
                 {
                   "term": {
-                    "cadence_user_id": "5537f5c066705d6d0a54a214"
+                    "cadence_user_id": req.user.id
                   }
                 },
                 {
                   "term": {
-                    "user_id": "83736981"
+                    "user_id": req.user.services.twitter.profileId
                   }
                 },
                 {
