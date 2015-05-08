@@ -42,7 +42,7 @@ exports = module.exports = function(req, res) {
             }
           }
         }, function(err, response) {
-          if(err) return res.apiError({"error": err});
+          if(err) return res.apiResponse({"error": err});
           var hits = mxm.objTry(response, 'hits', 'hits');
           if(hits && hits.length) {
             docs = docs.concat(hits);
@@ -59,10 +59,10 @@ exports = module.exports = function(req, res) {
         return (from + size) <= total;
       },
       function(err) {
-        if(err) return res.apiError({"error": err});
+        if(err) return res.apiResponse({"error": err});
  
         bulkUpdate(args, docs, function(err) {
-          if(err) return res.apiError({"error": err});
+          if(err) return res.apiResponse({"error": err});
 
           return res.apiResponse({
             success: true,
@@ -77,7 +77,7 @@ exports = module.exports = function(req, res) {
     } else {
       console.log(from);
       bulkUpdate(args, docs, function(err) {
-        if(err) return res.apiError({"error": err});
+        if(err) return res.apiResponse({"error": err});
 
         return res.apiResponse({
           success: true,

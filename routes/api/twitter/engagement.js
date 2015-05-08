@@ -113,7 +113,7 @@ exports = module.exports = function(req, res) {
       }
     }
   }, function(err, response) {
-    if(err) return res.apiError({"error": err});
+    if(err) return res.apiResponse({"error": err});
     var dataReturn = [],
         buckets = mxm.objTry(response, 'aggregations', 'engagement', 'buckets');
 
@@ -150,7 +150,7 @@ exports = module.exports = function(req, res) {
         }
       });   
     } else {
-      res.apiError('error', "No buckets.")
+      res.apiResponse('error', "No buckets.")
     }
   });
 
