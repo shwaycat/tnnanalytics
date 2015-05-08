@@ -21,6 +21,8 @@ exports = module.exports = function(req, res) {
     endTime = new Date(req.query.endTime);
   }
 
+  var interval = (endTime.getTime() - startTime.getTime()) / 24;
+      interval = interval / 1000;
 
   keystone.elasticsearch.search({
     index: keystone.get('elasticsearch index'),
