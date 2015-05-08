@@ -1,6 +1,7 @@
 var keystone = require('keystone'),
     _ = require('underscore'),
-    async = require('async');
+    async = require('async'),
+    mxm = require('../../../lib/mxm-utils');
 
 
 exports = module.exports = function(req, res) {
@@ -9,8 +10,10 @@ exports = module.exports = function(req, res) {
       locals = res.locals;
 
   var dataReturn = [];
-  startTime = new Date("Mar 1, 2015");
-  endTime = new Date("Mar 31, 2015");
+  endTime = new Date();
+  startTime = new Date();
+  startTime.setDate(endTime.getDate() - 30);
+
   if(req.query.startTime) {
     startTime = new Date(req.query.startTime);
   }
@@ -20,35 +23,98 @@ exports = module.exports = function(req, res) {
   console.log(startTime.toString());
   console.log(endTime.toString());
 
+  keystone.elasticsearch.search({
+    index: keystone.get('elasticsearch index'),
+    body: {
+      "query": {
+        "filtered": {
+          "filter": {
+            "and": {
+              "filters": [
+                { "exists": { "field": "followers_count" } },
+                { "range": {
+                    "timestamp": {
+                      "gte": startTime,
+                      "lte": endTime
+                    }
+                  } }
+              ]
+            }
+          }
+        }
+      },
+      "aggs": {
+        "followers": {
+          "date_histogram": {
+            "field": "timestamp",
+            "interval": "30m",
+            "min_doc_count": 0
+          },
+          "aggs": {
+            "avg_follower_count": {
+              "avg": {
+                "field": "followers_count"
+              }
+            }
+          }
+        }
+      }
+    }
+  }, function(err, response) {
+    if(err) return res.apiResponse({"error": err});
+    var dataReturn = [],
+        buckets = mxm.objTry(response, 'aggregations', 'followers', 'buckets');
+        console.log(buckets.length);
+    if(buckets && buckets.length) {
+      dataReturn.push({
+        key: startTime.toISOString(),
+        value: buckets[0].avg_follower_count.value
+      });
+
+      _.each(buckets, function(bucket){
+        if(bucket.avg_follower_count && bucket.avg_follower_count.value) {
+          dataReturn.push({
+            key: bucket.key_as_string,
+            value: bucket.avg_follower_count.value
+          })
+        }
+      });
+
+      dataReturn.push({
+        key: endTime.toISOString(),
+        value: _.last(dataReturn).value
+      });
+
+
+      return res.apiResponse({
+        success: true,
+        type: 'acquisition',
+        source: 'twitter',
+        queryString: req.query,
+        data: dataReturn,
+        summary: {
+          "totalFollowers" : _.last(dataReturn).value
+        }
+      });    
+    } else {
+      res.apiError('error', "No buckets.")
+    }
+  });
   
-  var dataReturn = [];
-  var timeHolder = startTime;
-  while(timeHolder < endTime) {
-    timeHolder.setDate(timeHolder.getDate() + 1);
-    dataReturn.push( { 
-      "key": timeHolder.toJSON(),
-      "value": Math.floor(Math.random() * 500)
-    });
-  }
+  // var dataReturn = [];
+  // var timeHolder = startTime;
+  // while(timeHolder < endTime) {
+  //   timeHolder.setDate(timeHolder.getDate() + 1);
+  //   dataReturn.push( { 
+  //     "key": timeHolder.toJSON(),
+  //     "value": Math.floor(Math.random() * 500)
+  //   });
+  // }
   // Build Response Here
   // DATA = Array of Key (Date) value pairs.
 
- 
-  // Return the response
-  view.render(function(err) {
-    if (err) return res.apiError('error', err);
 
-    return res.apiResponse({
-      success: true,
-      type: 'acquisition',
-      source: 'twitter',
-      queryString: req.query,
-      data: dataReturn,
-      summary: {
-        "totalFollowers" : dataReturn[dataReturn.length-1]['value']
-      }
-    });
 
-  });
- 
+
+
 }
