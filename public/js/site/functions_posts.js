@@ -115,7 +115,6 @@ function topTweet(data, options){
 			newDetailsHTML += '</span></li>';
 		}
 
-		console.log(theData);
 		post.find('.twitter-container')
 			.append(theData.oembed.html);
 		post.find('.post-details-list')

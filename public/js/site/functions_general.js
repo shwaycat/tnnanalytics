@@ -540,7 +540,6 @@ function dataControllerDelegation(sectionType, apiObj){
     statsDelegation(apiObj.summary, apiObj.options);
     
   } else if (sectionType == 'donut'){
-    // donutList(apiObj.data.data_all, apiObj.options, true);
     donutList(apiObj.data.data_list, apiObj.options);
     donutGraph(apiObj.data.data, apiObj.options);
 
@@ -549,7 +548,6 @@ function dataControllerDelegation(sectionType, apiObj){
     topPost(apiObj.data, apiObj.options);
 
   } else if (sectionType == 'topTweet'){
-    //apiObj.data = fakeTopTweet;
     topTweet(apiObj, apiObj.options);
 
   } else {
