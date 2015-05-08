@@ -38,8 +38,23 @@ exports = module.exports = function(req, res) {
             "and": {
               "filters": [
                 {
-                  "terms": {
-                    "doc_type": ["tweet", "mention", "direct_message"]
+                  "or": {
+                    "filters": [
+                      {
+                        "terms": {
+                          "doc_type": [
+                            "tweet",
+                            "mention",
+                            "direct_message"
+                          ]
+                        }
+                      },
+                      {
+                        "exists": {
+                          "field": "reply_count"
+                        }
+                      }
+                    ]
                   }
                 },
                 {
@@ -56,7 +71,7 @@ exports = module.exports = function(req, res) {
         }
       },
       "aggs": {
-        "followers": {
+        "engagement": {
           "date_histogram": {
             "field": "timestamp",
             "interval": interval + "s",
@@ -64,17 +79,17 @@ exports = module.exports = function(req, res) {
           },
           "aggs": {
             "reply_count": {
-              "max": {
+              "sum": {
                 "field": "reply_count"
               }
             },
             "favorite_count": {
-              "max": {
+              "sum": {
                 "field": "favorite_count"
               }
             },
             "retweet_count": {
-              "max": {
+              "sum": {
                 "field": "retweet_count"
               }
             },
@@ -91,7 +106,7 @@ exports = module.exports = function(req, res) {
   }, function(err, response) {
     if(err) return res.apiError({"error": err});
     var dataReturn = [],
-        buckets = mxm.objTry(response, 'aggregations', 'followers', 'buckets');
+        buckets = mxm.objTry(response, 'aggregations', 'engagement', 'buckets');
 
     if(buckets && buckets.length) {
 
