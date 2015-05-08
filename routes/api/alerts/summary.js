@@ -7,7 +7,8 @@ var keystone = require('keystone'),
 exports = module.exports = function(req, res) {
  
   var view = new keystone.View(req, res),
-      locals = res.locals;
+      locals = res.locals
+      user = req.user;
 
 
   keystone.elasticsearch.search({
@@ -17,13 +18,20 @@ exports = module.exports = function(req, res) {
       "query": {
         "filtered": {
           "filter": {
-            "exists": { "field": "alertState" }
+            "and": {
+              "filters": [
+                {"exists": { "field": "alertState" } },
+                {"term": { "cadence_user_id": user.id } }
+              ]
+            }
           }
         }
       },
       "aggs": {
         "alertStates": {
-          "terms": {"field": "alertState"}
+          "terms": {
+            "field": "alertState"
+          }
         }
       }
     }

@@ -27,12 +27,44 @@ exports = module.exports = function(req, res) {
     from: (page-1) * size,
     body: {
       "query": {
-        "filtered": {
-          "filter": {
-            "exists": { "field": "alertState" }
+        "bool": {
+          "must": [
+            {"terms": {
+              "alertState": [
+                "new",
+                "open",
+                "closed"
+              ]
+            }}
+          ],
+          "should": [
+            {"term": {
+              "alertState": {
+                "value": "new"
+              }
+            }},
+            {"term": {
+              "alertState": {
+                "value": "new"
+              }
+            }},
+            {"term": {
+              "alertState": {
+                "value": "open"
+              }
+            }}
+          ],
+          "boost": 1.2
+        }
+      },
+      "sort": [
+        "_score",
+        {
+          "timestamp": {
+            "order": "desc"
           }
         }
-      }
+      ]
     }
   }, function(err, response){
     if(err) return res.apiResponse({"error": err});
@@ -53,7 +85,7 @@ exports = module.exports = function(req, res) {
         emailLinkObject = DOC.emailLinkObject({user: user});
 
         alert.url = emailLinkObject.href;
-        total = response.hits.total
+        total = response.hits.total;
 
         data.push(alert);
       }
