@@ -32,6 +32,8 @@ function eventsTableController(apiString, table){
 		
 		apiObj.data = data.data;
 		apiObj.page = data.page;
+		apiObj.pageSize = data.pageSize;
+		apiObj.total = data.total;
 		apiObj.source = data.source;
 		apiObj.success = data.success;
 		apiObj.type = data.type;
@@ -149,6 +151,8 @@ function eventsTableData(apiObj, table){
 		paginationHTML = eventsTablePagination(page, pageSize, total);
 
 		eventsTableDraw($('#events-table'), paginationHTML);
+
+		compensateFooter();
 
 	}
 }
@@ -310,7 +314,7 @@ function eventsTableUpdateController(){
 		}
 
 		
-		// TODO: Push updated status here.
+		
 		globalDebug('   Events Call: ' + eventID + ' Updated', 'color:purple;');
 
 	});
