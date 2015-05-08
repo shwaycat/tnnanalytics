@@ -48,9 +48,19 @@ exports = module.exports = function(req, res) {
                 {
                   "range": {
                     "timestamp": {
-                      "gte": "0",
-                      "lte": "now"
+                      "gte": startTime,
+                      "lte": endTime
                     }
+                  }
+                },
+                {
+                  "term": {
+                    "cadence_user_id": "5537f5c066705d6d0a54a214"
+                  }
+                },
+                {
+                  "term": {
+                    "user_id": "83736981"
                   }
                 },
                 {

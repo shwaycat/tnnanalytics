@@ -70,6 +70,10 @@ function buildSeries() {
         series.push(deleteDeltasBySource('twitter'));
       }
 
+      if(argv['twitter-followerCounts'] || argv['twitter-all']) {
+        series.push(deleteDocsByType('twitter', 'followerCount'));
+      }
+
     return series;
 
   } else {
@@ -173,12 +177,13 @@ function showHelp() {
   console.log('<flags>');
   console.log('--help                           Show this dialog');
   console.log('');
-  console.log('--twitter-all                    Delete all Twitter objects and reset all sinceIds');
-  console.log('--twitter-direct_messages        Delete all Twitter direct_messages and reset direct_messagesinceId');
-  console.log('--twitter-mentions               Delete all Twitter mentions and reset mentionSinceId');
-  console.log('--twitter-tweets                 Delete all Twitter tweets and reset tweetSinceId');
+  console.log('--twitter-all                    Delete all Twitter objects');
+  console.log('--twitter-direct_messages        Delete all Twitter direct_messages');
+  console.log('--twitter-mentions               Delete all Twitter mentions');
+  console.log('--twitter-tweets                 Delete all Twitter tweets');
   console.log('--twitter-followers              Delete Twitter followers');  
   console.log('--twitter-deltas                 Delete all Twitter deltas');
+  console.log('--twitter-followerCounts         Delete all Twitter FollowerCounts');
   console.log('');
   console.log('<options>');
   console.log('--u <user email>                 Perform actions on specified user.')
