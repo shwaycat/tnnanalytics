@@ -215,20 +215,26 @@ function eventsTablePagination(page, pageSize, total){
 		
 		paginateHTML += '<a '+prevHref+' class="paginate_button previous '+ifFirst+'">Prev</a><span>';
 		
-		var i = 1,
-				offset = 1,
-				max = totalPages+1;
-
-		if (extended && page > 4 && (page < totalPages-2)) {
-			offset = page-3;
-			max = 7+offset;
+		var offset = 0,
+				max = 0;
+				
+		if (extended){
+			if (page > 4 && (page+3 < totalPages)) {
+				offset = page-3;
+				max = 7+offset;
+			} else if (page+3 >= totalPages) {
+				offset = totalPages - 6;
+				max = 7+offset;
+			} else {
+				offset = 1;
+				max = 7+offset;
+			}
+		} else {
+			max = totalPages+1;
+			offset = 1;
 		}
-		if (extended && (page >= totalPages-2)) {
-			offset = totalPages - 6;
-			max = offset+7;
-		}
 
-		for (i = offset; i < max; i++) {
+		for (var i = offset; i < max; i++) {
 			var current = '';
 			if (i == page){
 				current = 'current';
