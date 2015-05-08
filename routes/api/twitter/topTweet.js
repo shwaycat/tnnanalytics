@@ -1,6 +1,7 @@
 var keystone = require('keystone'),
     _ = require('underscore'),
     async = require('async'),
+    request = require('request'),
     mxm = require('../../../lib/mxm-utils');
     Tweet = require('../../../lib/sources/twitter/tweet'),
     twitter = require('twitter');
@@ -80,7 +81,7 @@ exports = module.exports = function(req, res) {
         if(err) return res.apiError({"error": err});
 
         var max = {};
-        if(!scoredTweets || scoredTweets.length == 0) return res.apiError("error": 'Error in async?');
+        if(!scoredTweets || scoredTweets.length == 0) return res.apiError({"error": 'Error in async?'});
 
         max = _.max(scoredTweets, function(tweet) { return tweet.score; });
         
@@ -94,26 +95,47 @@ exports = module.exports = function(req, res) {
 
             if(!tweet.oembed) {
               async.series([
-                function(callback) {
-                  var client = new twitter({
-                    consumer_key: process.env.TWITTER_API_KEY,
-                    consumer_secret: process.env.TWITTER_API_SECRET,
-                    access_token_key: req.user.services.twitter.accessToken,
-                    access_token_secret: req.user.services.twitter.refreshToken
-                  }),
-                  params = { 
-                    count: 1,
-                    id: tweet.id,
-                    url: tweet.url
-                  };
-                  // GO GET IT FROM TWITTER
+                function(next) {
+                  request({
+                    url: 'https://api.twitter.com/1/statuses/oembed.json?id=' + tweet._id,
+                    json: true
+                  }, function (err, response, body) {
+                    if(err) return next(err);
+
+                    tweet.oembed = body;
+                    next();
+                 
+                  });
+
                 },
-                function(callback) {
-                  // SAVE IT TO ES
+                function(next) {
+                  keystone.elasticsearch.update({
+                    index: keystone.get('elasticsearch index'),
+                    type: 'tweet',
+                    id: tweet.id,
+                    body: {
+                      doc: {
+                        oembed: JSON.stringify(tweet.oembed)
+                      }
+                    }
+                  }, function (err, response) {
+                    if(err) return next(err);
+                    return next();
+                  });  
                 }
               ], 
               function(err) {
-                // PUT IT IN DATA RETURN
+                dataReturn = {
+                  success: true,
+                  type: 'topTweet',
+                  source: 'twitter',
+                  queryString: req.query,
+                  data: max,
+                  oembed: tweet.oembed
+                };
+
+                return res.apiResponse(dataReturn);
+
               });
             } else {
               dataReturn = {
@@ -122,16 +144,15 @@ exports = module.exports = function(req, res) {
                 source: 'twitter',
                 queryString: req.query,
                 data: max,
-                oembed: tweet.oembed
+                oembed: JSON.parse(tweet.oembed)
               }
+
+              return res.apiResponse(dataReturn);
+
             }
 
-            return res.apiResposne(dataReturn);
 
           });
-        } else {
-          return res.apiError("error": "Something went way wrong.");
-        }
       });
 
   });
