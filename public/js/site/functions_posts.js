@@ -130,5 +130,8 @@ function topTweet(data, options){
 	}
 
 	$(options.selector).sectionLoad(true, true);
+	setTimeout(function(){
+		 equalHeightPairs(1200);
+	},500);
 	
 }
