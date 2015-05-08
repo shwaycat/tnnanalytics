@@ -58,6 +58,15 @@ exports = module.exports = function(req, res) {
                   }
                 },
                 {
+                  "not": {
+                    "filter": {
+                      "exists": {
+                        "field": "isRetweet"
+                      }
+                    }
+                  }
+                },
+                {
                   "range": {
                     "timestamp": {
                       "gte": startTime,
@@ -74,22 +83,22 @@ exports = module.exports = function(req, res) {
         "engagement": {
           "date_histogram": {
             "field": "timestamp",
-            "interval": interval + "s",
+            "interval": "1d",
             "min_doc_count": 0
           },
           "aggs": {
             "reply_count": {
-              "sum": {
+              "max": {
                 "field": "reply_count"
               }
             },
             "favorite_count": {
-              "sum": {
+              "max": {
                 "field": "favorite_count"
               }
             },
             "retweet_count": {
-              "sum": {
+              "max": {
                 "field": "retweet_count"
               }
             },
