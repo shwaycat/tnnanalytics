@@ -16,13 +16,6 @@ $(function() {
 	}
 	routesInit();
 
-	
-
-	//Front-End Functions
-	attachBrowserVersion();
-	compensateFooter();
-	elementReveal();
-	
 	$('[data-toggle="tooltip"]').tooltip();
 	
 	if($('.alert-warning').length > 0) {
@@ -32,5 +25,10 @@ $(function() {
 	setInterval(function(){
 		eventsCheckStatus();
 	}, 60000);
+
+	//Front-End Functions
+	attachBrowserVersion();
+	compensateFooter();
+	elementReveal();
 
 });

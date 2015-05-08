@@ -30,6 +30,11 @@ function attachBrowserVersion(){
 function compensateFooter(){
   if($('.footer-container')[0]){
     var windowHeight = window.innerHeight;
+
+    $('.main-container').removeAttr('style');
+    $('.header-container').removeAttr('style');
+    $('.footer-container').removeAttr('style');
+
     var mainHeight = parseInt($('.main-container').css('height'));
     var headerHeight = parseInt($('.header-container').css('height'));
     var footerHeight = parseInt($('.footer-container').css('height'));
