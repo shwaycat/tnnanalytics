@@ -99,7 +99,7 @@ exports = module.exports = function(req, res) {
         "engagement": {
           "date_histogram": {
             "field": "timestamp",
-            "interval": "1d",
+            "interval": interval + "s",
             "min_doc_count": 0
           },
           "aggs": {

@@ -48,7 +48,7 @@ exports = module.exports = function(req, res) {
         "followers": {
           "date_histogram": {
             "field": "timestamp",
-            "interval": "30m",
+            "interval": interval + "s",
             "min_doc_count": 0
           },
           "aggs": {
@@ -98,7 +98,7 @@ exports = module.exports = function(req, res) {
         }
       });    
     } else {
-      res.apiResponse({'error': "No buckets."})
+      res.apiResponse({'error': "No Buckets."})
     }
   });
   
