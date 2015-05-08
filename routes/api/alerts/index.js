@@ -67,7 +67,7 @@ exports = module.exports = function(req, res) {
       ]
     }
   }, function(err, response){
-    if(err) return res.apiError({"error": err});
+    if(err) return res.apiResponse({"error": err});
     
     var alerts = mxm.objTry(response, 'hits', 'hits');
     var data = [];
@@ -90,7 +90,7 @@ exports = module.exports = function(req, res) {
         data.push(alert);
       }
     } else {
-      return res.apiError({"error": "Error with ES results."});
+      return res.apiResponse({"error": "Error with ES results."});
     }
     
     return res.apiResponse({

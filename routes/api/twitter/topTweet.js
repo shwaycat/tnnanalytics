@@ -69,12 +69,12 @@ exports = module.exports = function(req, res) {
       }
     }
   }, function(err, response) {
-    if(err) return res.apiError({"error": err});
+    if(err) return res.apiResponse({"error": err});
 
     var tweets = mxm.objTry(response, 'hits', 'hits');
         scoredTweets = [];
       
-      if(!tweets || tweets.length == 0) return res.apiError({"error": "Error with ES search results."});
+      if(!tweets || tweets.length == 0) return res.apiResponse({"error": "Error with ES search results."});
 
       async.eachSeries(tweets, function(tweet, nextTweet) {
         Tweet.findOne(tweet._id, function(err, tweet) {
@@ -95,20 +95,20 @@ exports = module.exports = function(req, res) {
           });
         });
       }, function(err) {
-        if(err) return res.apiError({"error": err});
+        if(err) return res.apiResponse({"error": err});
 
         var max = {};
-        if(!scoredTweets || scoredTweets.length == 0) return res.apiError({"error": 'Error in async?'});
+        if(!scoredTweets || scoredTweets.length == 0) return res.apiResponse({"error": 'Error in async?'});
 
         max = _.max(scoredTweets, function(tweet) { return tweet.score; });
 
-        if(!max) return res.apiError({"error": "Something went way wrong."})
+        if(!max) return res.apiResponse({"error": "Something went way wrong."})
           keystone.elasticsearch.get({
             index: keystone.get('elasticsearch index'),
             type: 'twitter',
             id: max.id
           }, function(err, tweet) {
-            if(err) return res.apiError({"error": "Failed in ES.get"});
+            if(err) return res.apiResponse({"error": "Failed in ES.get"});
 
 
             if(!tweet._source.oembed) {

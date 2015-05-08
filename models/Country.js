@@ -1,4 +1,5 @@
-var keystone = require('keystone');
+var keystone = require('keystone'),
+    _ = require('underscore');
 
 /**
  * Country
@@ -26,6 +27,23 @@ Country.schema.statics.findByPoint = function(point, callback) {
    }
  }, callback);
 };
+
+Country.schema.statics.getMap = function(callback) {
+  this.find({}, function(err, results) {
+    if(err) callback(err);
+    if(results) {
+      callback(null, 
+        _.reduce(results, function(memo, country) {
+          memo[country.code] = country.name;
+          return memo;
+        },{})
+      );
+
+    } else {
+      callback(null);
+    }
+  });
+}
 
 Country.defaultColumns = 'code, name';
 Country.register();
