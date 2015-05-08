@@ -55,8 +55,8 @@ exports = module.exports = function(req, res) {
                 {
                   "range": {
                     "timestamp": {
-                      "gte": "0",
-                      "lte": "now"
+                      "gte": startTime,
+                      "lte": endTime
                     }
                   }
                 }
