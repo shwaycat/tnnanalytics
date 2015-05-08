@@ -29,7 +29,16 @@
 	  margin: auto;
 	  text-align: right;
 	  height: 100%;
-	  width: 43%;
+	  width:28%;
+	  .respond-sm({
+	  	width:30%;
+	  });
+	  .respond-md({
+	  	width:32%;
+	  });
+	  .respond-lg({
+	  	width: 42%;
+	  });
 		span {
 			display: block;
 			text-align: right;
@@ -40,8 +49,18 @@
 		display: table-cell;
 	  vertical-align: middle;
 	  padding: 1.5em;
-	  width: 57%;
 	  text-align: left;
+		width:72%;
+		.respond-sm({
+			width:70%;
+		});
+		.respond-md({
+			width:68%;
+		});
+		.respond-lg({
+			width: 58%;
+		});
+		
 		p {
 			text-transform: uppercase;
 			font-size: 1.4em;

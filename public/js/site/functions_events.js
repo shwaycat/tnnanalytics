@@ -177,7 +177,7 @@ function eventsTableDraw(table, paginationHTML){
 	if($('#events-table_wrapper')[0]){
 		$('#events-table_wrapper').append(paginationHTML);
 	}
-	
+
 	eventsTableUpdateController();
 	eventsDirectMessage();
 	$('.events-container').sectionLoad(false);
@@ -351,7 +351,7 @@ function eventsStatusUpdate(postObj, row, clicked, statusItem, accessedItem, pos
 					row.removeClass(STRING_STATUS_NEW_CLASS).addClass(STRING_STATUS_OPEN_CLASS);
 					clicked.removeClass(STRING_STATUS_NEW_CLASS).addClass(STRING_STATUS_OPEN_CLASS);
 					clicked.html(STRING_STATUS_OPEN_BUTTON);
-					statusItem.html(STRING_STATUS_OPEN.capitalizeFirstLetter());
+					statusItem.html('<span class="event-item-robot">'+1+'</span>'+STRING_STATUS_OPEN.capitalizeFirstLetter());
 
 				} else {
 
@@ -360,25 +360,29 @@ function eventsStatusUpdate(postObj, row, clicked, statusItem, accessedItem, pos
 						row.removeClass(STRING_STATUS_NEW_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
 						clicked.removeClass(STRING_STATUS_NEW_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
 						clicked.html(STRING_STATUS_CLOSED_BUTTON);
-						statusItem.html(STRING_STATUS_CLOSED.capitalizeFirstLetter());
+						statusItem.html('<span class="event-item-robot">'+2+'</span>'+STRING_STATUS_CLOSED.capitalizeFirstLetter());
 
 					} else if (clicked.hasClass(STRING_STATUS_OPEN_CLASS)) {
 
 						row.removeClass(STRING_STATUS_OPEN_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
 						clicked.removeClass(STRING_STATUS_OPEN_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
 						clicked.html(STRING_STATUS_CLOSED_BUTTON);
-						statusItem.html(STRING_STATUS_CLOSED.capitalizeFirstLetter());
+						statusItem.html('<span class="event-item-robot">'+2+'</span>'+STRING_STATUS_CLOSED.capitalizeFirstLetter());
 
 					} else if (clicked.hasClass(STRING_STATUS_CLOSED_CLASS)) {
 
 						row.removeClass(STRING_STATUS_CLOSED_CLASS).addClass(STRING_STATUS_OPEN_CLASS);
 						clicked.removeClass(STRING_STATUS_CLOSED_CLASS).addClass(STRING_STATUS_OPEN_CLASS);
 						clicked.html(STRING_STATUS_OPEN_BUTTON);
-						statusItem.html(STRING_STATUS_OPEN.capitalizeFirstLetter());
+						statusItem.html('<span class="event-item-robot">'+1+'</span>'+STRING_STATUS_OPEN.capitalizeFirstLetter());
 
 					}
 
 				}
+
+				var the_table = $('#events-table').DataTable();
+				the_table.draw();
+
 				setTimeout(function(){
 					eventsCheckStatus();
 				},3000);
