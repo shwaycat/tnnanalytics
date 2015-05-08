@@ -23,7 +23,9 @@ $(function() {
 	}
 
 	setInterval(function(){
-		eventsCheckStatus();
+		if (eventsCheckStatusOnInterval){
+			eventsCheckStatus();
+		}
 	}, 60000);
 
 	//Front-End Functions

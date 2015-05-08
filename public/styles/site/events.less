@@ -152,7 +152,7 @@
 			display:none;
 		}
 		.event-action-btn {
-			width: 80%;
+			width: 90%;
 			&.status-new {
 				background-color:@element_alert_lighter;
 				.transition(@events_transition);
@@ -191,6 +191,9 @@
 				}
 				&.event-link-cell, &.event-action-cell {
 					cursor:default;
+					&:hover {
+						color:@table_header_text;
+					}
 				}
 			}
 		}

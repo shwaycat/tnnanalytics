@@ -70,7 +70,7 @@ function routesInit(resizeOnce){
 		
 		
 	}
-	if (!$('body.session')[0]){
+	if (!$('body.session')[0] && !resizeOnce){
 		eventsCheckStatus();
 	}
 }

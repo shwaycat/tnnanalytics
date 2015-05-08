@@ -245,29 +245,52 @@ function simplifyData(data){
   var theData = data;
   var newData = {
     "data": [],
-    "data_all": [],
-    "data_other": []
+    "data_list": []
   };
-  newData
+  
   var totalValues = _.reduce(theData, function(memo, num){ return memo + num.value; }, 0),
       otherObj = { "label": "Other", "value": 0, "percent": 0 };
 
-  _.each(theData, function(datum){
-    if (datum.value/totalValues < 0.08 && datum.value/totalValues > 0.01){
-      otherObj.value += datum.value;
+  _.each(theData, function(datum, index){
+    if (datum.value/totalValues < 0.09 && datum.value/totalValues > 0.01){
       otherObj.percent = Math.round( (otherObj.value*100/totalValues) *100 )/100 + '%';
       datum.percent = Math.round( (datum.value*100/totalValues) *100 )/100 + '%';
-      newData.data_all.push(datum);
-      newData.data_other.push(datum);
-    } else {
+
+      otherObj.value += datum.value;
+      newData.data_list.push(datum);
+   
+    } else if (datum.value/totalValues > 0.01) {
       datum.percent = Math.round( (datum.value*100/totalValues) *100 )/100 + '%';
-      newData.data_all.push(datum);
+
       newData.data.push(datum);
+      newData.data_list.push(datum);
+      
     }
   });
+
+  newData.data = _.sortBy(newData.data, 'value');
+  newData.data.reverse();
+  newData.data_list = _.sortBy(newData.data_list, 'value');
+  newData.data_list.reverse();
+
   if (otherObj.value > 0){
     newData.data.push(otherObj);
+    newData.data = _.sortBy(newData.data, 'value');
+    newData.data.reverse();
   }
+
+  var data_list_other = newData.data_list.slice(10);
+  newData.data_list = newData.data_list.slice(0, 10);
+  var data_list_other_count = _.reduce(data_list_other, function(memo, num){ return memo + num.value; }, 0);
+  var data_list_count = _.reduce(newData.data_list, function(memo, num){ return memo + num.value; }, 0);
+  var data_list_other_percent = Math.round( (data_list_other_count*100/(data_list_other_count+data_list_count)) *100 )/100 + '%';
+  var data_list_other_object = { "label": "Other", "value": data_list_other_count, "percent": data_list_other_percent };
+  if (data_list_other_object.value > 0){
+    newData.data_list.push(data_list_other_object);
+  }
+  newData.data_list = _.sortBy(newData.data_list, 'value');
+  newData.data_list.reverse();
+
 
   return newData;
 }
@@ -497,8 +520,8 @@ function dataController(sectionType, type, apiString, dateObj, options){
       })
       .always(function( data ) {
         if (type == 'topCountries'){
-          //apiObj.data = simplifyData(apiObj.data);
-          apiObj.data = simplifyData(fakeTopCountryData);
+          apiObj.data = simplifyData(apiObj.data);
+          //apiObj.data = simplifyData(fakeTopCountryData);
           cachedData[type] = apiObj;
         } else {
           cachedData[type] = apiObj;
@@ -517,8 +540,8 @@ function dataControllerDelegation(sectionType, apiObj){
     statsDelegation(apiObj.summary, apiObj.options);
     
   } else if (sectionType == 'donut'){
-    donutList(apiObj.data.data_all, apiObj.options, true);
-    donutList(apiObj.data.data_other, apiObj.options);
+    // donutList(apiObj.data.data_all, apiObj.options, true);
+    donutList(apiObj.data.data_list, apiObj.options);
     donutGraph(apiObj.data.data, apiObj.options);
 
   } else if (sectionType == 'topPost'){
