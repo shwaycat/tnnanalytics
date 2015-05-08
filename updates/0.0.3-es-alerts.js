@@ -4,20 +4,7 @@ var keystone = require('keystone'),
     elasticsearch = require('elasticsearch');
 
 module.exports = function(done) {
-  var esOpts = {};
-  if (_.isArray(keystone.get('elasticsearch'))) {
-    esOpts.hosts = keystone.get('elasticsearch');
-  } else if (keystone.get('elasticsearch')) {
-    esOpts.host = keystone.get('elasticsearch');
-  }
-
-  [ "ssl", "maxSockets", "minSockets" ].forEach(function(key) {
-    if (keystone.get('elasticsearch '+key)) {
-      esOpts.ssl = keystone.get('elasticsearch '+key);
-    }
-  });
-
-  var esClient = new elasticsearch.Client(esOpts),
+  var esClient = keystone.get('elasticsearch'),
       indexName = keystone.get('elasticsearch index');
 
   async.series({
