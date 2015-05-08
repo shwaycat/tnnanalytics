@@ -338,15 +338,13 @@ function donutPercents(){
       .removeAttr('class', 'active');
   });
 }
-var asdf = 0;
+
 function statsDelegation(summary, options){
   if (!summary || summary == undefined || summary == null){
     return;
   }
 
   $(options.selector).next('.novo-graph-stats').remove();
-
-  
 
   var statsString = '',
       statsStringOpen,
@@ -360,7 +358,7 @@ function statsDelegation(summary, options){
     if(options.selector == '#engagement'){
       columnSize = 'col-lg-6';
     } else if (options.selector == '#acquisition'){
-      columnSize = 'col-lg-offset-6 col-lg-6';
+      columnSize = 'col-lg-6';
     }
   } else if(options.source == 'facebook'){
     if(options.selector == '#engagement'){
