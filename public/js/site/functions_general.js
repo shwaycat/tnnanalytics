@@ -492,6 +492,7 @@ function dataController(sectionType, type, apiString, dateObj, options){
           source: false,
           type: false,
           data: false,
+          oembed: false,
           summary: false,
           startTime: false,
           endTime: false,
@@ -510,7 +511,9 @@ function dataController(sectionType, type, apiString, dateObj, options){
         apiObj.source = data.source;
         apiObj.type = data.type;
         apiObj.data = data.data;
+        apiObj.oembed = data.oembed;
         apiObj.summary = data.summary;
+        //console.log(data);
       })
       .fail(function( data ) {
         globalDebug('   Ajax FAILED!: '+apiString, 'color:red;');
@@ -524,7 +527,6 @@ function dataController(sectionType, type, apiString, dateObj, options){
         } else {
           cachedData[type] = apiObj;
         }
-
         dataControllerDelegation(sectionType, apiObj);
       });
   } else {
@@ -538,7 +540,6 @@ function dataControllerDelegation(sectionType, apiObj){
     statsDelegation(apiObj.summary, apiObj.options);
     
   } else if (sectionType == 'donut'){
-    // donutList(apiObj.data.data_all, apiObj.options, true);
     donutList(apiObj.data.data_list, apiObj.options);
     donutGraph(apiObj.data.data, apiObj.options);
 
@@ -547,8 +548,7 @@ function dataControllerDelegation(sectionType, apiObj){
     topPost(apiObj.data, apiObj.options);
 
   } else if (sectionType == 'topTweet'){
-    apiObj.data = fakeTopTweet;
-    topTweet(apiObj.data, apiObj.options);
+    topTweet(apiObj, apiObj.options);
 
   } else {
     globalDebug('   GraphController Error: Wrong sectionType entered! Type: '+sectionType+' is not a valid sectionType!', 'color:red;');
