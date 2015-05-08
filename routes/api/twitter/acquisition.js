@@ -61,7 +61,7 @@ exports = module.exports = function(req, res) {
       }
     }
   }, function(err, response) {
-    if(err) return res.apiResponse({"error": err});
+    if(err) return res.apiError({"error": err});
     var dataReturn = [],
         buckets = mxm.objTry(response, 'aggregations', 'followers', 'buckets');
         console.log(buckets.length);
