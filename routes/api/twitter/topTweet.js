@@ -1,7 +1,7 @@
 var keystone = require('keystone'),
     _ = require('underscore'),
     async = require('async'),
-    debug = require('debug')("cadence:api:topTweet"),
+    debug = require('debug')("cadence:api:twitter:topTweet"),
     request = require('request'),
     mxm = require('../../../lib/mxm-utils');
     Tweet = require('../../../lib/sources/twitter/tweet'),
@@ -24,8 +24,7 @@ exports = module.exports = function(req, res) {
   if(req.query.endTime) {
     endTime = new Date(req.query.endTime);
   }
-  console.log(startTime.toString());
-  console.log(endTime.toString());
+
 
   // Build Response Here
 
@@ -88,7 +87,6 @@ exports = module.exports = function(req, res) {
 
         max = _.max(scoredTweets, function(tweet) { return tweet.score; });
 
-console.log(max);        
         if(!max) return res.apiError({"error": "Something went way wrong."})
           keystone.elasticsearch.get({
             index: keystone.get('elasticsearch index'),
@@ -97,7 +95,6 @@ console.log(max);
           }, function(err, tweet) {
             if(err) return res.apiError({"error": "Failed in ES.get"});
 
-            console.log(tweet);
 
             if(!tweet._source.oembed) {
               debug("GO GET IT!");

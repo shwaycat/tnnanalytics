@@ -20,8 +20,7 @@ exports = module.exports = function(req, res) {
   if(req.query.endTime) {
     endTime = new Date(req.query.endTime);
   }
-  console.log(startTime.toString());
-  console.log(endTime.toString());
+
 
   keystone.elasticsearch.search({
     index: keystone.get('elasticsearch index'),
@@ -64,7 +63,7 @@ exports = module.exports = function(req, res) {
     if(err) return res.apiError({"error": err});
     var dataReturn = [],
         buckets = mxm.objTry(response, 'aggregations', 'followers', 'buckets');
-        console.log(buckets.length);
+
     if(buckets && buckets.length) {
       dataReturn.push({
         key: startTime.toISOString(),
@@ -101,19 +100,6 @@ exports = module.exports = function(req, res) {
     }
   });
   
-  // var dataReturn = [];
-  // var timeHolder = startTime;
-  // while(timeHolder < endTime) {
-  //   timeHolder.setDate(timeHolder.getDate() + 1);
-  //   dataReturn.push( { 
-  //     "key": timeHolder.toJSON(),
-  //     "value": Math.floor(Math.random() * 500)
-  //   });
-  // }
-  // Build Response Here
-  // DATA = Array of Key (Date) value pairs.
-
-
 
 
 

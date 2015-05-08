@@ -1,7 +1,11 @@
 var keystone = require('keystone'),
     _ = require('underscore'),
     async = require('async'),
-    debug = require('debug')('api.engagement');
+    debug = require('debug')('cadence:api:twitter:engagement'),
+    mxm = require('../../../lib/mxm-utils');
+
+
+
 
 
 exports = module.exports = function(req, res) {
@@ -21,49 +25,145 @@ exports = module.exports = function(req, res) {
   
   var dataReturn = [];
   var timeHolder = startTime;
-  while(timeHolder < endTime) {
-    timeHolder.setHours(timeHolder.getHours() + 1);
-    dataReturn.push( { 
-      "key": timeHolder.toJSON(),
-      "value": Math.floor(Math.random() * 10)
-    });
-  }
 
-  var randomPercents = [];
-  var randomNumbers = [];
-  for(i=0; i<5; i++) {
-    randomNumbers.push(Math.floor(Math.random() * 10));
-  }
-  var randomTotal = _.reduce(randomNumbers, function(memo, num){ return memo + num; }, 0)
+  console.log(startTime.getDate() - endTime.getDate());
 
-
-  for(i=0; i<randomNumbers.length; i++) {
-    randomPercents.push(randomNumbers[i] / randomTotal);
-  }
-  
-
-  // Build Response Here
-  // DATA = Array of Key (Date) value pairs.
-  
-  // Return the response
-  view.render(function(err) {
-    if (err) return res.apiError('error', err);
-
-    return res.apiResponse({
-      success: true,
-      type: 'engagement',
-      source: 'twitter',
-      queryString: req.query,
-      data: dataReturn,
-      summary: {
-        "totalFavorites" : Math.round(_.reduce(dataReturn, function(memo, cur){ return memo + cur.value; }, 0) * (randomPercents[0])),
-        "totalRetweets" : Math.round(_.reduce(dataReturn, function(memo, cur){ return memo + cur.value; }, 0) * (randomPercents[1])),
-        "totalMentions" : Math.round(_.reduce(dataReturn, function(memo, cur){ return memo + cur.value; }, 0) * (randomPercents[2])),
-        "totalReplies" : Math.round(_.reduce(dataReturn, function(memo, cur){ return memo + cur.value; }, 0) * (randomPercents[3])),
-        "totalDirectMentions" : Math.round(_.reduce(dataReturn, function(memo, cur){ return memo + cur.value; }, 0) * (randomPercents[4]))
+  keystone.elasticsearch.search({
+    index: keystone.get('elasticsearch index'),
+    body: {
+      "query": {
+        "filtered": {
+          "filter": {
+            "and": {
+              "filters": [
+                {
+                  "terms": {
+                    "doc_type": ["tweet", "mention", "direct_message"]
+                  }
+                },
+                {
+                  "range": {
+                    "timestamp": {
+                      "gte": startTime,
+                      "lte": endTime
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "aggs": {
+        "followers": {
+          "date_histogram": {
+            "field": "timestamp",
+            "interval": "30m",
+            "min_doc_count": 0
+          },
+          "aggs": {
+            "reply_count": {
+              "max": {
+                "field": "reply_count"
+              }
+            },
+            "favorite_count": {
+              "max": {
+                "field": "favorite_count"
+              }
+            },
+            "retweet_count": {
+              "max": {
+                "field": "retweet_count"
+              }
+            },
+            "doc_types": {
+              "terms": {
+                "field": "doc_type",
+                "size": 0
+              }
+            }
+          }
+        }
       }
-    });
+    }
+  }, function(err, response) {
+    if(err) return res.apiError({"error": err});
+    var dataReturn = [],
+        buckets = mxm.objTry(response, 'aggregations', 'followers', 'buckets');
 
+    if(buckets && buckets.length) {
+
+      _.each(buckets, function(bucket){
+        dataReturn.push(extractDataPoint(bucket));
+      });
+
+      return res.apiResponse({
+        success: true,
+        type: 'engagement',
+        source: 'twitter',
+        queryString: req.query,
+        data: dataReturn,
+        summary: {
+          "totalFavorites" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.favorite_count; }, 0),
+          "totalRetweets" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.retweet_count; }, 0),
+          "totalReplies" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.reply_count; }, 0),
+          "totalMentions" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.mention_count; }, 0),
+          "totalDirectMentions" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.dm_count; }, 0)
+        }
+      });   
+    } else {
+      res.apiError('error', "No buckets.")
+    }
   });
 
+}
+
+function extractDataPoint(bucket) {
+  var key = bucket.key_as_string,
+      favorite_count = (bucket.favorite_count.value || 0),
+      reply_count = (bucket.reply_count.value || 0),
+      retweet_count = (bucket.retweet_count.value || 0),
+      mention_count,
+      dm_count,
+      value;
+
+
+
+  innerBucket = mxm.objTry(bucket, 'doc_types', 'buckets');
+
+  if(innerBucket && innerBucket.length) {
+
+    _.each(innerBucket, function(obj) {
+
+      if(obj.key == 'mention') {
+        mention_count = obj.doc_count || 0;
+      }
+
+      if(obj.key == 'direct_message') {
+       dm_count = obj.doc_count || 0;
+      }
+
+    })
+
+  }
+
+  if(!mention_count) {
+    mention_count = 0;
+  }
+  if(!dm_count) {
+    dm_count = 0;
+  }
+  
+  value = favorite_count + reply_count + retweet_count + mention_count + dm_count;
+
+  return {
+      key: key,
+      favorite_count: favorite_count,
+      reply_count: reply_count,
+      retweet_count: retweet_count,
+      mention_count: mention_count,
+      dm_count: dm_count,
+      value: value
+  };
 }
