@@ -98,7 +98,7 @@ exports = module.exports = function(req, res) {
         }
       });    
     } else {
-      res.apiResponse('error', "No buckets.")
+      res.apiResponse({'error': "No buckets."})
     }
   });
   
