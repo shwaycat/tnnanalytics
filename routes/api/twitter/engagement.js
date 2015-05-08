@@ -26,7 +26,8 @@ exports = module.exports = function(req, res) {
   var dataReturn = [];
   var timeHolder = startTime;
 
-  console.log(startTime.getDate() - endTime.getDate());
+  var interval = (endTime.getTime() - startTime.getTime()) / 24;
+      interval = interval / 1000;
 
   keystone.elasticsearch.search({
     index: keystone.get('elasticsearch index'),
@@ -37,8 +38,23 @@ exports = module.exports = function(req, res) {
             "and": {
               "filters": [
                 {
-                  "terms": {
-                    "doc_type": ["tweet", "mention", "direct_message"]
+                  "or": {
+                    "filters": [
+                      {
+                        "terms": {
+                          "doc_type": [
+                            "tweet",
+                            "mention",
+                            "direct_message"
+                          ]
+                        }
+                      },
+                      {
+                        "exists": {
+                          "field": "reply_count"
+                        }
+                      }
+                    ]
                   }
                 },
                 {
@@ -55,25 +71,25 @@ exports = module.exports = function(req, res) {
         }
       },
       "aggs": {
-        "followers": {
+        "engagement": {
           "date_histogram": {
             "field": "timestamp",
-            "interval": "30m",
+            "interval": interval + "s",
             "min_doc_count": 0
           },
           "aggs": {
             "reply_count": {
-              "max": {
+              "sum": {
                 "field": "reply_count"
               }
             },
             "favorite_count": {
-              "max": {
+              "sum": {
                 "field": "favorite_count"
               }
             },
             "retweet_count": {
-              "max": {
+              "sum": {
                 "field": "retweet_count"
               }
             },
@@ -90,13 +106,25 @@ exports = module.exports = function(req, res) {
   }, function(err, response) {
     if(err) return res.apiError({"error": err});
     var dataReturn = [],
-        buckets = mxm.objTry(response, 'aggregations', 'followers', 'buckets');
+        buckets = mxm.objTry(response, 'aggregations', 'engagement', 'buckets');
 
     if(buckets && buckets.length) {
+
+      if(buckets.length == 1) {
+        first = extractDataPoint(buckets[0]);
+        first.key = startTime.toISOString();
+        dataReturn.push(first);
+      }
 
       _.each(buckets, function(bucket){
         dataReturn.push(extractDataPoint(bucket));
       });
+
+      if(buckets.length == 1) {
+        last = _.last(dataReturn);
+        last.key = endTime.toISOString();
+        dataReturn.push(last);
+      }
 
       return res.apiResponse({
         success: true,
