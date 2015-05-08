@@ -208,7 +208,7 @@ function eventsTablePagination(page, pageSize, total){
 		} else {
 			nextHref = 'href="?page='+(page+1)+'"';
 		}
-
+		
 		if (extended) {
 			paginateHTML += '<a href="?page=1" class="paginate_button first '+ifFirst+'">First</a>';
 		}
@@ -217,7 +217,7 @@ function eventsTablePagination(page, pageSize, total){
 		
 		var i = 1,
 				offset = 1,
-				max = 8;
+				max = totalPages+1;
 
 		if (extended && page > 4 && (page < totalPages-2)) {
 			offset = page-3;

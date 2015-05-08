@@ -1,5 +1,6 @@
 // Global Vars
 var globalDebugBool = true;
+var eventsCheckStatusOnInterval = true;
 
 var dataErrorClass = '.data-error-container';
 var dataErrorHTML = '<div class="data-error-container"><p>There was an error loading the data for this section. Please <a href="mailto:nlambert@maxmedia.com">email</a> us and let us know you found this error.</p></div>';
@@ -249,51 +250,59 @@ var fakeTopTweet = {
 var fakeTopCountryData = [
       {
         "label": "sdf",
-        "value": 100
+        "value": 101
       },
       {
         "label": "USA",
-        "value": 100
+        "value": 102
       },
       {
         "label": "Canada",
-        "value": 100
+        "value": 112
       },
       {
         "label": "Mexico",
-        "value": 100
+        "value": 504
       },
       {
         "label": "England",
-        "value": 100
+        "value": 508
       },
       {
         "label": "Ireland",
-        "value": 100
+        "value": 606
       },
       {
         "label": "Germany",
-        "value": 100
+        "value": 107
       },
       {
         "label": "Belgium",
-        "value": 100
+        "value": 105
       },
       {
         "label": "Russia",
-        "value": 100
+        "value": 109
       },
       {
         "label": "Japan",
-        "value": 100
-      },
-      {
-        "label": "China",
-        "value": 100
+        "value": 110
       },
       {
         "label": "TaiWorld",
-        "value": 100
+        "value": 111
+      },
+      {
+        "label": "JeremyLand",
+        "value": 103
+      },
+      {
+        "label": "TravisTown",
+        "value": 113
+      },
+      {
+        "label": "NickCity",
+        "value": 114
       }
 
     ]
