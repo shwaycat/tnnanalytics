@@ -71,9 +71,9 @@ exports = module.exports = function(req, res) {
             scoredTweets.push({
               id: tweet.id,
               url: tweet.emailLinkObject(),
-              favorite_count: tweet.favorites_count || 0,
+              favorite_count: tweet.favorite_count || 0,
               reply_count: tweet.reply_count || 0,
-              retweet_count: tweet.retweets_count || 0,
+              retweet_count: tweet.retweet_count || 0,
               score: (tweet.favorite_count || 0) + (tweet.reply_count || 0) + (tweet.retweet_count || 0)
             });
             nextTweet();
