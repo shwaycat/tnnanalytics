@@ -58,6 +58,22 @@ exports = module.exports = function(req, res) {
                   }
                 },
                 {
+                  "and": {
+                    "filters": [
+                      {
+                        "term": {
+                          "cadence_user_id": req.user.id
+                        }
+                      },
+                      {
+                        "term": {
+                          "user_id": req.user.services.twitter.profileId
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
                   "not": {
                     "filter": {
                       "exists": {
