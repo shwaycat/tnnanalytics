@@ -43,11 +43,26 @@ exports = module.exports = function(req, res) {
             }
           },
           "filter": {
-            "range": {
-              "timestamp": {
-                "gte": startTime,
-                "lte": endTime
-              }
+            "and": {
+              "filters": [
+                {
+                  "range": {
+                    "timestamp": {
+                      "gte": "0",
+                      "lte": "now"
+                    }
+                  }
+                },
+                {
+                  "not": {
+                    "filter": {
+                      "exists": {
+                        "field": "isRetweet"
+                      }
+                    }
+                  }
+                }
+              ]
             }
           }
         }
