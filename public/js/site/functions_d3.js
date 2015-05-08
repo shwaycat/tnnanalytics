@@ -14,10 +14,10 @@ function type(d) {
 //       LINE GRAPH      //
 ///////////////////////////
 
-function lineGraph(data, options){
+function lineGraph(data, options, success){
 	// Preload Checks
 	if (!$(options.selector)[0]) return;
-	if (!data || data == undefined || data == null){
+	if (!data || data == undefined || data == null || !success){
 		$(options.selector).before(dataErrorHTML);
 		$(options.selector).remove();
 		return;
@@ -158,6 +158,10 @@ function lineGraph(data, options){
     .attr("stroke-width", 1)
     .attr("clip-path", "url("+options.selector+"_clip)")
     .attr("d", line(theData));
+
+  if($(options.selector).find('svg').find('path.area').attr("d").indexOf("NaN") != -1){
+  	
+  }
 
   statsDelegation(data.summary, options);
   $(options.selector).sectionLoad(true);

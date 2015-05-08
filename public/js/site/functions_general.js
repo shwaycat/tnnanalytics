@@ -483,7 +483,7 @@ function dataController(sectionType, type, apiString, dateObj, options){
   if (!cachedData[type]){
     var queryString = apiString + '?startTime='+dateObj.startTime + '&endTime='+dateObj.endTime;
     var apiObj = {
-          success: true,
+          success: false,
           source: false,
           type: false,
           data: false,
@@ -499,20 +499,21 @@ function dataController(sectionType, type, apiString, dateObj, options){
       apiObj.endTime = dateObj.endTime;
       timeObj = dateObj;
     }
-
-    $.get(apiString, timeObj )
+    if (type == 'topTweet'){
+      $(options.selector).before(loadingGifHTML);
+    }
+    $.get(apiString, timeObj)
       .done(function( data ) {
         globalDebug('   Ajax SUCCESS!: '+apiString, 'color:green;');
+        apiObj.success = data.success;
         apiObj.source = data.source;
         apiObj.type = data.type;
         apiObj.data = data.data;
         apiObj.oembed = data.oembed;
         apiObj.summary = data.summary;
-        //console.log(data);
       })
       .fail(function( data ) {
         globalDebug('   Ajax FAILED!: '+apiString, 'color:red;');
-        apiObj = false;
       })
       .always(function( data ) {
         if (type == 'topCountries'){
@@ -531,16 +532,16 @@ function dataController(sectionType, type, apiString, dateObj, options){
 
 function dataControllerDelegation(sectionType, apiObj){
   if (sectionType == 'line'){
-    lineGraph(apiObj.data, apiObj.options);
-    statsDelegation(apiObj.summary, apiObj.options);
+    lineGraph(apiObj.data, apiObj.options, apiObj.success);
+    statsDelegation(apiObj.summary, apiObj.options, apiObj.success);
     
   } else if (sectionType == 'donut'){
-    donutList(apiObj.data.data_list, apiObj.options);
-    donutGraph(apiObj.data.data, apiObj.options);
+    donutList(apiObj.data.data_list, apiObj.options, apiObj.success);
+    donutGraph(apiObj.data.data, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'topFacebookPost'){
     apiObj.data = fakeTopPost;
-    topFacebookPost(apiObj.data, apiObj.options);
+    topFacebookPost(apiObj.data, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'topTweet'){
     topTweet(apiObj, apiObj.options);

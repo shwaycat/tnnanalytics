@@ -1,8 +1,8 @@
-function topFacebookPost(data, options){
+function topFacebookPost(data, options, success){
 
 	// Preload Checks
 	if (!$(options.selector)[0]) return;
-	if (!data || data == undefined || data == null){
+	if (!data || data == undefined || data == null || !success){
 		$(options.selector).before(dataErrorHTML);
 		$(options.selector).remove();
 		return;
@@ -76,12 +76,13 @@ function topTweet(data, options){
 
 	// Preload Checks
 	if (!$(options.selector)[0]) return;
-	if (!data || data == undefined || data == null){
+	if (!data || data == undefined || data == null || !data.success){
 		$(options.selector).before(dataErrorHTML);
 		$(options.selector).remove();
 		return;
 	} else {
-		$(options.selector).before(loadingGifHTML);
+		//For Top Tweets, because oembed takes a while, I am loading this in the dataController
+		//$(options.selector).before(loadingGifHTML);
 	}
 
 	var theData = data;
