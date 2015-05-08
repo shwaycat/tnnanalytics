@@ -14,16 +14,22 @@ var cachedData = {
       'engagement': false,
       'acquisition': false,
       'reach': false,
-      'topPost': false,
+      'topFacebookPost': false,
       'topTweet': false,
+      'topInstagramPost': false,
+      'topGooglePost': false,
+      'topYoutubeVideo': false,
       'topCountries': false
     };
 var cachedSummary = {
       'engagement': false,
       'acquisition': false,
       'reach': false,
-      'topPost': false,
+      'topFacebookPost': false,
       'topTweet': false,
+      'topInstagramPost': false,
+      'topGooglePost': false,
+      'topYoutubeVideo': false,
       'topCountries': false
     };
 

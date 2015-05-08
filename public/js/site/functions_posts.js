@@ -1,4 +1,4 @@
-function topPost(data, options){
+function topFacebookPost(data, options){
 
 	// Preload Checks
 	if (!$(options.selector)[0]) return;
@@ -55,8 +55,13 @@ function topPost(data, options){
 			.html(newDate);
 		post.find('.post-link')
 			.attr('href', theData.url);
-		post.find('.post-image img')
-			.attr('src', theData.image);
+		if (theData.image){
+			post.find('.post-image img')
+				.attr('src', theData.image);
+		} else {
+			post.find('.post-image')
+				remove();
+		}
 		post.find('.post-details-list')
 			.children().remove();
 		post.find('.post-details-list')

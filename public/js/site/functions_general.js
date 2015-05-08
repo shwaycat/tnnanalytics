@@ -295,17 +295,12 @@ function simplifyData(data){
   return newData;
 }
 
-function donutList(data, options, hidden){
+function donutList(data, options){
   var theData = data;
   var post;
   var newDetailsHTML = '';
 
-  if (hidden){
-    //Used for displaying all data in print.
-    post = $(options.selector).siblings('.novo-data-list-print');
-  } else {
-    post = $(options.selector).siblings('.novo-data-list-normal');
-  }
+  post = $(options.selector).siblings('.novo-data-list');
 
   if (theData.length) {
     for (var i = 0; i < theData.length; i++){
@@ -543,13 +538,23 @@ function dataControllerDelegation(sectionType, apiObj){
     donutList(apiObj.data.data_list, apiObj.options);
     donutGraph(apiObj.data.data, apiObj.options);
 
-  } else if (sectionType == 'topPost'){
+  } else if (sectionType == 'topFacebookPost'){
     apiObj.data = fakeTopPost;
-    topPost(apiObj.data, apiObj.options);
+    topFacebookPost(apiObj.data, apiObj.options);
 
   } else if (sectionType == 'topTweet'){
     topTweet(apiObj, apiObj.options);
 
+  } else if (sectionType == 'topInstagramPost'){
+    topInstagramPost(apiObj, apiObj.options);
+
+  } else if (sectionType == 'topGooglePost'){
+    topGooglePost(apiObj, apiObj.options);
+
+  } else if (sectionType == 'topYoutubeVideo'){
+    topYoutubeVideo(apiObj, apiObj.options);
+
+  
   } else {
     globalDebug('   GraphController Error: Wrong sectionType entered! Type: '+sectionType+' is not a valid sectionType!', 'color:red;');
     return;
