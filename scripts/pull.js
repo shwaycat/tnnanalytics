@@ -19,10 +19,8 @@ require('../lib/keystone-script')(connectES, function(done) {
     async.eachSeries(_.keys(sourceType), function(docTypeKey, nextDocType) {
       console.info("Pulling from %s:%s", sourceKey, docTypeKey);
 
-      User.model.findConnected(sourceKey, function(err, users) {
-        if (err) {
-          return nextDocType(err);
-        }
+      User.model.findAccountRoots(function(err, users) {
+        if (err) return nextDocType(err);
 
         var docType = sourceType[docTypeKey];
 
