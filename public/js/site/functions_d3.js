@@ -160,7 +160,10 @@ function lineGraph(data, options, success){
     .attr("d", line(theData));
 
   if($(options.selector).find('svg').find('path.area').attr("d").indexOf("NaN") != -1){
-  	
+  	$(options.selector).before(dataErrorHTML);
+  	$(options.selector).siblings(loadingGifClass).remove();
+  	$(options.selector).remove();
+  	return;
   }
 
   statsDelegation(data.summary, options);
@@ -176,10 +179,10 @@ function lineGraph(data, options, success){
 
 // TODO: Donut graph labels are still overlapping
 // in some cases, need to fix this later on by QA.
-function donutGraph(data, options){
+function donutGraph(data, options, success){
 	// Preload Checks
 	if (!$(options.selector)[0]) return;
-	if (!data || data == undefined || data == null){
+	if (!data || data == undefined || data == null || !success){
 		$(options.selector).before(dataErrorHTML);
 		$(options.selector).remove();
 		return;

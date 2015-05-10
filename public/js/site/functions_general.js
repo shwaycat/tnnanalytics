@@ -295,30 +295,37 @@ function simplifyData(data){
   return newData;
 }
 
-function donutList(data, options){
+function donutList(data, options, success){
+
   var theData = data;
   var post;
   var newDetailsHTML = '';
 
   post = $(options.selector).siblings('.novo-data-list');
 
-  if (theData.length) {
-    for (var i = 0; i < theData.length; i++){
-      newDetailsHTML += '<li><span>';
-      newDetailsHTML += theData[i].label;
-      newDetailsHTML += '</span><span>';
-      newDetailsHTML += theData[i].percent;
-      newDetailsHTML += '</span></li>';
+  if (success) {
+
+    if (theData.length) {
+      for (var i = 0; i < theData.length; i++){
+        newDetailsHTML += '<li><span>';
+        newDetailsHTML += theData[i].label;
+        newDetailsHTML += '</span><span>';
+        newDetailsHTML += theData[i].percent;
+        newDetailsHTML += '</span></li>';
+      }
+
+      post.find('.data-list')
+        .children().remove();
+      post.find('.data-list')
+        .append(newDetailsHTML);
+    } else {
+      post.remove();
     }
-
-    post.find('.data-list')
-      .children().remove();
-    post.find('.data-list')
-      .append(newDetailsHTML);
   } else {
+    post.prev('.data-list-title').remove();
     post.remove();
+    return;
   }
-
   
 }
 
@@ -506,6 +513,7 @@ function dataController(sectionType, type, apiString, dateObj, options){
       .done(function( data ) {
         globalDebug('   Ajax SUCCESS!: '+apiString, 'color:green;');
         apiObj.success = data.success;
+        apiObj.error = data.error;
         apiObj.source = data.source;
         apiObj.type = data.type;
         apiObj.data = data.data;
@@ -517,9 +525,13 @@ function dataController(sectionType, type, apiString, dateObj, options){
         globalDebug('   Ajax FAILED!: '+apiString, 'color:red;');
       })
       .always(function( data ) {
+
         if (type == 'topCountries'){
           apiObj.data = simplifyData(apiObj.data);
           //apiObj.data = simplifyData(fakeTopCountryData);
+          cachedData[type] = apiObj;
+        } else if (type == 'topTweet'){
+          $(options.selector).prev(loadingGifClass).remove();
           cachedData[type] = apiObj;
         } else {
           cachedData[type] = apiObj;

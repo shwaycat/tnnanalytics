@@ -41,7 +41,6 @@ function eventsTableController(apiString, table){
 	})
 	.fail(function( data ) {
 	  globalDebug('   Ajax FAILED!: '+apiString, 'color:red;');
-	  apiObj = false;
 	})
 	.always(function( data ) {
 		if (apiObj.success && apiObj.data.length && apiObj.page){
@@ -161,7 +160,7 @@ function eventsTableDraw(table, paginationHTML){
 	table.DataTable({
 		"paging": false,
 		"dom": 'rtp',
-		"order": [[ 0, 'asc' ]],
+		//"order": [[ 0, 'asc' ]], //Orders them by Status. They should be preordered though by the backend, so no order should be needed.
 		"columns": [
 	    null,
 	    null,
