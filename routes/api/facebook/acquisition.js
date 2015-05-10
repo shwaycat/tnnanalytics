@@ -1,29 +1,121 @@
 var keystone = require('keystone'),
-    _ = require('underscore'),
-    async = require('async');
+    moment = require('moment'),
+    debug = require('debug')('cadence:api:facebook:acquisition'),
+    mxm = require('../../../lib/mxm-utils'),
+    _ = require('underscore');
 
+module.exports = function(req, res) {
+  var startTime = moment().subtract(1, 'month').toDate(),
+      endTime = new Date();
 
-exports = module.exports = function(req, res) {
- 
-  var view = new keystone.View(req, res),
-      locals = res.locals;
+  if(req.query.startTime) {
+    startTime = new Date(req.query.startTime);
+  }
+  if(req.query.endTime) {
+    endTime = new Date(req.query.endTime);
+  }
 
+  var interval = Math.floor((endTime.getTime() - startTime.getTime()) / 24 / 1000);
 
-  // Build Response Here
+  debug("startTime: %s, endTime: %s, interval: %s", startTime, endTime, interval);
 
- 
-  // Return the response
-  view.render(function(err) {
-    if (err) return res.apiError('error', err);
+  keystone.elasticsearch.search({
+    index: keystone.get('elasticsearch index'),
+    type: 'facebook,facebook_delta',
+    body: {
+      "query": {
+        "filtered": {
+          "filter": {
+            "and": {
+              "filters": [
+                {
+                  "or": {
+                    "filters": [
+                      {
+                        "term": { "cadence_user_id": req.user.id }
+                      },
+                      {
+                        "term": { "original_id": req.user.services.facebook.pageID }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "exists": { "field": "likes" }
+                },
+                {
+                  "range": {
+                    "timestamp": {
+                      "gte": startTime,
+                      "lte": endTime
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "aggs": {
+        "acquisition": {
+          "date_histogram": {
+            "field": "timestamp",
+            "interval": interval + "s",
+            "min_doc_count": 0
+          },
+          "aggs": {
+            "likes": {
+              "max": {
+                "field": "likes"
+              }
+            }
+          }
+        }
+      }
+    }
+  }, function(err, response) {
+    if(err) return res.apiResponse({ error: err });
 
-    return res.apiResponse({
-      success: true,
-      type: 'acquisition',
-      source: 'facebook',
-      queryString: req.query,
-      data: 'Data Goes Here'
+    var buckets = mxm.objTry(response, 'aggregations', 'acquisition', 'buckets');
+
+    buckets = _.sortBy(buckets, function(bucket) {
+      return bucket.key;
     });
 
+    if(buckets && buckets.length) {
+      var data = _.map(buckets, function(bucket, i) {
+            if (!bucket.likes.value && i > 0) {
+              bucket.likes.value = buckets[i-1].likes.value;
+            }
+            return {
+              key: bucket.key_as_string,
+              value: bucket.likes.value
+            };
+          });
+
+      if(buckets.length == 1) {
+        data.unshift({
+          key: startTime.toISOString(),
+          value: _.first(data).value
+        });
+        data.push({
+          key: endTime.toISOString(),
+          value: _.last(data).value
+        });
+      }
+
+      return res.apiResponse({
+        success: true,
+        type: 'acquisition',
+        source: 'facebook',
+        queryString: req.query,
+        data: data,
+        summary: {
+          likes: _.last(data).value
+        }
+      });
+    } else {
+      res.apiResponse({ error: "No buckets." });
+    }
   });
- 
-}
+};
