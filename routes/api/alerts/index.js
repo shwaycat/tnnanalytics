@@ -58,7 +58,6 @@ exports = module.exports = function(req, res) {
         }
       },
       "sort": [
-        "_score",
         {
           "timestamp": {
             "order": "desc"
