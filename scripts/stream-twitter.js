@@ -34,17 +34,17 @@ require('../lib/keystone-script')(connectES, function(done) {
             stringify_friend_ids: true,
             with: 'user'
           };
-  
+
       client.stream('user', params, function(stream) {
         debug('Stream started for user id %s', user.services.twitter.profileId);
-        
+
         stream.on('data', function(data) {
           if(data.friends_str || data.friends) {
             debug('Friend List Recived and Ignored');
           } else if (data.direct_message && data.direct_message.sender.id_str != user.services.twitter.profileId) {
             // Handle a DM
             handleDirectMessage(user, data, handleESError);
-          } else if (data.retweeted_status && data.user.id_str != user.services.twitter.profileId) { 
+          } else if (data.retweeted_status && data.user.id_str != user.services.twitter.profileId) {
             // Handle a Retweet no comment
             handleMention(user, data, handleESError);
             handleTweet(user, data.retweeted_status, handleESError);
@@ -59,7 +59,7 @@ require('../lib/keystone-script')(connectES, function(done) {
             errorHandling.sendSNS("warn", data);
           }
         });
-       
+
         stream.on('follow', function(data) {
           if(data.source.id_str != user.services.twitter.profileId) {
             handleFollow(user, data.target, handleESError);

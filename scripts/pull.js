@@ -20,7 +20,6 @@ require('../lib/keystone-script')(connectES, function(done) {
       console.info("Pulling from %s:%s", sourceKey, docTypeKey);
 
       User.model.findConnected(sourceKey, function(err, users) {
-
         if (err) {
           return nextDocType(err);
         }

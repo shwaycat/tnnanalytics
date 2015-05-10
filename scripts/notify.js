@@ -1,6 +1,6 @@
 require('dotenv').load()
 
-var keystone = require('../keystone-setup')(), 
+var keystone = require('../keystone-setup')(),
     debug = require('debug')('notify'),
     User = keystone.list('User'),
     async = require('async'),
@@ -38,10 +38,10 @@ require('../lib/keystone-script')(connectES, function(done) {
 
           bulkUpdates.push(
             { update: _.pick(hit, "_index", "_type", "_id") },
-            { doc: { 
+            { doc: {
                 isNotified: true,
                 alertState: "new"
-              } 
+              }
             }
           )
         });
