@@ -15,7 +15,7 @@ var STRING_STATUS_NEW = 'new',
 		STRING_CLOSEALL_ERROR = 'There was a error with the request.'
 
 function eventsTableController(apiString, table){
-	globalDebug('   Events Call: eventsTable', 'color:purple;');
+	globalDebug('   Events Get Data', 'color:purple;');
 
 
 
@@ -41,7 +41,6 @@ function eventsTableController(apiString, table){
 	})
 	.fail(function( data ) {
 	  globalDebug('   Ajax FAILED!: '+apiString, 'color:red;');
-	  apiObj = false;
 	})
 	.always(function( data ) {
 		if (apiObj.success && apiObj.data.length && apiObj.page){
@@ -56,7 +55,7 @@ function eventsTableController(apiString, table){
 }
 
 function eventsTableData(apiObj, table){
-	globalDebug('   Events Call: eventsTableData', 'color:purple;');
+	globalDebug('   Events Setup Table Data', 'color:purple;');
 
 	if(table != undefined && table[0]){
 		var tableHTML = '',
@@ -161,7 +160,7 @@ function eventsTableDraw(table, paginationHTML){
 	table.DataTable({
 		"paging": false,
 		"dom": 'rtp',
-		"order": [[ 0, 'asc' ]],
+		//"order": [[ 0, 'asc' ]], //Orders them by Status. They should be preordered though by the backend, so no order should be needed.
 		"columns": [
 	    null,
 	    null,
@@ -325,7 +324,7 @@ function eventsTableUpdateController(){
 	});
 
 	$('#eventsCloseAll').on('click',function(){
-		globalDebug('   Events Call: eventsCloseAll', 'color:purple;');
+		globalDebug('   Events Close All', 'color:purple;');
 		var postObj = {
 	    "alertState": "closed",
 	    "all": true
@@ -413,7 +412,7 @@ function eventsStatusUpdate(postObj, row, clicked, statusItem, accessedItem, pos
 
 
 function eventsCheckStatus(){
-	globalDebug('   Events Call: eventsCheckStatus', 'color:purple;');
+	globalDebug('   Events Check Status', 'color:purple;');
 
 	var apiString = '/api/1.0/alerts/summary',
 			apiObj = {
@@ -447,11 +446,12 @@ function eventsCheckStatus(){
 }
 
 function eventsDelegateAlerts(apiObj){
-	globalDebug('   Events Call: eventsDelegateAlerts', 'color:purple;');
+	
 	var count = 0;
 
 	if (apiObj.success && $('.alerts-block')[0] && (apiObj.data.new || apiObj.data.open) ){
 
+		globalDebug('   Events Delegation New:'+apiObj.data.new+' Open:'+apiObj.data.open, 'color:purple;');
 		count = (apiObj.data.new ? apiObj.data.new : 0) + (apiObj.data.open ? apiObj.data.open : 0);
 
 		if (count){
@@ -469,7 +469,7 @@ function eventsDelegateAlerts(apiObj){
 			}, 200);
 		}
 	} else {
-
+		globalDebug('   Events Delegation: 0 Events', 'color:purple;');
 		$('.event-alert').data('events-count', count);
 		$('.event-alert').removeClass('active');
 		$('.alerts-block').removeClass('active');
