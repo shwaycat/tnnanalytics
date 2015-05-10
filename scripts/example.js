@@ -12,7 +12,7 @@ var keystone = require('../keystone-setup')()
     }
 
 require('../lib/keystone-script')(connectES, function(done) {
-  User.model.findConnectedWithKeywords(function(err, users) {
+  User.model.findAccountRoots(function(err, users) {
     if (err) {
       return done(err)
     }

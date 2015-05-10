@@ -1,6 +1,6 @@
 require('dotenv').load()
 
-var keystone = require('../keystone-setup')(), 
+var keystone = require('../keystone-setup')(),
     debug = require('debug')('notify'),
     User = keystone.list('User'),
     async = require('async'),
@@ -15,7 +15,7 @@ var keystone = require('../keystone-setup')(),
 require('../lib/keystone-script')(connectES, function(done) {
   User.model.findAccountRoots(function(err, users) {
     if (err) {
-      return errorHandling.sendSNS("error", err, err.stack, done(err));
+      return errorHandling.sendSNS("error", err, done(err));
     }
 
     async.eachSeries(users, function(user, next) {
@@ -38,10 +38,10 @@ require('../lib/keystone-script')(connectES, function(done) {
 
           bulkUpdates.push(
             { update: _.pick(hit, "_index", "_type", "_id") },
-            { doc: { 
+            { doc: {
                 isNotified: true,
                 alertState: "new"
-              } 
+              }
             }
           )
         });
@@ -62,7 +62,7 @@ require('../lib/keystone-script')(connectES, function(done) {
         });
       });
     }, function(err) {
-        if (err) return errorHandling.sendSNS("error", err, err.stack, done);
+        if (err) return errorHandling.sendSNS("error", err, done);
         else done();
     });
   });
