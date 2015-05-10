@@ -11,7 +11,7 @@ if(!argv.help) {
         connectES = require('../lib/connect_es');
 
 
-  require('../lib/keystone-script')(connectES, function(done) { 
+  require('../lib/keystone-script')(connectES, function(done) {
 
     buildUsers(function(err, users) {
 
@@ -74,6 +74,14 @@ function buildSeries() {
         series.push(deleteDocsByType('twitter', 'followerCount'));
       }
 
+      if(argv['facebook-pages'] || argv['facebook-all']) {
+        series.push(deleteDocsByType('facebook', 'page'));
+      }
+
+      if(argv['facebook-deltas'] || argv['facebook-all']) {
+        series.push(deleteDeltasBySource('facebook'));
+      }
+
     return series;
 
   } else {
@@ -120,15 +128,15 @@ function deleteDocsByType(source, doc_type) {
           filtered: {
             filter: {
               and: [
-                { 
-                  term: { 
+                {
+                  term: {
                     doc_type: doc_type
-                  } 
+                  }
                 },
                 {
                   terms: {
                     cadence_user_id: _.pluck(users, 'id')
-                  } 
+                  }
                 }
               ]
             }
@@ -153,9 +161,9 @@ function deleteDeltasBySource(source) {
       index: keystone.get('elasticsearch index'),
       body: {
         query: {
-          match: { 
+          match: {
             _type: source + "_delta"
-          } 
+          }
         }
       }
     }, function(err, results) {
@@ -181,7 +189,7 @@ function showHelp() {
   console.log('--twitter-direct_messages        Delete all Twitter direct_messages');
   console.log('--twitter-mentions               Delete all Twitter mentions');
   console.log('--twitter-tweets                 Delete all Twitter tweets');
-  console.log('--twitter-followers              Delete Twitter followers');  
+  console.log('--twitter-followers              Delete Twitter followers');
   console.log('--twitter-deltas                 Delete all Twitter deltas');
   console.log('--twitter-followerCounts         Delete all Twitter FollowerCounts');
   console.log('');

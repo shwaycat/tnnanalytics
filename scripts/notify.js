@@ -8,7 +8,7 @@ var keystone = require('../keystone-setup')(),
     connectES = require('../lib/connect_es'),
     errorHandling = require('../lib/errorHandling'),
     sources = {
-      facebook: require('../lib/sources/facebook'),
+      // facebook: require('../lib/sources/facebook'),
       twitter: require('../lib/sources/twitter')
     };
 

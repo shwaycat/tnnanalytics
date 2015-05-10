@@ -12,6 +12,7 @@
     "jade": "~1.9.2",
     "keystone": "= 0.3.5",
     "minimist": "^1.1.1",
+    "moment": "^2.10.2",
     "mongoose": "^3.8.25",
     "passport": "^0.2.1",
     "passport-facebook": "^2.0.0",
