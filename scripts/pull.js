@@ -1,10 +1,11 @@
-require('dotenv').load()
+require('dotenv').load();
 
 var keystone = require('../keystone-setup')(),
     debug = require('debug')('cadence:pull'),
     User = keystone.list('User'),
     async = require('async'),
     _ = require('underscore'),
+    errorHandling = require('../lib/errorHandling'),
     connectES = require('../lib/connect_es'),
     sources = {
       // facebook: require('../lib/sources/facebook'),
@@ -27,12 +28,27 @@ require('../lib/keystone-script')(connectES, function(done) {
         var docType = sourceType[docTypeKey];
 
         async.eachSeries(users, function(user, nextUser) {
+          console.info("Pulling for user %s", user.id);
+          debug("User: %j", user);
           docType.pullAll(user, nextUser);
-        }, nextDocType)
+        }, nextDocType);
       });
-    }, nextSourceType);
-  }, done);
+    }, function(err) {
+      if (err) {
+        errorHandling.logError(err);
+        errorHandling.sendSNS('error', err, nextSourceType);
+      } else {
+        nextSourceType();
+      }
+    });
+  }, function(err) {
+    if (err) {
+      errorHandling.logError(err);
+      errorHandling.sendSNS('error', err, done);
+    } else {
+      done();
+    }
+  });
 });
 
 //[ { message: 'Rate limit exceeded', code: 88 } ]
-

@@ -79,7 +79,7 @@ require('../lib/keystone-script')(connectES, function(done) {
         });
 
         stream.on('error', function(error) {
-          console.error(error);
+          errorHandling.logError(error);
           errorHandling.sendSNS("error", error);
         });
       });
@@ -142,7 +142,7 @@ function handleTweet(user, data, callback) {
 
 function handleESError(err) {
   if(err) {
-    console.error(err);
-    errorHandling.sendSNS('error', err, err.stack);
+    errorHandling.logError(err);
+    errorHandling.sendSNS('error', err);
   }
 }
