@@ -1,6 +1,7 @@
 var keystone = require('keystone'),
     _ = require('underscore'),
     async = require('async'),
+    User = keystone.list('User'),
     mxm = require('../../../lib/mxm-utils');
 
 
@@ -10,53 +11,56 @@ exports = module.exports = function(req, res) {
       locals = res.locals
       user = req.user;
 
+  User.model.getAccountRootInfo(req.user.accountName, function(err, accountRoot) {
+    if (err) return apiResponse({'error': err});
 
-  keystone.elasticsearch.search({
-    index: keystone.get('elasticsearch index'),
-    "search_type": "count",
-    body: {
-      "query": {
-        "filtered": {
-          "filter": {
-            "and": {
-              "filters": [
-                {"exists": { "field": "alertState" } },
-                {"term": { "cadence_user_id": user.id } }
-              ]
+    keystone.elasticsearch.search({
+      index: keystone.get('elasticsearch index'),
+      "search_type": "count",
+      body: {
+        "query": {
+          "filtered": {
+            "filter": {
+              "and": {
+                "filters": [
+                  {"exists": { "field": "alertState" } },
+                  {"term": { "cadence_user_id": accountRoot.id } }
+                ]
+              }
+            }
+          }
+        },
+        "aggs": {
+          "alertStates": {
+            "terms": {
+              "field": "alertState"
             }
           }
         }
-      },
-      "aggs": {
-        "alertStates": {
-          "terms": {
-            "field": "alertState"
-          }
+      }
+    }, function(err, response){
+      if(err) return res.apiResponse({"error": err});
+      
+      var buckets = mxm.objTry(response, 'aggregations', 'alertStates', 'buckets');
+      var data = {};
+
+      if(_.isArray(buckets)) {
+        for(i=0;i<buckets.length;i++) {
+          bucket = buckets[i];
+          data[bucket.key] = bucket.doc_count;
         }
+      } else {
+        return res.apiResponse({"error": "Error with ES results."});
       }
-    }
-  }, function(err, response){
-    if(err) return res.apiResponse({"error": err});
-    
-    var buckets = mxm.objTry(response, 'aggregations', 'alertStates', 'buckets');
-    var data = {};
+      
+      return res.apiResponse({
+        success: true,
+        type: 'alert summary',
+        source: 'all',
+        data: data
+      });
 
-    if(_.isArray(buckets)) {
-      for(i=0;i<buckets.length;i++) {
-        bucket = buckets[i];
-        data[bucket.key] = bucket.doc_count;
-      }
-    } else {
-      return res.apiResponse({"error": "Error with ES results."});
-    }
-    
-    return res.apiResponse({
-      success: true,
-      type: 'alert summary',
-      source: 'all',
-      data: data
     });
-
   });
   
 }

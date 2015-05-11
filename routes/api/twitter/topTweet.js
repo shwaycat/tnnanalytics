@@ -3,7 +3,8 @@ var keystone = require('keystone'),
     async = require('async'),
     debug = require('debug')("cadence:api:twitter:topTweet"),
     request = require('request'),
-    mxm = require('../../../lib/mxm-utils');
+    mxm = require('../../../lib/mxm-utils'),
+    User = keystone.list('User'),
     Tweet = require('../../../lib/sources/twitter/tweet'),
     twitter = require('twitter');
 
@@ -27,162 +28,165 @@ exports = module.exports = function(req, res) {
 
 
   // Build Response Here
+  User.model.getAccountRootInfo(req.user.accountName, function(err, accountRoot) {
+    if (err) return apiResponse({'error': err});
 
-  keystone.elasticsearch.search({
-    index: keystone.get('elasticsearch index'),
-    from: 0,
-    size: 1000000000,
-    body: {
-      "query": {
-        "filtered": {
-          "query": {
-            "term": {
-              "doc_type": {
-                "value": "tweet"
+    keystone.elasticsearch.search({
+      index: keystone.get('elasticsearch index'),
+      from: 0,
+      size: 1000000000,
+      body: {
+        "query": {
+          "filtered": {
+            "query": {
+              "term": {
+                "doc_type": {
+                  "value": "tweet"
+                }
               }
-            }
-          },
-          "filter": {
-            "and": {
-              "filters": [
-                {
-                  "range": {
-                    "timestamp": {
-                      "gte": startTime,
-                      "lte": endTime
+            },
+            "filter": {
+              "and": {
+                "filters": [
+                  {
+                    "range": {
+                      "timestamp": {
+                        "gte": startTime,
+                        "lte": endTime
+                      }
                     }
-                  }
-                },
-                {
-                  "term": {
-                    "cadence_user_id": req.user.id
-                  }
-                },
-                {
-                  "term": {
-                    "user_id": req.user.services.twitter.profileId
-                  }
-                },
-                {
-                  "not": {
-                    "filter": {
-                      "exists": {
-                        "field": "isRetweet"
+                  },
+                  {
+                    "term": {
+                      "cadence_user_id": accountRoot.id
+                    }
+                  },
+                  {
+                    "term": {
+                      "user_id": accountRoot.services.twitter.profileId
+                    }
+                  },
+                  {
+                    "not": {
+                      "filter": {
+                        "exists": {
+                          "field": "isRetweet"
+                        }
                       }
                     }
                   }
-                }
-              ]
+                ]
+              }
             }
           }
         }
       }
-    }
-  }, function(err, response) {
-    if(err) return res.apiResponse({"error": err});
+    }, function(err, response) {
+      if(err) return res.apiResponse({"error": err});
 
-    var tweets = mxm.objTry(response, 'hits', 'hits');
-        scoredTweets = [];
-      
-      if(!tweets || tweets.length == 0) return res.apiResponse({"error": "Error with ES search results."});
+      var tweets = mxm.objTry(response, 'hits', 'hits');
+          scoredTweets = [];
+        
+        if(!tweets || tweets.length == 0) return res.apiResponse({"error": "Error with ES search results."});
 
-      async.eachSeries(tweets, function(tweet, nextTweet) {
-        Tweet.findOne(tweet._id, function(err, tweet) {
-          if(err) return nextTweet(err);
+        async.eachSeries(tweets, function(tweet, nextTweet) {
+          Tweet.findOne(tweet._id, function(err, tweet) {
+            if(err) return nextTweet(err);
 
-          tweet.modifyByDelta(function(err) {
-            if (err) return nextTweet(err);
+            tweet.modifyByDelta(function(err) {
+              if (err) return nextTweet(err);
 
-            scoredTweets.push({
-              id: tweet.id,
-              url: tweet.emailLinkObject(),
-              favorite_count: tweet.favorite_count || 0,
-              reply_count: tweet.reply_count || 0,
-              retweet_count: tweet.retweet_count || 0,
-              score: (tweet.favorite_count || 0) + (tweet.reply_count || 0) + (tweet.retweet_count || 0)
+              scoredTweets.push({
+                id: tweet.id,
+                url: tweet.emailLinkObject(),
+                favorite_count: tweet.favorite_count || 0,
+                reply_count: tweet.reply_count || 0,
+                retweet_count: tweet.retweet_count || 0,
+                score: (tweet.favorite_count || 0) + (tweet.reply_count || 0) + (tweet.retweet_count || 0)
+              });
+              nextTweet();
             });
-            nextTweet();
           });
-        });
-      }, function(err) {
-        if(err) return res.apiResponse({"error": err});
+        }, function(err) {
+          if(err) return res.apiResponse({"error": err});
 
-        var max = {};
-        if(!scoredTweets || scoredTweets.length == 0) return res.apiResponse({"error": 'Error in async?'});
+          var max = {};
+          if(!scoredTweets || scoredTweets.length == 0) return res.apiResponse({"error": 'Error in async?'});
 
-        max = _.max(scoredTweets, function(tweet) { return tweet.score; });
+          max = _.max(scoredTweets, function(tweet) { return tweet.score; });
 
-        if(!max) return res.apiResponse({"error": "Something went way wrong."})
-          keystone.elasticsearch.get({
-            index: keystone.get('elasticsearch index'),
-            type: 'twitter',
-            id: max.id
-          }, function(err, tweet) {
-            if(err) return res.apiResponse({"error": "Failed in ES.get"});
+          if(!max) return res.apiResponse({"error": "Something went way wrong."})
+            keystone.elasticsearch.get({
+              index: keystone.get('elasticsearch index'),
+              type: 'twitter',
+              id: max.id
+            }, function(err, tweet) {
+              if(err) return res.apiResponse({"error": "Failed in ES.get"});
 
 
-            if(!tweet._source.oembed) {
-              debug("GO GET IT!");
-              async.series([
-                function(next) {
-                  request({
-                    url: 'https://api.twitter.com/1/statuses/oembed.json?id=' + tweet._id,
-                    json: true
-                  }, function (err, response, body) {
-                    if(err) return next(err);
+              if(!tweet._source.oembed) {
+                debug("GO GET IT!");
+                async.series([
+                  function(next) {
+                    request({
+                      url: 'https://api.twitter.com/1/statuses/oembed.json?id=' + tweet._id,
+                      json: true
+                    }, function (err, response, body) {
+                      if(err) return next(err);
 
-                    tweet.oembed = body;
-                    next();
-                 
-                  });
+                      tweet.oembed = body;
+                      next();
+                   
+                    });
 
-                },
-                function(next) {
-                  keystone.elasticsearch.update({
-                    index: keystone.get('elasticsearch index'),
-                    type: 'twitter',
-                    id: tweet._id,
-                    body: {
-                      doc: {
-                        oembed: JSON.stringify(tweet.oembed)
+                  },
+                  function(next) {
+                    keystone.elasticsearch.update({
+                      index: keystone.get('elasticsearch index'),
+                      type: 'twitter',
+                      id: tweet._id,
+                      body: {
+                        doc: {
+                          oembed: JSON.stringify(tweet.oembed)
+                        }
                       }
-                    }
-                  }, function (err, response) {
-                    if(err) return next(err);
-                    return next();
-                  });  
-                }
-              ], 
-              function(err) {
+                    }, function (err, response) {
+                      if(err) return next(err);
+                      return next();
+                    });  
+                  }
+                ], 
+                function(err) {
+                  dataReturn = {
+                    success: true,
+                    type: 'topTweet',
+                    source: 'twitter',
+                    queryString: req.query,
+                    data: max,
+                    oembed: tweet.oembed
+                  };
+
+                  return res.apiResponse(dataReturn);
+
+                });
+              } else {
+                debug("IT WAS CACHED");
                 dataReturn = {
                   success: true,
                   type: 'topTweet',
                   source: 'twitter',
                   queryString: req.query,
                   data: max,
-                  oembed: tweet.oembed
-                };
-
+                  oembed: JSON.parse(tweet._source.oembed)
+                }
                 return res.apiResponse(dataReturn);
 
-              });
-            } else {
-              debug("IT WAS CACHED");
-              dataReturn = {
-                success: true,
-                type: 'topTweet',
-                source: 'twitter',
-                queryString: req.query,
-                data: max,
-                oembed: JSON.parse(tweet._source.oembed)
               }
-              return res.apiResponse(dataReturn);
-
-            }
 
 
-          });
-      });
+            });
+        });
 
+    });
   });
 }

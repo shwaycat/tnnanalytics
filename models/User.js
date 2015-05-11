@@ -118,6 +118,8 @@ User.schema.virtual('canAccessKeystone').get(function() {
 });
 
 
+
+
 /**
  * Methods
  * =======
@@ -224,26 +226,6 @@ User.schema.methods.sendNotificationEmail = function(links, callback) {
       else     callback();               // successful response
     });
 
-
-
-
-  // (new keystone.Email('notification')).send({
-  //   subject: 'Cadence Notification',
-  //   to: this.email,
-  //   from: {
-  //     name: 'Cadence',
-  //     email: 'no-reply@maxmedia.com'
-  //   },
-  //   links: links
-  // }, function(err, info) {
-  //   if (err) {
-  //     console.error("Error sending notification email to %s", self.email);
-  //   } else {
-  //     console.info("Sent notification email to %s", self.email);
-  //   }
-
-  //   callback(err, info);
-  // });
 };
 
 User.schema.methods.facebookPages = function(callback) {
@@ -366,6 +348,14 @@ User.schema.post('save', function() {
   }
 
 });
+
+User.schema.statics.getAccountRootInfo = function(accountName, callback) {
+  return this.findOne({
+    accountName: accountName,
+    isAccountRoot: true
+  }, callback); 
+}
+
 
 User.schema.methods.resetPassword = function(callback) {
 
