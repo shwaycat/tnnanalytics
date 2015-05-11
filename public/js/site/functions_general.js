@@ -415,7 +415,7 @@ function statsDelegation(summary, options){
       statsString += statStringOpen;
       statsString += "Direct Messages"
       statsString += statStringMid;
-      statsString += summary.totalDirectMentions
+      statsString += summary.totalDirectMessages
       statsString += statStringClose;
 
     } else if (options.selector == '#acquisition'){
