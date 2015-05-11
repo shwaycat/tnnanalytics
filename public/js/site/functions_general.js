@@ -345,7 +345,7 @@ function donutPercents(){
 }
 
 function statsDelegation(summary, options){
-  if (!summary || summary == undefined || summary == null){
+  if (!summary || summary == undefined || summary == null || options.selector == '#reach'){
     return;
   }
 
@@ -431,50 +431,50 @@ function statsDelegation(summary, options){
     
     if (options.selector == '#engagement'){
 
-      // statsString += statStringOpen;
-      // statsString += summary.totalFavorites
-      // statsString += statStringMid;
-      // statsString += "Favorites"
-      // statsString += statStringClose;
+      statsString += statStringOpen;
+      statsString += "Likes"
+      statsString += statStringMid;
+      statsString += summary.totalLikes
+      statsString += statStringClose;
 
-      // statsString += statStringOpen;
-      // statsString += summary.totalRetweets
-      // statsString += statStringMid;
-      // statsString += "Retweets"
-      // statsString += statStringClose;
+      statsString += statStringOpen;
+      statsString += "Shares"
+      statsString += statStringMid;
+      statsString += summary.totalShares
+      statsString += statStringClose;
 
-      // statsString += statStringOpen;
-      // statsString += summary.totalMentions
-      // statsString += statStringMid;
-      // statsString += "Mentions"
-      // statsString += statStringClose;
+      statsString += statStringOpen;
+      statsString += "Comments"
+      statsString += statStringMid;
+      statsString += summary.totalComments
+      statsString += statStringClose;
 
-      // statsString += statStringOpen;
-      // statsString += summary.totalReplies
-      // statsString += statStringMid;
-      // statsString += "Replies"
-      // statsString += statStringClose;
+      statsString += statStringOpen;
+      statsString += "Mentions"
+      statsString += statStringMid;
+      statsString += summary.totalMentions
+      statsString += statStringClose;
 
-      // statsString += statStringOpen;
-      // statsString += summary.totalDirectMentions
-      // statsString += statStringMid;
-      // statsString += "Direct Mentions"
-      // statsString += statStringClose;
+      statsString += statStringOpen;
+      statsString += "Posts"
+      statsString += statStringMid;
+      statsString += summary.totalPosts
+      statsString += statStringClose;
 
     } else if (options.selector == '#acquisition'){
 
-      // statsString += statStringOpen;
-      // statsString += summary.totalFollowers
-      // statsString += statStringMid;
-      // statsString += "Followers"
-      // statsString += statStringClose;
+      statsString += statStringOpen;
+      statsString += "Likes"
+      statsString += statStringMid;
+      statsString += summary.totalLikes
+      statsString += statStringClose;
 
     } else if (options.selector == '#reach'){
 
       // statsString += statStringOpen;
-      // statsString += summary.totalFollowers
+      // statsString += "Impressions"
       // statsString += statStringMid;
-      // statsString += "Followers"
+      // statsString += summary.totalImpressions
       // statsString += statStringClose;
 
     }
@@ -552,7 +552,8 @@ function dataControllerDelegation(sectionType, apiObj){
   if (sectionType == 'line'){
     lineGraph(apiObj.data, apiObj.options, apiObj.success);
     statsDelegation(apiObj.summary, apiObj.options, apiObj.success);
-    
+    //statsDelegation(fakeSummaryFacebook, apiObj.options, apiObj.success);
+
   } else if (sectionType == 'donut'){
     donutList(apiObj.data.data_list, apiObj.options, apiObj.success);
     donutGraph(apiObj.data.data, apiObj.options, apiObj.success);

@@ -49,6 +49,21 @@ if($('.date-container')[0]){
 
 //Fake data for testing below
 
+var fakeSummaryFacebook = {
+  totalRetweets: 'askldfa',
+  totalFavorites: '234',
+  totalMentions: '23434',
+  totalReplies: '4234a',
+  totalDirectMentions: '234f',
+  totalFollowers: '234assge',
+  totalLikes: 'sdfdsa',
+  totalShares: '2jf0',
+  totalComments: '34',
+  totalMentions: '234asdga',
+  totalPosts: 'sdfasda'
+
+};
+
 var fakeMapping = {
   AD: 'Andorra',
   AE: 'United Arab Emirates',
