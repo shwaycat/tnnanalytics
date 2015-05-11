@@ -261,6 +261,8 @@ function simplifyData(data, map){
 
       if (datum.key == "US"){
         datum.label = "USA";
+      } else if (datum.key == "UK") {
+        datum.label = "UK";
       } else {
         datum.label = map[datum.key];
       }
@@ -272,6 +274,8 @@ function simplifyData(data, map){
 
       if (datum.key == "US"){
         datum.label = "USA";
+      } else if (datum.key == "UK") {
+        datum.label = "UK";
       } else {
         datum.label = map[datum.key];
       }
@@ -344,7 +348,7 @@ function donutList(data, options, success){
 }
 
 function numberWithCommas(x) {
-  return Math.round(x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+  return Math.round(x).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 function donutPercents(){

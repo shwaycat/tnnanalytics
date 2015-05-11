@@ -42,6 +42,7 @@ require('../lib/keystone-script')(connectES, function(done) {
             }
           );
         });
+        nextBatch();
       }, function(err) {
         if (err) return next(err);
         if (!links.length) return next();

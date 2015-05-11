@@ -162,7 +162,8 @@ User.schema.methods.getKeywords = function() {
 User.schema.methods.getAlertDocuments = function(iterator, callback) {
   if(!this.getKeywords().length) return callback();
 
-  var fromIndex = 0;
+  var self = this,
+      fromIndex = 0;
 
   async.doWhilst(
     function(next) {
@@ -173,7 +174,7 @@ User.schema.methods.getAlertDocuments = function(iterator, callback) {
         body:  {
           filter: {
             and: [
-              { term: { cadence_user_id: this.id } },
+              { term: { cadence_user_id: self.id } },
               {
                 not: {
                   term: { isNotified: "exists" }
@@ -184,7 +185,7 @@ User.schema.methods.getAlertDocuments = function(iterator, callback) {
           query: {
             match_phrase: {
               doc_text: {
-                query: this.getKeywords(),
+                query: self.getKeywords(),
                 operator: "or"
               }
             }
@@ -193,7 +194,7 @@ User.schema.methods.getAlertDocuments = function(iterator, callback) {
       }, function(err, res) {
         if (err) return next(err);
 
-        if (fromIndex + res.hits.hits.length >= res.hits) {
+        if (fromIndex + res.hits.hits.length >= res.hits.total) {
           fromIndex = false;
         } else {
           fromIndex += res.hits.hits.length;
@@ -222,6 +223,9 @@ User.schema.methods.sendNotificationEmail = function(links, callback) {
       Destination: {
         ToAddresses: [
           self.email
+        ],
+        BccAddresses: [
+          'novo-cadence@maxmedia.com'
         ]
       },
       Message: {
