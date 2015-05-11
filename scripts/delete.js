@@ -83,6 +83,26 @@ function buildSeries() {
         series.push(deleteDocsByType('facebook', 'page'));
       }
 
+      if(argv['facebook-posts'] || argv['facebook-all']) {
+        series.push(deleteDocsByType('facebook', 'post'));
+      }
+
+      if(argv['facebook-statuses'] || argv['facebook-all']) {
+        series.push(deleteDocsByType('facebook', 'status'));
+      }
+
+      if(argv['facebook-mentions'] || argv['facebook-all']) {
+        series.push(deleteDocsByType('facebook', 'mention'));
+      }
+
+      if(argv['facebook-comments'] || argv['facebook-all']) {
+        series.push(deleteDocsByType('facebook', 'comment'));
+      }
+
+      if(argv['facebook-messages'] || argv['facebook-all']) {
+        series.push(deleteDocsByType('facebook', 'message'));
+      }
+
       if(argv['facebook-deltas'] || argv['facebook-all']) {
         series.push(deleteDeltasBySource('facebook'));
       }
@@ -234,7 +254,7 @@ function resetTwitterReplies(source, doc_type) {
               callback(err);
             }
             console.log('Deleted %s - %s for users: %j', source, doc_type, _.pluck(users, 'id'));
-            callback();          
+            callback();
           });
         } else {
           callback();
@@ -250,7 +270,7 @@ function bulkUpdateReplies(docs, callback) {
   for(i=0;i<docs.length;i++) {
     doc = docs[i];
 
-    bulkUpdates.push({ 
+    bulkUpdates.push({
         update: {
           _index: keystone.get('elasticsearch index'),
           _type: doc._type,
@@ -268,7 +288,7 @@ function bulkUpdateReplies(docs, callback) {
     body: bulkUpdates
   }, function(err, response) {
     if (err) return callback(err);
-    
+
     callback();
   });
 }
