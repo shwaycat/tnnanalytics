@@ -115,7 +115,7 @@ module.exports = function(req, res) {
         queryString: req.query,
         data: data,
         summary: {
-          likes: _.last(data).value
+          totalLikes: _.last(data).value
         }
       });
     } else {
