@@ -598,10 +598,7 @@ function dataControllerDelegation(sectionType, apiObj){
     donutGraph(apiObj.data.data, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'topFacebookPost'){
-    setTimeout(function(){
-      topFacebookPost(apiObj.data, apiObj.options, apiObj.success);
-    },10000);
-    
+    topFacebookPost(apiObj.data, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'topTweet'){
     topTweet(apiObj, apiObj.options);
