@@ -1,6 +1,6 @@
 {
   "name": "cadence",
-  "version": "2.0.0-dev",
+  "version": "2.0.0",
   "private": true,
   "dependencies": {
     "async": "~0.9.0",
