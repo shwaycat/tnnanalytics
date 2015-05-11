@@ -259,13 +259,23 @@ function simplifyData(data, map){
 
       otherObj.value += datum.value;
 
-      datum.label = map[datum.key];
+      if (datum.key == "US"){
+        datum.label = "USA";
+      } else {
+        datum.label = map[datum.key];
+      }
+
       newData.data_list.push(datum);
    
     } else if (datum.value/totalValues > 0.01) {
       datum.percent = Math.round( (datum.value*100/totalValues) *100 )/100 + '%';
-      datum.label = map[datum.key];
 
+      if (datum.key == "US"){
+        datum.label = "USA";
+      } else {
+        datum.label = map[datum.key];
+      }
+      
       newData.data.push(datum);
       newData.data_list.push(datum);
       
