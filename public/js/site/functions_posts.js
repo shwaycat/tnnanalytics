@@ -23,20 +23,14 @@ function topFacebookPost(data, options, success){
 
 		var post = $(options.selector);
 
-		// Creation Date in MM/DD/YYYY
-		var newDate = new Date(theData.creation);
-		newDate = (newDate.getMonth() < 10 ? ('0'+newDate.getMonth()) : newDate.getMonth() )+ '/' + (newDate.getDate() < 10 ? ('0'+newDate.getDate()) : newDate.getDate() ) + '/' + newDate.getFullYear();
+		// theData = { data: { url: 'https://www.facebook.com/MaxMediaATL/posts/10153318926083185', score: '1234' } };
+
+		var fbPost = '<div data-href="'+theData.data.url+'" class="fb-post"></div>'
 
 		var newDetailsHTML = '';
-		var newDetails = [[],[],[],[]];
+		var newDetails = [[]];
 		newDetails[0][0] = 'Total Engagement';
-		newDetails[0][1] = theData.engagement;
-		newDetails[1][0] = 'Shares';
-		newDetails[1][1] = theData.shares
-		newDetails[2][0] = 'Comments';
-		newDetails[2][1] = theData.comments;
-		newDetails[3][0] = 'Likes';
-		newDetails[3][1] = theData.likes;
+		newDetails[0][1] = theData.data.score;
 
 		for (var i = 0; i < newDetails.length; i++){
 			newDetailsHTML += '<li><span>';
@@ -45,23 +39,8 @@ function topFacebookPost(data, options, success){
 			newDetailsHTML += newDetails[i][1];
 			newDetailsHTML += '</span></li>';
 		}
-
-		post.find('.post-title a')
-			.html(theData.title)
-			.attr('href', theData.url);
-		post.find('.post-content')
-			.html(theData.content);
-		post.find('.post-creation')
-			.html(newDate);
-		post.find('.post-link')
-			.attr('href', theData.url);
-		if (theData.image){
-			post.find('.post-image img')
-				.attr('src', theData.image);
-		} else {
-			post.find('.post-image')
-				remove();
-		}
+		post.find('.post')
+			.append(fbPost);
 		post.find('.post-details-list')
 			.children().remove();
 		post.find('.post-details-list')
@@ -69,6 +48,9 @@ function topFacebookPost(data, options, success){
 	}
 
 	$(options.selector).sectionLoad(true, true);
+	setTimeout(function(){
+		 equalHeightPairs();
+	},1000);
 	
 }
 
