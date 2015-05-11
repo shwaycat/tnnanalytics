@@ -1,6 +1,7 @@
 require('dotenv').load();
 
-var keystone = require('../keystone-setup')(),
+var argv = require('minimist')(process.argv.slice(2)), 
+    keystone = require('../keystone-setup')(),
     debug = require('debug')('cadence:pull'),
     User = keystone.list('User'),
     async = require('async'),
@@ -21,7 +22,15 @@ require('../lib/keystone-script')(connectES, function(done) {
       async.eachSeries(users, function(user, nextUser) {
         console.info("Pulling for user %s", user.id);
         debug("User: %j", user);
-        docType.pullAll(user, nextUser);
+
+        if(argv.all) {
+          debug("Pull all");
+          docType.pullAll(user, nextUser);  
+        } else {
+          debug("Pull latest");
+          docType.pull(user, nextUser);
+        }
+        
       }, nextDocType);
     });
   }, function(err) {

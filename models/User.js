@@ -87,7 +87,7 @@ User.add({
       profileId: { type: String, label: 'Profile ID', dependsOn: deps.google },
       username: { type: String, label: 'Username', dependsOn: deps.google },
       accessToken: { type: String, label: 'Access Token', dependsOn: deps.google },
-      refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.google }
+      refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.google },
     },
     /**
      * Twitter Service
@@ -103,7 +103,10 @@ User.add({
       profileId: { type: String, label: 'Profile ID', dependsOn: deps.twitter },
       username: { type: String, label: 'Username', dependsOn: deps.twitter },
       accessToken: { type: String, label: 'Access Token', dependsOn: deps.twitter },
-      refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.twitter }
+      refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.twitter },
+      tweetSinceID: { type: String, label: 'Tweet Since ID', dependsOn: deps.twitter },
+      mentionSinceID: { type: String, label: 'Mention Since ID', dependsOn: deps.twitter },
+      direct_messageSinceID: { type: String, label: 'Direct Message Since ID', dependsOn: deps.twitter },
     }
   }
 });
