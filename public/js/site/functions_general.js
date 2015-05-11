@@ -241,7 +241,7 @@ $.fn.sectionLoad = function(reload, eh){
 
 };
 
-function simplifyData(data){
+function simplifyData(data, map){
   var theData = data;
   var newData = {
     "data": [],
@@ -257,10 +257,13 @@ function simplifyData(data){
       datum.percent = Math.round( (datum.value*100/totalValues) *100 )/100 + '%';
 
       otherObj.value += datum.value;
+
+      datum.label = map[datum.key];
       newData.data_list.push(datum);
    
     } else if (datum.value/totalValues > 0.01) {
       datum.percent = Math.round( (datum.value*100/totalValues) *100 )/100 + '%';
+      datum.label = map[datum.key];
 
       newData.data.push(datum);
       newData.data_list.push(datum);
@@ -528,15 +531,9 @@ function dataController(sectionType, type, apiString, dateObj, options){
       .always(function( data ) {
 
         if (type == 'topCountries'){
-          //apiObj.data = simplifyData(apiObj.data);
-
-          apiObj.success = true;
-          apiObj.error = false;
-          apiObj.source = 'facebook';
-          apiObj.type = '';
-          apiObj.map = '';
-
-          apiObj.data = simplifyData(fakeTopCountryData );
+          apiObj.data = simplifyData(apiObj.data, apiObj.map);
+          //apiObj.data = simplifyData(fakeTopCountryData, apiObj.map );
+          
           cachedData[type] = apiObj;
         } else if (type == 'topTweet'){
           $(options.selector).prev(loadingGifClass).remove();
