@@ -18,6 +18,10 @@ module.exports = function(req, res) {
 
   var interval = Math.floor((endTime.getTime() - startTime.getTime()) / 24 / 1000);
 
+  if (interval < 86400) { // min. resolution is 1 day
+    interval = 86400
+  }
+
   debug("startTime: %s, endTime: %s, interval: %s", startTime, endTime, interval);
 
   keystone.elasticsearch.search({
