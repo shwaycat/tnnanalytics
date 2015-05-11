@@ -23,8 +23,6 @@ function topFacebookPost(data, options, success){
 
 		var post = $(options.selector);
 
-		// theData = { data: { url: 'https://www.facebook.com/MaxMediaATL/posts/10153318926083185', score: '1234' } };
-
 		var fbPost = '<div data-href="'+theData.data.url+'" class="fb-post"></div>'
 
 		var newDetailsHTML = '';

@@ -40,7 +40,10 @@ module.exports = function(req, res) {
               ]
             }
           }
-        }
+        },
+        "sort": [
+          { "timestamp": "desc" }
+        ]
       }
     }, function(err, response) {
       if(err) return res.apiResponse({ error: err });
@@ -66,15 +69,17 @@ module.exports = function(req, res) {
       }, function(err) {
         if(err) return res.apiResponse({ error: err});
 
+        topPost.data = {
+          url: topPost.embedURL(),
+          score: topPost.score()
+        };
+
         res.apiResponse({
           success: true,
           type: 'topPost',
           source: 'facebook',
           queryString: req.query,
-          data: _.extend(topPost, {
-            url: topPost.emailLinkObject().href,
-            score: topPost.score()
-          })
+          data: topPost
         });
       });
     });
