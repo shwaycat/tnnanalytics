@@ -217,9 +217,9 @@ User.schema.methods.sendNotificationEmail = function(links, callback) {
       username: self.name.full,
       host: hostname,
       links: links,
-    });  
+    });
     var params = {
-      Destination: { 
+      Destination: {
         ToAddresses: [
           self.email
         ]
@@ -230,7 +230,7 @@ User.schema.methods.sendNotificationEmail = function(links, callback) {
             Data: html
           }
         },
-        Subject: { 
+        Subject: {
           Data: 'Cadence Notification'
         }
       },
@@ -240,7 +240,7 @@ User.schema.methods.sendNotificationEmail = function(links, callback) {
       ],
       ReturnPath: 'no-reply@cadence.novo.mxmcloud.com'
     };
-    
+
     ses.sendEmail(params, function(err, data) {
       if (err) callback(err, err.stack); // an error occurred
       else     callback();               // successful response
@@ -356,7 +356,7 @@ User.schema.post('save', function() {
 
   var self = this;
   if(self.wasNew) {
-    
+
     self.resetPasswordKey = keystone.utils.randomString([16,24]);
     self.wasNew = false;
 
@@ -373,7 +373,7 @@ User.schema.statics.getAccountRootInfo = function(accountName, callback) {
   return this.findOne({
     accountName: accountName,
     isAccountRoot: true
-  }, callback); 
+  }, callback);
 }
 
 
@@ -401,9 +401,9 @@ function sendAccountEmail(user, isNewUser, callback) {
       host: hostname,
       link: '/reset-password/' + user.resetPasswordKey,
       newUser: isNewUser
-    });  
+    });
     var params = {
-      Destination: { 
+      Destination: {
         ToAddresses: [
           user.email
         ]
@@ -414,7 +414,7 @@ function sendAccountEmail(user, isNewUser, callback) {
             Data: html
           }
         },
-        Subject: { 
+        Subject: {
           Data: 'Cadence Account Information'
         }
       },
@@ -424,7 +424,7 @@ function sendAccountEmail(user, isNewUser, callback) {
       ],
       ReturnPath: 'no-reply@cadence.novo.mxmcloud.com'
     };
-    
+
     ses.sendEmail(params, function(err, data) {
       if (err) callback(err, err.stack); // an error occurred
       else     callback();               // successful response
