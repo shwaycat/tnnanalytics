@@ -112,7 +112,7 @@ exports = module.exports = function(req, res) {
 
 function extractDataPoint(bucket) {
   return {
-      code: bucket.key.toUpperCase(),
+      key: bucket.key.toUpperCase(),
       value: bucket.doc_count
   };
 }
