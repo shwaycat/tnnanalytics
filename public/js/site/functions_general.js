@@ -822,6 +822,7 @@ function dateCalendar(selectorArray, dateObj){
       calendars: 1,
       starts: 1,
       onChange: function(formatted, dateObj){
+        dateObj.setHours(23,59,59);
         $('.datepickerContainer').removeClass('datepickerWarning');
         $('[data-date-selection="missingdate"]').removeClass('active');
         $('[data-date-selection="mismatch"]').removeClass('active');
