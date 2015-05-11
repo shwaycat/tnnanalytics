@@ -21,7 +21,6 @@ require('../lib/keystone-script')(connectES, function(done) {
 
       async.eachSeries(users, function(user, nextUser) {
         console.info("Pulling for user %s", user.id);
-        debug("User: %j", user);
 
         if(argv.all) {
           debug("Pull all");
