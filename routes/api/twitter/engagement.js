@@ -2,9 +2,8 @@ var keystone = require('keystone'),
     _ = require('underscore'),
     async = require('async'),
     debug = require('debug')('cadence:api:twitter:engagement'),
+    User = keystone.list('User'),
     mxm = require('../../../lib/mxm-utils');
-
-
 
 
 
@@ -29,147 +28,150 @@ exports = module.exports = function(req, res) {
   var interval = (endTime.getTime() - startTime.getTime()) / 24;
       interval = interval / 1000;
 
-  keystone.elasticsearch.search({
-    index: keystone.get('elasticsearch index'),
-    body: {
-      "query": {
-        "filtered": {
-          "filter": {
-            "and": {
-              "filters": [
-                {
-                  "or": {
-                    "filters": [
-                      {
-                        "terms": {
-                          "doc_type": [
-                            "tweet",
-                            "mention",
-                            "direct_message"
-                          ]
+  User.model.getAccountRootInfo(req.user.accountName, function(err, accountRoot) {
+    if (err) return apiResponse({'error': err});
+
+    keystone.elasticsearch.search({
+      index: keystone.get('elasticsearch index'),
+      body: {
+        "query": {
+          "filtered": {
+            "filter": {
+              "and": {
+                "filters": [
+                  {
+                    "or": {
+                      "filters": [
+                        {
+                          "terms": {
+                            "doc_type": [
+                              "tweet",
+                              "mention",
+                              "direct_message"
+                            ]
+                          }
+                        },
+                        {
+                          "exists": {
+                            "field": "reply_count"
+                          }
                         }
-                      },
-                      {
+                      ]
+                    }
+                  },
+                  {
+                    "and": {
+                      "filters": [
+                        {
+                          "term": {
+                            "cadence_user_id": accountRoot.id
+                          }
+                        },
+                        {
+                          "term": {
+                            "user_id": accountRoot.services.twitter.profileId
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "not": {
+                      "filter": {
                         "exists": {
-                          "field": "reply_count"
+                          "field": "isRetweet"
                         }
                       }
-                    ]
-                  }
-                },
-                {
-                  "and": {
-                    "filters": [
-                      {
-                        "term": {
-                          "cadence_user_id": req.user.id
-                        }
-                      },
-                      {
-                        "term": {
-                          "user_id": req.user.services.twitter.profileId
-                        }
-                      }
-                    ]
-                  }
-                },
-                {
-                  "not": {
-                    "filter": {
-                      "exists": {
-                        "field": "isRetweet"
+                    }
+                  },
+                  {
+                    "range": {
+                      "timestamp": {
+                        "gte": startTime,
+                        "lte": endTime
                       }
                     }
                   }
-                },
-                {
-                  "range": {
-                    "timestamp": {
-                      "gte": startTime,
-                      "lte": endTime
-                    }
-                  }
+                ]
+              }
+            }
+          }
+        },
+        "aggs": {
+          "engagement": {
+            "date_histogram": {
+              "field": "timestamp",
+              "interval": interval + "s",
+              "min_doc_count": 0
+            },
+            "aggs": {
+              "reply_count": {
+                "max": {
+                  "field": "reply_count"
                 }
-              ]
-            }
-          }
-        }
-      },
-      "aggs": {
-        "engagement": {
-          "date_histogram": {
-            "field": "timestamp",
-            "interval": interval + "s",
-            "min_doc_count": 0
-          },
-          "aggs": {
-            "reply_count": {
-              "max": {
-                "field": "reply_count"
-              }
-            },
-            "favorite_count": {
-              "max": {
-                "field": "favorite_count"
-              }
-            },
-            "retweet_count": {
-              "max": {
-                "field": "retweet_count"
-              }
-            },
-            "doc_types": {
-              "terms": {
-                "field": "doc_type",
-                "size": 0
+              },
+              "favorite_count": {
+                "max": {
+                  "field": "favorite_count"
+                }
+              },
+              "retweet_count": {
+                "max": {
+                  "field": "retweet_count"
+                }
+              },
+              "doc_types": {
+                "terms": {
+                  "field": "doc_type",
+                  "size": 0
+                }
               }
             }
           }
         }
       }
-    }
-  }, function(err, response) {
-    if(err) return res.apiResponse({"error": err});
-    var dataReturn = [],
-        buckets = mxm.objTry(response, 'aggregations', 'engagement', 'buckets');
+    }, function(err, response) {
+      if(err) return res.apiResponse({"error": err});
+      var dataReturn = [],
+          buckets = mxm.objTry(response, 'aggregations', 'engagement', 'buckets');
 
-    if(buckets && buckets.length) {
+      if(buckets && buckets.length) {
 
-      if(buckets.length == 1) {
-        first = extractDataPoint(buckets[0]);
-        first.key = startTime.toISOString();
-        dataReturn.push(first);
-      }
-
-      _.each(buckets, function(bucket){
-        dataReturn.push(extractDataPoint(bucket));
-      });
-
-      if(buckets.length == 1) {
-        last = _.last(dataReturn);
-        last.key = endTime.toISOString();
-        dataReturn.push(last);
-      }
-
-      return res.apiResponse({
-        success: true,
-        type: 'engagement',
-        source: 'twitter',
-        queryString: req.query,
-        data: dataReturn,
-        summary: {
-          "totalFavorites" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.favorite_count; }, 0),
-          "totalRetweets" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.retweet_count; }, 0),
-          "totalReplies" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.reply_count; }, 0),
-          "totalMentions" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.mention_count; }, 0),
-          "totalDirectMentions" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.dm_count; }, 0)
+        if(buckets.length == 1) {
+          first = extractDataPoint(buckets[0]);
+          first.key = startTime.toISOString();
+          dataReturn.push(first);
         }
-      });   
-    } else {
-      res.apiResponse('error', "No buckets.")
-    }
+
+        _.each(buckets, function(bucket){
+          dataReturn.push(extractDataPoint(bucket));
+        });
+
+        if(buckets.length == 1) {
+          last = _.last(dataReturn);
+          last.key = endTime.toISOString();
+          dataReturn.push(last);
+        }
+
+        return res.apiResponse({
+          success: true,
+          type: 'engagement',
+          source: 'twitter',
+          queryString: req.query,
+          data: dataReturn,
+          summary: {
+            "totalFavorites" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.favorite_count; }, 0),
+            "totalRetweets" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.retweet_count; }, 0),
+            "totalReplies" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.reply_count; }, 0),
+            "totalMentions" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.mention_count; }, 0),
+            "totalDirectMentions" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.dm_count; }, 0)
+          }
+        });   
+      } else {
+        res.apiResponse('error', "No buckets.")
+      }
+    });
   });
-
 }
 
 function extractDataPoint(bucket) {

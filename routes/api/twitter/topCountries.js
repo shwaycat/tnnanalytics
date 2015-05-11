@@ -2,6 +2,7 @@ var keystone = require('keystone'),
     _ = require('underscore'),
     async = require('async'),
     Country = keystone.list('Country'),
+    User = keystone.list('User'),
     mxm = require('../../../lib/mxm-utils');
 
 
@@ -26,77 +27,86 @@ exports = module.exports = function(req, res) {
   var interval = (endTime.getTime() - startTime.getTime()) / 24;
       interval = interval / 1000;
 
-  keystone.elasticsearch.search({
-    index: keystone.get('elasticsearch index'),
-    body: {
-      "query": {
-        "filtered": {
-          "filter": {
-            "and": {
-              "filters": [
-                {
-                  "and": {
-                    "filters": [
-                      {
-                        "terms": {
-                          "doc_type": [
-                            "mention"
-                          ]
+  User.model.getAccountRootInfo(req.user.accountName, function(err, accountRoot) {
+    if (err) return apiResponse({'error': err});
+
+    keystone.elasticsearch.search({
+      index: keystone.get('elasticsearch index'),
+      body: {
+        "query": {
+          "filtered": {
+            "filter": {
+              "and": {
+                "filters": [
+                  {
+                    "and": {
+                      "filters": [
+                        {
+                          "terms": {
+                            "doc_type": [
+                              "mention"
+                            ]
+                          }
+                        },
+                        {
+                          "exists": {
+                            "field": "country"
+                          }
+                        },
+                        {
+                          "term": {
+                            "cadence_user_id": accountRoot.id
+                          }
                         }
-                      },
-                      {
-                        "exists": {
-                          "field": "country"
-                        }
+                      ]
+                    }
+                  },
+                  {
+                    "range": {
+                      "timestamp": {
+                        "gte": startTime,
+                        "lte": endTime
                       }
-                    ]
-                  }
-                },
-                {
-                  "range": {
-                    "timestamp": {
-                      "gte": startTime,
-                      "lte": endTime
                     }
                   }
-                }
-              ]
+                ]
+              }
+            }
+          }
+        },
+        "aggs": {
+          "topCountries": {
+            "terms": {
+              "field": "country",
+              "size": 0      
             }
           }
         }
-      },
-      "aggs": {
-        "topCountries": {
-          "terms": {
-            "field": "country",
-            "size": 0      
-          }
-        }
       }
-    }
-  }, function(err, response) {
-    if(err) return res.apiResponse({"error": err});
-    var dataReturn = [],
-        buckets = mxm.objTry(response, 'aggregations', 'topCountries', 'buckets');
+    }, function(err, response) {
+      if(err) return res.apiResponse({"error": err});
+      var dataReturn = [],
+          buckets = mxm.objTry(response, 'aggregations', 'topCountries', 'buckets');
 
-    if(buckets && buckets.length) {
-      Country.model.getMap(function(err, map) {
-        _.each(buckets, function(bucket){
-          dataReturn.push(extractDataPoint(bucket));
-        });
+      if(buckets && buckets.length) {
+        Country.model.getMap(function(err, map) {
+          _.each(buckets, function(bucket){
+            dataReturn.push(extractDataPoint(bucket));
+          });
 
-        return res.apiResponse({
-          success: true,
-          type: 'topCountries',
-          source: 'twitter',
-          map: map,
-          data: dataReturn
-        });   
-      })
+          return res.apiResponse({
+            success: true,
+            type: 'topCountries',
+            source: 'twitter',
+            map: map,
+            data: dataReturn
+          });   
+        })
 
-    } else {
-      res.apiResponse({'error': "No Buckets"})
-    }
+      } else {
+        res.apiResponse({'error': "No Buckets"})
+      }
+    });
   });
 }
 
