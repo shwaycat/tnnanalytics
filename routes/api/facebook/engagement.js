@@ -157,7 +157,7 @@ module.exports = function(req, res) {
 
         return res.apiResponse({
           success: true,
-          type: 'acquisition',
+          type: 'engagement',
           source: 'facebook',
           queryString: req.query,
           data: data,
