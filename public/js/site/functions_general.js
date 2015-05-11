@@ -553,7 +553,6 @@ function dataControllerDelegation(sectionType, apiObj){
     donutGraph(apiObj.data.data, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'topFacebookPost'){
-    apiObj.data = fakeTopPost;
     topFacebookPost(apiObj.data, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'topTweet'){

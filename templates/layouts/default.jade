@@ -12,6 +12,7 @@ include ../mixins/global/date
 include ../mixins/accounts/events
 include ../mixins/accounts/social-graph
 include ../mixins/accounts/top-posts
+include ../mixins/accounts/fb-js-embed
 
 html
   head
@@ -32,6 +33,7 @@ html
   body(class=section)
 
     if user
+      +fb-js
       +alerts
 
     .container-fluid.header-container
