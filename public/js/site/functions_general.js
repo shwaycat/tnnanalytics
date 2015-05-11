@@ -517,6 +517,7 @@ function dataController(sectionType, type, apiString, dateObj, options){
         apiObj.source = data.source;
         apiObj.type = data.type;
         apiObj.data = data.data;
+        apiObj.map = data.map;
         apiObj.oembed = data.oembed;
         apiObj.summary = data.summary;
         console.log(data);
@@ -527,8 +528,15 @@ function dataController(sectionType, type, apiString, dateObj, options){
       .always(function( data ) {
 
         if (type == 'topCountries'){
-          apiObj.data = simplifyData(apiObj.data);
-          //apiObj.data = simplifyData(fakeTopCountryData);
+          //apiObj.data = simplifyData(apiObj.data);
+
+          apiObj.success = true;
+          apiObj.error = false;
+          apiObj.source = 'facebook';
+          apiObj.type = '';
+          apiObj.map = '';
+
+          apiObj.data = simplifyData(fakeTopCountryData );
           cachedData[type] = apiObj;
         } else if (type == 'topTweet'){
           $(options.selector).prev(loadingGifClass).remove();
