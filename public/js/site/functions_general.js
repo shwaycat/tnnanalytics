@@ -344,7 +344,7 @@ function donutList(data, options, success){
 }
 
 function numberWithCommas(x) {
-  return Math.round(x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+  return Math.round(x).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 function donutPercents(){
