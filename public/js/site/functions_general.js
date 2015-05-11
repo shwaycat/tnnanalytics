@@ -333,6 +333,10 @@ function donutList(data, options, success){
   
 }
 
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 function donutPercents(){
   $('[data-label]').on('click, mouseover', function(){
     var label = $(this).data('label');
@@ -392,7 +396,7 @@ function statsDelegation(summary, options){
         statsString += statStringOpen;
         statsString += "Favorites"
         statsString += statStringMid;
-        statsString += summary.totalFavorites
+        statsString += numberWithCommas(summary.totalFavorites);
         statsString += statStringClose;
       }
 
@@ -400,7 +404,7 @@ function statsDelegation(summary, options){
         statsString += statStringOpen;
         statsString += "Retweets"
         statsString += statStringMid;
-        statsString += summary.totalRetweets
+        statsString += numberWithCommas(summary.totalRetweets);
         statsString += statStringClose;
       }
 
@@ -408,7 +412,7 @@ function statsDelegation(summary, options){
         statsString += statStringOpen;
         statsString += "Mentions"
         statsString += statStringMid;
-        statsString += summary.totalMentions
+        statsString += numberWithCommas(summary.totalMentions);
         statsString += statStringClose;
       }
 
@@ -416,7 +420,7 @@ function statsDelegation(summary, options){
         statsString += statStringOpen;
         statsString += "Replies"
         statsString += statStringMid;
-        statsString += summary.totalReplies
+        statsString += numberWithCommas(summary.totalReplies);
         statsString += statStringClose;
       }
 
@@ -424,7 +428,7 @@ function statsDelegation(summary, options){
         statsString += statStringOpen;
         statsString += "Direct Messages"
         statsString += statStringMid;
-        statsString += summary.totalDirectMessages
+        statsString += numberWithCommas(summary.totalDirectMessages);
         statsString += statStringClose;
       }
 
@@ -434,7 +438,7 @@ function statsDelegation(summary, options){
         statsString += statStringOpen;
         statsString += "Followers"
         statsString += statStringMid;
-        statsString += summary.totalFollowers
+        statsString += numberWithCommas(summary.totalFollowers);
         statsString += statStringClose;
       }
 
@@ -448,7 +452,7 @@ function statsDelegation(summary, options){
         statsString += statStringOpen;
         statsString += "Likes"
         statsString += statStringMid;
-        statsString += summary.totalLikes
+        statsString += numberWithCommas(summary.totalLikes);
         statsString += statStringClose;
       }
 
@@ -456,7 +460,7 @@ function statsDelegation(summary, options){
         statsString += statStringOpen;
         statsString += "Shares"
         statsString += statStringMid;
-        statsString += summary.totalShares
+        statsString += numberWithCommas(summary.totalShares);
         statsString += statStringClose;
       }
 
@@ -464,7 +468,7 @@ function statsDelegation(summary, options){
         statsString += statStringOpen;
         statsString += "Comments"
         statsString += statStringMid;
-        statsString += summary.totalComments
+        statsString += numberWithCommas(summary.totalComments);
         statsString += statStringClose;
       }
 
@@ -472,7 +476,7 @@ function statsDelegation(summary, options){
         statsString += statStringOpen;
         statsString += "Mentions"
         statsString += statStringMid;
-        statsString += summary.totalMentions
+        statsString += numberWithCommas(summary.totalMentions);
         statsString += statStringClose;
       }
 
@@ -480,7 +484,7 @@ function statsDelegation(summary, options){
         statsString += statStringOpen;
         statsString += "Messages"
         statsString += statStringMid;
-        statsString += summary.totalMessages
+        statsString += numberWithCommas(summary.totalMessages);
         statsString += statStringClose;
       }
 
@@ -488,7 +492,7 @@ function statsDelegation(summary, options){
         statsString += statStringOpen;
         statsString += "Posts"
         statsString += statStringMid;
-        statsString += summary.totalPosts
+        statsString += numberWithCommas(summary.totalPosts);
         statsString += statStringClose;
       }
 
@@ -498,7 +502,7 @@ function statsDelegation(summary, options){
         statsString += statStringOpen;
         statsString += "Likes"
         statsString += statStringMid;
-        statsString += summary.totalLikes
+        statsString += numberWithCommas(summary.totalLikes);
         statsString += statStringClose;
       }
 
