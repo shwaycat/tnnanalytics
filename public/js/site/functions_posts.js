@@ -2,7 +2,7 @@ function topFacebookPost(data, options, success){
 
 	// Preload Checks
 	if (!$(options.selector)[0]) return;
-	if (!data || data == undefined || data == null || !success){
+	if (!data || data == undefined || data == null || !success || !data.data || !data.data.url || data.data.url == undefined){
 		$(options.selector).before(dataErrorHTML);
 		$(options.selector).remove();
 		return;

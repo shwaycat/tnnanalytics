@@ -523,7 +523,7 @@ function dataController(sectionType, type, apiString, dateObj, options){
         apiObj.map = data.map;
         apiObj.oembed = data.oembed;
         apiObj.summary = data.summary;
-        console.log(data);
+        globalDebug(data);
       })
       .fail(function( data ) {
         globalDebug('   Ajax FAILED!: '+apiString, 'color:red;');
