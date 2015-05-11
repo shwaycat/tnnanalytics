@@ -1,4 +1,4 @@
-require('dotenv').load()
+require('dotenv').load();
 
 var keystone = require('../keystone-setup')(),
     debug = require('debug')('notify'),
@@ -8,7 +8,7 @@ var keystone = require('../keystone-setup')(),
     connectES = require('../lib/connect_es'),
     errorHandling = require('../lib/errorHandling'),
     sources = {
-      // facebook: require('../lib/sources/facebook'),
+      facebook: require('../lib/sources/facebook'),
       twitter: require('../lib/sources/twitter')
     };
 
@@ -19,22 +19,19 @@ require('../lib/keystone-script')(connectES, function(done) {
     }
 
     async.eachSeries(users, function(user, next) {
-      console.info("Notifying for user %s", user.id)
+      console.info("Notifying for user %s", user.id);
 
-      user.getAlertDocuments(function(err, res) {
-        if (err) return next(err);
-        if (res.hits.total == 0) return next();
+      var bulkUpdates = [],
+          links = [];
 
-        debug("User: %s Hits: %s", user.id, res.hits.total);
+      user.getAlertDocuments(function(hits, nextBatch) {
+        if (!hits.length) return nextBatch();
 
-        var bulkUpdates = [],
-            links = [];
-
-        res.hits.hits.forEach(function(hit) {
+        _.each(hits, function(hit) {
           var docType = sources[hit._source.doc_source][hit._source.doc_type],
-              obj = new docType(hit._id, hit._source)
+              obj = new docType(hit._id, hit._source);
 
-          links.push( obj.emailLinkObject({ user: user }) )
+          links.push( obj.emailLinkObject({ user: user }) );
 
           bulkUpdates.push(
             { update: _.pick(hit, "_index", "_type", "_id") },
@@ -43,27 +40,31 @@ require('../lib/keystone-script')(connectES, function(done) {
                 alertState: "new"
               }
             }
-          )
+          );
         });
+      }, function(err) {
+        if (err) return next(err);
+        if (!links.length) return next();
 
-        user.sendNotificationEmail(links, function(err, info) {
+        debug("User %s - %s notifications", user.id, links.length);
+
+        user.sendNotificationEmail(links, function(err) {
           if (err) return next(err);
 
           keystone.elasticsearch.bulk({
             body: bulkUpdates
-          }, function (err, resp) {
+          }, function (err) {
             if (err) {
-              console.error("Error updating ES documents to notified state for user %s", user.id)
-              return next(err)
+              console.error("Error updating ES documents to notified state for user %s", user.id);
+              return next(err);
             }
             next();
           });
-
         });
       });
     }, function(err) {
-        if (err) return errorHandling.sendSNS("error", err, done);
-        else done();
+      if (err) return errorHandling.sendSNS("error", err, done);
+      done();
     });
   });
 });
