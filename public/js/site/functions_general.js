@@ -548,7 +548,7 @@ function dataController(sectionType, type, apiString, dateObj, options){
       apiObj.endTime = dateObj.endTime;
       timeObj = dateObj;
     }
-    if (type == 'topTweet'){
+    if (type == 'topTweet' || type == 'topPost'){
       $(options.selector).before(loadingGifHTML);
     }
     $.get(apiString, timeObj)
@@ -598,7 +598,10 @@ function dataControllerDelegation(sectionType, apiObj){
     donutGraph(apiObj.data.data, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'topFacebookPost'){
-    topFacebookPost(apiObj.data, apiObj.options, apiObj.success);
+    setTimeout(function(){
+      topFacebookPost(apiObj.data, apiObj.options, apiObj.success);
+    },10000);
+    
 
   } else if (sectionType == 'topTweet'){
     topTweet(apiObj, apiObj.options);
