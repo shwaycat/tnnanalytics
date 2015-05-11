@@ -121,7 +121,8 @@ function globalDebug(message, css){
 function createFakeData(){
   var ourArray = [];
   var index = 50;
-  for (var i = 0; i < index; i++){
+  var countarray = [1151707, 1162369, 1169145, 1177156, 1187363, 1194867, 1203956, 1209300, 1197983, 1206968, 1214102, 1224658, 1232331, 1245532, 1251306, 1258431, 1263521, 1268405, 1271295];
+  for (var i = 0; i < countarray.length; i++){
     var year = 1971 + i;
     var day = 1971 + i;
     var date = new Date('2014', '03', i*15);
@@ -414,7 +415,7 @@ function statsDelegation(summary, options){
       statsString += statStringOpen;
       statsString += "Direct Messages"
       statsString += statStringMid;
-      statsString += summary.totalDirectMentions
+      statsString += summary.totalDirectMessages
       statsString += statStringClose;
 
     } else if (options.selector == '#acquisition'){
