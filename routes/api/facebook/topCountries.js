@@ -16,9 +16,6 @@ module.exports = function(req, res) {
     endTime = new Date(req.query.endTime);
   }
 
-  // var interval = Math.floor((endTime.getTime() - startTime.getTime()) / 24 / 1000);
-
-  // debug("startTime: %s, endTime: %s, interval: %s", startTime, endTime, interval);
   debug("startTime: %s, endTime: %s", startTime, endTime);
 
   keystone.elasticsearch.search({
