@@ -1,7 +1,7 @@
 var keystone = require('keystone'),
-    crypto = require('crypto'),
     _ = require('underscore'),
     request = require('request'),
+    async = require('async'),
     Types = keystone.Field.Types;
     AWS = require('aws-sdk'),
     ses = new AWS.SES(),
@@ -159,37 +159,54 @@ User.schema.methods.getKeywords = function() {
   }
 };
 
-//TODO paging
-User.schema.methods.getAlertDocuments = function(callback) {
-  if(this.getKeywords().length > 0) {
-    keystone.elasticsearch.search({
-      index: keystone.get('elasticsearch index'),
-      from: 0,
-      size: 1000000000,
-      body:  {
-        filter: {
-          and: [
-            { term: { cadence_user_id: this.id } },
-            { 
-              not: {
-                term: { isNotified: "exists" }
+User.schema.methods.getAlertDocuments = function(iterator, callback) {
+  if(!this.getKeywords().length) return callback();
+
+  var fromIndex = 0;
+
+  async.doWhilst(
+    function(next) {
+      keystone.elasticsearch.search({
+        index: keystone.get('elasticsearch index'),
+        from: fromIndex,
+        size: 100,
+        body:  {
+          filter: {
+            and: [
+              { term: { cadence_user_id: this.id } },
+              {
+                not: {
+                  term: { isNotified: "exists" }
+                }
               }
-            }
-          ]
-        },
-        query: {
-          match_phrase: {
-            doc_text: {
-              query: this.getKeywords(),
-              operator: "or"
+            ]
+          },
+          query: {
+            match_phrase: {
+              doc_text: {
+                query: this.getKeywords(),
+                operator: "or"
+              }
             }
           }
         }
-      }
-    }, callback);
-  } else {
-    callback();
-  }
+      }, function(err, res) {
+        if (err) return next(err);
+
+        if (fromIndex + res.hits.hits.length >= res.hits) {
+          fromIndex = false;
+        } else {
+          fromIndex += res.hits.hits.length;
+        }
+
+        iterator(res.hits.hits, next);
+      });
+    },
+    function() {
+      return fromIndex;
+    },
+    callback
+  );
 };
 
 User.schema.methods.sendNotificationEmail = function(links, callback) {
