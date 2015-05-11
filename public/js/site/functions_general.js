@@ -333,6 +333,10 @@ function donutList(data, options, success){
   
 }
 
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 function donutPercents(){
   $('[data-label]').on('click, mouseover', function(){
     var label = $(this).data('label');
@@ -388,43 +392,55 @@ function statsDelegation(summary, options){
 
     if (options.selector == '#engagement'){
 
-      statsString += statStringOpen;
-      statsString += "Favorites"
-      statsString += statStringMid;
-      statsString += summary.totalFavorites
-      statsString += statStringClose;
+      if (summary.totalFavorites) {
+        statsString += statStringOpen;
+        statsString += "Favorites"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalFavorites);
+        statsString += statStringClose;
+      }
 
-      statsString += statStringOpen;
-      statsString += "Retweets"
-      statsString += statStringMid;
-      statsString += summary.totalRetweets
-      statsString += statStringClose;
+      if (summary.totalRetweets) {
+        statsString += statStringOpen;
+        statsString += "Retweets"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalRetweets);
+        statsString += statStringClose;
+      }
 
-      statsString += statStringOpen;
-      statsString += "Mentions"
-      statsString += statStringMid;
-      statsString += summary.totalMentions
-      statsString += statStringClose;
+      if (summary.totalMentions) {
+        statsString += statStringOpen;
+        statsString += "Mentions"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalMentions);
+        statsString += statStringClose;
+      }
 
-      statsString += statStringOpen;
-      statsString += "Replies"
-      statsString += statStringMid;
-      statsString += summary.totalReplies
-      statsString += statStringClose;
+      if (summary.totalReplies) {
+        statsString += statStringOpen;
+        statsString += "Replies"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalReplies);
+        statsString += statStringClose;
+      }
 
-      statsString += statStringOpen;
-      statsString += "Direct Messages"
-      statsString += statStringMid;
-      statsString += summary.totalDirectMessages
-      statsString += statStringClose;
+      if (summary.totalDirectMessages) {
+        statsString += statStringOpen;
+        statsString += "Direct Messages"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalDirectMessages);
+        statsString += statStringClose;
+      }
 
     } else if (options.selector == '#acquisition'){
 
-      statsString += statStringOpen;
-      statsString += "Followers"
-      statsString += statStringMid;
-      statsString += summary.totalFollowers
-      statsString += statStringClose;
+      if (summary.totalFollowers) {
+        statsString += statStringOpen;
+        statsString += "Followers"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalFollowers);
+        statsString += statStringClose;
+      }
 
     }
     
@@ -432,51 +448,63 @@ function statsDelegation(summary, options){
     
     if (options.selector == '#engagement'){
 
-      statsString += statStringOpen;
-      statsString += "Likes"
-      statsString += statStringMid;
-      statsString += summary.totalLikes
-      statsString += statStringClose;
+      if (summary.totalLikes) {
+        statsString += statStringOpen;
+        statsString += "Likes"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalLikes);
+        statsString += statStringClose;
+      }
 
-      statsString += statStringOpen;
-      statsString += "Shares"
-      statsString += statStringMid;
-      statsString += summary.totalShares
-      statsString += statStringClose;
+      if (summary.totalShares) {
+        statsString += statStringOpen;
+        statsString += "Shares"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalShares);
+        statsString += statStringClose;
+      }
 
-      statsString += statStringOpen;
-      statsString += "Comments"
-      statsString += statStringMid;
-      statsString += summary.totalComments
-      statsString += statStringClose;
+      if (summary.totalComments) {
+        statsString += statStringOpen;
+        statsString += "Comments"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalComments);
+        statsString += statStringClose;
+      }
 
-      statsString += statStringOpen;
-      statsString += "Mentions"
-      statsString += statStringMid;
-      statsString += summary.totalMentions
-      statsString += statStringClose;
+      if (summary.totalMentions) {
+        statsString += statStringOpen;
+        statsString += "Mentions"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalMentions);
+        statsString += statStringClose;
+      }
 
-      statsString += statStringOpen;
-      statsString += "Posts"
-      statsString += statStringMid;
-      statsString += summary.totalPosts
-      statsString += statStringClose;
+      if (summary.totalMessages) {
+        statsString += statStringOpen;
+        statsString += "Messages"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalMessages);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalPosts) {
+        statsString += statStringOpen;
+        statsString += "Posts"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalPosts);
+        statsString += statStringClose;
+      }
 
     } else if (options.selector == '#acquisition'){
 
-      statsString += statStringOpen;
-      statsString += "Likes"
-      statsString += statStringMid;
-      statsString += summary.totalLikes
-      statsString += statStringClose;
-
-    } else if (options.selector == '#reach'){
-
-      // statsString += statStringOpen;
-      // statsString += "Impressions"
-      // statsString += statStringMid;
-      // statsString += summary.totalImpressions
-      // statsString += statStringClose;
+      if (summary.totalLikes) {
+        statsString += statStringOpen;
+        statsString += "Likes"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalLikes);
+        statsString += statStringClose;
+      }
 
     }
 
