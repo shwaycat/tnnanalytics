@@ -344,7 +344,7 @@ function donutList(data, options, success){
 }
 
 function numberWithCommas(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return Math.round(x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
 }
 
 function donutPercents(){
@@ -732,11 +732,12 @@ function dateController(){
 
   now = new Date();
   now.setMinutes(0,0,0);
-  now.setHours(now.getHours() - 1);
+  now.setHours(23,59,59);
   now = now.toJSON();
+  
 
   today = new Date();
-  today.setHours(0,0,0,0);
+  today.setHours(0,0,0);
   today = today.toJSON();
 
   yesterday = new Date();
@@ -821,6 +822,7 @@ function dateCalendar(selectorArray, dateObj){
       calendars: 1,
       starts: 1,
       onChange: function(formatted, dateObj){
+        dateObj.setHours(23,59,59);
         $('.datepickerContainer').removeClass('datepickerWarning');
         $('[data-date-selection="missingdate"]').removeClass('active');
         $('[data-date-selection="mismatch"]').removeClass('active');
