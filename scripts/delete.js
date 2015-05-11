@@ -8,6 +8,7 @@ if(!argv.help) {
         User = keystone.list('User'),
         async = require('async'),
         _ = require('underscore'),
+        mxm = require('../lib/mxm-utils'),
         connectES = require('../lib/connect_es');
 
 
@@ -72,6 +73,10 @@ function buildSeries() {
 
       if(argv['twitter-followerCounts'] || argv['twitter-all']) {
         series.push(deleteDocsByType('twitter', 'followerCount'));
+      }
+
+      if(argv['twitter-replies'] || argv['twitter-all']) {
+        series.push(resetTwitterReplies('twitter', 'replies'));
       }
 
       if(argv['facebook-pages'] || argv['facebook-all']) {
@@ -177,6 +182,97 @@ function deleteDeltasBySource(source) {
     });
   }
 }
+
+function resetTwitterReplies(source, doc_type) {
+  return function(users, callback) {
+    keystone.elasticsearch.search({
+      index: keystone.get('elasticsearch index'),
+      size: 1000000000,
+      type: "twitter",
+      body: {
+        "query": {
+          "filtered": {
+            "filter": {
+              "and": {
+                "filters": [
+                  {
+                    "exists": {
+                      "field": "replyCounted"
+                    }
+                  },
+                  {
+                    "exists": {
+                      "field": "in_reply_to_status_id_str"
+                    }
+                  },
+                  {
+                    "term": {
+                      "doc_type": "mention"
+                    }
+                  },
+                  {
+                    "terms": {
+                      "cadence_user_id": _.pluck(users, 'id')
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }, function(err, response) {
+      if(err) {
+        console.log('Delete %s - %s Failed.', source, doc_type);
+        callback(err);
+      } else {
+        var replies = mxm.objTry(response, 'hits', 'hits');
+        if(replies.length) {
+          bulkUpdateReplies(replies, function(err) {
+            if(err) {
+              console.log('Delete %s - %s Failed.', source, doc_type);
+              callback(err);
+            }
+            console.log('Deleted %s - %s for users: %j', source, doc_type, _.pluck(users, 'id'));
+            callback();          
+          });
+        } else {
+          callback();
+        }
+      }
+    });
+  }
+}
+
+function bulkUpdateReplies(docs, callback) {
+  var bulkUpdates = [];
+
+  for(i=0;i<docs.length;i++) {
+    doc = docs[i];
+
+    bulkUpdates.push({ 
+        update: {
+          _index: keystone.get('elasticsearch index'),
+          _type: doc._type,
+          _id: doc._id
+        }
+      },
+      {
+        doc: {
+          replyCounted: null
+        }
+      });
+  }
+
+  keystone.elasticsearch.bulk({
+    body: bulkUpdates
+  }, function(err, response) {
+    if (err) return callback(err);
+    
+    callback();
+  });
+}
+
 
 function showHelp() {
   console.log('');
