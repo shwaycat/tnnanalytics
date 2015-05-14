@@ -250,7 +250,7 @@ function simplifyData(data, map){
   };
   
   var totalValues = _.reduce(theData, function(memo, num){ return memo + num.value; }, 0),
-      otherObj = { "label": "Other", "value": 0, "percent": 0 };
+      otherObj = { "label": "Additional Countries", "value": 0, "percent": 0 };
 
   _.each(theData, function(datum, index){
     if (datum.value/totalValues < 0.09 && datum.value/totalValues > 0.01){
@@ -826,7 +826,9 @@ function dateCalendar(selectorArray, dateObj){
       calendars: 1,
       starts: 1,
       onChange: function(formatted, dateObj){
-        dateObj.setHours(23,59,59);
+        if ($(this).parent().attr('id') == 'dateCalendarEnd'){
+          dateObj.setHours(23,59,59);
+        }
         $('.datepickerContainer').removeClass('datepickerWarning');
         $('[data-date-selection="missingdate"]').removeClass('active');
         $('[data-date-selection="mismatch"]').removeClass('active');

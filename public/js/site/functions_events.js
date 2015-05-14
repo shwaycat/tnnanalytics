@@ -10,8 +10,8 @@ var STRING_STATUS_NEW = 'new',
 		statusClass = '',
 		statusOrder = 0,
 		urlHtml = '',
-		STRING_ALERTS_MESSAGE = ' New or Open Adverse Event',
-		STRING_ALERTS_MESSAGE_PLURAL = ' New or Open Adverse Events';
+		STRING_ALERTS_MESSAGE = ' New or Open Keyword Event',
+		STRING_ALERTS_MESSAGE_PLURAL = ' New or Open Keyword Events';
 		STRING_CLOSEALL_ERROR = 'There was a error with the request.'
 
 function eventsTableController(apiString, table){
@@ -75,10 +75,20 @@ function eventsTableData(apiObj, table){
 					currentEvent_creation,
 					currentEvent_creation_human,
 					currentEvent_accessed,
-					currentEvent_accessed_human;
+					currentEvent_accessed_human,
+					currentEvent_id_short;
 
 			// Get the Current Event Data
 			currentEvent = apiObj.data[i];
+
+			// Shorten the ID
+			if (currentEvent._id.length > 10) {
+				currentEvent_id_short = currentEvent._id.slice(0,10);
+				currentEvent_id_short += '...';
+			} else {
+				currentEvent_id_short = currentEvent._id;
+			}
+			
 			
 			// Creation Date
 			currentEvent_creation = new Date(currentEvent.timestamp);
@@ -135,7 +145,7 @@ function eventsTableData(apiObj, table){
 			tableHTML += '<td class="event-item-status"><span class="event-item-robot">'+statusOrder+'</span>'+currentEvent.alertState.capitalizeFirstLetter()+'</td>';
 			tableHTML += '<td><span class="event-item-robot">'+currentEvent_creation+'</span>'+currentEvent_creation_human+'</td>';
 			tableHTML += '<td>'+currentEvent._type.capitalizeFirstLetter()+'</td>';
-			tableHTML += '<td>'+currentEvent._id+'</td>';
+			tableHTML += '<td><span class="event-item-robot">'+currentEvent._id+'</span><span class="event-item-human" data-toggle="tooltip" data-trigger="click" data-placement="top" title='+currentEvent._id+'>'+currentEvent_id_short+'</span></td>';
 			tableHTML += '<td class="event-item-accessed"><span class="event-item-robot">'+currentEvent_accessed+'</span><span class="event-item-human">'+currentEvent_accessed_human.capitalizeFirstLetter()+'</span></td>';
 			tableHTML += '<td><button class="btn btn-default event-action-btn '+statusClass+'">'+actionText+'</td>';
 			tableHTML += '<td class="event-item-link event-link-cell">'+urlHtml+'<span class="entypo entypo-chevron-right"></span></td>';
@@ -151,6 +161,7 @@ function eventsTableData(apiObj, table){
 		eventsTableDraw($('#events-table'), paginationHTML);
 
 		compensateFooter();
+		$('[data-toggle="tooltip"]').tooltip();
 
 	}
 }
