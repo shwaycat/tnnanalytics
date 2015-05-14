@@ -25,7 +25,7 @@ function browserVersion() {
 function attachBrowserVersion(){
   var version = browserVersion();
   $('html').addClass('browser-'+browserVersion());
-} 
+}
 
 function compensateFooter(){
   if($('.footer-container')[0]){
@@ -75,7 +75,7 @@ function equalHeightPairs(breakpoint){
       var rightHeight = parseInt(rightChild.css('height'));
 
       if (left[0] && right[0]){
-        
+
         if (leftHeight > rightHeight){
           control = left;
           controlHeight = leftHeight;
@@ -114,7 +114,7 @@ function globalDebug(message, css){
     } else {
       console.log(message);
     }
-    
+
   }
 }
 
@@ -232,7 +232,7 @@ $.fn.sectionLoad = function(reload, eh){
     el.removeClass('loaded');
   }
   el.prev(loadingGifClass).remove();
-  
+
   setTimeout(function(){
     el.addClass('loaded');
     if (eh){
@@ -248,9 +248,9 @@ function simplifyData(data, map){
     "data": [],
     "data_list": []
   };
-  
+
   var totalValues = _.reduce(theData, function(memo, num){ return memo + num.value; }, 0),
-      otherObj = { "label": "Additional Countries", "value": 0, "percent": 0 };
+      otherObj = { "label": "Other", "value": 0, "percent": 0 };
 
   _.each(theData, function(datum, index){
     if (datum.value/totalValues < 0.09 && datum.value/totalValues > 0.01){
@@ -268,7 +268,7 @@ function simplifyData(data, map){
       }
 
       newData.data_list.push(datum);
-   
+
     } else if (datum.value/totalValues > 0.01) {
       datum.percent = Math.round( (datum.value*100/totalValues) *100 )/100 + '%';
 
@@ -279,10 +279,10 @@ function simplifyData(data, map){
       } else {
         datum.label = map[datum.key];
       }
-      
+
       newData.data.push(datum);
       newData.data_list.push(datum);
-      
+
     }
   });
 
@@ -302,7 +302,7 @@ function simplifyData(data, map){
   var data_list_other_count = _.reduce(data_list_other, function(memo, num){ return memo + num.value; }, 0);
   var data_list_count = _.reduce(newData.data_list, function(memo, num){ return memo + num.value; }, 0);
   var data_list_other_percent = Math.round( (data_list_other_count*100/(data_list_other_count+data_list_count)) *100 )/100 + '%';
-  var data_list_other_object = { "label": "Other", "value": data_list_other_count, "percent": data_list_other_percent };
+  var data_list_other_object = { "label": "Additional Countries", "value": data_list_other_count, "percent": data_list_other_percent };
   if (data_list_other_object.value > 0){
     newData.data_list.push(data_list_other_object);
   }
@@ -344,7 +344,7 @@ function donutList(data, options, success){
     post.remove();
     return;
   }
-  
+
 }
 
 function numberWithCommas(x) {
@@ -457,9 +457,9 @@ function statsDelegation(summary, options){
       }
 
     }
-    
+
   } else if (options.source == 'facebook'){
-    
+
     if (options.selector == '#engagement'){
 
       if (summary.totalLikes) {
@@ -576,7 +576,7 @@ function dataController(sectionType, type, apiString, dateObj, options){
         if (type == 'topCountries'){
           apiObj.data = simplifyData(apiObj.data, apiObj.map);
           //apiObj.data = simplifyData(fakeTopCountryData, apiObj.map );
-          
+
           cachedData[type] = apiObj;
         } else if (type == 'topTweet'){
           $(options.selector).prev(loadingGifClass).remove();
@@ -616,7 +616,7 @@ function dataControllerDelegation(sectionType, apiObj){
   } else if (sectionType == 'topYoutubeVideo'){
     topYoutubeVideo(apiObj, apiObj.options);
 
-  
+
   } else {
     globalDebug('   GraphController Error: Wrong sectionType entered! Type: '+sectionType+' is not a valid sectionType!', 'color:red;');
     return;
@@ -703,7 +703,7 @@ $.fn.dateDelegate = function(startTime, endTime){
     "endTime": endTime
   };
   date = JSON.stringify(date);
-  el.data().dateTime = date; 
+  el.data().dateTime = date;
 };
 
 function dateController(){
@@ -738,7 +738,7 @@ function dateController(){
   now.setMinutes(0,0,0);
   now.setHours(23,59,59);
   now = now.toJSON();
-  
+
 
   today = new Date();
   today.setHours(0,0,0);
@@ -838,7 +838,7 @@ function dateCalendar(selectorArray, dateObj){
         } else {
           $('[data-date-selection="'+selector+'"]').html(formatted).addClass('selected');
           $('[data-date-selection="'+selector+'"]').data().dateTime = dateObj.toJSON();
-        }        
+        }
       }
     });
   }
@@ -859,14 +859,8 @@ function showErrors() {
     $('#firstName').parent().addClass('error');
     $('#lastName').parent().addClass('error');
   } else {
-    $('.form-group').addClass('error');    
+    $('.form-group').addClass('error');
   }
 
   $('.alert-warning').hide();
 }
-
-
-
-
-
-
