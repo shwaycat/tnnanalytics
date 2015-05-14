@@ -28,7 +28,7 @@ function topFacebookPost(data, options, success){
 		var newDetailsHTML = '';
 		var newDetails = [[]];
 		newDetails[0][0] = 'Total Engagement';
-		newDetails[0][1] = theData.data.score;
+		newDetails[0][1] = numberWithCommas(theData.data.score);
 
 		for (var i = 0; i < newDetails.length; i++){
 			newDetailsHTML += '<li><span>';
@@ -85,13 +85,13 @@ function topTweet(data, options){
 		var newDetailsHTML = '';
 		var newDetails = [[],[],[],[]];
 		newDetails[0][0] = 'Total Engagement';
-		newDetails[0][1] = theData.data.score;
+		newDetails[0][1] = numberWithCommas(theData.data.score);
 		newDetails[1][0] = 'Favorites';
-		newDetails[1][1] = theData.data.favorite_count;
+		newDetails[1][1] = numberWithCommas(theData.data.favorite_count);
 		newDetails[2][0] = 'Replies';
-		newDetails[2][1] = theData.data.reply_count;
+		newDetails[2][1] = numberWithCommas(theData.data.reply_count);
 		newDetails[3][0] = 'Retweets';
-		newDetails[3][1] = theData.data.retweet_count;
+		newDetails[3][1] = numberWithCommas(theData.data.retweet_count);
 
 		for (var i = 0; i < newDetails.length; i++){
 			newDetailsHTML += '<li><span>';
