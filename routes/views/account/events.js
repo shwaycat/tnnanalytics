@@ -7,7 +7,7 @@ exports = module.exports = function(req, res) {
 
 	locals.section = 'events';
 	locals.showDates = false;
-	locals.title = 'Adverse Events';
+	locals.title = 'Keyword Events';
 
 	view.render('account/events');
 };

@@ -93,7 +93,7 @@ exports = module.exports = function(app) {
   app.get('/api/1.0/facebook/topPost', routes.api.facebook.topPost);
   app.get('/api/1.0/facebook/topCountries', routes.api.facebook.topCountries);
 
-  // Adverse Events
+  // Keyword Events
   // /alerts expects query strings with page
   app.get('/api/1.0/alerts', routes.api.alerts.index);
   app.get('/api/1.0/alerts/summary', routes.api.alerts.summary);

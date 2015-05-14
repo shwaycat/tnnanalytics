@@ -11,11 +11,11 @@ exports.initLocals = function(req, res, next) {
   var locals = res.locals
 
   locals.socialLinks = {
-    "facebook": "https://www.facebook.com/novonordisk",
-    "twitter": "https://twitter.com/novonordisk",
-    "instagram": "https://instagram.com/novonordisk/",
-    "youtube": "https://www.youtube.com/user/novonordisk/custom",
-    "googlePlus": "https://plus.google.com/+novonordisk"
+    "facebook": "https://www.facebook.com/TeamNovoNordisk",
+    "twitter": "https://twitter.com/teamnovonordisk",
+    "instagram": "https://instagram.com/teamnovonordisk/",
+    "youtube": "https://www.youtube.com/user/TeamNovoNordisk",
+    "googlePlus": "https://plus.google.com/+teamnovonordisk"
   }
 
   locals.navLinks = [
@@ -30,7 +30,7 @@ exports.initLocals = function(req, res, next) {
     // { label: 'All',               type: 'sub-link',         key: 'analytics-all',   href: 'analytics-all' },
     // { label: 'Global',            type: 'sub-link',         key: 'analytics-global',href: 'analytics-global' },
     // { label: 'US',                type: 'sub-link',         key: 'analytics-us',    href: 'analytics-us' },
-    { label: 'Adverse Events',    type: 'link',             key: 'events',          href: 'events' }
+    { label: 'Keyword Events',    type: 'link',             key: 'events',          href: 'events' }
   ]
 
   locals.footerLinks = [
