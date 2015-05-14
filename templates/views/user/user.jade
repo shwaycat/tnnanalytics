@@ -71,19 +71,7 @@ block content
                     span.connection-text Your account is connected.
                   a(href='?disconnect=instagram', title='Revoke authorization of your Instagram account').btn.btn-social-connect.btn-instagram
                     span.connection-text Disconnect
-              //- .form-group
-              //-   label.sr-only Instagram    
-              //-   if !user.services.instagram.isConfigured
-              //-     a(href='/auth/instagram', title='Connect your Google account').btn.btn-social-connect.btn-instagram
-              //-       span.connection-icon.entypo-social.entypo-instagram
-              //-       span.connection-text Connect your Instagram account
-              //-   if user.services.instagram.isConfigured
-              //-     .social-connect
-              //-       span.connection-icon.entypo-social.entypo-instagram
-              //-       span.connection-text Your account is connected.
-              //-     a(href='?disconnect=instagram' title='Revoke authorization of your instagram account').btn.btn-social-connect.btn-instagram
-              //-       span.connection-text Disconnect
-              
+
               .form-group
                 label.sr-only Google    
                 if !user.services.google.isConfigured
