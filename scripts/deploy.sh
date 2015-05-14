@@ -24,7 +24,7 @@ run() {
   done
   echo ">$cmd"
   cmd="sh -c 'cd $APP_ROOT ; $cmd'"
-  ssh -t "$APP_NAME@$TARGET_HOST" "$cmd"
+  ssh -qt "$APP_NAME@$TARGET_HOST" "$cmd"
 }
 
 notify_slack() {
@@ -73,7 +73,5 @@ run ln -s "$APP_ROOT/releases/$rel_tag" current
 ###
 # Restart
 run sudo /opt/passenger/bin/passenger-config restart-app "$APP_ROOT/current"
-# run "kill `cat current/tmp/pids/stream-twitter.pid`"
-# run "nohup node current/scripts/stream-twitter.js &>>current/log/stream-twitter.log & echo \$! >current/tmp/pids/stream-twitter.pid"
 
 notify_slack "Finished deployment: $rel_tag to $ENVIRONMENT"
