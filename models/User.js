@@ -96,6 +96,8 @@ User.add({
      * @member {String} profileId - Twitter user profile ID
      * @member {String} username - Twitter username
      * @member {String} accessToken - OAuth access token
+     * @member {String} tweetSinceId - last DirectMessage     
+     * @member {String} mentionSinceId - last DirectMessage     
      * @member {String} direct_messageSinceId - last DirectMessage
     */
     twitter: {
@@ -107,7 +109,22 @@ User.add({
       tweetSinceID: { type: String, label: 'Tweet Since ID', dependsOn: deps.twitter },
       mentionSinceID: { type: String, label: 'Mention Since ID', dependsOn: deps.twitter },
       direct_messageSinceID: { type: String, label: 'Direct Message Since ID', dependsOn: deps.twitter },
-    }
+    },
+    /**
+     * Instagram Service
+     * @typedef {Object} UserServices~Instagram
+     * @member {Boolean} isConfigured - `true` if configured
+     * @member {String} profileId - Instagram user profile ID
+     * @member {String} username - Instagram username
+     * @member {String} accessToken - OAuth access token
+    */
+    instagram: {
+      isConfigured: { type: Boolean, label: 'Instagram has been authenticated' },
+      profileId: { type: String, label: 'Profile ID', dependsOn: deps.instagram },
+      username: { type: String, label: 'Username', dependsOn: deps.instagram },
+      accessToken: { type: String, label: 'Access Token', dependsOn: deps.instagram },
+      refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.instagram }
+    },
   }
 });
 

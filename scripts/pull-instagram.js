@@ -2,12 +2,12 @@ require('dotenv').load();
 
 var argv = require('minimist')(process.argv.slice(2)),
     keystone = require('../keystone-setup')(),
-    debug = require('debug')('cadence:pull:twitter'),
+    debug = require('debug')('cadence:pull:instagram'),
     User = keystone.list('User'),
     async = require('async'),
     errorHandling = require('../lib/errorHandling'),
     connectES = require('../lib/connect_es'),
-    twitterSource = require('../lib/sources/twitter');
+    instagramSource = require('../lib/sources/instagram');
 
 function pullType(docType) {
   return function(callback) {
@@ -16,7 +16,7 @@ function pullType(docType) {
 
       async.eachSeries(users, function(user, nextUser) {
         console.info("Pulling for user %s", user.id);
-        debug("User: %j", user);
+
         if(argv.all) {
           debug("Pull all");
           docType.pullAll(user, nextUser);
@@ -31,11 +31,8 @@ function pullType(docType) {
 
 require('../lib/keystone-script')(connectES, function(done) {
   async.auto({
-    followerCounts: pullType(twitterSource.followerCount),
-    tweets: [ 'followerCounts', pullType(twitterSource.tweet) ],
-    directMessages: [ 'tweets', pullType(twitterSource.direct_message) ],
-    mentions: [ 'directMessages', pullType(twitterSource.mention) ],
-    replies: [ 'mentions', pullType(twitterSource.reply) ]
+    followerCounts: pullType(instagramSource.followerCount),
+    media: pullType(instagramSource.media)
   }, function(err) {
     if (err) {
       errorHandling.logError(err);
