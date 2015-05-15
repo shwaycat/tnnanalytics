@@ -13,8 +13,10 @@ exports = module.exports = function(req, res) {
       locals = res.locals,
       dataReturn = [];
 
-  startTime = new Date("Mar 1, 2015");
-  endTime = new Date("Mar 31, 2015");
+  startTime = new Date();
+  endTime = new Date();
+  startTime.setDate(endTime.getDate() - 30);
+
   if(req.query.startTime) {
     startTime = new Date(req.query.startTime);
   }
@@ -33,6 +35,7 @@ exports = module.exports = function(req, res) {
 
     keystone.elasticsearch.search({
       index: keystone.get('elasticsearch index'),
+      type: "instagram",
       body: {
         "query": {
           "filtered": {
@@ -43,17 +46,18 @@ exports = module.exports = function(req, res) {
                     "or": {
                       "filters": [
                         {
-                          "terms": {
-                            "doc_type": [
-                              "tweet",
-                              "mention",
-                              "direct_message"
-                            ]
+                          "term": {
+                            "doc_type": "media"
                           }
                         },
                         {
                           "exists": {
-                            "field": "reply_count"
+                            "field": "comments"
+                          }
+                        },
+                        {
+                          "exists": {
+                            "field": "likes"
                           }
                         }
                       ]
@@ -69,19 +73,10 @@ exports = module.exports = function(req, res) {
                         },
                         {
                           "term": {
-                            "user_id": accountRoot.services.twitter.profileId
+                            "user_id": accountRoot.services.instagram.profileId
                           }
                         }
                       ]
-                    }
-                  },
-                  {
-                    "not": {
-                      "filter": {
-                        "exists": {
-                          "field": "isRetweet"
-                        }
-                      }
                     }
                   },
                   {
@@ -101,29 +96,18 @@ exports = module.exports = function(req, res) {
           "engagement": {
             "date_histogram": {
               "field": "timestamp",
-              "interval": interval + "s",
+              "interval": "3600s",
               "min_doc_count": 0
             },
             "aggs": {
-              "reply_count": {
+              "comments": {
                 "max": {
-                  "field": "reply_count"
+                  "field": "comments"
                 }
               },
-              "favorite_count": {
+              "likes": {
                 "max": {
-                  "field": "favorite_count"
-                }
-              },
-              "retweet_count": {
-                "max": {
-                  "field": "retweet_count"
-                }
-              },
-              "doc_types": {
-                "terms": {
-                  "field": "doc_type",
-                  "size": 0
+                  "field": "likes"
                 }
               }
             }
@@ -138,8 +122,12 @@ exports = module.exports = function(req, res) {
       if(buckets && buckets.length) {
 
         if(buckets.length == 1) {
-          first = extractDataPoint(buckets[0]);
-          first.key = startTime.toISOString();
+          first = {
+            key:startTime.toISOString(),
+            likes:0,
+            comments:0,
+            value:0
+          }
           dataReturn.push(first);
         }
 
@@ -148,8 +136,12 @@ exports = module.exports = function(req, res) {
         });
 
         if(buckets.length == 1) {
-          last = _.last(dataReturn);
-          last.key = endTime.toISOString();
+          last = {
+            key:endTime.toISOString(),
+            likes:0,
+            comments:0,
+            value:0
+          }
           dataReturn.push(last);
         }
 
@@ -160,11 +152,8 @@ exports = module.exports = function(req, res) {
           queryString: req.query,
           data: dataReturn,
           summary: {
-            "totalFavorites" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.favorite_count; }, 0),
-            "totalRetweets" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.retweet_count; }, 0),
-            "totalReplies" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.reply_count; }, 0),
-            "totalMentions" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.mention_count; }, 0),
-            "totalDirectMessages" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.dm_count; }, 0)
+            "totalLikes" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.likes; }, 0),
+            "totalComments" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.comments; }, 0)
           }
         });   
       } else {
@@ -176,49 +165,16 @@ exports = module.exports = function(req, res) {
 
 function extractDataPoint(bucket) {
   var key = bucket.key_as_string,
-      favorite_count = (bucket.favorite_count.value || 0),
-      reply_count = (bucket.reply_count.value || 0),
-      retweet_count = (bucket.retweet_count.value || 0),
-      mention_count,
-      dm_count,
+      likes = (bucket.likes.value || 0),
+      comments = (bucket.comments.value || 0),
       value;
 
-
-
-  innerBucket = mxm.objTry(bucket, 'doc_types', 'buckets');
-
-  if(innerBucket && innerBucket.length) {
-
-    _.each(innerBucket, function(obj) {
-
-      if(obj.key == 'mention') {
-        mention_count = obj.doc_count || 0;
-      }
-
-      if(obj.key == 'direct_message') {
-       dm_count = obj.doc_count || 0;
-      }
-
-    })
-
-  }
-
-  if(!mention_count) {
-    mention_count = 0;
-  }
-  if(!dm_count) {
-    dm_count = 0;
-  }
-  
-  value = favorite_count + reply_count + retweet_count + mention_count + dm_count;
+  value = likes + comments;
 
   return {
       key: key,
-      favorite_count: favorite_count,
-      reply_count: reply_count,
-      retweet_count: retweet_count,
-      mention_count: mention_count,
-      dm_count: dm_count,
+      likes: likes,
+      comments: comments,
       value: value
   };
 }
