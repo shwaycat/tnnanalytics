@@ -111,6 +111,10 @@ function buildSeries() {
         series.push(deleteDocsByType('instagram', 'followerCount'));
       }
 
+      if(argv['instgram-media'] || argv['instagram-all']) {
+        series.push(deleteDocsByType('instagram', 'media'));
+      }
+
       if(argv['instgram-comments'] || argv['instagram-all']) {
         series.push(deleteDocsByType('instagram', 'comment'));
       }
@@ -332,6 +336,7 @@ function showHelp() {
   console.log('');
   console.log('--instagram-all                  Delete all Instagram objects');
   console.log('--instagram-followerCounts       Delete all Instagram FollowerCounts');
+  console.log('--instagram-media                Delete all Instagram media');
   console.log('--instagram-comments             Delete all Instagram comments');
   console.log('--instagram-deltas               Delete all Instagram deltas');
   console.log('<options>');
