@@ -36,7 +36,7 @@ exports = module.exports = function(req, res) {
             "filter": {
               "and": {
                 "filters": [
-                  { "exists": { "field": "followers_count" } },
+                  { "exists": { "field": "followed_by" } },
                   { "range": {
                       "timestamp": {
                         "gte": startTime,
@@ -64,7 +64,7 @@ exports = module.exports = function(req, res) {
             "aggs": {
               "avg_follower_count": {
                 "avg": {
-                  "field": "followers_count"
+                  "field": "followed_by"
                 }
               }
             }
@@ -100,11 +100,11 @@ exports = module.exports = function(req, res) {
         return res.apiResponse({
           success: true,
           type: 'acquisition',
-          source: 'twitter',
+          source: 'instagram',
           queryString: req.query,
           data: dataReturn,
           summary: {
-            "totalFollowers" : _.last(dataReturn).value,
+            "totalFollowers": _.last(dataReturn).value,
             "changeInFollowers": _.last(dataReturn).value - _.first(dataReturn).value
           }
         });    

@@ -106,7 +106,8 @@ module.exports = function(req, res) {
           queryString: req.query,
           data: data,
           summary: {
-            totalLikes: _.last(data).value
+            totalLikes: _.last(data).value,
+            changeInLikes: _.last(dataReturn).value - _.first(dataReturn).value
           }
         });
       } else {
