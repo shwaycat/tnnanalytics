@@ -209,7 +209,7 @@ function topYoutubeVideo(data, options, success){
 
     var youtube_id = theData.data._id;
     var youtubeHTML = '<iframe src="https://www.youtube.com/embed/'+url+'" frameborder="0" allowfullscreen></iframe>';
-    var newDate = new Date(theData.data.timestamp);
+    var newDate = new Date(theData.data.createdAt);
     newDate = (newDate.getMonth() < 10 ? ('0'+newDate.getMonth()) : newDate.getMonth() )+ '/' + (newDate.getDate() < 10 ? ('0'+newDate.getDate()) : newDate.getDate() ) + '/' + newDate.getFullYear();
 
 
@@ -253,7 +253,7 @@ function topYoutubeVideo(data, options, success){
       post.find('.post-link')
         .attr('href', theData.data.url);
     }
-    if (theData.data.timestamp){
+    if (theData.data.createdAt){
       post.find('.post-creation')
         .append(newDate);
     }
