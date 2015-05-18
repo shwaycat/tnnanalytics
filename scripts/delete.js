@@ -107,6 +107,22 @@ function buildSeries() {
         series.push(deleteDeltasBySource('facebook'));
       }
 
+      if(argv['instgram-followerCounts'] || argv['instagram-all']) {
+        series.push(deleteDocsByType('instagram', 'followerCount'));
+      }
+
+      if(argv['instgram-media'] || argv['instagram-all']) {
+        series.push(deleteDocsByType('instagram', 'media'));
+      }
+
+      if(argv['instgram-comments'] || argv['instagram-all']) {
+        series.push(deleteDocsByType('instagram', 'comment'));
+      }
+
+      if(argv['instgram-deltas'] || argv['instagram-all']) {
+        series.push(deleteDeltasBySource('instagram'));
+      }
+
     return series;
 
   } else {
@@ -305,10 +321,24 @@ function showHelp() {
   console.log('--twitter-direct_messages        Delete all Twitter direct_messages');
   console.log('--twitter-mentions               Delete all Twitter mentions');
   console.log('--twitter-tweets                 Delete all Twitter tweets');
-  console.log('--twitter-followers              Delete Twitter followers');
+  console.log('--twitter-followers              Delete all Twitter followers');
   console.log('--twitter-deltas                 Delete all Twitter deltas');
   console.log('--twitter-followerCounts         Delete all Twitter FollowerCounts');
   console.log('');
+  console.log('--facebook-all                   Delete all Facebook objects');
+  console.log('--facebook-pages                 Delete all Facebook pages');
+  console.log('--facebook-posts                 Delete all Facebook posts');
+  console.log('--facebook-statuses              Delete all Facebook statuses');
+  console.log('--facebook-mentions              Delete all Facebook mentions');
+  console.log('--facebook-comments              Delete all Facebook comments');
+  console.log('--facebook-messages              Delete all Facebook messages');
+  console.log('--facebook-deltas                Delete all Facebook deltas');
+  console.log('');
+  console.log('--instagram-all                  Delete all Instagram objects');
+  console.log('--instagram-followerCounts       Delete all Instagram FollowerCounts');
+  console.log('--instagram-media                Delete all Instagram media');
+  console.log('--instagram-comments             Delete all Instagram comments');
+  console.log('--instagram-deltas               Delete all Instagram deltas');
   console.log('<options>');
   console.log('--u <user email>                 Perform actions on specified user.')
   console.log('');

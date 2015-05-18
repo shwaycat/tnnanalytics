@@ -93,6 +93,13 @@ exports = module.exports = function(app) {
   app.get('/api/1.0/facebook/topPost', routes.api.facebook.topPost);
   app.get('/api/1.0/facebook/topCountries', routes.api.facebook.topCountries);
 
+  // Instagram Endpoints
+  // They all expect query strings with startTime endTime
+  app.get('/api/1.0/instagram/engagement', routes.api.instagram.engagement);
+  app.get('/api/1.0/instagram/acquisition', routes.api.instagram.acquisition);
+  app.get('/api/1.0/instagram/topPost', routes.api.instagram.topPost);
+  app.get('/api/1.0/instagram/topCountries', routes.api.instagram.topCountries);
+
   // Keyword Events
   // /alerts expects query strings with page
   app.get('/api/1.0/alerts', routes.api.alerts.index);

@@ -1,12 +1,12 @@
 var keystone = require('keystone'),
     _ = require('underscore'),
     async = require('async'),
-    debug = require('debug')("cadence:api:twitter:topTweet"),
+    debug = require('debug')("cadence:api:instagram:topPost"),
     request = require('request'),
     mxm = require('../../../lib/mxm-utils'),
     User = keystone.list('User'),
-    Tweet = require('../../../lib/sources/twitter/tweet'),
-    twitter = require('twitter');
+    Media = require('../../../lib/sources/instagram/media'),
+    insta = require('../../../lib/sources/instagram/insta');
 
 
 exports = module.exports = function(req, res) {
@@ -41,7 +41,7 @@ exports = module.exports = function(req, res) {
             "query": {
               "term": {
                 "doc_type": {
-                  "value": "tweet"
+                  "value": "media"
                 }
               }
             },
@@ -63,16 +63,7 @@ exports = module.exports = function(req, res) {
                   },
                   {
                     "term": {
-                      "user_id": accountRoot.services.twitter.profileId
-                    }
-                  },
-                  {
-                    "not": {
-                      "filter": {
-                        "exists": {
-                          "field": "isRetweet"
-                        }
-                      }
+                      "user_id": accountRoot.services.instagram.profileId
                     }
                   }
                 ]
@@ -84,58 +75,57 @@ exports = module.exports = function(req, res) {
     }, function(err, response) {
       if(err) return res.apiResponse({"error": err});
 
-      var tweets = mxm.objTry(response, 'hits', 'hits');
-          scoredTweets = [];
+      var medias = mxm.objTry(response, 'hits', 'hits');
+          scoredMedia = [];
         
-        if(!tweets || tweets.length == 0) return res.apiResponse({"error": "Error with ES search results."});
+        if(!medias || medias.length == 0) return res.apiResponse({"error": "Error with ES search results."});
 
-        async.eachSeries(tweets, function(tweet, nextTweet) {
-          Tweet.findOne(tweet._id, function(err, tweet) {
-            if(err) return nextTweet(err);
+        async.eachSeries(medias, function(media, nextMedia) {
+          Media.findOne(media._id, function(err, media) {
+            if(err) return nextMedia(err);
 
-            tweet.modifyByDelta(function(err) {
-              if (err) return nextTweet(err);
+            media.modifyByDelta(function(err) {
+              if (err) return nextMedia(err);
 
-              scoredTweets.push({
-                id: tweet.id,
-                url: tweet.emailLinkObject(),
-                favorite_count: tweet.favorite_count || 0,
-                reply_count: tweet.reply_count || 0,
-                retweet_count: tweet.retweet_count || 0,
-                score: (tweet.favorite_count || 0) + (tweet.reply_count || 0) + (tweet.retweet_count || 0)
+              scoredMedia.push({
+                id: media.id,
+                url: media.url,
+                likes: media.likes || 0,
+                comments: media.comments || 0,
+                score: (media.likes || 0) + (media.comments || 0)
               });
-              nextTweet();
+              nextMedia();
             });
           });
         }, function(err) {
           if(err) return res.apiResponse({"error": err});
 
           var max = {};
-          if(!scoredTweets || scoredTweets.length == 0) return res.apiResponse({"error": 'Error in async?'});
+          if(!scoredMedia || scoredMedia.length == 0) return res.apiResponse({"error": 'Error in async?'});
 
-          max = _.max(scoredTweets, function(tweet) { return tweet.score; });
+          max = _.max(scoredMedia, function(media) { return media.score; });
 
           if(!max) return res.apiResponse({"error": "Something went way wrong."})
 
           keystone.elasticsearch.get({
             index: keystone.get('elasticsearch index'),
-            type: 'twitter',
+            type: 'instagram',
             id: max.id
-          }, function(err, tweet) {
+          }, function(err, media) {
             if(err) return res.apiResponse({"error": "Failed in ES.get"});
 
 
-            if(!tweet._source.oembed) {
+            if(!media._source.oembed) {
               debug("GO GET IT!");
               async.series([
                 function(next) {
                   request({
-                    url: 'https://api.twitter.com/1/statuses/oembed.json?id=' + tweet._id,
+                    url: 'http://api.instagram.com/oembed?url=' + media._source.url,
                     json: true
                   }, function (err, response, body) {
                     if(err) return next(err);
 
-                    tweet.oembed = body;
+                    media.oembed = body;
                     next();
                  
                   });
@@ -144,15 +134,16 @@ exports = module.exports = function(req, res) {
                 function(next) {
                   keystone.elasticsearch.update({
                     index: keystone.get('elasticsearch index'),
-                    type: 'twitter',
-                    id: tweet._id,
+                    type: 'instagram',
+                    id: media._id,
                     body: {
                       doc: {
-                        oembed: JSON.stringify(tweet.oembed)
+                        oembed: JSON.stringify(media.oembed)
                       }
                     }
                   }, function (err, response) {
                     if(err) return next(err);
+
                     return next();
                   });  
                 }
@@ -160,25 +151,24 @@ exports = module.exports = function(req, res) {
               function(err) {
                 dataReturn = {
                   success: true,
-                  type: 'topTweet',
-                  source: 'twitter',
+                  type: 'topPost',
+                  source: 'instagram',
                   queryString: req.query,
                   data: max,
-                  oembed: tweet.oembed
+                  oembed: media.oembed
                 };
 
                 return res.apiResponse(dataReturn);
 
               });
             } else {
-              debug("IT WAS CACHED");
               dataReturn = {
                 success: true,
-                type: 'topTweet',
-                source: 'twitter',
+                type: 'topPost',
+                source: 'instagram',
                 queryString: req.query,
                 data: max,
-                oembed: JSON.parse(tweet._source.oembed)
+                oembed: JSON.parse(media._source.oembed)
               }
               return res.apiResponse(dataReturn);
 
@@ -186,8 +176,10 @@ exports = module.exports = function(req, res) {
 
 
           });
-        });
 
+
+
+      });
     });
   });
 }
