@@ -88,6 +88,7 @@ User.add({
       username: { type: String, label: 'Username', dependsOn: deps.google },
       accessToken: { type: String, label: 'Access Token', dependsOn: deps.google },
       refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.google },
+      analyticsAccountIDsStr: { type: String, label: 'Analytics Account IDs', dependsOn: deps.google }
     },
     /**
      * Twitter Service
@@ -137,8 +138,20 @@ User.schema.virtual('canAccessKeystone').get(function() {
   return this.isAdmin;
 });
 
+User.schema.virtual('services.google.analyticsAccountIDs').get(function() {
+  if (!this.services.google || !this.services.google.analyticsAccountIDsStr) {
+    return [];
+  }
+  return this.services.google.analyticsAccountIDsStr.split(',');
+});
 
-
+User.schema.virtual('services.google.analyticsAccountIDs').set(function(val) {
+  if (!val) {
+    this.services.google.analyticsAccountIDsStr = null;
+  } else {
+    this.services.google.analyticsAccountIDsStr = _.compact(val);
+  }
+});
 
 /**
  * Methods
