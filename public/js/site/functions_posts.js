@@ -26,7 +26,9 @@ function topFacebookPost(data, options, success){
     var fbPost = '<div data-href="'+theData.data.url+'" class="fb-post"></div>'
 
     var newDetailsHTML = '';
-    var newDetails = [[]];
+    var newDetails = [];
+    
+    newDetails[0] = [];
     newDetails[0][0] = 'Total Engagement';
     newDetails[0][1] = numberWithCommas(theData.data.score);
 
@@ -86,13 +88,18 @@ function topTweet(data, options){
     newDate = (newDate.getMonth() < 10 ? ('0'+newDate.getMonth()) : newDate.getMonth() )+ '/' + (newDate.getDate() < 10 ? ('0'+newDate.getDate()) : newDate.getDate() ) + '/' + newDate.getFullYear();
 
     var newDetailsHTML = '';
-    var newDetails = [[],[],[],[]];
+    var newDetails = [];
+
+    newDetails[0] = [];
     newDetails[0][0] = 'Total Engagement';
     newDetails[0][1] = numberWithCommas(theData.data.score);
+    newDetails[1] = [];
     newDetails[1][0] = 'Favorites';
     newDetails[1][1] = numberWithCommas(theData.data.favorite_count);
+    newDetails[2] = [];
     newDetails[2][0] = 'Replies';
     newDetails[2][1] = numberWithCommas(theData.data.reply_count);
+    newDetails[3] = [];
     newDetails[3][0] = 'Retweets';
     newDetails[3][1] = numberWithCommas(theData.data.retweet_count);
 
@@ -220,11 +227,15 @@ function topGooglePost(data, options, success){
 
 
     var newDetailsHTML = '';
-    var newDetails = [[]];
+    var newDetails = [];
+
+    newDetails[0] = [];
     newDetails[0][0] = 'Total Engagement';
     newDetails[0][1] = numberWithCommas(theData.data.score);
+    newDetails[1] = [];
     newDetails[1][0] = "Comments";
     newDetails[1][1] = numberWithCommas(theData.data.comments);
+    newDetails[2] = [];
     newDetails[2][0] = 'Shares';
     newDetails[2][1] = numberWithCommas(theData.data.shares);
 
