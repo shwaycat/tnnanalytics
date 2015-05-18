@@ -67,12 +67,12 @@ exports = module.exports = function(app) {
   app.all('/accounts/:account_name', routes.views.account.dashboard);
   app.all('/accounts/:account_name/facebook', routes.views.account.facebook);
   app.all('/accounts/:account_name/twitter', routes.views.account.twitter);
-  // app.all('/accounts/:account_name/instagram', routes.views.account.instagram);
-  // app.all('/accounts/:account_name/youtube', routes.views.account.youtube);
-  // app.all('/accounts/:account_name/google-plus', routes.views.account.google_plus);
-  // app.all('/accounts/:account_name/analytics-all', routes.views.account.analytics_all);
-  // app.all('/accounts/:account_name/analytics-global', routes.views.account.analytics_global);
-  // app.all('/accounts/:account_name/analytics-us', routes.views.account.analytics_us);
+  app.all('/accounts/:account_name/instagram', routes.views.account.instagram);
+  app.all('/accounts/:account_name/youtube', routes.views.account.youtube);
+  app.all('/accounts/:account_name/google-plus', routes.views.account.google_plus);
+  app.all('/accounts/:account_name/analytics-all', routes.views.account.analytics_all);
+  app.all('/accounts/:account_name/analytics-global', routes.views.account.analytics_global);
+  app.all('/accounts/:account_name/analytics-us', routes.views.account.analytics_us);
   app.all('/accounts/:account_name/events', routes.views.account.events);
 
   // API

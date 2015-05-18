@@ -2,19 +2,19 @@ var keystone = require('keystone');
 
 exports = module.exports = function(req, res) {
 
-	var view = new keystone.View(req, res),
-		locals = res.locals;
+  var view = new keystone.View(req, res),
+    locals = res.locals;
 
-	locals.section = 'instagram';
-	locals.showDates = true;
-	locals.title = 'Instagram';
-	locals.tooltip = {
-		reach: "",
-		engagement: "",
-		acquisition: "",
-		topInstagramPost: "",
-		topCountries: ""
-	};
+  locals.section = 'instagram';
+  locals.showDates = true;
+  locals.title = 'Instagram';
+  locals.tooltip = {
+    reach: "",
+    engagement: "Likes + Comments + Tags + Mentions",
+    acquisition: "Total Followers",
+    topInstagramPost: "Comments + Likes",
+    topCountries: "Tags + Mentions"
+  };
 
-	view.render('account/instagram');
+  view.render('account/instagram');
 };
