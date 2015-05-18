@@ -121,9 +121,9 @@ function topInstagramPost(data, options, success){
   // Preload Checks
   if (!$(options.selector)[0]) return;
   if (!data || data == undefined || data == null || !success || !data.data){
-    // $(options.selector).before(dataErrorHTML);
-    // $(options.selector).remove();
-    // return;
+    $(options.selector).before(dataErrorHTML);
+    $(options.selector).remove();
+    return;
   } else {
     $(options.selector).before(loadingGifHTML);
   }
@@ -141,12 +141,16 @@ function topInstagramPost(data, options, success){
 
     var post = $(options.selector);
 
-    var fbPost = '<div data-href="'+theData.data.url+'" class="fb-post"></div>'
+    var oembed = theData.oembed;
 
     var newDetailsHTML = '';
     var newDetails = [[]];
     newDetails[0][0] = 'Total Engagement';
     newDetails[0][1] = numberWithCommas(theData.data.score);
+    newDetails[0][0] = 'Likes';
+    newDetails[0][1] = numberWithCommas(theData.data.likes);
+    newDetails[0][0] = 'Comments';
+    newDetails[0][1] = numberWithCommas(theData.data.comments);
 
     for (var i = 0; i < newDetails.length; i++){
       newDetailsHTML += '<li><span>';
@@ -155,8 +159,8 @@ function topInstagramPost(data, options, success){
       newDetailsHTML += newDetails[i][1];
       newDetailsHTML += '</span></li>';
     }
-    post.find('.post')
-      .append(fbPost);
+    post.find('.instagram-container')
+      .append(oembed);
     post.find('.post-details-list')
       .children().remove();
     post.find('.post-details-list')
