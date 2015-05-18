@@ -19,10 +19,6 @@ module.exports = function(done) {
               url: {
                 type: 'string',
                 index: 'no'
-              },
-              oembed: {
-                type: 'string',
-                index: 'no'
               }
             }
           }

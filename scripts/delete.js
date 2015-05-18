@@ -53,18 +53,17 @@ function buildSeries() {
 
       if(argv['twitter-direct_messages'] || argv['twitter-all']) {
         series.push(deleteDocsByType('twitter', 'direct_message'));
+        series.push(resetUsersLastTime('services.twitter.direct_messageSinceID'));
       }
 
       if(argv['twitter-mentions'] || argv['twitter-all']) {
         series.push(deleteDocsByType('twitter', 'mention'));
+        series.push(resetUsersLastTime('services.twitter.mentionSinceID'));
       }
 
       if(argv['twitter-tweets'] || argv['twitter-all']) {
         series.push(deleteDocsByType('twitter', 'tweet'));
-      }
-
-      if(argv['twitter-followers'] || argv['twitter-all']) {
-        series.push(deleteDocsByType('twitter', 'followerCount'));
+        series.push(resetUsersLastTime('services.twitter.tweetSinceID'));        
       }
 
       if(argv['twitter-deltas'] || argv['twitter-all']) {
@@ -72,7 +71,7 @@ function buildSeries() {
       }
 
       if(argv['twitter-followerCounts'] || argv['twitter-all']) {
-        series.push(deleteDocsByType('twitter', 'followerCount'));
+        series.push(deleteDocsByType('twitter', 'followercount'));
       }
 
       if(argv['twitter-replies'] || argv['twitter-all']) {
@@ -107,19 +106,19 @@ function buildSeries() {
         series.push(deleteDeltasBySource('facebook'));
       }
 
-      if(argv['instgram-followerCounts'] || argv['instagram-all']) {
-        series.push(deleteDocsByType('instagram', 'followerCount'));
+      if(argv['instagram-followerCounts'] || argv['instagram-all']) {
+        series.push(deleteDocsByType('instagram', 'followercount'));
       }
 
-      if(argv['instgram-media'] || argv['instagram-all']) {
+      if(argv['instagram-media'] || argv['instagram-all']) {
         series.push(deleteDocsByType('instagram', 'media'));
       }
 
-      if(argv['instgram-comments'] || argv['instagram-all']) {
+      if(argv['instagram-comments'] || argv['instagram-all']) {
         series.push(deleteDocsByType('instagram', 'comment'));
       }
 
-      if(argv['instgram-deltas'] || argv['instagram-all']) {
+      if(argv['instagram-deltas'] || argv['instagram-all']) {
         series.push(deleteDeltasBySource('instagram'));
       }
 
@@ -143,27 +142,28 @@ function hasArgs() {
   }
 }
 
-// function resetUsersLastTime(path) {
-//   return function(users, callback) {
-//     debug("resetting %s for users", path);
+function resetUsersLastTime(path) {
+  return function(users, callback) {
+    debug("resetting %s for users", path);
 
-//     var resetQuery = {};
-//     resetQuery[path] = null;
+    var resetQuery = {};
+    resetQuery[path] = null;
 
-//     User.model.update({
-//       '_id': {'$in': _.pluck(users, '_id')}
-//       },
-//       { '$set': resetQuery },
-//       { multi : true },
-//       callback);
-//   }
+    User.model.update({
+      '_id': {'$in': _.pluck(users, '_id')}
+      },
+      { '$set': resetQuery },
+      { multi : true },
+      callback);
+  }
 
-// }
+}
 
 function deleteDocsByType(source, doc_type) {
   return function(users, callback) {
     keystone.elasticsearch.deleteByQuery({
       index: keystone.get('elasticsearch index'),
+      type: source,
       body: {
         query: {
           filtered: {
