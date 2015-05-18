@@ -147,7 +147,7 @@ function topInstagramPost(data, options, success){
 
     var post = $(options.selector);
 
-    var oembed = theData.oembed;
+    var oembedHTML = theData.oembed.html;
 
     var newDetailsHTML = '';
     var newDetails = [[]];
@@ -166,7 +166,7 @@ function topInstagramPost(data, options, success){
       newDetailsHTML += '</span></li>';
     }
     post.find('.instagram-container')
-      .append(oembed);
+      .append(oembedHTML);
     post.find('.post-details-list')
       .children().remove();
     post.find('.post-details-list')
