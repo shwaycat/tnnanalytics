@@ -1,11 +1,18 @@
 extends ../../layouts/default
 
-block content
-	.row.content-row
-		.col-xs-12
-			h1.view-title=title
+block head
+  script(type="text/javascript" src="https://apis.google.com/js/plusone.js")
 
-	.row.content-row
-		.col-xs-12.col-md-12.col-lg-12.content-block
-			.inner-content
-				h4.section-title Coming Soon!
+block content
+  .row.content-row.content-row-title
+    .col-xs-12
+      h1.view-title=title
+      a.btn.btn-default.page-cta-btn(target="_blank" title=section+" Link" href=socialLinks.googlePlus)="Launch "+title
+  .row.content-row
+    +social-graph('engagement')
+  .row.content-row
+    +social-graph('acquisition')
+  .row.content-row
+    +topGooglePost
+    +social-graph('topCountries')
+  

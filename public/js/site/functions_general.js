@@ -598,13 +598,61 @@ function statsDelegation(summary, options){
         statsString += statStringOpen;
         statsString += "Subscribers"
         statsString += statStringMid;
-        statsString += numberWithCommas(summary.totalsubscribers);
+        statsString += numberWithCommas(summary.totalSubscribers);
         statsString += statStringClose;
       }
 
       if (summary.changeInLikes) {
         statsString += statStringOpen;
         statsString += "Change in Subscribers"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.changeInSubscribers);
+        statsString += statStringClose;
+      }
+
+    }
+
+  } else if (options.source == 'google'){
+
+    if (options.selector == '#engagement'){
+
+      if (summary.totalLikes) {
+        statsString += statStringOpen;
+        statsString += "Plus 1's"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalLikes);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalComments) {
+        statsString += statStringOpen;
+        statsString += "Comments"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalComments);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalShares) {
+        statsString += statStringOpen;
+        statsString += "Shares"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalShares);
+        statsString += statStringClose;
+      }
+
+    } else if (options.selector == '#acquisition'){
+
+      if (summary.totalLikes) {
+        statsString += statStringOpen;
+        statsString += "Added to Circles"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalCircles);
+        statsString += statStringClose;
+      }
+
+      if (summary.changeInLikes) {
+        statsString += statStringOpen;
+        statsString += "Change in Circle Additions"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.changeInSubscribers);
         statsString += statStringClose;

@@ -52,6 +52,9 @@ function topFacebookPost(data, options, success){
 
 }
 
+
+
+
 function topTweet(data, options){
 
   // Preload Checks
@@ -116,6 +119,9 @@ function topTweet(data, options){
 
 }
 
+
+
+
 function topInstagramPost(data, options, success){
 
   // Preload Checks
@@ -177,7 +183,73 @@ function topInstagramPost(data, options, success){
 
 
 
+function topGooglePost(data, options, success){
 
+  // Preload Checks
+  if (!$(options.selector)[0]) return;
+  if (!data || data == undefined || data == null || !success || !data.data){
+    $(options.selector).before(dataErrorHTML);
+    $(options.selector).remove();
+    return;
+  } else {
+    $(options.selector).before(loadingGifHTML);
+  }
+
+  var theData = data;
+
+  // Gets options in a data attr on the obj. Used to pass Keystone generated data.
+  if ($(options.selector).data('admin-options') != '' || $(options.selector).data('admin-options') != null){
+    options.admin_options = $(options.selector).data('admin-options');
+  } else {
+    options.admin_options = false;
+  }
+
+  if(options.source == 'google'){
+
+    var post = $(options.selector);
+
+    var google_id = theData.data.account_id;
+    var post_id = theData.data._id;
+    var googleURL = 'https://plus.google.com/'+google_id+'/posts/'+post_id;
+
+    var newDate = new Date(theData.data.createdAt);
+    newDate = (newDate.getMonth() < 10 ? ('0'+newDate.getMonth()) : newDate.getMonth() )+ '/' + (newDate.getDate() < 10 ? ('0'+newDate.getDate()) : newDate.getDate() ) + '/' + newDate.getFullYear();
+
+
+    var newDetailsHTML = '';
+    var newDetails = [[]];
+    newDetails[0][0] = 'Total Engagement';
+    newDetails[0][1] = numberWithCommas(theData.data.score);
+    newDetails[1][0] = "Comments";
+    newDetails[1][1] = numberWithCommas(theData.data.comments);
+    newDetails[2][0] = 'Shares';
+    newDetails[2][1] = numberWithCommas(theData.data.shares);
+
+    for (var i = 0; i < newDetails.length; i++){
+      newDetailsHTML += '<li><span>';
+      newDetailsHTML += newDetails[i][0];
+      newDetailsHTML += '</span><span>';
+      newDetailsHTML += newDetails[i][1];
+      newDetailsHTML += '</span></li>';
+    }
+    post.find('.g-post')
+      .data().href = googleURL;
+    post.find('.post-details-list')
+      .children().remove();
+    post.find('.post-details-list')
+      .append(newDetailsHTML);
+    if (theData.data.createdAt){
+      post.find('.post-creation')
+        .append(newDate);
+    }
+  }
+
+  $(options.selector).sectionLoad(true, true);
+  setTimeout(function(){
+     equalHeightPairs();
+  },1000);
+
+}
 
 
 

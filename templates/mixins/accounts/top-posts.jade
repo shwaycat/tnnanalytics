@@ -42,11 +42,10 @@ mixin topGooglePost(options)
         =sectionTitles.topGooglePost
       section.top-posts.top-google-post#topGooglePost(data-admin-options=options)
         article.post
-          h3.post-title: a(target="_blank")
-          p.post-content
+          section.google-container
+            .g-post(data-href="")
           span.post-creation
           a(target="_blank").post-link: span.entypo.entypo-chevron-right
-        section.post-media: img
         section.post-details
           h3.post-title-details Details
           ul.post-details-list
