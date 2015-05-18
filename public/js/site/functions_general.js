@@ -456,6 +456,14 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
+      if (summary.changeInFollowers) {
+        statsString += statStringOpen;
+        statsString += "Change in Followers"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.changeInFollowers);
+        statsString += statStringClose;
+      }
+
     }
 
   } else if (options.source == 'facebook'){
@@ -517,6 +525,14 @@ function statsDelegation(summary, options){
         statsString += "Likes"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.totalLikes);
+        statsString += statStringClose;
+      }
+
+      if (summary.changeInLikes) {
+        statsString += statStringOpen;
+        statsString += "Change in Likes"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.changeInLikes);
         statsString += statStringClose;
       }
 
@@ -605,16 +621,16 @@ function dataControllerDelegation(sectionType, apiObj){
     topFacebookPost(apiObj.data, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'topTweet'){
-    topTweet(apiObj, apiObj.options);
+    topTweet(apiObj, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'topInstagramPost'){
-    topInstagramPost(apiObj, apiObj.options);
+    topInstagramPost(apiObj, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'topGooglePost'){
-    topGooglePost(apiObj, apiObj.options);
+    topGooglePost(apiObj, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'topYoutubeVideo'){
-    topYoutubeVideo(apiObj, apiObj.options);
+    topYoutubeVideo(apiObj, apiObj.options, apiObj.success);
 
 
   } else {

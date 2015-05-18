@@ -1,72 +1,68 @@
 mixin topFacebookPost(options)
-	.col-xs-12.col-md-12.col-lg-6.content-block.post-block.equal-height-block-1
-		.inner-content
-			h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.topFacebookPost)
-				=sectionTitles.topFacebookPost
-			section.top-posts.top-facebook-post#topFacebookPost(data-admin-options=options)
-				article.post
+  .col-xs-12.col-md-12.col-lg-6.content-block.post-block.equal-height-block-1
+    .inner-content
+      h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.topFacebookPost)
+        =sectionTitles.topFacebookPost
+      section.top-posts.top-facebook-post#topFacebookPost(data-admin-options=options)
+        article.post
 
-				section.post-details
-					h3.post-title-details Details
-					ul.post-details-list
+        section.post-details
+          h3.post-title-details Details
+          ul.post-details-list
 
 
 mixin topTweet(options)
-	.col-xs-12.col-md-12.col-lg-6.content-block.post-block.equal-height-block-1
-		.inner-content
-			h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.topTweet)
-				=sectionTitles.topTweet
-			section.top-posts.top-tweet#topTweet(data-admin-options=options)
-				article.post
-					section.twitter-container
-				section.post-details
-					h3.post-title-details Details
-					ul.post-details-list
+  .col-xs-12.col-md-12.col-lg-6.content-block.post-block.equal-height-block-1
+    .inner-content
+      h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.topTweet)
+        =sectionTitles.topTweet
+      section.top-posts.top-tweet#topTweet(data-admin-options=options)
+        article.post
+          section.twitter-container
+        section.post-details
+          h3.post-title-details Details
+          ul.post-details-list
 
 mixin topInstagramPost(options)
-	.col-xs-12.col-md-12.col-lg-6.content-block.post-block.equal-height-block-1
-		.inner-content
-			h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.topInstagramPost)
-				=sectionTitles.topInstagramPost
-			section.top-posts.top-instagram-post#topInstagramPost(data-admin-options=options)
-				article.post
-					h3.post-title: a(target="_blank")
-					p.post-content
-					span.post-creation
-					a(target="_blank").post-link: span.entypo.entypo-chevron-right
-				section.post-image: img
-				section.post-details
-					h3.post-title-details Details
-					ul.post-details-list
-
+  .col-xs-12.col-md-12.col-lg-6.content-block.post-block.equal-height-block-1
+    .inner-content
+      h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.topInstagramPost)
+        =sectionTitles.topInstagramPost
+      section.top-posts.top-instagram-post#topInstagramPost(data-admin-options=options)
+        article.post
+          section.instagram-container
+        section.post-details
+          h3.post-title-details Details
+          ul.post-details-list
+            
 mixin topGooglePost(options)
-	.col-xs-12.col-md-12.col-lg-6.content-block.post-block.equal-height-block-1
-		.inner-content
-			h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.topGooglePost)
-				=sectionTitles.topGooglePost
-			section.top-posts.top-google-post#topGooglePost(data-admin-options=options)
-				article.post
-					h3.post-title: a(target="_blank")
-					p.post-content
-					span.post-creation
-					a(target="_blank").post-link: span.entypo.entypo-chevron-right
-				section.post-image: img
-				section.post-details
-					h3.post-title-details Details
-					ul.post-details-list
+  .col-xs-12.col-md-12.col-lg-6.content-block.post-block.equal-height-block-1
+    .inner-content
+      h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.topGooglePost)
+        =sectionTitles.topGooglePost
+      section.top-posts.top-google-post#topGooglePost(data-admin-options=options)
+        article.post
+          h3.post-title: a(target="_blank")
+          p.post-content
+          span.post-creation
+          a(target="_blank").post-link: span.entypo.entypo-chevron-right
+        section.post-image: img
+        section.post-details
+          h3.post-title-details Details
+          ul.post-details-list
 
 mixin topYoutubeVideo(options)
-	.col-xs-12.col-md-12.col-lg-6.content-block.post-block.equal-height-block-1
-		.inner-content
-			h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.topYoutubeVideo)
-				=sectionTitles.topYoutubeVideo
-			section.top-posts.top-youtube-post#topYoutubeVideo(data-admin-options=options)
-				article.post
-					h3.post-title: a(target="_blank")
-					p.post-content
-					span.post-creation
-					a(target="_blank").post-link: span.entypo.entypo-chevron-right
-				section.post-image: img
-				section.post-details
-					h3.post-title-details Details
-					ul.post-details-list
+  .col-xs-12.col-md-12.col-lg-6.content-block.post-block.equal-height-block-1
+    .inner-content
+      h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.topYoutubeVideo)
+        =sectionTitles.topYoutubeVideo
+      section.top-posts.top-youtube-post#topYoutubeVideo(data-admin-options=options)
+        article.post
+          h3.post-title: a(target="_blank")
+          p.post-content
+          span.post-creation
+          a(target="_blank").post-link: span.entypo.entypo-chevron-right
+        section.post-image: img
+        section.post-details
+          h3.post-title-details Details
+          ul.post-details-list

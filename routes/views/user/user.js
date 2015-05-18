@@ -8,7 +8,7 @@ exports = module.exports = function(req, res) {
     locals = res.locals;
 
   locals.section = 'user';
-  locals.page.title = locals.site.brand + ' Settings';
+  locals.title = 'Settings';
 
   /*/
     Handle disconnect requests

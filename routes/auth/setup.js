@@ -5,7 +5,11 @@ var _ = require('underscore'),
 
 module.exports = function(req, res, next) {
   var view = new keystone.View(req, res),
-      authService = authServices[req.params.service];
+      authService = authServices[req.params.service],
+      locals = res.locals;
+
+  locals.title = req.params.service + ' Setup'
+
 
   if (!authService) return next(new Error('Invalid service'));
   if (!authService.getSetupOptions) return next(new Error('Service does not have setup options'));

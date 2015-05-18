@@ -72,16 +72,42 @@ block content
                   a(href='?disconnect=instagram', title='Revoke authorization of your Instagram account').btn.btn-social-connect.btn-instagram
                     span.connection-text Disconnect
               //- .form-group
-              //-   label.sr-only Google    
-              //-   if !user.services.google.isConfigured
-              //-     a(href='/auth/google', title='Connect your Google account').btn.btn-social-connect.btn-google
-              //-       span.connection-icon.entypo-social.entypo-google-circles
-              //-       span.connection-text Connect your Google account
-              //-   if user.services.google.isConfigured
+              //-   label.sr-only Instagram    
+              //-   if !user.services.instagram.isConfigured
+              //-     a(href='/auth/instagram', title='Connect your Google account').btn.btn-social-connect.btn-instagram
+              //-       span.connection-icon.entypo-social.entypo-instagram
+              //-       span.connection-text Connect your Instagram account
+              //-   if user.services.instagram.isConfigured
               //-     .social-connect
-              //-       span.connection-icon.entypo-social.entypo-google-circles
+              //-       span.connection-icon.entypo-social.entypo-instagram
               //-       span.connection-text Your account is connected.
-              //-     a(href='?disconnect=google' title='Revoke authorization of your Google account').btn.btn-social-connect.btn-google
+              //-     a(href='?disconnect=instagram' title='Revoke authorization of your instagram account').btn.btn-social-connect.btn-instagram
+              //-       span.connection-text Disconnect
+              
+              .form-group
+                label.sr-only Google    
+                if !user.services.google.isConfigured
+                  a(href='/auth/google', title='Connect your Google account').btn.btn-social-connect.btn-google
+                    span.connection-icon.entypo-social.entypo-google-circles
+                    span.connection-text Connect your Google account
+                if user.services.google.isConfigured
+                  .social-connect
+                    span.connection-icon.entypo-social.entypo-google-circles
+                    span.connection-text Your account is connected.
+                  a(href='?disconnect=google' title='Revoke authorization of your Google account').btn.btn-social-connect.btn-google
+                    span.connection-text Disconnect
+                    
+              //- .form-group
+              //-   label.sr-only Youtube    
+              //-   if !user.services.youtube.isConfigured
+              //-     a(href='/auth/youtube', title='Connect your Youtube account').btn.btn-social-connect.btn-youtube
+              //-       span.connection-icon.entypo-social-new.entypo-youtube
+              //-       span.connection-text Connect your Youtube account
+              //-   if user.services.youtube.isConfigured
+              //-     .social-connect
+              //-       span.connection-icon.entypo-social-new.entypo-youtube
+              //-       span.connection-text Your account is connected.
+              //-     a(href='?disconnect=youtube' title='Revoke authorization of your youtube account').btn.btn-social-connect.btn-youtube
               //-       span.connection-text Disconnect
 
           .form-actions

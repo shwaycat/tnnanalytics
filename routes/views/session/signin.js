@@ -12,6 +12,7 @@ exports = module.exports = function(req, res) {
 
   locals.section = 'session';
   locals.form = req.body;
+  locals.title = 'Sign In';
 
 
   view.on('post', { action: 'signin' }, function(next) {
