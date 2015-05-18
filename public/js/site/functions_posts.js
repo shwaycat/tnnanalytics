@@ -150,13 +150,16 @@ function topInstagramPost(data, options, success){
     var oembedHTML = theData.oembed.html;
 
     var newDetailsHTML = '';
-    var newDetails = [[]];
+    var newDetails = [];
+    newDetails[0] = [];
     newDetails[0][0] = 'Total Engagement';
     newDetails[0][1] = numberWithCommas(theData.data.score);
-    newDetails[0][0] = 'Likes';
-    newDetails[0][1] = numberWithCommas(theData.data.likes);
-    newDetails[0][0] = 'Comments';
-    newDetails[0][1] = numberWithCommas(theData.data.comments);
+    newDetails[1] = [];
+    newDetails[1][0] = 'Likes';
+    newDetails[1][1] = numberWithCommas(theData.data.likes);
+    newDetails[2] = [];
+    newDetails[2][0] = 'Comments';
+    newDetails[2][1] = numberWithCommas(theData.data.comments);
 
     for (var i = 0; i < newDetails.length; i++){
       newDetailsHTML += '<li><span>';
