@@ -1,122 +1,141 @@
 .top-posts {
-	opacity:0;
-	&.loaded {
-		opacity:1;
-		.transition(@section_transition);
-	}
+  opacity:0;
+  &.loaded {
+    opacity:1;
+    .transition(@section_transition);
+  }
 
-	//Article Content
-	.post {
-		padding:0.75em 2.5em;
-		position: relative;
-	}
+  //Article Content
+  .post {
+    padding:0.75em 2.5em;
+    position: relative;
+  }
 
-	//Article Image
-	.post-image {
-		width:100%;
-		min-height: 10em;
-		background-color:black;
-		margin-top: 1em;
-		margin-bottom: 1em;
-		.clearfix();
-		img {
-			max-width: 100%;
-			height:auto;
-			width:auto;
-			margin:auto;
-			text-align: center;
-			display:block;
-			max-height: 15em;
-		}
-	}
+  //Article Image
+  .post-media {
+    width:100%;
+    min-height: 10em;
+    background-color:black;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    .clearfix();
+    img {
+      max-width: 100%;
+      height:auto;
+      width:auto;
+      margin:auto;
+      text-align: center;
+      display:block;
+      max-height: 15em;
+    }
+  }
 
-	//Analytics Details
-	.post-details {
-		padding:0.75em 2.5em;
-		position: relative;
-	}
+  //Analytics Details
+  .post-details {
+    padding:0.75em 2.5em;
+    position: relative;
+  }
 
-	.post-title {
-		font-weight: 300;
-		padding: 0 0 0.5em;
-		margin:0;
-	}
+  .post-title {
+    font-weight: 300;
+    padding: 0 0 0.5em;
+    margin:0;
+  }
 
-	.post-content {
-		display: block;
-		width: 100%;
-		font-size: 1.2em;
-		line-height: 1.4;
-		margin-bottom: 2.5em;
-	}
-	.post-creation {
-		display:block;
-		position: absolute;
-		bottom:0.75em;
-		left:2.5em;
-	}
-	.post-link {
-		display:block;
-		position: absolute;
-		bottom:0;
-		right:0;
-		outline:0 !important;
-		span {
-			padding:0.3em 0.4em 0.05em;
-			font-size: 5em;
-			outline:0 !important;
-		}
-	}
-	
+  .post-content {
+    display: block;
+    width: 100%;
+    font-size: 1.2em;
+    line-height: 1.4;
+    margin-bottom: 2.5em;
+  }
+  .post-creation {
+    display:block;
+    position: absolute;
+    bottom:0.75em;
+    left:2.5em;
+  }
+  .post-link {
+    display:block;
+    position: absolute;
+    bottom:0;
+    right:0;
+    outline:0 !important;
+    span {
+      padding:0.3em 0.4em 0.05em;
+      font-size: 5em;
+      outline:0 !important;
+    }
+  }
 
-	.post-title-details {
-		.post-title();
-	}
 
-	.post-details-list {
-		li {
-			padding:0.5em 0;
-			vertical-align: middle;
-			display:block;
-			
-			span {
-				font-size:1.25em;
-				&:first-child {
-					text-align: left;
-					float:left;
-					color:@whiteOff;
-				}
-				&:last-child {
-					text-align: right;
-					float:right;
-				}
-			}
-			.clearfix();
-		}
-	}
+  .post-title-details {
+    .post-title();
+  }
 
-	// Facebook, Google Plus, Youtube, Instagram
-	&.top-facebook-post {
-		.post {
-			padding: .75em 1.5em;
-			.fb-post {
-				max-width:350px;
-				margin:auto;
-				position:relative;
-				display: block;
-			}
-		}
-	}
+  .post-details-list {
+    li {
+      padding:0.5em 0;
+      vertical-align: middle;
+      display:block;
 
-	// Twitter
-	&.top-tweet {
-		.post {
-			.twitter-container {
-				// margin:auto;
-				iframe {
-					margin: auto !important;
-				}
-			}
-		}
-	}
+      span {
+        font-size:1.25em;
+        &:first-child {
+          text-align: left;
+          float:left;
+          color:@whiteOff;
+        }
+        &:last-child {
+          text-align: right;
+          float:right;
+        }
+      }
+      .clearfix();
+    }
+  }
+
+  // Facebook
+  &.top-facebook-post {
+    .post {
+      padding: .75em 1.5em;
+      .fb-post {
+        max-width:350px;
+        margin:auto;
+        position:relative;
+        display: block;
+      }
+    }
+  }
+
+  // Twitter
+  &.top-tweet {
+    .post {
+      .twitter-container {
+        iframe {
+          margin: auto !important;
+        }
+      }
+    }
+  }
+
+  // Instagram
+  &.top-instagram-post {
+
+  }
+
+  // Google Plus
+  &.top-google-post {
+
+  }
+
+  // Youtube
+  &.top-youtube-video {
+    .post-media {
+      > iframe {
+        width: 100%;
+        height: 25em;
+      }
+    }
+  }
 }

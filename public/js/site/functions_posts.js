@@ -173,3 +173,100 @@ function topInstagramPost(data, options, success){
   },1000);
 
 }
+
+
+
+
+
+
+
+
+
+function topYoutubeVideo(data, options, success){
+
+  // Preload Checks
+  if (!$(options.selector)[0]) return;
+  if (!data || data == undefined || data == null || !success || !data.data){
+    $(options.selector).before(dataErrorHTML);
+    $(options.selector).remove();
+    return;
+  } else {
+    $(options.selector).before(loadingGifHTML);
+  }
+
+  var theData = data;
+
+  // Gets options in a data attr on the obj. Used to pass Keystone generated data.
+  if ($(options.selector).data('admin-options') != '' || $(options.selector).data('admin-options') != null){
+    options.admin_options = $(options.selector).data('admin-options');
+  } else {
+    options.admin_options = false;
+  }
+
+  if(options.source == 'youtube'){
+
+    var post = $(options.selector);
+
+    var youtube_id = theData.data._id;
+    var youtubeHTML = '<iframe src="https://www.youtube.com/embed/'+url+'" frameborder="0" allowfullscreen></iframe>';
+    var newDate = new Date(theData.data.createdAt);
+    newDate = (newDate.getMonth() < 10 ? ('0'+newDate.getMonth()) : newDate.getMonth() )+ '/' + (newDate.getDate() < 10 ? ('0'+newDate.getDate()) : newDate.getDate() ) + '/' + newDate.getFullYear();
+
+
+    var newDetailsHTML = '';
+    var newDetails = [[]];
+    newDetails[0][0] = 'Total Engagement';
+    newDetails[0][1] = numberWithCommas(theData.data.score);
+    newDetails[1][0] = 'Likes';
+    newDetails[1][1] = numberWithCommas(theData.data.likes);
+    newDetails[2][0] = 'Shares';
+    newDetails[2][1] = numberWithCommas(theData.data.shares);
+    newDetails[3][0] = 'Replies';
+    newDetails[3][1] = numberWithCommas(theData.data.replies);
+    newDetails[4][0] = 'Mentions';
+    newDetails[4][1] = numberWithCommas(theData.data.mentions);
+    newDetails[5][0] = 'Comments';
+    newDetails[5][1] = numberWithCommas(theData.data.comments);
+    newDetails[6][0] = 'View';
+    newDetails[6][1] = numberWithCommas(theData.data.views);
+
+    for (var i = 0; i < newDetails.length; i++){
+      newDetailsHTML += '<li><span>';
+      newDetailsHTML += newDetails[i][0];
+      newDetailsHTML += '</span><span>';
+      newDetailsHTML += newDetails[i][1];
+      newDetailsHTML += '</span></li>';
+    }
+    post.find('.post-media')
+      .append(youtubeHTML);
+    post.find('.post-details-list')
+      .children().remove();
+    post.find('.post-details-list')
+      .append(newDetailsHTML);
+    if (theData.data.title){
+      post.find('.post-title a')
+        .append(theData.data.title);
+    }
+    if (theData.data.url){
+      post.find('.post-title a')
+        .attr('href', theData.data.url);
+      post.find('.post-link')
+        .attr('href', theData.data.url);
+    }
+    if (theData.data.createdAt){
+      post.find('.post-creation')
+        .append(newDate);
+    }
+    if (theData.data.content){
+      post.find('.post-content')
+        .append(theData.data.content);
+    }
+
+  }
+
+  $(options.selector).sectionLoad(true, true);
+  setTimeout(function(){
+     equalHeightPairs();
+  },1000);
+
+}

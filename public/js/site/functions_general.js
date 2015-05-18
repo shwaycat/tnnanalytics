@@ -538,6 +538,80 @@ function statsDelegation(summary, options){
 
     }
 
+  } else if (options.source == 'youtube'){
+
+    if (options.selector == '#engagement'){
+
+      if (summary.totalLikes) {
+        statsString += statStringOpen;
+        statsString += "Likes"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalLikes);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalShares) {
+        statsString += statStringOpen;
+        statsString += "Shares"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalShares);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalPosts) {
+        statsString += statStringOpen;
+        statsString += "Replies"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalReplies);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalMentions) {
+        statsString += statStringOpen;
+        statsString += "Mentions"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalMentions);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalComments) {
+        statsString += statStringOpen;
+        statsString += "Comments"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalComments);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalMessages) {
+        statsString += statStringOpen;
+        statsString += "Views"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalViews);
+        statsString += statStringClose;
+      }
+
+
+
+    } else if (options.selector == '#acquisition'){
+
+      if (summary.totalLikes) {
+        statsString += statStringOpen;
+        statsString += "Subscribers"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalsubscribers);
+        statsString += statStringClose;
+      }
+
+      if (summary.changeInLikes) {
+        statsString += statStringOpen;
+        statsString += "Change in Subscribers"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.changeInSubscribers);
+        statsString += statStringClose;
+      }
+
+    }
+
   }
 
   statsString += statsStringClose;
