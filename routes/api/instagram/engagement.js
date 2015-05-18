@@ -1,7 +1,7 @@
 var keystone = require('keystone'),
     _ = require('underscore'),
     async = require('async'),
-    debug = require('debug')('cadence:api:twitter:engagement'),
+    debug = require('debug')('cadence:api:instagram:engagement'),
     User = keystone.list('User'),
     mxm = require('../../../lib/mxm-utils');
 
