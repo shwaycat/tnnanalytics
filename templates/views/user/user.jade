@@ -84,19 +84,6 @@ block content
                     span.connection-text Your account is connected.
                   a(href='?disconnect=google' title='Revoke authorization of your Google account').btn.btn-social-connect.btn-google
                     span.connection-text Disconnect
-                    
-              //- .form-group
-              //-   label.sr-only Youtube    
-              //-   if !user.services.youtube.isConfigured
-              //-     a(href='/auth/youtube', title='Connect your Youtube account').btn.btn-social-connect.btn-youtube
-              //-       span.connection-icon.entypo-social-new.entypo-youtube
-              //-       span.connection-text Connect your Youtube account
-              //-   if user.services.youtube.isConfigured
-              //-     .social-connect
-              //-       span.connection-icon.entypo-social-new.entypo-youtube
-              //-       span.connection-text Your account is connected.
-              //-     a(href='?disconnect=youtube' title='Revoke authorization of your youtube account').btn.btn-social-connect.btn-youtube
-              //-       span.connection-text Disconnect
 
           .form-actions
             button(type='submit', data-loading-text="Saving...").btn.btn-default.btn-large Save Profile
