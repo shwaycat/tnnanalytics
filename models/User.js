@@ -163,7 +163,12 @@ User.schema.methods.getAlertDocuments = function(iterator, callback) {
   if(!this.getKeywords().length) return callback();
 
   var self = this,
-      fromIndex = 0;
+      fromIndex = 0,
+      queryShoulds = _.collect(self.getKeywords(), function(kw) {
+        return {
+          match_phrase: { doc_text: kw }
+        };
+      });
 
   async.doWhilst(
     function(next) {
@@ -177,17 +182,15 @@ User.schema.methods.getAlertDocuments = function(iterator, callback) {
               { term: { cadence_user_id: self.id } },
               {
                 not: {
-                  term: { isNotified: "exists" }
+                  exists: { field: "isNotified" }
                 }
               }
             ]
           },
           query: {
-            match_phrase: {
-              doc_text: {
-                query: self.getKeywords(),
-                operator: "or"
-              }
+            bool: {
+              should: queryShoulds,
+              minimum_should_match: 1
             }
           }
         }
