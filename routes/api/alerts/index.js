@@ -5,7 +5,8 @@ var keystone = require('keystone'),
     User = keystone.list('User'),
     sources = {
       facebook: require('../../../lib/sources/facebook'),
-      twitter: require('../../../lib/sources/twitter')
+      twitter: require('../../../lib/sources/twitter'),
+      instagram: require('../../../lib/sources/instagram')
     };
 
 
