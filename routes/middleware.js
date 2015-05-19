@@ -15,7 +15,8 @@ exports.initLocals = function(req, res, next) {
     "twitter": "https://twitter.com/teamnovonordisk",
     "instagram": "https://instagram.com/teamnovonordisk/",
     "youtube": "https://www.youtube.com/user/TeamNovoNordisk",
-    "googlePlus": "https://plus.google.com/+teamnovonordisk"
+    "googlePlus": "https://plus.google.com/+teamnovonordisk",
+    "analytics": "insertanalyticsurlhere"
   }
 
   locals.navLinks = [
