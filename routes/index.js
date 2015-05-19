@@ -100,7 +100,7 @@ exports = module.exports = function(app) {
   app.get('/api/1.0/instagram/topPost', routes.api.instagram.topPost);
   app.get('/api/1.0/instagram/topCountries', routes.api.instagram.topCountries);
 
-  // Keyword Events
+  // Keyword Alerts
   // /alerts expects query strings with page
   app.get('/api/1.0/alerts', routes.api.alerts.index);
   app.get('/api/1.0/alerts/summary', routes.api.alerts.summary);

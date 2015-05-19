@@ -1,123 +1,123 @@
-// Top Alert Block for Keyword Events
+// Top Alert Block for Keyword Alert
 .alerts-block {
-	display:table;
-	opacity:0;
-	height: 0;
-	background-color:@element_alert;
-	padding:0;
-	width:100%;
-	text-align: center;
-	font-size:0;
-	.transition(0.2s);
-	.translate(0, -100%);
-	&:hover {
-		background-color:@element_alert_light;
-		.transition(0.2s);
-	}
-	&.active {
-		height: 6em;
-		opacity:1;
-		font-size:1em;
-		.translate(0, 0);
-		.transition(0.2s);
-	}
-	.alerts-icon {
-		padding: 0;
-	  display: table-cell;
-	  vertical-align: middle;
-	  position: relative;
-	  margin: auto;
-	  text-align: right;
-	  height: 100%;
-	  width:28%;
-	  .respond-sm({
-	  	width:30%;
-	  });
-	  .respond-md({
-	  	width:32%;
-	  });
-	  .respond-lg({
-	  	width: 42%;
-	  });
-		span {
-			display: block;
-			text-align: right;
-  		font-size: 5em;
-		}
-	}
-	.alerts-message {
-		display: table-cell;
-	  vertical-align: middle;
-	  padding: 1.5em;
-	  text-align: left;
-		width:72%;
-		.respond-sm({
-			width:70%;
-		});
-		.respond-md({
-			width:68%;
-		});
-		.respond-lg({
-			width: 58%;
-		});
+  display:table;
+  opacity:0;
+  height: 0;
+  background-color:@element_alert;
+  padding:0;
+  width:100%;
+  text-align: center;
+  font-size:0;
+  .transition(0.2s);
+  .translate(0, -100%);
+  &:hover {
+    background-color:@element_alert_light;
+    .transition(0.2s);
+  }
+  &.active {
+    height: 6em;
+    opacity:1;
+    font-size:1em;
+    .translate(0, 0);
+    .transition(0.2s);
+  }
+  .alerts-icon {
+    padding: 0;
+    display: table-cell;
+    vertical-align: middle;
+    position: relative;
+    margin: auto;
+    text-align: right;
+    height: 100%;
+    width:28%;
+    .respond-sm({
+      width:30%;
+    });
+    .respond-md({
+      width:32%;
+    });
+    .respond-lg({
+      width: 42%;
+    });
+    span {
+      display: block;
+      text-align: right;
+      font-size: 5em;
+    }
+  }
+  .alerts-message {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 1.5em;
+    text-align: left;
+    width:72%;
+    .respond-sm({
+      width:70%;
+    });
+    .respond-md({
+      width:68%;
+    });
+    .respond-lg({
+      width: 58%;
+    });
 
-		p {
-			text-transform: uppercase;
-			font-size: 1.4em;
-			margin-bottom: 0;
-			display: inline-block;
-		}
-		span {
-		  display: inline-block;
-		  font-size: 4em;
-		  padding-left: 15px;
-		}
-	}
+    p {
+      text-transform: uppercase;
+      font-size: 1.4em;
+      margin-bottom: 0;
+      display: inline-block;
+    }
+    span {
+      display: inline-block;
+      font-size: 4em;
+      padding-left: 15px;
+    }
+  }
 }
 
 // Used on flash messages
 .novo-alert {
-	background-color:transparent;
-	border:0;
-	padding: 0 1.5em;
-	color:#EA8787;
-	font-weight: normal;
-	line-height: 1.2;
-	a, a:hover, a:visited, a:active, a:focus {
-		color:@element_alert_lighter !important;
-	}
+  background-color:transparent;
+  border:0;
+  padding: 0 1.5em;
+  color:#EA8787;
+  font-weight: normal;
+  line-height: 1.2;
+  a, a:hover, a:visited, a:active, a:focus {
+    color:@element_alert_lighter !important;
+  }
 
-	&.alert-success {
-		color:@lightBlue;
-	}
+  &.alert-success {
+    color:@lightBlue;
+  }
 }
 
 // Tooltip Alerts
 .tooltip {
 
-	&.right .tooltip-arrow {
-		border-right-color:@tooltip_bg !important;
-	}
-	&.top .tooltip-arrow {
-		border-top-color:@tooltip_bg !important;
-	}
-	&.left .tooltip-arrow {
-		border-left-color:@tooltip_bg !important;
-	}
-	&.bottom .tooltip-arrow {
-		border-bottom-color:@tooltip_bg !important;
-	}
-	&.top .tooltip-inner {
-		max-width:500px;
-	}
+  &.right .tooltip-arrow {
+    border-right-color:@tooltip_bg !important;
+  }
+  &.top .tooltip-arrow {
+    border-top-color:@tooltip_bg !important;
+  }
+  &.left .tooltip-arrow {
+    border-left-color:@tooltip_bg !important;
+  }
+  &.bottom .tooltip-arrow {
+    border-bottom-color:@tooltip_bg !important;
+  }
+  &.top .tooltip-inner {
+    max-width:500px;
+  }
 
-	.tooltip-inner {
-		background-color:@tooltip_bg;
-		font-size: 1em;
-		padding: 0.3em 0.9em;
-		max-width: 230px;
-		-webkit-border-radius: 0;
-		-moz-border-radius: 0;
-		border-radius: 0;
-	}
+  .tooltip-inner {
+    background-color:@tooltip_bg;
+    font-size: 1em;
+    padding: 0.3em 0.9em;
+    max-width: 230px;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+  }
 }

@@ -27,7 +27,7 @@ function topFacebookPost(data, options, success){
 
     var newDetailsHTML = '';
     var newDetails = [];
-    
+
     newDetails[0] = [];
     newDetails[0][0] = 'Total Engagement';
     newDetails[0][1] = numberWithCommas(theData.data.score);
