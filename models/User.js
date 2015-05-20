@@ -88,7 +88,8 @@ User.add({
       username: { type: String, label: 'Username', dependsOn: deps.google },
       accessToken: { type: String, label: 'Access Token', dependsOn: deps.google },
       refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.google },
-      analyticsAccountIDsStr: { type: String, label: 'Analytics Account IDs', dependsOn: deps.google }
+      analyticsAccountIDsStr: { type: String, label: 'Analytics Account IDs', dependsOn: deps.google },
+      youtubeChannelID: { type: String, label: 'Youtube Channel ID', dependsOn: deps.google }
     },
     /**
      * Twitter Service
