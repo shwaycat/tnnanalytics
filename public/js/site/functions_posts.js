@@ -294,10 +294,9 @@ function topYoutubeVideo(data, options, success){
     var post = $(options.selector);
 
     var youtube_id = theData.data._id;
-    var youtubeHTML = '<iframe src="https://www.youtube.com/embed/'+url+'" frameborder="0" allowfullscreen></iframe>';
+    var youtubeHTML = '<iframe src="https://www.youtube.com/embed/'+youtube_id+'" frameborder="0" allowfullscreen></iframe>';
     var newDate = new Date(theData.data.createdAt);
     newDate = (newDate.getMonth() < 10 ? ('0'+newDate.getMonth()) : newDate.getMonth() )+ '/' + (newDate.getDate() < 10 ? ('0'+newDate.getDate()) : newDate.getDate() ) + '/' + newDate.getFullYear();
-
 
     var newDetailsHTML = '';
     var newDetails = [[]];
