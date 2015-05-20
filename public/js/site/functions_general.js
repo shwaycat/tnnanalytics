@@ -364,7 +364,7 @@ function donutPercents(){
 }
 
 function statsDelegation(summary, options){
-  if (!summary || summary == undefined || summary == null || options.selector == '#reach'){
+  if (!summary || summary == undefined || summary == null){
     return;
   }
 
@@ -533,6 +533,46 @@ function statsDelegation(summary, options){
         statsString += "Change in Likes"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.changeInLikes);
+        statsString += statStringClose;
+      }
+
+    }
+
+  } else if (options.source == 'instagram'){
+
+    if (options.selector == '#engagement'){
+
+      if (summary.totalLikes) {
+        statsString += statStringOpen;
+        statsString += "Likes"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalLikes);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalComments) {
+        statsString += statStringOpen;
+        statsString += "Comments"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalComments);
+        statsString += statStringClose;
+      }
+
+    } else if (options.selector == '#acquisition'){
+
+      if (summary.totalFollowers) {
+        statsString += statStringOpen;
+        statsString += "Followers"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalFollowers);
+        statsString += statStringClose;
+      }
+
+      if (summary.changeInFollowers) {
+        statsString += statStringOpen;
+        statsString += "Change in Followers"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.changeInFollowers);
         statsString += statStringClose;
       }
 

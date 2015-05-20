@@ -8,7 +8,7 @@ var keystone = require('keystone'),
 
 
 exports = module.exports = function(req, res) {
- 
+
   var view = new keystone.View(req, res),
       locals = res.locals,
       dataReturn = [];
@@ -23,7 +23,7 @@ exports = module.exports = function(req, res) {
   if(req.query.endTime) {
     endTime = new Date(req.query.endTime);
   }
-  
+
   var dataReturn = [];
   var timeHolder = startTime;
 
@@ -148,14 +148,14 @@ exports = module.exports = function(req, res) {
         return res.apiResponse({
           success: true,
           type: 'engagement',
-          source: 'twitter',
+          source: 'instagram',
           queryString: req.query,
           data: dataReturn,
           summary: {
             "totalLikes" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.likes; }, 0),
             "totalComments" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.comments; }, 0)
           }
-        });   
+        });
       } else {
         res.apiResponse('error', "No buckets.")
       }

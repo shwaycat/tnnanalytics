@@ -7,7 +7,7 @@ var keystone = require('keystone'),
 
 
 exports = module.exports = function(req, res) {
- 
+
   var view = new keystone.View(req, res),
       locals = res.locals,
       dataReturn = [];
@@ -20,7 +20,7 @@ exports = module.exports = function(req, res) {
   if(req.query.endTime) {
     endTime = new Date(req.query.endTime);
   }
-  
+
   var dataReturn = [];
   var timeHolder = startTime;
 
@@ -78,7 +78,7 @@ exports = module.exports = function(req, res) {
           "topCountries": {
             "terms": {
               "field": "country",
-              "size": 0      
+              "size": 0
             }
           }
         }
@@ -97,10 +97,10 @@ exports = module.exports = function(req, res) {
           return res.apiResponse({
             success: true,
             type: 'topCountries',
-            source: 'twitter',
+            source: 'instagram',
             map: map,
             data: dataReturn
-          });   
+          });
         })
 
       } else {
@@ -116,7 +116,3 @@ function extractDataPoint(bucket) {
       value: bucket.doc_count
   };
 }
-
-
-
-
