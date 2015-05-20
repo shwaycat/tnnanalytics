@@ -12,6 +12,7 @@ mixin side-navigation
         if item.type == 'link'
           li.navigation-section.navigation-section-link(class='navigation-'+item.key+' '+(section == item.key ? 'active' : ''))
             a(href='/accounts/'+user.accountName+'/'+item.href title=item.label)= item.label
+              .navigation-icon-divider
               .navigation-icon
                 if item.key == 'dashboard'
                   .entypo-regular-new.entypo-grid
@@ -20,6 +21,7 @@ mixin side-navigation
         if item.type == 'navigation'
           li.navigation-section.navigation-section-title(class='navigation-'+item.key+' '+"icon-"+item.key+' '+(social == item.key ? 'active' : '')+(web == item.key ? 'active' : ''))
             span=item.label
+              .navigation-icon-divider
               .navigation-icon
                 if item.key == 'view-social'
                   .entypo.entypo-share

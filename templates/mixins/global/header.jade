@@ -16,3 +16,7 @@ mixin header
               li: a(href='/keystone') Keystone
             li: a(href='/user/'+user.key).user
               =user.name.first
+
+mixin page-cta(social_link)
+  a.btn.btn-default.page-cta-btn(target="_blank" title=section+" Link" href=social_link)="Launch "+title
+    span.entypo.entypo-chevron-thin-right

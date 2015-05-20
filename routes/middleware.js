@@ -15,7 +15,8 @@ exports.initLocals = function(req, res, next) {
     "twitter": "https://twitter.com/teamnovonordisk",
     "instagram": "https://instagram.com/teamnovonordisk/",
     "youtube": "https://www.youtube.com/user/TeamNovoNordisk",
-    "googlePlus": "https://plus.google.com/+teamnovonordisk"
+    "googlePlus": "https://plus.google.com/+teamnovonordisk",
+    "analytics": "insertanalyticsurlhere"
   }
 
   locals.navLinks = [
@@ -30,7 +31,7 @@ exports.initLocals = function(req, res, next) {
     { label: 'All',               type: 'sub-link',         key: 'analytics-all',   href: 'analytics-all' },
     { label: 'Global',            type: 'sub-link',         key: 'analytics-global',href: 'analytics-global' },
     { label: 'US',                type: 'sub-link',         key: 'analytics-us',    href: 'analytics-us' },
-    { label: 'Keyword Events',    type: 'link',             key: 'events',          href: 'events' }
+    { label: 'Keyword Alerts',    type: 'link',             key: 'events',          href: 'events' }
   ]
 
   locals.footerLinks = [

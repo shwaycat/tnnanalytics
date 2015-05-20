@@ -1,14 +1,14 @@
 extends ../../layouts/default
 
 block content
-	.row.content-row.content-row-title
-		.col-xs-12
-			h1.view-title=title
-			a.btn.btn-default.page-cta-btn(target="_blank" title=section+" Link" href=socialLinks.twitter)="Launch "+title
-	.row.content-row
-		+social-graph('engagement')
-	.row.content-row
-		+social-graph('acquisition')
-	.row.content-row
-		+topTweet
-		+social-graph('topCountries')
+  .row.content-row.content-row-title
+    .col-xs-12
+      h1.view-title=title
+      +page-cta(socialLinks.twitter)
+  .row.content-row
+    +social-graph('engagement')
+  .row.content-row
+    +social-graph('acquisition')
+  .row.content-row
+    +topTweet
+    +social-graph('topCountries')
