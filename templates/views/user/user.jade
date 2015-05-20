@@ -24,7 +24,7 @@ block content
             input(id='lastName' type='text', name='name.last', value=user.name.last, placeholder='Last Name').form-control
             span.error-message Enter your Last Name
           .form-group(class=validationErrors.email ? 'has-error' : null).never-error
-            label(for='email') Email
+            label.has-disabled(for='email') Email
             input(id='email' type='email', name='email', value=user.email, placeholder='Email' disabled="disabled").form-control
           
           if user.isAccountRoot

@@ -10,10 +10,10 @@ exports = module.exports = function(req, res) {
   locals.title = 'Instagram';
   locals.tooltip = {
     reach: "",
-    engagement: "Likes + Comments + Tags + Mentions",
+    engagement: "Likes + Comments",
     acquisition: "Total Followers",
     topInstagramPost: "Comments + Likes",
-    topCountries: "Tags + Mentions"
+    topCountries: ""
   };
 
   view.render('account/instagram');
