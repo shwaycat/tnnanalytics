@@ -12,7 +12,7 @@ var keystone = require('keystone'),
 
 
 exports = module.exports = function(req, res) {
- 
+
   var view = new keystone.View(req, res),
       locals = res.locals,
       page = req.query.page,
@@ -21,7 +21,7 @@ exports = module.exports = function(req, res) {
 
   User.model.getAccountRootInfo(req.user.accountName, function(err, accountRoot) {
     if (err) return apiResponse({'error': err});
-    
+
     if(!page) {
       page = 1;
     }
@@ -41,7 +41,8 @@ exports = module.exports = function(req, res) {
                       "alertState": [
                         "new",
                         "open",
-                        "closed"
+                        "closed",
+                        "benign"
                       ]
                     }
                   }
@@ -64,7 +65,28 @@ exports = module.exports = function(req, res) {
                   {
                     "term": {
                       "alertState": {
+                        "value": "new"
+                      }
+                    }
+                  },
+                  {
+                    "term": {
+                      "alertState": {
                         "value": "open"
+                      }
+                    }
+                  },
+                  {
+                    "term": {
+                      "alertState": {
+                        "value": "open"
+                      }
+                    }
+                  },
+                  {
+                    "term": {
+                      "alertState": {
+                        "value": "closed"
                       }
                     }
                   }
@@ -89,7 +111,7 @@ exports = module.exports = function(req, res) {
       }
     }, function(err, response){
       if(err) return res.apiResponse({"error": err});
-      
+
       var alerts = mxm.objTry(response, 'hits', 'hits');
       var data = [];
 
@@ -113,7 +135,7 @@ exports = module.exports = function(req, res) {
       } else {
         return res.apiResponse({"error": "Error with ES results."});
       }
-      
+
       return res.apiResponse({
         success: true,
         type: 'alerts',
@@ -126,5 +148,5 @@ exports = module.exports = function(req, res) {
 
     });
   });
-  
+
 }
