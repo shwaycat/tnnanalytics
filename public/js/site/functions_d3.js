@@ -64,8 +64,15 @@ function lineGraph(data, options, success){
           d = type(d); return d.key;
         })])
         .range([padding*2, width - padding*2]);
+  // y = d3.scale.linear()
+  //     .domain([0, d3.max(theData, function(d) {
+  //       d = type(d); return d.value;
+  //     })])
+  //     .range([height - padding*2, padding/2]);
   y = d3.scale.linear()
-      .domain([0, d3.max(theData, function(d) {
+      .domain([d3.min(theData, function(d) {
+        d = type(d); return d.value;
+      }), d3.max(theData, function(d) {
         d = type(d); return d.value;
       })])
       .range([height - padding*2, padding/2]);
