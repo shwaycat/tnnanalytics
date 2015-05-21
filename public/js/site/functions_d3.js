@@ -54,7 +54,19 @@ function lineGraph(data, options, success){
   width = parseInt(svg.style('width'));
   height = parseInt(svg.style('height'));
   var padding = 45;
-   var interpolateType = 'linear';
+  var interpolateType = 'linear';
+  var yMin = function(){
+    var min = d3.min(theData, function(d) {
+      d = type(d); return d.value;
+    });
+    var max = d3.max(theData, function(d) {
+      d = type(d); return d.value;
+    });
+    if (min == max || min > max) {
+      min = 0;
+    }
+    return min;
+  }
 
    // Setup our x/y d3 functions and axes.
   x = d3.time.scale()
@@ -64,15 +76,8 @@ function lineGraph(data, options, success){
           d = type(d); return d.key;
         })])
         .range([padding*2, width - padding*2]);
-  // y = d3.scale.linear()
-  //     .domain([0, d3.max(theData, function(d) {
-  //       d = type(d); return d.value;
-  //     })])
-  //     .range([height - padding*2, padding/2]);
   y = d3.scale.linear()
-      .domain([d3.min(theData, function(d) {
-        d = type(d); return d.value;
-      }), d3.max(theData, function(d) {
+      .domain([yMin, d3.max(theData, function(d) {
         d = type(d); return d.value;
       })])
       .range([height - padding*2, padding/2]);
