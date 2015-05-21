@@ -1,6 +1,6 @@
 extends ../../layouts/default
 
-block content
+block error
 	.container-sm: .pv-2
 		h1!=errorTitle || 'Not found (404)'
 		if 'object' == typeof errorMsg

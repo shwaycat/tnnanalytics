@@ -34,3 +34,12 @@ node_modules
 .DS_Store
 .idea/*
 *.iml
+
+# Generated jsdocs
+doc/
+
+/log/*
+/tmp/*
+!.gitkeep
+
+public/styles/site.min.css

@@ -1,0 +1,14 @@
+mixin footer
+  footer
+    p &copy; Team Novo Nordisk | 
+      a(href="/privacy" title="Privacy Policy") Privacy Policy
+    ul
+      each link in footerLinks
+        if link.type == 'social'
+          li: a(target="_blank" href=link.href title=link.label)
+            if link.key == 'youtube'
+              .footer-icon.social-new
+                .entypo-social-new(class="entypo-"+link.key)
+            else
+              .footer-icon
+                .entypo-social(class="entypo-"+link.key)

@@ -1,0 +1,28 @@
+mixin eventsCloseAll
+  .modal.fade#eventsCloseAllModal(tabindex="-1" role="dialog" aria-labelledby="eventsCloseAllModal" aria-hidden="true")
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button(type="button" class="close" data-dismiss="modal" aria-label="Close")
+            span(aria-hidden="true").entypo-regular-new.entypo-circle-with-cross
+          h4.section-title Close All Events
+        .modal-body
+          p This will close 
+            strong ALL 
+            | Keyword Events. Are you sure you wish to do this?
+          
+        .modal-footer
+          button.btn.btn-default(type="button" data-dismiss="modal") Cancel
+          button#eventsCloseAll.btn.btn-default.btn-danger(type="button") Submit
+
+mixin eventsDirectMessageModal
+  .modal.fade#eventsDirectMessageModal(tabindex="-1" role="dialog" aria-labelledby="eventsDirectMessageModal" aria-hidden="true")
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button(type="button" class="close" data-dismiss="modal" aria-label="Close")
+            span(aria-hidden="true").entypo-regular-new.entypo-circle-with-cross
+        .modal-body
+          p There is not a link to this Direct Message, instead you can go to your account profile page by clicking the button below.
+        .modal-footer
+          a#eventsDirectMessageButton.btn.btn-default(target="_blank") Twitter Account Page

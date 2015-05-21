@@ -1,32 +1,41 @@
 {
   "name": "cadence",
-  "version": "0.0.0",
+  "version": "2.0.0",
   "private": true,
   "dependencies": {
     "async": "~0.9.0",
+    "aws-sdk": "^2.1.26",
     "connect-redis": "^2.2.0",
+    "debug": "^2.1.3",
     "dotenv": "~0.4.0",
-    "elasticsearch": "^3.1.3",
-    "keystone": "~0.3.0",
+    "elasticsearch": "^4.0.0",
+    "jade": "~1.9.2",
+    "keystone": "= 0.3.5",
+    "minimist": "^1.1.1",
+    "moment": "^2.10.2",
     "mongoose": "^3.8.25",
     "passport": "^0.2.1",
     "passport-facebook": "^2.0.0",
     "passport-google-oauth": "^0.2.0",
     "passport-twitter": "^1.0.3",
     "request": "^2.53.0",
-    "twitter": "^1.2.3",
-    "underscore": "~1.7.0"
+    "twitter": "^1.2.5",
+    "underscore": "^1.7.0"
   },
   "devDependencies": {
     "gulp": "~3.7.0",
+    "gulp-jsdoc": "^0.1.4",
     "gulp-jshint": "~1.9.0",
+    "gulp-watch": "~0.6.5",
+    "jsdoc": "^3.2.2",
     "jshint-stylish": "~0.1.3",
-    "gulp-watch": "~0.6.5"
+    "nodemon": "^1.3.7"
   },
   "engines": {
-    "node": ">=0.10.22",
-    "npm": ">=1.3.14"
+    "node": "~0.10.22 || ~0.12.0",
+    "npm": "^1.3.14 || ^2.5.0"
   },
+  "engine-strict": true,
   "scripts": {
     "start": "node keystone.js"
   },

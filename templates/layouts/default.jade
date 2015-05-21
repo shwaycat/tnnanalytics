@@ -1,69 +1,110 @@
 include ../mixins/flash-messages
+include ../mixins/alerts
 include ../mixins/auth/auth-forms
 
-doctype html
+include ../mixins/global/favicons
+
+include ../mixins/global/header
+include ../mixins/global/footer
+include ../mixins/global/side-navigation
+include ../mixins/global/date
+
+include ../mixins/accounts/events
+include ../mixins/accounts/social-graph
+include ../mixins/accounts/top-posts
+include ../mixins/accounts/fb-js-embed
+
 html
-	head
-		meta(charset="utf-8")
-		meta(name="viewport", content="width=device-width, initial-scale=1.0")
-		meta(http-equiv="X-UA-Compatible" content="IE=edge")
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(http-equiv="X-UA-Compatible" content="IE=edge")
 
-		title= title || site.brand
+    title= title || site.brand
 
-		link(rel="shortcut icon", href="/favicon.ico", type="image/x-icon")
-		link(href="/styles/site.min.css", rel="stylesheet")
+    +favicons
 
-		block css
-		block head
-	body
-		header
-			div(role="navigation").navbar.navbar-default
-				.container-fluid
-					.navbar-header
-						button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
-							span.sr-only Toggle navigation
-							span.icon-bar
-							span.icon-bar
-							span.icon-bar
-						a.navbar-brand(href='/')=site.brand
-					.collapse.navbar-collapse
-						ul.nav.navbar-nav.navbar-left
-							each link in navLinks
-								li(class=(section == link.key ? 'active' : null)): a(href=link.href)= link.label
-						ul.nav.navbar-nav.navbar-right
-							if user
-								if user.canAccessKeystone
-									li: a(href='/keystone') Open Keystone
-								li: a(href='/me').user.hidden-xs
-									img(src=(user.avatarUrl || '/images/avatar.png'), width=27).img-circle
-									=' ' +user.name.first
-								li: a(href='/signout')
-									span.visible-xs Sign out
-									span.entypo.entypo-large.entypo-logout.hidden-xs
-							else
-								li: a(href='/signin', data-from=page.path, data-initial='signin').js-auth-trigger Sign in
+    link(href="/styles/site.min.css", rel="stylesheet")
+    link(href="/styles/print.min.css", rel="stylesheet" media="print")
+    script(src='/js/lib/jquery/jquery-2.1.1.min.js')
 
-		block intro
+    block css
+    block head
+  body(class=section)
 
-		block content
+    if user
+      +fb-js
+      +alerts
 
-		footer
-			p Copyright &copy; MaxMedia
 
-		if !user
-			#modal-auth(tabindex="-1", role="dialog", aria-labelledby="signin", aria-hidden="true").modal.fade
-				.modal-dialog
-					.modal-content
-						+auth-forms({ modal: true, initial: 'signin' })
+    .container-fluid.header-container
+      +header
 
-		script(src='/js/lib/jquery/jquery-2.1.1.min.js')
-		script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js')
-		script(src='/js/lib/bootstrap/bootstrap-3.2.0.min.js')
-		//script(src='/js/lib/bootstrap/collapse.js')
-		//script(src='/js/lib/bootstrap/dropdown.js')
-		script(src='/js/lib/bootstrap/modal.js')
-		script(src='/js/ui.js')
+    if user
+      .container-fluid.main-container
+        main
+          .row
+            .col-xs-12.col-md-4.col-lg-3.side-navigation-container
+              +side-navigation
+            .col-xs-12.col-md-8.col-lg-9.content
 
-		include shared/analytics
+              block content
+    
+      .container-fluid.footer-container
+        +footer
 
-		block js
+      +dateModal
+      +eventsCloseAll
+      +eventsDirectMessageModal
+    else
+
+      .container-fluid.main-container
+        main
+          .row
+            .col-xs-12.col-md-offset-3.col-md-6.col-lg-offset-4.col-lg-4.session-block
+              block session
+            .col-xs-12.col-md-offset-3.col-md-6.col-lg-offset-4.col-lg-4
+              block error
+
+
+      
+      .container-fluid.footer-container
+        +footer
+
+    if !user
+      #modal-auth(tabindex="-1", role="dialog", aria-labelledby="signin", aria-hidden="true").modal.fade
+        .modal-dialog
+          .modal-content
+            +auth-forms({ modal: true, initial: 'signin' })
+
+    //- Libraries
+    
+    script(src='/js/lib/jquery/jquery.timeago.js')
+    script(src='/js/lib/jquery/jquery.transit.min.js')
+    script(src='/js/lib/jquery/jquery.cookie.js')
+
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js')
+    script(src='/js/lib/bootstrap/bootstrap-3.2.0.min.js')
+    script(src='/js/lib/datepicker/datepicker.js')
+      
+    script(src='//cdn.datatables.net/1.10.6/js/jquery.dataTables.min.js')
+
+    script(src='/js/lib/d3/d3.min.js')
+
+    script(src='/js/lib/underscore/underscore-min.js')
+    
+
+    //- TODO Put this in a block JS section for the pages its needed on.
+    script(src='/js/ui.js')
+
+    include shared/analytics
+
+    script(src='/js/site/functions_general.js')
+    script(src='/js/site/_config.js')
+    script(src='/js/site/functions_events.js')
+    script(src='/js/site/functions_d3.js')
+    script(src='/js/site/functions_posts.js')
+    script(src='/js/site/functions_routes.js')
+    script(src='/js/site/app.js')
+
+    block js

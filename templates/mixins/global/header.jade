@@ -1,0 +1,18 @@
+mixin header
+  header
+    if user
+      .row
+        .col-xs-12
+          a.header-logo(href="/" title="Cadence Home")
+            img(src="/images/logo.png" alt="Cadence Logo")
+          ul.header-items
+            if showDates
+              li: +date
+            li: a.event-alert-item(href='/accounts/'+user.accountName+'/events')
+              .glyphicon.glyphicon-bell
+                .event-alert
+                  span 10
+            if user.canAccessKeystone
+              li: a(href='/keystone') Keystone
+            li: a(href='/user/'+user.key).user
+              =user.name.first

@@ -1,0 +1,15 @@
+extends ../../layouts/default
+
+block content
+	.row.content-row
+		.col-xs-12
+			h1.view-title=title
+	.row.content-row
+		+social-graph('reach')
+	.row.content-row
+		+social-graph('engagement')
+	.row.content-row
+		+social-graph('acquisition')
+	.row.content-row
+		+social-graph('topPosts')
+		+social-graph('topCountries')

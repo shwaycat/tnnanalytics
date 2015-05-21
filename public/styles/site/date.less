@@ -1,0 +1,194 @@
+@transition_modal_short: 0.15s;
+@transition_modal_shorter: 0.05s;
+
+.modal {
+	.modal-dialog {
+		margin: 3em auto;
+		width: 90%;
+		.respond-md({
+		  width: 70%;
+		});
+		.respond-lg({
+			width:60%;
+		});
+		.responsive(1920px, {
+			width:40%;
+		});
+		button {
+			outline:0 !important;
+		}
+		.modal-content {
+			-webkit-border-radius: 0;
+			-moz-border-radius: 0;
+			border-radius: 0;
+			background-color:@background_element;
+		}
+		.modal-header {
+			border-bottom:0;
+			padding: 0.75em;
+			button {
+				font-size: 1.2em;
+				text-shadow: 0 0 0 rgba(0,0,0,0);
+				opacity: 1;
+				color:@gray;
+				height: 2em;
+				margin-top: 0;
+				.transition(@transition_modal_short);
+				&:hover {
+					.transition(@transition_modal_short);
+					color:@lightGray;
+				}
+			}
+			.section-title {
+				padding: 0.25em;
+			}
+		}
+		.modal-footer {
+			border-top:0;
+			padding: 1em 15px 1.5em;
+			button {
+				width: 6em;
+				font-size: 1.15em;
+				margin-left: 0.5em;
+			}
+		}
+		.modal-body {
+			padding: 0.75em 1.75em 2em;
+			.date-selection-warning {
+				display:none;
+				color:@element_alert_lighter_highlight;
+				font-weight: normal;
+				text-align: center;
+				font-size: 1.2em;
+				width: 80%;
+				margin: auto;
+				&.active {
+					display:block;
+				}
+			}
+			.date-calendars {
+				.clearfix();
+			}
+			.date-selection {
+				display: block;
+			  position: relative;
+			  text-align: center;
+			  padding-top: 1em;
+			  font-size: 1.5em;
+			  padding-bottom: 1em;
+			}
+		}
+	}
+}
+
+
+
+.datepicker {
+	width: 100% !important;
+	height: auto !important;
+	.datepickerContainer {
+		width: 100% !important;
+		height: auto !important;
+		position: relative !important;
+	  top: 0 !important;
+	  left: 0 !important;
+	  padding: 2em;
+	  background-color:@background_element_lighter;
+	  &.datepickerWarning {
+	  	border:2px solid @element_alert_lighter;
+	  }
+		table {
+			width: 100%;
+
+			> thead > tr,
+			> tbody > tr,
+			> tfoot > tr,
+			> thead > tr,
+			> tbody > tr,
+			> tfoot > tr {
+
+			}
+			> thead > tr > th,
+			> tbody > tr > th,
+			> tfoot > tr > th,
+			> thead > tr > td,
+			> tbody > tr > td,
+			> tfoot > tr > td {
+				&.datepickerWeek {
+					a {
+						&:hover {
+							background-color:transparent !important;
+							.transition(@transition_modal_shorter);
+						}
+						span {
+							font-size: 0.9em;
+							font-weight: normal;
+							color: #575656;
+							.transition(@transition_modal_shorter);
+						}
+						
+					}
+				}
+				font-family: @font_main;
+				&.datepickerSelected {
+					background-color:transparent;
+					a {
+						background-color:@date_highlight !important;
+						color:white;
+						.transition(@transition_modal_shorter);
+					}
+				}
+				a {
+					text-align: center;
+					margin: auto;
+					padding-left:0;
+					padding-right:0;
+					height: auto;
+					font-weight:300;
+					width:100%;
+					.transition(@transition_modal_shorter);
+					&:hover {
+						background-color:@date_highlight_light;
+						color:white;
+						.transition(@transition_modal_shorter);
+					}
+					
+					span {
+						display: block;
+						padding-top:0.3em;
+						padding-bottom:0.3em;
+						font-size:1.1em;
+						.respond-md({
+							padding-top: 0.5em;
+						  padding-bottom: 0.5em;
+						  font-size: 1.3em;
+						});
+					}
+				}
+			}
+			thead {
+				tr {
+					th {
+						span {
+							text-align: center;
+							margin: auto;
+							display: block;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	.datepickerBorderT, .datepickerBorderB, .datepickerBorderL, .datepickerBorderR, .datepickerBorderTL, .datepickerBorderTR, .datepickerBorderBL, .datepickerBorderBR {
+		background:none;
+		display:none;
+	}
+}
+
+
+
+
+
+
+
