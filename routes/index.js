@@ -107,7 +107,7 @@ exports = module.exports = function(app) {
   app.get('/api/1.0/youtube/acquisition', routes.api.youtube.acquisition);
   // app.get('/api/1.0/youtube/reach', routes.api.youtube.reach);
   app.get('/api/1.0/youtube/topVideo', routes.api.youtube.topVideo);
-  app.get('/api/1.0/youtube/topCountries', routes.api.youtube.topCountries);
+  // app.get('/api/1.0/youtube/topCountries', routes.api.youtube.topCountries);
 
   // Keyword Alerts
   // /alerts expects query strings with page

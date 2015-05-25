@@ -122,6 +122,22 @@ function buildSeries() {
         series.push(deleteDeltasBySource('instagram'));
       }
 
+      if(argv['youtube-subscriberCounts'] || argv['youtube-all']) {
+        series.push(deleteDocsByType('youtube', 'subscribercount'));
+      }
+
+      if(argv['youtube-videos'] || argv['youtube-all']) {
+        series.push(deleteDocsByType('youtube', 'video'));
+      }
+
+      if(argv['youtube-comments'] || argv['youtube-all']) {
+        series.push(deleteDocsByType('youtube', 'comment'));
+      }
+
+      if(argv['youtube-deltas'] || argv['youtube-all']) {
+        series.push(deleteDeltasBySource('youtube'));
+      }
+
     return series;
 
   } else {
@@ -339,6 +355,12 @@ function showHelp() {
   console.log('--instagram-media                Delete all Instagram media');
   console.log('--instagram-comments             Delete all Instagram comments');
   console.log('--instagram-deltas               Delete all Instagram deltas');
+  console.log('');
+  console.log('--youtube-all                    Delete all YouTube objects');
+  console.log('--youtube-followerCounts         Delete all YouTube SubscriberCounts');
+  console.log('--youtube-media                  Delete all YouTube videos');
+  console.log('--youtube-comments               Delete all YouTube comments');
+  console.log('--youtube-deltas                 Delete all YouTube deltas');
   console.log('<options>');
   console.log('--u <user email>                 Perform actions on specified user.')
   console.log('');

@@ -6,7 +6,7 @@ module.exports = function(done) {
       indexName = keystone.get('elasticsearch index');
 
   async.series({
-    createMappingInstagram: function(callback) {
+    createMappingYoutTube: function(callback) {
       esClient.indices.putMapping({
         index: indexName,
         type: 'youtube',
@@ -24,7 +24,7 @@ module.exports = function(done) {
         }
       }, callback);
     },
-    createMappingInstagramDelta: function(callback) {
+    createMappingYoutTubeDelta: function(callback) {
       esClient.indices.putMapping({
         index: indexName,
         type: 'youtube_delta',
