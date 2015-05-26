@@ -100,6 +100,15 @@ exports = module.exports = function(app) {
   app.get('/api/1.0/instagram/topPost', routes.api.instagram.topPost);
   app.get('/api/1.0/instagram/topCountries', routes.api.instagram.topCountries);
 
+
+  // YouTube Endpoints
+  // They all expect query strings with startTime endTime
+  app.get('/api/1.0/youtube/engagement', routes.api.youtube.engagement);
+  app.get('/api/1.0/youtube/acquisition', routes.api.youtube.acquisition);
+  // app.get('/api/1.0/youtube/reach', routes.api.youtube.reach);
+  app.get('/api/1.0/youtube/topVideo', routes.api.youtube.topVideo);
+  // app.get('/api/1.0/youtube/topCountries', routes.api.youtube.topCountries);
+
   // Keyword Alerts
   // /alerts expects query strings with page
   app.get('/api/1.0/alerts', routes.api.alerts.index);
