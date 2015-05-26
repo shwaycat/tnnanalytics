@@ -9,7 +9,7 @@ module.exports = function() {
 
     'less': 'public',
     'static': 'public',
-    'favicon': 'public/favicon.ico',
+    'favicon': 'public/images/favicons/favicon.ico',
     'views': 'templates/views',
     'view engine': 'jade',
 
