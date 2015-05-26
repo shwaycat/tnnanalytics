@@ -3,6 +3,10 @@
 ///////////////////////////
 
 function type(d) {
+  var d = {
+    key: false,
+    value: false
+  };
   d.key = new Date(d.key);
   d.value = +d.value;
   return d;
