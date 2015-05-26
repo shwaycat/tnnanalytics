@@ -148,12 +148,15 @@ exports = module.exports = function(req, res) {
         return res.apiResponse({
           success: true,
           type: 'engagement',
-          source: 'instagram',
+          source: 'youtube',
           queryString: req.query,
           data: dataReturn,
           summary: {
-            "totalLikes" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.likes; }, 0),
-            "totalComments" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.comments; }, 0)
+            "totalViews" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.viewCount; }, 0),
+            "totalLikes" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.likeCount; }, 0),
+            "totalDislikes" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.dislikeCount; }, 0),
+            "totalComments" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.commentCount; }, 0),
+            "totalShares" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.shareCount; }, 0)
           }
         });
       } else {
