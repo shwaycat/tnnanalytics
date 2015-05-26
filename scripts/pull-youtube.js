@@ -31,9 +31,9 @@ function pullType(docType) {
 
 require('../lib/keystone-script')(connectES, function(done) {
   async.auto({
-    // subscriberCount: pullType(youtubeSource.subscriberCount),
-    // video: pullType(youtubeSource.video)
-    comment: pullType(youtubeSource.comment)
+    subscriberCount: pullType(youtubeSource.subscriberCount),
+    video: pullType(youtubeSource.video),
+    comment: [ 'video', pullType(youtubeSource.comment) ]
   }, function(err) {
     if (err) {
       errorHandling.logError(err);
