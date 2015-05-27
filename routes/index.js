@@ -98,7 +98,7 @@ exports = module.exports = function(app) {
   app.get('/api/1.0/instagram/engagement', routes.api.instagram.engagement);
   app.get('/api/1.0/instagram/acquisition', routes.api.instagram.acquisition);
   app.get('/api/1.0/instagram/topPost', routes.api.instagram.topPost);
-  app.get('/api/1.0/instagram/topCountries', routes.api.instagram.topCountries);
+  // app.get('/api/1.0/instagram/topCountries', routes.api.instagram.topCountries);
 
 
   // YouTube Endpoints
