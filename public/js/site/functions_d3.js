@@ -3,13 +3,13 @@
 ///////////////////////////
 
 function type(d) {
-  var d = {
+  var q = {
     key: false,
     value: false
   };
-  d.key = new Date(d.key);
-  d.value = +d.value;
-  return d;
+  q.key = new Date(d.key);
+  q.value = +d.value;
+  return q;
 }
 
 
@@ -59,18 +59,6 @@ function lineGraph(data, options, success){
   height = parseInt(svg.style('height'));
   var padding = 45;
   var interpolateType = 'linear';
-  var yMin = function(){
-    var min = d3.min(theData, function(d) {
-      d = type(d); return d.value;
-    });
-    var max = d3.max(theData, function(d) {
-      d = type(d); return d.value;
-    });
-    if (min == max || min > max) {
-      min = 0;
-    }
-    return min;
-  }
 
    // Setup our x/y d3 functions and axes.
   x = d3.time.scale()
@@ -81,7 +69,9 @@ function lineGraph(data, options, success){
         })])
         .range([padding*2, width - padding*2]);
   y = d3.scale.linear()
-      .domain([yMin, d3.max(theData, function(d) {
+      .domain([d3.min(theData, function(d) {
+        d = type(d); return d.value;
+      }), d3.max(theData, function(d) {
         d = type(d); return d.value;
       })])
       .range([height - padding*2, padding/2]);
@@ -95,9 +85,9 @@ function lineGraph(data, options, success){
   // Area Function
   var area = d3.svg.area()
       .interpolate(interpolateType)
-      .x(function(d) { return x(d.key); })
+      .x(function(d) { d = type(d); return x(d.key); })
       .y0(height - padding*2)
-      .y1(function(d) {  return y(d.value) });
+      .y1(function(d) {  d = type(d); return y(d.value) });
 
   // Line Function
   var line = d3.svg.line()
