@@ -32,82 +32,64 @@ exports = module.exports = function(req, res) {
       from: (page-1) * size,
       body: {
         "query": {
-          "filtered": {
-            "query": {
-              "bool": {
-                "must": [
+          "function_score": {
+            "filter": {
+              "and": {
+                "filters": [
                   {
-                    "terms": {
-                      "alertState": [
-                        "new",
-                        "open",
-                        "closed",
-                        "benign"
-                      ]
+                    "exists": {
+                      "field": "alertState"
+                    }
+                  },
+                  {
+                    "term": {
+                      "cadence_user_id": accountRoot.id
                     }
                   }
-                ],
-                "should": [
-                  {
-                    "term": {
-                      "alertState": {
-                        "value": "new"
-                      }
-                    }
-                  },
-                  {
-                    "term": {
-                      "alertState": {
-                        "value": "new"
-                      }
-                    }
-                  },
-                  {
-                    "term": {
-                      "alertState": {
-                        "value": "new"
-                      }
-                    }
-                  },
-                  {
-                    "term": {
-                      "alertState": {
-                        "value": "open"
-                      }
-                    }
-                  },
-                  {
-                    "term": {
-                      "alertState": {
-                        "value": "open"
-                      }
-                    }
-                  },
-                  {
-                    "term": {
-                      "alertState": {
-                        "value": "closed"
-                      }
-                    }
-                  }
-                ],
-                "boost": 1.2
+                ]
               }
             },
-            "filter": {
-              "term": {
-                "cadence_user_id": accountRoot.id
+            "functions": [
+              {
+                "filter": {
+                  "term": {
+                    "alertState": "new"
+                  }
+                },
+                "weight": 3
+              },
+              {
+                "filter": {
+                  "term": {
+                    "alertState": "open"
+                  }
+                },
+                "weight": 2
+              },
+              {
+                "filter": {
+                  "term": {
+                    "alertState": "closed"
+                  }
+                },
+                "weight": 1.5
               }
-            }
+            ]
           }
         },
         "sort": [
           {
+            "_score": {
+              "order": "desc"
+            }
+          },
+          {
             "timestamp": {
-              "order": "asc"
+              "order": "desc"
             }
           }
-        ]
+        ],
+        "track_scores": true
       }
     }, function(err, response){
       if(err) return res.apiResponse({"error": err});
