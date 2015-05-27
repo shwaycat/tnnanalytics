@@ -1,18 +1,23 @@
 var STRING_STATUS_NEW = 'new',
     STRING_STATUS_NEW_CLASS = 'status-new',
-    STRING_STATUS_NEW_BUTTON = 'Mark Complete',
+    STRING_STATUS_NEW_BUTTON = 'Complete',
     STRING_STATUS_OPEN = 'open',
     STRING_STATUS_OPEN_CLASS = 'status-open',
-    STRING_STATUS_OPEN_BUTTON = 'Mark Complete',
+    STRING_STATUS_OPEN_BUTTON = 'Complete',
     STRING_STATUS_CLOSED = 'closed',
     STRING_STATUS_CLOSED_CLASS = 'status-closed',
-    STRING_STATUS_CLOSED_BUTTON = 'Mark Incomplete',
-    // STRING_STATUS_FALSE = 'closed',
-    // STRING_STATUS_FALSE_CLASS = 'status-closed',
-    // STRING_STATUS_FALSE_BUTTON = 'Mark Incomplete',
+    STRING_STATUS_CLOSED_BUTTON = 'Incomplete',
+    STRING_STATUS_FALSE = 'benign',
+    STRING_STATUS_FALSE_FRONT = 'false',
+    STRING_STATUS_FALSE_CLASS = 'status-false',
+    STRING_STATUS_FALSE_ACTION_CLASS = 'status-false-action',
+    STRING_STATUS_FALSE_BUTTON = 'Incomplete',
+    STRING_STATUS_FALSE_ACTION_BUTTON = 'False',
     statusClass = '',
     statusOrder = 0,
+    statusText = '',
     urlHtml = '',
+    actionButtonHtml =  '',
     STRING_ALERTS_MESSAGE = ' New or Open Keyword Alert',
     STRING_ALERTS_MESSAGE_PLURAL = ' New or Open Keyword Alerts';
     STRING_CLOSEALL_ERROR = 'There was a error with the request.'
@@ -71,8 +76,10 @@ function eventsTableData(apiObj, table){
 
       statusClass = '';
       actionText = '';
+      statusText = '';
       statusOrder = 0;
       urlHtml = '';
+      actionButtonHtml = '';
 
       var currentEvent,
           currentEvent_creation,
@@ -119,21 +126,35 @@ function eventsTableData(apiObj, table){
       // Delegates whether an event is new or open
       if (currentEvent.alertState == STRING_STATUS_NEW){
 
+        statusText = STRING_STATUS_NEW;
         statusClass = STRING_STATUS_NEW_CLASS;
         actionText = STRING_STATUS_NEW_BUTTON;
         statusOrder = 0;
+        actionButtonHtml = '<button class="btn btn-default event-action-btn '+statusClass+'">'+actionText+'</button><button class="btn btn-default event-false-action-btn '+STRING_STATUS_FALSE_ACTION_CLASS+'">'+STRING_STATUS_FALSE_ACTION_BUTTON+'</button>';
 
       } else if (currentEvent.alertState == STRING_STATUS_OPEN){
 
+        statusText = STRING_STATUS_OPEN;
         statusClass = STRING_STATUS_OPEN_CLASS;
         actionText = STRING_STATUS_OPEN_BUTTON;
         statusOrder = 1;
+        actionButtonHtml = '<button class="btn btn-default event-action-btn '+statusClass+'">'+actionText+'</button><button class="btn btn-default event-false-action-btn '+STRING_STATUS_FALSE_ACTION_CLASS+'">'+STRING_STATUS_FALSE_ACTION_BUTTON+'</button>';
 
       } else if (currentEvent.alertState == STRING_STATUS_CLOSED){
 
+        statusText = STRING_STATUS_CLOSED;
         statusClass = STRING_STATUS_CLOSED_CLASS;
         actionText = STRING_STATUS_CLOSED_BUTTON;
         statusOrder = 2;
+        actionButtonHtml = '<button class="btn btn-default event-action-btn '+statusClass+'">'+actionText+'</button><button class="btn btn-default event-false-action-btn '+STRING_STATUS_FALSE_ACTION_CLASS+'">'+STRING_STATUS_FALSE_ACTION_BUTTON+'</button>';
+
+      } else if (currentEvent.alertState == STRING_STATUS_FALSE){
+
+        statusText = STRING_STATUS_FALSE_FRONT;
+        statusClass = STRING_STATUS_FALSE_CLASS;
+        actionText = STRING_STATUS_FALSE_BUTTON;
+        statusOrder = 3;
+        actionButtonHtml = '<button class="btn btn-default event-action-btn '+statusClass+'">'+actionText+'</button><button style="display:none;" class="btn btn-default event-false-action-btn '+STRING_STATUS_FALSE_ACTION_CLASS+'">'+STRING_STATUS_FALSE_ACTION_BUTTON+'</button>';
 
       }
 
@@ -144,13 +165,13 @@ function eventsTableData(apiObj, table){
       }
 
       // Create the table row with the given data
-      tableHTML += '<tr data-status="'+currentEvent.alertState+'" data-type="'+currentEvent._type+'" data-id="'+currentEvent._id+'"" class="'+statusClass+'">';
-      tableHTML += '<td class="event-item-status"><span class="event-item-robot">'+statusOrder+'</span>'+currentEvent.alertState.capitalizeFirstLetter()+'</td>';
+      tableHTML += '<tr data-status="'+statusText+'" data-type="'+currentEvent._type+'" data-id="'+currentEvent._id+'"" class="'+statusClass+'">';
+      tableHTML += '<td class="event-item-status"><span class="event-item-robot">'+statusOrder+'</span>'+statusText.capitalizeFirstLetter()+'</td>';
       tableHTML += '<td><span class="event-item-robot">'+currentEvent_creation+'</span>'+currentEvent_creation_human+'</td>';
       tableHTML += '<td>'+currentEvent._type.capitalizeFirstLetter()+'</td>';
       tableHTML += '<td><span class="event-item-robot">'+currentEvent._id+'</span><span class="event-item-human" data-toggle="tooltip" data-trigger="click" data-placement="top" title='+currentEvent._id+'>'+currentEvent_id_short+'</span></td>';
       tableHTML += '<td class="event-item-accessed"><span class="event-item-robot">'+currentEvent_accessed+'</span><span class="event-item-human">'+currentEvent_accessed_human.capitalizeFirstLetter()+'</span></td>';
-      tableHTML += '<td><button class="btn btn-default event-action-btn '+statusClass+'">'+actionText+'</td>';
+      tableHTML += '<td class="event-item-action-buttons">'+actionButtonHtml+'</td>';
       tableHTML += '<td class="event-item-link event-link-cell">'+urlHtml+'<span class="entypo entypo-chevron-right"></span></td>';
       tableHTML += '</tr>';
 
@@ -277,7 +298,7 @@ function eventsDirectMessage(){
 }
 
 function eventsTableUpdateController(){
-  $('.event-action-btn, .event-item-link').on('click',function(){
+  $('.event-action-btn, .event-false-action-btn, .event-item-link').on('click',function(){
     var clicked = $(this),
         row = clicked.parents('tr'),
         statusItem = row.find('.event-item-status'),
@@ -286,6 +307,7 @@ function eventsTableUpdateController(){
         eventType = row.data('type'),
         eventStatus = row.data('status'),
         eventStatusButton = row.find('.event-action-btn'),
+        eventFalseButton = row.find('.event-false-action-btn'),
         alertState,
         postObj = {};
 
@@ -315,6 +337,10 @@ function eventsTableUpdateController(){
         alertState = STRING_STATUS_CLOSED;
       } else if (clicked.hasClass(STRING_STATUS_CLOSED_CLASS)) {
         alertState = STRING_STATUS_OPEN;
+      } else if (clicked.hasClass(STRING_STATUS_FALSE_CLASS)) {
+        alertState = STRING_STATUS_OPEN;
+      } else if (clicked.hasClass(STRING_STATUS_FALSE_ACTION_CLASS)) {
+        alertState = STRING_STATUS_FALSE;
       }
 
       postObj = {
@@ -343,8 +369,7 @@ function eventsTableUpdateController(){
       "alertState": "closed",
       "all": true
     }
-    eventsStatusUpdate(postObj);
-  });
+    eventsStatusUpdate(postObj);  });
 
 }
 
@@ -366,33 +391,98 @@ function eventsStatusUpdate(postObj, row, clicked, statusItem, accessedItem, pos
 
         if (postClicked) {
 
-          row.removeClass(STRING_STATUS_NEW_CLASS).addClass(STRING_STATUS_OPEN_CLASS);
-          clicked.removeClass(STRING_STATUS_NEW_CLASS).addClass(STRING_STATUS_OPEN_CLASS);
-          clicked.html(STRING_STATUS_OPEN_BUTTON);
-          statusItem.html('<span class="event-item-robot">'+1+'</span>'+STRING_STATUS_OPEN.capitalizeFirstLetter());
+          row
+            .removeClass(STRING_STATUS_NEW_CLASS)
+            .addClass(STRING_STATUS_OPEN_CLASS)
+            .data('status') = STRING_STATUS_OPEN;
+          clicked
+            .removeClass(STRING_STATUS_NEW_CLASS)
+            .addClass(STRING_STATUS_OPEN_CLASS);
+          clicked
+            .html(STRING_STATUS_OPEN_BUTTON);
+          statusItem
+            .html('<span class="event-item-robot">'+1+'</span>'+STRING_STATUS_OPEN.capitalizeFirstLetter());
 
         } else {
 
           if (clicked.hasClass(STRING_STATUS_NEW_CLASS)) {
 
-            row.removeClass(STRING_STATUS_NEW_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
-            clicked.removeClass(STRING_STATUS_NEW_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
-            clicked.html(STRING_STATUS_CLOSED_BUTTON);
-            statusItem.html('<span class="event-item-robot">'+2+'</span>'+STRING_STATUS_CLOSED.capitalizeFirstLetter());
+            row
+              .removeClass(STRING_STATUS_NEW_CLASS)
+              .addClass(STRING_STATUS_CLOSED_CLASS)
+              .data.status = STRING_STATUS_CLOSED;
+            clicked
+              .removeClass(STRING_STATUS_NEW_CLASS)
+              .addClass(STRING_STATUS_CLOSED_CLASS);
+            clicked
+              .html(STRING_STATUS_CLOSED_BUTTON);
+            statusItem
+              .html('<span class="event-item-robot">'+2+'</span>'+STRING_STATUS_CLOSED.capitalizeFirstLetter());
 
           } else if (clicked.hasClass(STRING_STATUS_OPEN_CLASS)) {
 
-            row.removeClass(STRING_STATUS_OPEN_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
-            clicked.removeClass(STRING_STATUS_OPEN_CLASS).addClass(STRING_STATUS_CLOSED_CLASS);
-            clicked.html(STRING_STATUS_CLOSED_BUTTON);
-            statusItem.html('<span class="event-item-robot">'+2+'</span>'+STRING_STATUS_CLOSED.capitalizeFirstLetter());
+            row
+              .removeClass(STRING_STATUS_OPEN_CLASS)
+              .addClass(STRING_STATUS_CLOSED_CLASS)
+              .data.status = STRING_STATUS_CLOSED;
+            clicked
+              .removeClass(STRING_STATUS_OPEN_CLASS)
+              .addClass(STRING_STATUS_CLOSED_CLASS);
+            clicked
+              .html(STRING_STATUS_CLOSED_BUTTON);
+            statusItem
+              .html('<span class="event-item-robot">'+2+'</span>'+STRING_STATUS_CLOSED.capitalizeFirstLetter());
 
           } else if (clicked.hasClass(STRING_STATUS_CLOSED_CLASS)) {
 
-            row.removeClass(STRING_STATUS_CLOSED_CLASS).addClass(STRING_STATUS_OPEN_CLASS);
-            clicked.removeClass(STRING_STATUS_CLOSED_CLASS).addClass(STRING_STATUS_OPEN_CLASS);
-            clicked.html(STRING_STATUS_OPEN_BUTTON);
-            statusItem.html('<span class="event-item-robot">'+1+'</span>'+STRING_STATUS_OPEN.capitalizeFirstLetter());
+            row
+              .removeClass(STRING_STATUS_CLOSED_CLASS)
+              .addClass(STRING_STATUS_OPEN_CLASS)
+              .data.status = STRING_STATUS_OPEN;
+            clicked
+              .removeClass(STRING_STATUS_CLOSED_CLASS)
+              .addClass(STRING_STATUS_OPEN_CLASS);
+            clicked
+              .html(STRING_STATUS_OPEN_BUTTON);
+            statusItem
+              .html('<span class="event-item-robot">'+1+'</span>'+STRING_STATUS_OPEN.capitalizeFirstLetter());
+
+          } else if (clicked.hasClass(STRING_STATUS_FALSE_CLASS)) {
+
+            row
+              .removeClass(STRING_STATUS_FALSE_CLASS)
+              .addClass(STRING_STATUS_OPEN_CLASS)
+              .data.status = STRING_STATUS_OPEN;
+            clicked
+              .removeClass(STRING_STATUS_FALSE_CLASS)
+              .addClass(STRING_STATUS_OPEN_CLASS);
+            clicked
+              .html(STRING_STATUS_OPEN_BUTTON);
+            statusItem
+              .html('<span class="event-item-robot">'+1+'</span>'+STRING_STATUS_OPEN.capitalizeFirstLetter());
+            clicked
+              .next('.event-false-action-btn').show();
+
+          } else if (clicked.hasClass(STRING_STATUS_FALSE_ACTION_CLASS)) {
+
+            row
+              .removeClass(STRING_STATUS_NEW_CLASS)
+              .removeClass(STRING_STATUS_OPEN_CLASS)
+              .removeClass(STRING_STATUS_CLOSED_CLASS)
+              .addClass(STRING_STATUS_FALSE_CLASS)
+              .data.status = STRING_STATUS_FALSE_FRONT;
+            clicked
+              .siblings('.event-action-btn')
+              .removeClass(STRING_STATUS_NEW_CLASS)
+              .removeClass(STRING_STATUS_OPEN_CLASS)
+              .removeClass(STRING_STATUS_CLOSED_CLASS)
+              .addClass(STRING_STATUS_FALSE_CLASS);
+            clicked
+              .siblings('.event-action-btn')
+              .html(STRING_STATUS_FALSE_BUTTON);
+            statusItem
+              .html('<span class="event-item-robot">'+3+'</span>'+STRING_STATUS_FALSE_FRONT.capitalizeFirstLetter());
+            clicked.hide();
 
           }
 

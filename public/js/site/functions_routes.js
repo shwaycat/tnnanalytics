@@ -59,7 +59,7 @@ function routesInit(resizeOnce){
     dataController('line',  'acquisition', '/api/1.0/youtube/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'youtube'});
     dataController('donut', 'topCountries', '/api/1.0/youtube/topCountries', currentSelectedDate, {selector: '#topCountries', source: 'youtube'});
     if (!resizeOnce){
-      dataController('topYoutubeVideo', 'topYoutubeVideo', '/api/1.0/youtube/topPost', currentSelectedDate, {selector: '#topYoutubeVideo', source: 'youtube' });
+      dataController('topYoutubeVideo', 'topYoutubeVideo', '/api/1.0/youtube/topVideo', currentSelectedDate, {selector: '#topYoutubeVideo', source: 'youtube' });
     }
   }
   if ($('body.analytics-all')[0]){
