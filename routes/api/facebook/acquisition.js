@@ -107,7 +107,7 @@ module.exports = function(req, res) {
           data: data,
           summary: {
             totalLikes: _.last(data).value,
-            changeInLikes: _.last(dataReturn).value - _.first(dataReturn).value
+            changeInLikes: _.last(data).value - _.first(data).value
           }
         });
       } else {
