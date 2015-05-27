@@ -59,18 +59,6 @@ function lineGraph(data, options, success){
   height = parseInt(svg.style('height'));
   var padding = 45;
   var interpolateType = 'linear';
-  var yMin = function(){
-    var min = d3.min(theData, function(d) {
-      d = type(d); return d.value;
-    });
-    var max = d3.max(theData, function(d) {
-      d = type(d); return d.value;
-    });
-    if (min == max || min > max) {
-      min = 0;
-    }
-    return min;
-  }
 
    // Setup our x/y d3 functions and axes.
   x = d3.time.scale()
