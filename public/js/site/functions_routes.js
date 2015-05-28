@@ -35,7 +35,6 @@ function routesInit(resizeOnce){
 
     dataController('line',  'engagement', '/api/1.0/instagram/engagement',   currentSelectedDate, {selector: '#engagement', source: 'instagram'});
     dataController('line',  'acquisition', '/api/1.0/instagram/acquisition',  currentSelectedDate, {selector: '#acquisition', source: 'instagram'});
-    dataController('donut', 'topCountries', '/api/1.0/instagram/topCountries', currentSelectedDate, {selector: '#topCountries', source: 'instagram'});
     if (!resizeOnce){
       dataController('topInstagramPost', 'topInstagramPost', '/api/1.0/instagram/topPost',     currentSelectedDate, {selector: '#topInstagramPost', source: 'instagram'});
     }
@@ -46,7 +45,6 @@ function routesInit(resizeOnce){
     dataController('line',  'reach', '/api/1.0/google/reach',               currentSelectedDate, {selector: '#reach', source: 'google'});
     dataController('line',  'engagement', '/api/1.0/google/engagement',     currentSelectedDate, {selector: '#engagement', source: 'google'});
     dataController('line',  'acquisition', '/api/1.0/google/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'google'});
-    dataController('donut', 'topCountries', '/api/1.0/google/topCountries', currentSelectedDate, {selector: '#topCountries', source: 'google'});
     if (!resizeOnce){
       dataController('topGooglePost', 'topGooglePost', '/api/1.0/google/topPost', currentSelectedDate, {selector: '#topGooglePost', source: 'google' });
     }

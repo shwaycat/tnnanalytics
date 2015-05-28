@@ -60,6 +60,27 @@ function lineGraph(data, options, success){
   var padding = 45;
   var interpolateType = 'linear';
 
+  var yMin = 0;
+  var yMax = 0;
+
+  yMin = d3.min(theData, function(d) {
+    d = type(d); return d.value;
+  });
+
+  yMax = d3.max(theData, function(d) {
+    d = type(d); return d.value;
+  });
+
+  if (yMin >= yMax) {
+    // If min and max are even, give it a bit a room to breathe.
+    yMin = yMin * 0.8;
+    yMax = yMax * 1.2;
+  } else {
+    // Otherwise give them the tiniest margin for edge cases.
+    yMin = yMin * 0.999;
+    yMax = yMax * 1.001;
+  }
+
    // Setup our x/y d3 functions and axes.
   x = d3.time.scale()
         .domain([d3.min(theData, function(d) {
@@ -69,11 +90,7 @@ function lineGraph(data, options, success){
         })])
         .range([padding*2, width - padding*2]);
   y = d3.scale.linear()
-      .domain([d3.min(theData, function(d) {
-        d = type(d); return d.value;
-      }), d3.max(theData, function(d) {
-        d = type(d); return d.value;
-      })])
+      .domain([yMin, yMax])
       .range([height - padding*2, padding/2]);
   xAxis = d3.svg.axis().scale(x).ticks(13).tickSize(-height+padding).tickSubdivide(true).orient("bottom");
   yAxis = d3.svg.axis().scale(y).ticks(7).tickSubdivide(true).orient("left").tickFormat(function(d) { return abbreviateNumber(d); });
