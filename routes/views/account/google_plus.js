@@ -13,7 +13,7 @@ exports = module.exports = function(req, res) {
     engagement: "Plus 1 + Comments + Shares",
     acquisition: 'Total "Add to Circles"',
     topGooglePost: "Comments + Shares",
-    topCountries: "Plus 1 + Comments + Shares "
+    topCountries: ""
   };
 
   view.render('account/google-plus');
