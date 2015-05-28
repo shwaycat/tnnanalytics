@@ -17,6 +17,9 @@
 # YouTube pulls every 30 min. All pulls are ALL pulls.
 */30 * * * *    cd current && node scripts/pull-youtube.js &>>log/pull-youtube.log
 
+# Google+ pulls every 30 min. All pulls are ALL pulls.
+*/30 * * * *    cd current && node scripts/pull-googleplus.js &>>log/pull-googleplus.log
+
 # Run Notify every 3 min.
 */3 * * * *    cd current && node scripts/notify.js &>>log/notify.log
 

@@ -32,8 +32,8 @@ function pullType(docType) {
 require('../lib/keystone-script')(connectES, function(done) {
   async.auto({
     page: pullType(googlePlusSource.page),
-    post: pullType(googlePlusSource.post)
-    // comment: [ 'video', pullType(googlePlusSource.comment) ]
+    post: [ 'page', pullType(googlePlusSource.post) ],
+    comment: [ 'post', pullType(googlePlusSource.comment) ]
   }, function(err) {
     if (err) {
       errorHandling.logError(err);
