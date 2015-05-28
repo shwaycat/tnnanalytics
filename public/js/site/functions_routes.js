@@ -7,6 +7,10 @@ function routesInit(resizeOnce){
   if ($('body.dashboard')[0]){
     globalDebug('   Route: Dashboard', 'color:gray;');
 
+    dataController('line',  'reach', '/api/1.0/dashboard/reach',               currentSelectedDate, {selector: '#reach', source: 'dashboard'});
+    dataController('line',  'engagement', '/api/1.0/dashboard/engagement',     currentSelectedDate, {selector: '#engagement', source: 'dashboard'});
+    dataController('line',  'acquisition', '/api/1.0/dashboard/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'dashboard'});
+    dataController('donut', 'refTraffic', '/api/1.0/analyticsAll/refTraffic', currentSelectedDate, {selector: '#refTraffic', source: 'analyticsAll'});
 
   }
   if ($('body.facebook')[0]){
@@ -63,16 +67,19 @@ function routesInit(resizeOnce){
   if ($('body.analytics-all')[0]){
     globalDebug('   Route: Analytics-All', 'color:gray;');
 
+    dataController('donut', 'refTraffic', '/api/1.0/analyticsAll/refTraffic', currentSelectedDate, {selector: '#refTraffic', source: 'analyticsAll'});
 
   }
   if ($('body.analytics-global')[0]){
     globalDebug('   Route: Analytics-Global', 'color:gray;');
 
+    dataController('donut', 'refTraffic', '/api/1.0/analyticsGlobal/refTraffic', currentSelectedDate, {selector: '#refTraffic', source: 'analyticsGlobal'});
 
   }
   if ($('body.analytics-us')[0]){
     globalDebug('   Route: Analytics-Us', 'color:gray;');
 
+    dataController('donut', 'refTraffic', '/api/1.0/analyticsUs/refTraffic', currentSelectedDate, {selector: '#refTraffic', source: 'analyticsUs'});
 
   }
   if ($('body.events')[0] && !resizeOnce){

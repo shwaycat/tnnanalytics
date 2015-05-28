@@ -19,7 +19,8 @@ var cachedData = {
       'topInstagramPost': false,
       'topGooglePost': false,
       'topYoutubeVideo': false,
-      'topCountries': false
+      'topCountries': false,
+      'refTraffic': false
     };
 var cachedSummary = {
       'engagement': false,
@@ -560,3 +561,27 @@ var fakeTopCountryData = [
       }
 
     ]
+
+
+    var fakeRefTraffic = [
+          {
+            "key": "Referral",
+            "value": 101
+          },
+          {
+            "key": "Direct",
+            "value": 443
+          },
+          {
+            "key": "Organic Search",
+            "value": 112
+          },
+          {
+            "key": "Social",
+            "value": 435
+          },
+          {
+            "key": "Other",
+            "value": 34
+          }
+        ]

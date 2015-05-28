@@ -220,7 +220,8 @@ function topGooglePost(data, options, success){
 
     var google_id = theData.data.account_id;
     var post_id = theData.data._id;
-    var googleURL = 'https://plus.google.com/'+google_id+'/posts/'+post_id;
+    var googleURL = theData.data.url;
+    var googleHtml = '<div class="g-post" data-href="'+googleURL+'"></div>'
 
     var newDate = new Date(theData.data.createdAt);
     newDate = (newDate.getMonth() < 10 ? ('0'+newDate.getMonth()) : newDate.getMonth() )+ '/' + (newDate.getDate() < 10 ? ('0'+newDate.getDate()) : newDate.getDate() ) + '/' + newDate.getFullYear();
@@ -246,8 +247,10 @@ function topGooglePost(data, options, success){
       newDetailsHTML += newDetails[i][1];
       newDetailsHTML += '</span></li>';
     }
-    post.find('.g-post')
-      .data().href = googleURL;
+    // post.find('.g-post')
+    //   .data().href = googleURL;
+    post.find('.google-container')
+      .append(googleHtml);
     post.find('.post-details-list')
       .children().remove();
     post.find('.post-details-list')
@@ -256,6 +259,9 @@ function topGooglePost(data, options, success){
       post.find('.post-creation')
         .append(newDate);
     }
+
+    $.getScript("https://apis.google.com/js/plusone.js");
+
   }
 
   $(options.selector).sectionLoad(true, true);
