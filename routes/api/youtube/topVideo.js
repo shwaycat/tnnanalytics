@@ -89,7 +89,7 @@ exports = module.exports = function(req, res) {
                 dislikeCount: video.dislikeCount || 0,
                 commentCount: video.commentCount || 0,
                 shareCount: video.shareCount || 0,
-                score: (parseInt(video.viewCount) || 0) + (parseInt(video.likeCount) || 0) + (parseInt(video.commentCount) || 0) + (parseInt(video.shareCount) || 0) - (parseInt(video.dislikeCount) || 0)
+                score: (parseInt(video.viewCount) || 0) + (parseInt(video.likeCount) || 0) + (parseInt(video.commentCount) || 0) + (parseInt(video.shareCount) || 0)
               });
               nextVideo();
             });

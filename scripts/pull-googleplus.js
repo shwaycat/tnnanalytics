@@ -7,7 +7,7 @@ var argv = require('minimist')(process.argv.slice(2)),
     async = require('async'),
     errorHandling = require('../lib/errorHandling'),
     connectES = require('../lib/connect_es'),
-    googlePlusSource = require('../lib/sources/googlePlus');
+    googlePlusSource = require('../lib/sources/googleplus');
 
 function pullType(docType) {
   return function(callback) {
@@ -31,8 +31,8 @@ function pullType(docType) {
 
 require('../lib/keystone-script')(connectES, function(done) {
   async.auto({
-    page: pullType(googlePlusSource.page)
-    // video: pullType(googlePlusSource.video),
+    page: pullType(googlePlusSource.page),
+    post: pullType(googlePlusSource.post)
     // comment: [ 'video', pullType(googlePlusSource.comment) ]
   }, function(err) {
     if (err) {

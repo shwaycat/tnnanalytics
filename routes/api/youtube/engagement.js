@@ -124,9 +124,12 @@ exports = module.exports = function(req, res) {
         if(buckets.length == 1) {
           first = {
             key:startTime.toISOString(),
-            likes:0,
-            comments:0,
-            value:0
+            viewCount: 0,
+            likeCount: 0,
+            dislikeCount: 0,
+            commentCount: 0,
+            shareCount: 0,
+            value: 0
           }
           dataReturn.push(first);
         }
@@ -138,9 +141,12 @@ exports = module.exports = function(req, res) {
         if(buckets.length == 1) {
           last = {
             key:endTime.toISOString(),
-            likes:0,
-            comments:0,
-            value:0
+            viewCount: 0,
+            likeCount: 0,
+            dislikeCount: 0,
+            commentCount: 0,
+            shareCount: 0,
+            value: 0
           }
           dataReturn.push(last);
         }
