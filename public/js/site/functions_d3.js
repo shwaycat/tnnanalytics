@@ -245,12 +245,26 @@ function donutGraph(data, options, success){
       return d.percent;
     });
 
-  var arc = d3.svg.arc()
-    .outerRadius(radius * 0.65)
-    .innerRadius(radius * 0.45);//.startAngle(function(d) { return d.startAngle + Math.PI/7; }).endAngle(function(d) { return d.endAngle + Math.PI/7; });
-  var outerArc = d3.svg.arc()
-    .innerRadius(radius * 0.9)
-    .outerRadius(radius * 0.9);//.startAngle(function(d) { return d.startAngle + Math.PI/7; }).endAngle(function(d) { return d.endAngle + Math.PI/7; });
+  if (options.rotation != undefined){
+    if (options.rotation == "135") {
+      var arc = d3.svg.arc()
+        .outerRadius(radius * 0.65)
+        .innerRadius(radius * 0.45).startAngle(function(d) { return d.startAngle - Math.PI/6; }).endAngle(function(d) { return d.endAngle - Math.PI/6; });
+      var outerArc = d3.svg.arc()
+        .innerRadius(radius * 0.9)
+        .outerRadius(radius * 0.9).startAngle(function(d) { return d.startAngle - Math.PI/6; }).endAngle(function(d) { return d.endAngle - Math.PI/6; });
+    }
+
+  } else {
+    var arc = d3.svg.arc()
+      .outerRadius(radius * 0.65)
+      .innerRadius(radius * 0.45);//.startAngle(function(d) { return d.startAngle + Math.PI/7; }).endAngle(function(d) { return d.endAngle + Math.PI/7; });
+    var outerArc = d3.svg.arc()
+      .innerRadius(radius * 0.9)
+      .outerRadius(radius * 0.9);//.startAngle(function(d) { return d.startAngle + Math.PI/7; }).endAngle(function(d) { return d.endAngle + Math.PI/7; });
+  }
+
+
   var key = function(d){ return d.data.label; };
 
   svg

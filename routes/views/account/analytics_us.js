@@ -12,7 +12,8 @@ exports = module.exports = function(req, res) {
     reach: "",
     engagement: "",
     acquisition: "",
-    refTraffic: "Referring Traffic"
+    refTraffic: "Referring Traffic",
+    topCountries: "Top Countries"
   };
 
   view.render('account/analytics');

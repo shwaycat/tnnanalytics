@@ -242,6 +242,27 @@ $.fn.sectionLoad = function(reload, eh){
 
 };
 
+function simplifyDataPercentsOnly(data){
+  var theData = data;
+  var newData = {
+    "data": []
+  };
+
+  var totalValues = _.reduce(theData, function(memo, num){ return memo + num.value; }, 0);
+
+  _.each(theData, function(datum, index){
+    datum.percent = Math.round( (datum.value*100/totalValues) *100 )/100 + '%';
+    datum.label = datum.key;
+    newData.data.push(datum);
+
+  });
+
+  newData.data = _.sortBy(newData.data, 'value');
+  newData.data.reverse();
+
+  return newData;
+}
+
 function simplifyData(data, map){
   var theData = data;
   var newData = {
@@ -753,30 +774,33 @@ function dataController(sectionType, type, apiString, dateObj, options){
 
         if (type == 'topCountries'){
           apiObj.data = simplifyData(apiObj.data, apiObj.map);
-          //apiObj.data = simplifyData(fakeTopCountryData, apiObj.map );
-
           cachedData[type] = apiObj;
         } else if (type == 'topTweet'){
           $(options.selector).prev(loadingGifClass).remove();
           cachedData[type] = apiObj;
+        } else if (type == 'refTraffic'){
+          apiObj.data = simplifyDataPercentsOnly(apiObj.data);
+          cachedData[type] = apiObj;
+
         } else {
           cachedData[type] = apiObj;
         }
-        dataControllerDelegation(sectionType, apiObj);
+        dataControllerDelegation(sectionType, type, apiObj);
       });
   } else {
-    dataControllerDelegation(sectionType, cachedData[type]);
+    dataControllerDelegation(sectionType, type, cachedData[type]);
   }
 }
 
-function dataControllerDelegation(sectionType, apiObj){
+function dataControllerDelegation(sectionType, type, apiObj){
   if (sectionType == 'line'){
     lineGraph(apiObj.data, apiObj.options, apiObj.success);
     statsDelegation(apiObj.summary, apiObj.options, apiObj.success);
-    //statsDelegation(fakeSummaryFacebook, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'donut'){
-    donutList(apiObj.data.data_list, apiObj.options, apiObj.success);
+    if (type == 'topCountries'){
+      donutList(apiObj.data.data_list, apiObj.options, apiObj.success);
+    }
     donutGraph(apiObj.data.data, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'topFacebookPost'){
