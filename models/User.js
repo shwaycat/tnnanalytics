@@ -30,7 +30,8 @@ var User = new keystone.List('User', {
 var deps = {
   facebook: { 'services.facebook.isConfigured': true },
   google: { 'services.google.isConfigured': true },
-  twitter: { 'services.twitter.isConfigured': true }
+  twitter: { 'services.twitter.isConfigured': true },
+  instagram: { 'services.instagram.isConfigured': true }
 };
 
 User.add({
