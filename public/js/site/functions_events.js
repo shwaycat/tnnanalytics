@@ -161,14 +161,14 @@ function eventsTableData(apiObj, table){
       if (currentEvent.doc_type == 'direct_message') {
         urlHtml = '<a data-toggle="modal" data-events-url='+currentEvent.url+' data-events-has-modal="true" data-target="#eventsDirectMessageModal">View DM'
       } else {
-        urlHtml = '<a target="_blank" href="'+currentEvent.url+'" title="'+currentEvent._type+' Link">View Event'
+        urlHtml = '<a target="_blank" href="'+currentEvent.url+'" title="'+currentEvent.sourceName+' Link">View Event'
       }
 
       // Create the table row with the given data
-      tableHTML += '<tr data-status="'+statusText+'" data-type="'+currentEvent._type+'" data-id="'+currentEvent._id+'"" class="'+statusClass+'">';
-      tableHTML += '<td class="event-item-status"><span class="event-item-robot">'+statusOrder+'</span>'+statusText.capitalizeFirstLetter()+'</td>';
+      tableHTML += '<tr data-status="'+statusText+'" data-type="'+currentEvent.sourceName+'" data-id="'+currentEvent._id+'"" class="'+statusClass+'">';
+      tableHTML += '<td class="event-item-status"><span class="event-item-robot">'+statusOrder+'</span>'+statusText+'</td>';
       tableHTML += '<td class="event-item-creation"><span class="event-item-robot">'+currentEvent_creation+'</span>'+currentEvent_creation_human+'</td>';
-      tableHTML += '<td>'+currentEvent._type.capitalizeFirstLetter()+'</td>';
+      tableHTML += '<td>'+currentEvent.sourceName+'</td>';
       tableHTML += '<td><span class="event-item-robot">'+currentEvent._id+'</span><span class="event-item-human" data-toggle="tooltip" data-trigger="click" data-placement="top" title='+currentEvent._id+'>'+currentEvent_id_short+'</span></td>';
       tableHTML += '<td class="event-item-accessed"><span class="event-item-robot">'+currentEvent_accessed+'</span><span class="event-item-human">'+currentEvent_accessed_human.capitalizeFirstLetter()+'</span></td>';
       tableHTML += '<td class="event-item-action-buttons">'+actionButtonHtml+'</td>';

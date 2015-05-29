@@ -1,33 +1,32 @@
 mixin social-graph(type, options)
 
-	if type == 'reach'
-		.col-xs-12.col-md-12.col-lg-12.content-block
-			.inner-content
-				h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.reach)
-					=sectionTitles.reach
-				section.novo-graph.novo-line-graph.reach#reach(data-admin-options=options)
+  if type == 'reach'
+    .col-xs-12.col-md-12.col-lg-12.content-block
+      .inner-content
+        h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.reach)
+          =sectionTitles.reach
+        section.novo-graph.novo-line-graph.reach#reach(data-admin-options=options)
 
-	if type == 'engagement'
-		.col-xs-12.col-md-12.col-lg-12.content-block
-			.inner-content
-				h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.engagement)
-					=sectionTitles.engagement
-				section.novo-graph.novo-line-graph.engagement#engagement(data-admin-options=options)
+  if type == 'engagement'
+    .col-xs-12.col-md-12.col-lg-12.content-block
+      .inner-content
+        h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.engagement)
+          =sectionTitles.engagement
+        section.novo-graph.novo-line-graph.engagement#engagement(data-admin-options=options)
 
-	if type == 'acquisition'
-		.col-xs-12.col-md-12.col-lg-12.content-block
-			.inner-content
-				h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.acquisition)
-					=sectionTitles.acquisition
-				section.novo-graph.novo-line-graph.acquisition#acquisition(data-admin-options=options)
+  if type == 'acquisition'
+    .col-xs-12.col-md-12.col-lg-12.content-block
+      .inner-content
+        h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.acquisition)
+          =sectionTitles.acquisition
+        section.novo-graph.novo-line-graph.acquisition#acquisition(data-admin-options=options)
 
-	if type == 'topCountries'
-		.col-xs-12.col-md-12.col-lg-6.content-block.donut-block.equal-height-block-2
-			.inner-content
-				h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.topCountries)
-					=sectionTitles.topCountries
-				section.novo-graph.novo-donut-graph.reach#topCountries(data-admin-options=options)
-				section.novo-data-list
-					h3.data-list-title Top Ten Countries
-					ul.data-list
-					
+  if type == 'topCountries'
+    .col-xs-12.col-md-12.col-lg-6.content-block.donut-block.equal-height-block-2
+      .inner-content
+        h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.topCountries)
+          =sectionTitles.topCountries
+        section.novo-graph.novo-donut-graph.reach#topCountries(data-admin-options=options)
+        section.novo-data-list
+          h3.data-list-title Top Ten Countries
+          ul.data-list

@@ -7,6 +7,10 @@ function routesInit(resizeOnce){
   if ($('body.dashboard')[0]){
     globalDebug('   Route: Dashboard', 'color:gray;');
 
+    dataController('line',  'reach', '/api/1.0/dashboard/reach',               currentSelectedDate, {selector: '#reach', source: 'dashboard'});
+    dataController('line',  'engagement', '/api/1.0/dashboard/engagement',     currentSelectedDate, {selector: '#engagement', source: 'dashboard'});
+    dataController('line',  'acquisition', '/api/1.0/dashboard/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'dashboard'});
+    dataController('donut', 'refTraffic', '/api/1.0/analyticsAll/refTraffic', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsAll'});
 
   }
   if ($('body.facebook')[0]){
@@ -42,11 +46,11 @@ function routesInit(resizeOnce){
   if ($('body.google-plus')[0]){
     globalDebug('   Route: Google-Plus', 'color:gray;');
 
-    dataController('line',  'reach', '/api/1.0/google/reach',               currentSelectedDate, {selector: '#reach', source: 'google'});
-    dataController('line',  'engagement', '/api/1.0/google/engagement',     currentSelectedDate, {selector: '#engagement', source: 'google'});
-    dataController('line',  'acquisition', '/api/1.0/google/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'google'});
+    dataController('line',  'reach', '/api/1.0/googleplus/reach',               currentSelectedDate, {selector: '#reach', source: 'googleplus'});
+    dataController('line',  'engagement', '/api/1.0/googleplus/engagement',     currentSelectedDate, {selector: '#engagement', source: 'googleplus'});
+    dataController('line',  'acquisition', '/api/1.0/googleplus/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'googleplus'});
     if (!resizeOnce){
-      dataController('topGooglePost', 'topGooglePost', '/api/1.0/google/topPost', currentSelectedDate, {selector: '#topGooglePost', source: 'google' });
+      dataController('topGooglePost', 'topGooglePost', '/api/1.0/googleplus/topPost', currentSelectedDate, {selector: '#topGooglePost', source: 'googleplus' });
     }
   }
   if ($('body.youtube')[0]){
@@ -63,16 +67,22 @@ function routesInit(resizeOnce){
   if ($('body.analytics-all')[0]){
     globalDebug('   Route: Analytics-All', 'color:gray;');
 
+    analyticsTableController('/api/1.0/analyticsAll/topCountries', $('#analytics-table'), currentSelectedDate);
+    dataController('donut', 'refTraffic', '/api/1.0/analyticsAll/refTraffic', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsAll'});
 
   }
   if ($('body.analytics-global')[0]){
     globalDebug('   Route: Analytics-Global', 'color:gray;');
 
+    analyticsTableController('/api/1.0/analyticsGlobal/topCountries', $('#analytics-table'), currentSelectedDate);
+    dataController('donut', 'refTraffic', '/api/1.0/analyticsGlobal/refTraffic', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsGlobal'});
 
   }
   if ($('body.analytics-us')[0]){
     globalDebug('   Route: Analytics-Us', 'color:gray;');
 
+    analyticsTableController('/api/1.0/analyticsUs/topCountries', $('#analytics-table'), currentSelectedDate);
+    dataController('donut', 'refTraffic', '/api/1.0/analyticsUs/refTraffic', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsUs'});
 
   }
   if ($('body.events')[0] && !resizeOnce){
