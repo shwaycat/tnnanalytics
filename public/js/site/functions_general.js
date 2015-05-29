@@ -337,14 +337,16 @@ function simplifyData(data, map){
 function donutList(data, options, success){
 
   var theData = data;
-  var post;
   var newDetailsHTML = '';
 
-  post = $(options.selector).siblings('.novo-data-list');
+  $(options.listSelector).remove();
 
   if (success) {
 
     if (theData.length) {
+
+      newDetailsHTML += '<section class="novo-data-list"><h3 class="data-list-title">'+options.listTitle+'</h3><ul class="data-list">';
+
       for (var i = 0; i < theData.length; i++){
         newDetailsHTML += '<li><span>';
         newDetailsHTML += theData[i].label;
@@ -353,19 +355,10 @@ function donutList(data, options, success){
         newDetailsHTML += '</span></li>';
       }
 
-      post.find('.data-list')
-        .children().remove();
-      post.find('.data-list')
-        .append(newDetailsHTML);
-    } else {
-      post.remove();
-    }
-  } else {
-    post.prev('.data-list-title').remove();
-    post.remove();
-    return;
-  }
+      newDetails += '</ul></section>';
 
+    }
+  }
 }
 
 function numberWithCommas(x) {

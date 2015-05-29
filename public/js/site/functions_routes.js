@@ -19,7 +19,7 @@ function routesInit(resizeOnce){
     dataController('line',  'reach', '/api/1.0/facebook/reach',               currentSelectedDate, {selector: '#reach', source: 'facebook'});
     dataController('line',  'engagement', '/api/1.0/facebook/engagement',     currentSelectedDate, {selector: '#engagement', source: 'facebook'});
     dataController('line',  'acquisition', '/api/1.0/facebook/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'facebook'});
-    dataController('donut', 'topCountries', '/api/1.0/facebook/topCountries', currentSelectedDate, {selector: '#topCountries', source: 'facebook'});
+    dataController('donut', 'topCountries', '/api/1.0/facebook/topCountries', currentSelectedDate, {listTitle:'Top Ten Countries', listSelector: '.novo-data-list', selector: '#topCountries', source: 'facebook'});
     if (!resizeOnce){
       dataController('topFacebookPost', 'topFacebookPost', '/api/1.0/facebook/topPost', currentSelectedDate, {selector: '#topFacebookPost', source: 'facebook' });
     }
@@ -29,7 +29,7 @@ function routesInit(resizeOnce){
 
     dataController('line',  'engagement', '/api/1.0/twitter/engagement',   currentSelectedDate, {selector: '#engagement', source: 'twitter'});
     dataController('line',  'acquisition', '/api/1.0/twitter/acquisition',  currentSelectedDate, {selector: '#acquisition', source: 'twitter'});
-    dataController('donut', 'topCountries', '/api/1.0/twitter/topCountries', currentSelectedDate, {selector: '#topCountries', source: 'twitter'});
+    dataController('donut', 'topCountries', '/api/1.0/twitter/topCountries', currentSelectedDate, {listTitle:'Top Ten Countries', listSelector: '.novo-data-list', selector: '#topCountries', source: 'twitter'});
     if (!resizeOnce){
       dataController('topTweet', 'topTweet', '/api/1.0/twitter/topTweet',     currentSelectedDate, {selector: '#topTweet', source: 'twitter'});
     }
@@ -59,7 +59,7 @@ function routesInit(resizeOnce){
     dataController('line',  'reach', '/api/1.0/youtube/reach',               currentSelectedDate, {selector: '#reach', source: 'youtube'});
     dataController('line',  'engagement', '/api/1.0/youtube/engagement',     currentSelectedDate, {selector: '#engagement', source: 'youtube'});
     dataController('line',  'acquisition', '/api/1.0/youtube/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'youtube'});
-    dataController('donut', 'topCountries', '/api/1.0/youtube/topCountries', currentSelectedDate, {selector: '#topCountries', source: 'youtube'});
+    dataController('donut', 'topCountries', '/api/1.0/youtube/topCountries', currentSelectedDate, {listTitle:'Top Ten Countries', listSelector: '.novo-data-list', selector: '#topCountries', source: 'youtube'});
     if (!resizeOnce){
       dataController('topYoutubeVideo', 'topYoutubeVideo', '/api/1.0/youtube/topVideo', currentSelectedDate, {selector: '#topYoutubeVideo', source: 'youtube' });
     }
