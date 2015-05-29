@@ -1,12 +1,11 @@
 var keystone = require('keystone'),
     _ = require('underscore'),
     async = require('async'),
-    debug = require('debug')("cadence:api:youtube:topVideo"),
+    debug = require('debug')("cadence:api:googleplus:topPost"),
     request = require('request'),
     mxm = require('../../../lib/mxm-utils'),
     User = keystone.list('User'),
-    Video = require('../../../lib/sources/youtube/video');
-
+    Post = require('../../../lib/sources/googleplus/post');
 
 exports = module.exports = function(req, res) {
  
@@ -16,7 +15,7 @@ exports = module.exports = function(req, res) {
   var dataReturn = [];
   endTime = new Date();
   startTime = new Date();
-  startTime.setDate(endTime.getDate() - 90);
+  startTime.setDate(endTime.getDate() - 1000);
 
   if(req.query.startTime) {
     startTime = new Date(req.query.startTime);
@@ -34,13 +33,14 @@ exports = module.exports = function(req, res) {
       index: keystone.get('elasticsearch index'),
       from: 0,
       size: 1000000000,
+      type: "googleplus",
       body: {
         "query": {
           "filtered": {
             "query": {
               "term": {
                 "doc_type": {
-                  "value": "video"
+                  "value": "post"
                 }
               }
             },
@@ -69,49 +69,47 @@ exports = module.exports = function(req, res) {
     }, function(err, response) {
       if(err) return res.apiResponse({"error": err});
 
-      var videos = mxm.objTry(response, 'hits', 'hits');
-          scoredVideos = [];
+      var posts = mxm.objTry(response, 'hits', 'hits');
+          scoredPost = [];
         
-        if(!videos || videos.length == 0) return res.apiResponse({"error": "Error with ES search results."});
+        if(!posts || posts.length == 0) return res.apiResponse({"error": "Error with ES search results."});
 
-        async.eachSeries(videos, function(video, nextVideo) {
-          Video.findOne(video._id, function(err, video) {
-            if(err) return nextVideo(err);
+        async.eachSeries(posts, function(post, nextPost) {
+          Post.findOne(post._id, function(err, post) {
+            if(err) return nextPost(err);
 
-            video.modifyByDelta(function(err) {
-              if (err) return nextVideo(err);
+            post.modifyByDelta(function(err) {
+              if (err) return nextPost(err);
 
-              scoredVideos.push({
-                id: video.id,
-                url: video.url,
-                viewCount: video.viewCount || 0,
-                likeCount: video.likeCount || 0,
-                commentCount: video.commentCount || 0,
-                shareCount: video.shareCount || 0,
-                score: (parseInt(video.viewCount) || 0) + (parseInt(video.likeCount) || 0) + (parseInt(video.commentCount) || 0) + (parseInt(video.shareCount) || 0)
+              scoredPost.push({
+                id: post.id,
+                url: post.url,
+                plusoners: (post.plusoners || 0),
+                comments: (post.comments || 0),
+                resharers: (post.resharers || 0),
+                score: (post.plusoners || 0) + (post.comments || 0) + (post.resharers || 0)
               });
-              nextVideo();
+              nextPost();
             });
           });
         }, function(err) {
           if(err) return res.apiResponse({"error": err});
 
           var max = {};
-          if(!scoredVideos || scoredVideos.length == 0) return res.apiResponse({"error": 'Error in async?'});
+          if(!scoredPost || scoredPost.length == 0) return res.apiResponse({"error": 'Error in async?'});
 
-          max = _.max(scoredVideos, function(video) { return video.score; });
+          max = _.max(scoredPost, function(post) { return post.score; });
 
           if(!max) return res.apiResponse({"error": "Something went way wrong."})
 
           dataReturn = {
             success: true,
             type: 'topPost',
-            source: 'youtube',
+            source: 'googleplus',
             queryString: req.query,
             data: max
           }
           return res.apiResponse(dataReturn);
-
 
 
       });

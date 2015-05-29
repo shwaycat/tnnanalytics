@@ -1,7 +1,7 @@
 var keystone = require('keystone'),
     _ = require('underscore'),
     async = require('async'),
-    debug = require('debug')('cadence:api:instagram:engagement'),
+    debug = require('debug')('cadence:api:googleplus:engagement'),
     User = keystone.list('User'),
     mxm = require('../../../lib/mxm-utils');
 
@@ -35,7 +35,7 @@ exports = module.exports = function(req, res) {
 
     keystone.elasticsearch.search({
       index: keystone.get('elasticsearch index'),
-      type: "youtube",
+      type: "googleplus",
       body: {
         "query": {
           "filtered": {
@@ -47,7 +47,22 @@ exports = module.exports = function(req, res) {
                       "filters": [
                         {
                           "term": {
-                            "doc_type": "video"
+                            "doc_type": "post"
+                          }
+                        },
+                        {
+                          "exists": {
+                            "field": "replies"
+                          }
+                        },
+                        {
+                          "exists": {
+                            "field": "plusoners"
+                          }
+                        },
+                        {
+                          "exists": {
+                            "field": "resharers"
                           }
                         }
                       ]
@@ -85,31 +100,21 @@ exports = module.exports = function(req, res) {
               "min_doc_count": 0
             },
             "aggs": {
-              "commentCount": {
+              "comments": {
                 "max": {
-                  "field": "commentCount"
+                  "field": "replies"
                 }
               },
-              "viewCount": {
+              "plusoners": {
                 "max": {
-                  "field": "viewCount"
+                  "field": "plusoners"
                 }
               },
-              "likeCount": {
+              "resharers": {
                 "max": {
-                  "field": "likeCount"
+                  "field": "resharers"
                 }
-              },
-              "shareCount": {
-                "max": {
-                  "field": "shareCount"
-                }
-              },
-              "dislikeCount": {
-                "max": {
-                  "field": "dislikeCount"
-                }
-              }              
+              }
             }
           }
         }
@@ -124,12 +129,10 @@ exports = module.exports = function(req, res) {
         if(buckets.length == 1) {
           first = {
             key:startTime.toISOString(),
-            viewCount: 0,
-            likeCount: 0,
-            dislikeCount: 0,
-            commentCount: 0,
-            shareCount: 0,
-            value: 0
+            plusoners:0,
+            comments:0,
+            resharers:0,
+            value:0
           }
           dataReturn.push(first);
         }
@@ -141,12 +144,10 @@ exports = module.exports = function(req, res) {
         if(buckets.length == 1) {
           last = {
             key:endTime.toISOString(),
-            viewCount: 0,
-            likeCount: 0,
-            dislikeCount: 0,
-            commentCount: 0,
-            shareCount: 0,
-            value: 0
+            plusoners:0,
+            comments:0,
+            resharers:0,
+            value:0
           }
           dataReturn.push(last);
         }
@@ -154,15 +155,13 @@ exports = module.exports = function(req, res) {
         return res.apiResponse({
           success: true,
           type: 'engagement',
-          source: 'youtube',
+          source: 'googleplus',
           queryString: req.query,
           data: dataReturn,
           summary: {
-            "totalViews" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.viewCount; }, 0),
-            "totalLikes" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.likeCount; }, 0),
-            "totalDislikes" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.dislikeCount; }, 0),
-            "totalComments" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.commentCount; }, 0),
-            "totalShares" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.shareCount; }, 0)
+            "totalPlusOners" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.plusoners; }, 0),
+            "totalResharers" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.resharers; }, 0),
+            "totalComments" : _.reduce(dataReturn, function(memo, dataPoint) { return memo + dataPoint.comments; }, 0)
           }
         });
       } else {
@@ -174,22 +173,18 @@ exports = module.exports = function(req, res) {
 
 function extractDataPoint(bucket) {
   var key = bucket.key_as_string,
-      viewCount = (bucket.viewCount.value || 0),
-      likeCount = (bucket.likeCount.value || 0),
-      dislikeCount = (bucket.dislikeCount.value || 0),
-      commentCount = (bucket.commentCount.value || 0),
-      shareCount = (bucket.shareCount.value || 0),
+      plusoners = (bucket.plusoners.value || 0),
+      comments = (bucket.comments.value || 0),
+      resharers = (bucket.resharers.value || 0),
       value;
 
-  value = viewCount + likeCount - dislikeCount + commentCount + shareCount;
+  value = plusoners + comments + resharers;
 
   return {
       key: key,
-      viewCount: viewCount,
-      likeCount: likeCount,
-      dislikeCount: dislikeCount,
-      commentCount: commentCount,
-      shareCount: shareCount,
+      plusoners: plusoners,
+      comments: comments,
+      resharers: resharers,
       value: value
   };
 }

@@ -138,6 +138,21 @@ function buildSeries() {
         series.push(deleteDeltasBySource('youtube'));
       }
 
+      if(argv['googleplus-pages'] || argv['googleplus-all']) {
+        series.push(deleteDocsByType('googleplus', 'page'));
+      }
+
+      if(argv['googleplus-posts'] || argv['googleplus-all']) {
+        series.push(deleteDocsByType('googleplus', 'post'));
+      }
+
+      if(argv['googleplus-comments'] || argv['googleplus-all']) {
+        series.push(deleteDocsByType('googleplus', 'comment'));
+      }
+
+      if(argv['googleplus-deltas'] || argv['googleplus-all']) {
+        series.push(deleteDeltasBySource('googleplus'));
+      }
     return series;
 
   } else {
@@ -361,6 +376,12 @@ function showHelp() {
   console.log('--youtube-media                  Delete all YouTube videos');
   console.log('--youtube-comments               Delete all YouTube comments');
   console.log('--youtube-deltas                 Delete all YouTube deltas');
+  console.log('');
+  console.log('--googleplus-all                 Delete all Google+ objects');
+  console.log('--googleplus-followerCounts      Delete all Google+ pages');
+  console.log('--googleplus-media               Delete all Google+ posts');
+  console.log('--googleplus-comments            Delete all Google+ comments');
+  console.log('--googleplus-deltas              Delete all Google+ deltas');
   console.log('<options>');
   console.log('--u <user email>                 Perform actions on specified user.')
   console.log('');
