@@ -1,6 +1,6 @@
 var keystone = require('keystone'),
     moment = require('moment'),
-    debug = require('debug')('cadence:api:facebook:acquisition'),
+    debug = require('debug')('cadence:api:twitter:acquisition'),
     _ = require('underscore'),
     twitterMetrics = require('../../../lib/metrics/twitter');
 
