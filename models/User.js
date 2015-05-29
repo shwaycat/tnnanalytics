@@ -31,6 +31,7 @@ var User = new keystone.List('User', {
 var deps = {
   facebook: { 'services.facebook.isConfigured': true },
   google: { 'services.google.isConfigured': true },
+  googleplus: { 'services.google.isConfigured': true },
   twitter: { 'services.twitter.isConfigured': true },
   instagram: { 'services.instagram.isConfigured': true }
 };
@@ -94,6 +95,26 @@ User.add({
       analyticsProfiles_str: { type: String, label: 'Analytics Profiles', dependsOn: deps.google },
       youtubeChannelID: { type: String, label: 'Youtube Channel ID', dependsOn: deps.google },
       youtubeChannelUploadPlaylistID: { type: String, label: 'Youtube Channel ID', dependsOn: deps.google }
+    },
+    /**
+     * Google Plus & Youtube Service
+     * @typedef {Object} UserServices~Googleplus
+     * @member {Boolean} isConfigured - `true` if configured
+     * @member {String} profileId - Google+ page ID
+     * @member {String} username - Google username/email address
+     * @member {String} accessToken - OAuth access token
+     * @member {String} refreshToken - OAuth refresh token
+     * @member {String} youtubeChannelID - youtube Channel ID
+     * @member {string} youtubeChannelUploadPlaylistID - TODO
+    */
+    googleplus: {
+      isConfigured: { type: Boolean, label: 'Google+ has been authenticated' },
+      profileId: { type: String, label: 'Profile ID', dependsOn: deps.googleplus },
+      username: { type: String, label: 'Username', dependsOn: deps.googleplus },
+      accessToken: { type: String, label: 'Access Token', dependsOn: deps.googleplus },
+      refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.googleplus },
+      youtubeChannelID: { type: String, label: 'Youtube Channel ID', dependsOn: deps.googleplus },
+      youtubeChannelUploadPlaylistID: { type: String, label: 'Youtube Channel ID', dependsOn: deps.googleplus }
     },
     /**
      * Twitter Service

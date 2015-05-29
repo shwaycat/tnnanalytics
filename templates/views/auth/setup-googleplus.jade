@@ -1,0 +1,23 @@
+extends ../../layouts/default
+
+
+block content
+  .row.content-row.content-row-title
+    .col-xs-12
+      h1.view-title Service Setup
+  .row.content-row
+    .col-xs-12.col-md-12.col-lg-6.session-block
+      .session-content
+        h4.session-title Google+
+      
+        form(method='post', autocomplete='off', novalidate).session-form
+          input(type='hidden', name='action', value='auth.setup')
+          input(type='hidden', name=csrf_token_key, value=csrf_token_value)
+          .form-group(class=validationErrors.name ? 'has-error' : null)
+            label.control-label(for='youtubeChannelID') YouTube Channel
+            select.form-control(id='youtubeChannelID' name='youtubeChannelID')
+              each channel in setupOptions.youtubeChannels
+                option(value=channel.id)= channel.title
+
+          .form-actions
+            button(type='submit', data-loading-text="Saving...").btn.btn-default.btn-large Save Setup
