@@ -15,18 +15,16 @@ module.exports = function(req, res) {
     endTime = new Date(req.query.endTime);
   }
 
-  twitterMetrics.topTweet(req.user, startTime, endTime, function(response) {
+  twitterMetrics.topTweet(req.user, startTime, endTime, function(err, response) {
     debug(response);
 
-    if(response.error) {
-      return res.apiResponse(response);  
-    } else {
-      response.success = true;
-      response.type = 'topTweet';
-      response.source = 'twitter';
-      response.queryString = req.queryString;
-      return res.apiResponse(response);
-    }
+    if(err) return res.apiResponse({error: err});  
+
+    response.success = true;
+    response.type = 'topTweet';
+    response.source = 'twitter';
+    response.queryString = req.queryString;
+    return res.apiResponse(response);
     
   }); 
 

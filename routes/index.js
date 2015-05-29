@@ -115,6 +115,12 @@ exports = module.exports = function(app) {
   app.get('/api/1.0/googleplus/acquisition', routes.api.googleplus.acquisition);
   app.get('/api/1.0/googleplus/topPost', routes.api.googleplus.topPost);
 
+  // Dashboard Endpoints
+  // They all expect query strings with startTime endTime
+  app.get('/api/1.0/dashboard/engagement', routes.api.dashboard.engagement);
+  app.get('/api/1.0/dashboard/acquisition', routes.api.dashboard.acquisition);
+  app.get('/api/1.0/dashboard/reach', routes.api.dashboard.reach);
+
   // Keyword Alerts
   // /alerts expects query strings with page
   app.get('/api/1.0/alerts', routes.api.alerts.index);

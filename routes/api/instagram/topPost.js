@@ -15,18 +15,16 @@ module.exports = function(req, res) {
     endTime = new Date(req.query.endTime);
   }
 
-  instagramMetrics.topPost(req.user, startTime, endTime, function(response) {
+  instagramMetrics.topPost(req.user, startTime, endTime, function(err, response) {
     debug(response);
 
-    if(response.error) {
-      return res.apiResponse(response);  
-    } else {
-      response.success = true;
-      response.type = 'topPost';
-      response.source = 'instagram';
-      response.queryString = req.queryString;
-      return res.apiResponse(response);
-    }
+    if(err) return res.apiResponse({error: err});  
+
+    response.success = true;
+    response.type = 'topPost';
+    response.source = 'instagram';
+    response.queryString = req.queryString;
+    return res.apiResponse(response);
     
   }); 
 
