@@ -43,7 +43,16 @@
   }
   .clearfix();
 }
-
+.donut-block {
+  &.donut-full-width {
+    .novo-donut-graph {
+      padding-top:70%;
+      svg {
+        padding-top:10%;
+      }
+    }
+  }
+}
 .novo-graph {
   padding-top: 60%;
   position: relative;
@@ -120,7 +129,6 @@
   }
   &.novo-donut-graph {
     padding-top:100%;
-
     svg {
       height: 100%;
       padding-top: 20%;

@@ -1,4 +1,4 @@
-mixin social-graph(type, options)
+mixin social-graph(type, options, columns)
 
   if type == 'reach'
     .col-xs-12.col-md-12.col-lg-12.content-block
@@ -22,7 +22,10 @@ mixin social-graph(type, options)
         section.novo-graph.novo-line-graph.acquisition#acquisition(data-admin-options=options)
 
   if type == 'topCountries'
-    .col-xs-12.col-md-12.col-lg-6.content-block.donut-block.equal-height-block-2
+    - var largeColumn = 'col-lg-6 equal-height-block-2'
+    if columns == 'full-width'
+      - largeColumn = 'col-lg-12 donut-full-width'
+    .col-xs-12.col-md-12.content-block.donut-block(class=largeColumn)
       .inner-content
         h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.topCountries)
           =sectionTitles.topCountries
