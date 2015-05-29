@@ -1,11 +1,9 @@
 var keystone = require('keystone'),
     moment = require('moment'),
-    // debug = require('debug')('cadence:api:facebook:topPost'),
-    mxm = require('../../../lib/mxm-utils'),
+    debug = require('debug')('cadence:api:facebook:topPost'),
     _ = require('underscore'),
-    async = require('async'),
-    User = keystone.list('User'),
-    Post = require('../../../lib/sources/facebook/post');
+    facebookMetrics = require('../../../lib/metrics/facebook');
+
 
 module.exports = function(req, res) {
   var startTime = moment().subtract(1, 'month').toDate(),
@@ -18,70 +16,18 @@ module.exports = function(req, res) {
     endTime = new Date(req.query.endTime);
   }
 
-  User.model.getAccountRootInfo(req.user.accountName, function(err, accountRoot) {
-    if (err) return res.apiResponse({ error: err });
+  facebookMetrics.topPost(req.user, startTime, endTime, function(response) {
+    debug(response);
 
-    keystone.elasticsearch.search({
-      index: keystone.get('elasticsearch index'),
-      from: 0,
-      size: 1000000000,
-      body: {
-        "query": {
-          "filtered": {
-            "filter": {
-              "and": [
-                { "term": { "doc_type": "post" } },
-                { "term": { "cadence_user_id": accountRoot.id } },
-                {
-                  "range": {
-                    "timestamp": { "gte": startTime, "lte": endTime }
-                  }
-                }
-              ]
-            }
-          }
-        },
-        "sort": [
-          { "timestamp": "desc" }
-        ]
-      }
-    }, function(err, response) {
-      if(err) return res.apiResponse({ error: err });
-
-      var posts = mxm.objTry(response, 'hits', 'hits'),
-          topPost;
-
-      if(!posts || !posts.length) {
-        return res.apiResponse({ error: "Error with ES search results." });
-      }
-
-      async.eachSeries(posts, function(postHit, next) {
-        var post = new Post(postHit._id, postHit._source);
-
-        post.modifyByDelta(function(err, post) {
-          if (err) return next(err);
-
-          if (!topPost || post.score() > topPost.score()) {
-            topPost = post;
-          }
-          next();
-        });
-      }, function(err) {
-        if(err) return res.apiResponse({ error: err});
-
-        topPost.data = {
-          url: topPost.embedURL(),
-          score: topPost.score()
-        };
-
-        res.apiResponse({
-          success: true,
-          type: 'topPost',
-          source: 'facebook',
-          queryString: req.query,
-          data: topPost
-        });
-      });
-    });
-  });
+    if(response.error) {
+      return res.apiResponse(response);  
+    } else {
+      response.success = true;
+      response.type = 'topPost';
+      response.source = 'facebook';
+      response.queryString = req.queryString;
+      return res.apiResponse(response);
+    }
+    
+  });  
 };
