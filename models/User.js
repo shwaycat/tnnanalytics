@@ -40,7 +40,7 @@ User.add({
   resetPasswordKey: { type: String, hidden: true },
   accountName: { type: String, required: true, index: true, initial: true },
   isAccountRoot: { type: Boolean, "default": false },
-  wasNew: { type: Boolean, default: true, hidden: true },
+  wasNew: { type: Boolean, 'default': true, hidden: true },
   keywords: { type: Types.Textarea, label: 'Keywords'}
 }, 'Permissions', {
   isAdmin: { type: Boolean, label: 'Can Admin ' + keystone.get('brand') }
@@ -99,8 +99,8 @@ User.add({
      * @member {String} profileId - Twitter user profile ID
      * @member {String} username - Twitter username
      * @member {String} accessToken - OAuth access token
-     * @member {String} tweetSinceId - last DirectMessage     
-     * @member {String} mentionSinceId - last DirectMessage     
+     * @member {String} tweetSinceId - last DirectMessage
+     * @member {String} mentionSinceId - last DirectMessage
      * @member {String} direct_messageSinceId - last DirectMessage
     */
     twitter: {
@@ -111,7 +111,7 @@ User.add({
       refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.twitter },
       tweetSinceID: { type: String, label: 'Tweet Since ID', dependsOn: deps.twitter },
       mentionSinceID: { type: String, label: 'Mention Since ID', dependsOn: deps.twitter },
-      direct_messageSinceID: { type: String, label: 'Direct Message Since ID', dependsOn: deps.twitter },
+      direct_messageSinceID: { type: String, label: 'Direct Message Since ID', dependsOn: deps.twitter }
     },
     /**
      * Instagram Service
@@ -127,7 +127,7 @@ User.add({
       username: { type: String, label: 'Username', dependsOn: deps.instagram },
       accessToken: { type: String, label: 'Access Token', dependsOn: deps.instagram },
       refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.instagram }
-    },
+    }
   }
 });
 
