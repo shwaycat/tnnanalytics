@@ -1,5 +1,6 @@
 var keystone = require('keystone'),
     _ = require('underscore'),
+    debug = require('debug')('cadence:User'),
     request = require('request'),
     async = require('async'),
     Types = keystone.Field.Types;
@@ -79,9 +80,10 @@ User.add({
      * @typedef {Object} UserServices~Google
      * @member {Boolean} isConfigured - `true` if configured
      * @member {String} profileId - Google user profile ID
-     * @member {String} username - Google username
+     * @member {String} username - Google username/email address
      * @member {String} accessToken - OAuth access token
      * @member {String} refreshToken - OAuth refresh token
+     * @member {String} analyticsProfiles_str - serialized profile labels & IDs
     */
     google: {
       isConfigured: { type: Boolean, label: 'Google has been authenticated' },
@@ -89,7 +91,7 @@ User.add({
       username: { type: String, label: 'Username', dependsOn: deps.google },
       accessToken: { type: String, label: 'Access Token', dependsOn: deps.google },
       refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.google },
-      analyticsAccountIDsStr: { type: String, label: 'Analytics Account IDs', dependsOn: deps.google },
+      analyticsProfiles_str: { type: String, label: 'Analytics Profiles', dependsOn: deps.google },
       youtubeChannelID: { type: String, label: 'Youtube Channel ID', dependsOn: deps.google },
       youtubeChannelUploadPlaylistID: { type: String, label: 'Youtube Channel ID', dependsOn: deps.google }
     },
@@ -141,18 +143,86 @@ User.schema.virtual('canAccessKeystone').get(function() {
   return this.isAdmin;
 });
 
-User.schema.virtual('services.google.analyticsAccountIDs').get(function() {
-  if (!this.services.google || !this.services.google.analyticsAccountIDsStr) {
+User.schema.virtual('services.google.analyticsProfiles_a').get(function() {
+  if (!this.services.google || !this.services.google.analyticsProfiles_str) {
     return [];
   }
-  return this.services.google.analyticsAccountIDsStr.split(',');
+  return JSON.parse(this.services.google.analyticsProfiles_str);
 });
 
-User.schema.virtual('services.google.analyticsAccountIDs').set(function(val) {
+User.schema.virtual('services.google.analyticsProfiles').get(function() {
+  if (!this.services.google || !this.services.google.analyticsProfiles_str) {
+    return {};
+  }
+  return _.object(this.services.google.analyticsProfiles_a);
+});
+
+User.schema.virtual('services.google.analyticsProfiles').set(function(val) {
   if (!val) {
-    this.services.google.analyticsAccountIDsStr = null;
+    this.services.google.analyticsProfiles_str = null;
   } else {
-    this.services.google.analyticsAccountIDsStr = _.compact(val);
+    if (!(val instanceof Array)) {
+      val = _.pairs(val);
+    }
+    this.services.google.analyticsProfiles_str = JSON.stringify(val);
+  }
+});
+
+User.schema.virtual('services.google.analyticsProfilesKeys').set(function(val) {
+  debug("services.google.analyticsProfilesKeys=%j", val);
+
+  if (!val) {
+    this.services.google.analyticsProfiles = null;
+  } else {
+    if (val.length && !val[0]) {
+      val = _.clone(val);
+      val.shift();
+    }
+
+    var newProfiles = this.services.google.analyticsProfiles_a;
+
+    if (val.length < newProfiles) {
+      newProfiles = _.first(newProfiles, val.length);
+    }
+
+    val.forEach(function(v, i) {
+      if (!newProfiles[i]) {
+        newProfiles[i] = [v, null];
+      } else {
+        newProfiles[i][0] = v;
+      }
+    });
+
+    this.services.google.analyticsProfiles = newProfiles;
+  }
+});
+
+User.schema.virtual('services.google.analyticsProfilesValues').set(function(val) {
+  debug("services.google.analyticsProfilesValues=%j", val);
+
+  if (!val) {
+    this.services.google.analyticsProfiles = null;
+  } else {
+    if (val.length && !val[0]) {
+      val = _.clone(val);
+      val.shift();
+    }
+
+    var newProfiles = this.services.google.analyticsProfiles_a;
+
+    if (val.length < newProfiles) {
+      newProfiles = _.first(newProfiles, val.length);
+    }
+
+    val.forEach(function(v, i) {
+      if (!newProfiles[i]) {
+        newProfiles[i] = [i, v];
+      } else {
+        newProfiles[i][1] = v;
+      }
+    });
+
+    this.services.google.analyticsProfiles = newProfiles;
   }
 });
 
