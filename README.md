@@ -17,6 +17,7 @@ FACEBOOK_CALLBACK_URL=http://cadence.local.mxmcloud.com:3000/auth/facebook?cb
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
 GOOGLE_CALLBACK_URL=http://cadence.local.mxmcloud.com:3000/auth/google?cb
+GOOGLEPLUS_CALLBACK_URL=http://cadence.local.mxmcloud.com:3000/auth/googleplus?cb
 AWS_REGION=us-east-1
 AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=

@@ -63,7 +63,7 @@ function buildSeries() {
 
       if(argv['twitter-tweets'] || argv['twitter-all']) {
         series.push(deleteDocsByType('twitter', 'tweet'));
-        series.push(resetUsersLastTime('services.twitter.tweetSinceID'));        
+        series.push(resetUsersLastTime('services.twitter.tweetSinceID'));
       }
 
       if(argv['twitter-deltas'] || argv['twitter-all']) {

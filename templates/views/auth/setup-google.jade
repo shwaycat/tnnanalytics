@@ -10,25 +10,26 @@ block content
       .session-content
         h4.session-title Google Analytics
       
-        form(method='post', autocomplete='off', novalidate).session-form
+        form.form-horizontal(method='post', autocomplete='off', novalidate).session-form
           input(type='hidden', name='action', value='auth.setup')
           input(type='hidden', name=csrf_token_key, value=csrf_token_value)
-          input(type='hidden', name='analyticsAccountIDs', value='')
+          input(type='hidden', name='analyticsProfilesKeys', value='')
+          input(type='hidden', name='analyticsProfilesValues', value='')
           .form-group(class=validationErrors.name ? 'has-error' : null)
-            each acct in setupOptions.analyticsAccounts
-              input(type='checkbox', name='analyticsAccountIDs', value=acct.id)
-              label(for='analyticsAccountIDs')=acct.name
+            label.col-sm-2.control-label(for='analyticsProfilesValues1') Profile 1
+            .col-sm-10
+              input.form-control(type='text' name='analyticsProfilesKeys' value='Global' disabled=true)
+            select.form-control(id='analyticsProfilesValues1' name='analyticsProfilesValues')
+              each profile in setupOptions.analyticsProfiles
+                option(value=profile.id)= profile.name
+
+          .form-group(class=validationErrors.name ? 'has-error' : null)
+            label.col-sm-2.control-label(for='analyticsProfilesValues2') Profile 2
+            .col-sm-10
+              input.form-control(type='text' name='analyticsProfilesKeys' value='US' disabled=true)
+            select.form-control(id='analyticsProfilesValues2' name='analyticsProfilesValues')
+              each profile in setupOptions.analyticsProfiles
+                option(value=profile.id)= profile.name
 
           .form-actions
             button(type='submit', data-loading-text="Saving...").btn.btn-default.btn-large Save Setup
-
-        //- h4.session-title Google Plus
-        //- 
-        //- form(method='post', autocomplete='off', novalidate).session-form
-        //-   input(type='hidden', name='action', value='auth.setup')
-        //-   input(type='hidden', name=csrf_token_key, value=csrf_token_value)
-        //-   .form-group(class=validationErrors.name ? 'has-error' : null)
-        //-     label(for='pageID') Google Plus Page
-        //-     select(id='pageID' name='pageID')
-        //-       each page in setupOptions.pages
-        //-         option(value=page.id)= page.name

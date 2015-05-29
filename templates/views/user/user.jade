@@ -85,6 +85,19 @@ block content
                   a(href='?disconnect=google' title='Revoke authorization of your Google account').btn.btn-social-connect.btn-google
                     span.connection-text Disconnect
 
+              .form-group
+                label.sr-only Google Plus
+                if !user.services.googleplus.isConfigured
+                  a(href='/auth/googleplus', title='Connect your Google+ & Youtube account').btn.btn-social-connect.btn-googleplus
+                    span.connection-icon.entypo-social.entypo-google-plus
+                    span.connection-text Connect your Google+ account
+                if user.services.googleplus.isConfigured
+                  .social-connect
+                    span.connection-icon.entypo-social.entypo-google-plus
+                    span.connection-text Your account is connected.
+                  a(href='?disconnect=googleplus' title='Revoke authorization of your Google+ account').btn.btn-social-connect.btn-googleplus
+                    span.connection-text Disconnect
+
           .form-actions
             button(type='submit', data-loading-text="Saving...").btn.btn-default.btn-large Save Profile
 
