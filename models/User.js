@@ -84,6 +84,7 @@ User.add({
      * @member {String} username - Google username/email address
      * @member {String} accessToken - OAuth access token
      * @member {String} refreshToken - OAuth refresh token
+     * @member {Date} tokenExpiresAt - Datetime that the accessToken expires
      * @member {String} analyticsProfiles_str - serialized profile labels & IDs
     */
     google: {
@@ -92,6 +93,7 @@ User.add({
       username: { type: String, label: 'Username', dependsOn: deps.google },
       accessToken: { type: String, label: 'Access Token', dependsOn: deps.google },
       refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.google },
+      tokenExpiresAt: { type: Types.Datetime, label: 'Token Expiration', dependsOn: deps.google },
       analyticsProfiles_str: { type: String, label: 'Analytics Profiles', dependsOn: deps.google },
       youtubeChannelID: { type: String, label: 'Youtube Channel ID', dependsOn: deps.google },
       youtubeChannelUploadPlaylistID: { type: String, label: 'Youtube Channel ID', dependsOn: deps.google }
@@ -104,6 +106,7 @@ User.add({
      * @member {String} username - Google username/email address
      * @member {String} accessToken - OAuth access token
      * @member {String} refreshToken - OAuth refresh token
+     * @member {Date} tokenExpiresAt - Datetime that the accessToken expires
      * @member {String} youtubeChannelID - youtube Channel ID
      * @member {string} youtubeChannelUploadPlaylistID - TODO
     */
@@ -113,6 +116,7 @@ User.add({
       username: { type: String, label: 'Username', dependsOn: deps.googleplus },
       accessToken: { type: String, label: 'Access Token', dependsOn: deps.googleplus },
       refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.googleplus },
+      tokenExpiresAt: { type: Types.Datetime, label: 'Token Expiration', dependsOn: deps.google },
       youtubeChannelID: { type: String, label: 'Youtube Channel ID', dependsOn: deps.googleplus },
       youtubeChannelUploadPlaylistID: { type: String, label: 'Youtube Channel ID', dependsOn: deps.googleplus }
     },
