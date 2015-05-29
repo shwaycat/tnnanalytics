@@ -115,6 +115,12 @@ exports = module.exports = function(app) {
   app.get('/api/1.0/googleplus/acquisition', routes.api.googleplus.acquisition);
   app.get('/api/1.0/googleplus/topPost', routes.api.googleplus.topPost);
 
+  // Google+ Endpoints
+  // They all expect query strings with startTime endTime
+  app.get('/api/1.0/googleanalytics/:profileName/overview', routes.api.googleanalytics.overview);
+  app.get('/api/1.0/googleanalytics/:profileName/sources', routes.api.googleanalytics.sources);
+  app.get('/api/1.0/googleanalytics/:profileName/topCountries', routes.api.googleanalytics.topCountries);
+
   // Dashboard Endpoints
   // They all expect query strings with startTime endTime
   app.get('/api/1.0/dashboard/engagement', routes.api.dashboard.engagement);

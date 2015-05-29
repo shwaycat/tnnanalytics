@@ -52,7 +52,7 @@ function analyticsTableData(apiObj, table){
       tableHTML += '<tr>';
       tableHTML += '<td class="analytic-item-country"><span class="analytic-item-robot">'+currentAnalytic.label+'</span>'+currentAnalytic.label+'</td>';
       tableHTML += '<td class="analytic-item-sessions"><span class="analytic-item-robot">'+currentAnalytic.sessions+'</span>'+currentAnalytic.sessions+'</td>';
-      tableHTML += '<td class="analytic-item-bounce-rate"><span class="analytic-item-robot">'+currentAnalytic.bounce_rate+'</span>'+currentAnalytic.bounce_rate+'</td>';
+      tableHTML += '<td class="analytic-item-bounce-rate"><span class="analytic-item-robot">'+currentAnalytic.bounceRate+'</span>'+currentAnalytic.bounceRate+'</td>';
       tableHTML += '</tr>';
 
     }

@@ -153,8 +153,16 @@ function buildSeries() {
       if(argv['googleplus-deltas'] || argv['googleplus-all']) {
         series.push(deleteDeltasBySource('googleplus'));
       }
-    return series;
 
+      if(argv['google-analytics'] || argv['google-analytics-all']) {
+        series.push(deleteDocsByType('googleAnalytics', 'profile'));
+      }
+
+      if(argv['google-analytics-deltas'] || argv['google-analytics-all']) {
+        series.push(deleteDeltasBySource('googleAnalytics'));
+      }
+
+    return series;
   } else {
     return false;
   }
@@ -364,6 +372,9 @@ function showHelp() {
   console.log('--facebook-comments              Delete all Facebook comments');
   console.log('--facebook-messages              Delete all Facebook messages');
   console.log('--facebook-deltas                Delete all Facebook deltas');
+  console.log('');
+  console.log('--google-analytics[-all]         Delete all Google Analytics objects');
+  console.log('--google-analytics-deltas        Delete all Google Analytics deltas');
   console.log('');
   console.log('--instagram-all                  Delete all Instagram objects');
   console.log('--instagram-followerCounts       Delete all Instagram FollowerCounts');
