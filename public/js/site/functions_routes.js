@@ -46,11 +46,11 @@ function routesInit(resizeOnce){
   if ($('body.google-plus')[0]){
     globalDebug('   Route: Google-Plus', 'color:gray;');
 
-    dataController('line',  'reach', '/api/1.0/google/reach',               currentSelectedDate, {selector: '#reach', source: 'google'});
-    dataController('line',  'engagement', '/api/1.0/google/engagement',     currentSelectedDate, {selector: '#engagement', source: 'google'});
-    dataController('line',  'acquisition', '/api/1.0/google/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'google'});
+    dataController('line',  'reach', '/api/1.0/googleplus/reach',               currentSelectedDate, {selector: '#reach', source: 'googleplus'});
+    dataController('line',  'engagement', '/api/1.0/googleplus/engagement',     currentSelectedDate, {selector: '#engagement', source: 'googleplus'});
+    dataController('line',  'acquisition', '/api/1.0/googleplus/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'googleplus'});
     if (!resizeOnce){
-      dataController('topGooglePost', 'topGooglePost', '/api/1.0/google/topPost', currentSelectedDate, {selector: '#topGooglePost', source: 'google' });
+      dataController('topGooglePost', 'topGooglePost', '/api/1.0/googleplus/topPost', currentSelectedDate, {selector: '#topGooglePost', source: 'googleplus' });
     }
   }
   if ($('body.youtube')[0]){

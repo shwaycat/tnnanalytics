@@ -10,7 +10,7 @@ exports = module.exports = function(req, res) {
   locals.title = 'Youtube';
   locals.tooltip = {
     reach: "Total Impressions",
-    engagement: "Likes + Shares + Reply + Mention + Comments + Total Number of Views",
+    engagement: "Likes + Shares + Comments + Total Number of Views - Dislikes",
     acquisition: "Total Subscribers",
     topYoutubeVideo: "Likes + Shares + Comments + Views",
     topCountries: "Likes + Shares + Reply + Mention + Comments + Total Number of Views"
