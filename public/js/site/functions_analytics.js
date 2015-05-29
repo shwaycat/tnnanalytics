@@ -20,6 +20,9 @@ function analyticsTableController(apiString, table, dateObj){
   })
   .fail(function( data ) {
     globalDebug('   Ajax FAILED!: '+apiString, 'color:red;');
+
+    table.before(dataErrorHTML);
+    table.remove();
   })
   .always(function( data ) {
     if (apiObj.success && apiObj.data.length){
