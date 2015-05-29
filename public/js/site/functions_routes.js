@@ -67,6 +67,7 @@ function routesInit(resizeOnce){
   if ($('body.analytics-all')[0]){
     globalDebug('   Route: Analytics-All', 'color:gray;');
 
+    dataController('stats', 'overview', '/api/1.0/analyticsAll/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsAll'});
     analyticsTableController('/api/1.0/analyticsAll/topCountries', $('#analytics-table'), currentSelectedDate);
     dataController('donut', 'refTraffic', '/api/1.0/analyticsAll/refTraffic', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsAll'});
 
@@ -74,6 +75,7 @@ function routesInit(resizeOnce){
   if ($('body.analytics-global')[0]){
     globalDebug('   Route: Analytics-Global', 'color:gray;');
 
+    dataController('stats', 'overview', '/api/1.0/analyticsGlobal/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsGlobal'});
     analyticsTableController('/api/1.0/analyticsGlobal/topCountries', $('#analytics-table'), currentSelectedDate);
     dataController('donut', 'refTraffic', '/api/1.0/analyticsGlobal/refTraffic', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsGlobal'});
 
@@ -81,6 +83,7 @@ function routesInit(resizeOnce){
   if ($('body.analytics-us')[0]){
     globalDebug('   Route: Analytics-Us', 'color:gray;');
 
+    dataController('stats', 'overview', '/api/1.0/analyticsUs/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsUs'});
     analyticsTableController('/api/1.0/analyticsUs/topCountries', $('#analytics-table'), currentSelectedDate);
     dataController('donut', 'refTraffic', '/api/1.0/analyticsUs/refTraffic', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsUs'});
 

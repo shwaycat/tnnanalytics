@@ -16,7 +16,7 @@ exports.initLocals = function(req, res, next) {
     "instagram": "https://instagram.com/teamnovonordisk/",
     "youtube": "https://www.youtube.com/user/TeamNovoNordisk",
     "googlePlus": "https://plus.google.com/+teamnovonordisk",
-    "analytics": "insertanalyticsurlhere"
+    "analytics": "http://www.google.com/analytics"
   }
 
   locals.navLinks = [
@@ -53,7 +53,9 @@ exports.initLocals = function(req, res, next) {
     "topInstagramPost": "Top Instagram Post",
     "topGooglePost": "Top Google Post",
     "topYoutubeVideo": "Top Youtube Video",
-    "refTraffic": "Referring Traffic"
+    "refTraffic": "Referring Traffic",
+    "analyticsTopCountries": "Top Countries",
+    "overview": "Overview"
   }
 
   locals.user = req.user
