@@ -1,18 +1,10 @@
 var keystone = require('keystone'),
     moment = require('moment'),
-    debug = require('debug')('cadence:api:twitter:acquisition'),
+    debug = require('debug')('cadence:api:dashboard:acquisition'),
     _ = require('underscore'),
-    async = require('async'),
-    metrics = {
-      facebook: require('../../../lib/metrics/facebook'),
-      twitter: require('../../../lib/metrics/twitter'),
-      instagram: require('../../../lib/metrics/instagram'),
-      youtube: require('../../../lib/metrics/youtube'),
-      googleplus: require('../../../lib/metrics/googleplus')
-    };
+    dashboardMetrics = require('../../../lib/metrics/dashboard');
 
 module.exports = function(req, res) {
-
   var startTime = moment().subtract(1, 'month').toDate(),
       endTime = new Date();
 
@@ -23,23 +15,17 @@ module.exports = function(req, res) {
     endTime = new Date(req.query.endTime);
   }
 
-  async.parallel([
-    function(callback) { metrics.facebook.acquisition(req.user, startTime, endTime, callback) },
-    function(callback) { metrics.twitter.acquisition(req.user, startTime, endTime, callback) },
-    function(callback) { metrics.instagram.acquisition(req.user, startTime, endTime, callback) },
-    function(callback) { metrics.youtube.acquisition(req.user, startTime, endTime, callback) },
-    function(callback) { metrics.googleplus.acquisition(req.user, startTime, endTime, callback) }
-  ],
-  function(err, results) {
+  dashboardMetrics.acquisition(req.user, startTime, endTime, function(err, response) {
+    debug(response);
+
     if(err) return res.apiResponse({error: err});
 
-    var data = _.pluck(results, 'data');
-        data = _.compact(data);
+    response.success = true;
+    response.type = 'acquisition';
+    response.source = 'dashboard';
+    response.queryString = req.queryString;
+    return res.apiResponse(response);
+    
+  }); 
 
-
-    return res.apiResponse(data);
-
-  });
-
-
-}
+};

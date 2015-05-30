@@ -7,7 +7,8 @@ var keystone = require('keystone'),
 module.exports = function(req, res) {
   var startTime = moment().subtract(1, 'month').toDate(),
       endTime = new Date();
-
+console.log(startTime);
+console.log(endTime);
   if(req.query.startTime) {
     startTime = new Date(req.query.startTime);
   }
