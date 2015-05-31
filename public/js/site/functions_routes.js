@@ -10,7 +10,7 @@ function routesInit(resizeOnce){
     dataController('line',  'reach', '/api/1.0/dashboard/reach',               currentSelectedDate, {selector: '#reach', source: 'dashboard'});
     dataController('line',  'engagement', '/api/1.0/dashboard/engagement',     currentSelectedDate, {selector: '#engagement', source: 'dashboard'});
     dataController('line',  'acquisition', '/api/1.0/dashboard/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'dashboard'});
-    dataController('donut', 'refTraffic', '/api/1.0/analyticsAll/refTraffic', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsAll'});
+    dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/all/refTraffic', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsAll'});
 
   }
   if ($('body.facebook')[0]){
@@ -67,25 +67,25 @@ function routesInit(resizeOnce){
   if ($('body.analytics-all')[0]){
     globalDebug('   Route: Analytics-All', 'color:gray;');
 
-    dataController('stats', 'overview', '/api/1.0/analyticsAll/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsAll'});
-    analyticsTableController('/api/1.0/analyticsAll/topCountries', $('#analytics-table'), currentSelectedDate);
-    dataController('donut', 'refTraffic', '/api/1.0/analyticsAll/refTraffic', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsAll'});
+    dataController('stats', 'overview', '/api/1.0/googleanalytics/all/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsAll'});
+    analyticsTableController('/api/1.0/googleanalytics/all/topCountries', $('#analytics-table'), currentSelectedDate);
+    dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/all/sources', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsAll'});
 
   }
   if ($('body.analytics-global')[0]){
     globalDebug('   Route: Analytics-Global', 'color:gray;');
 
-    dataController('stats', 'overview', '/api/1.0/analyticsGlobal/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsGlobal'});
-    analyticsTableController('/api/1.0/analyticsGlobal/topCountries', $('#analytics-table'), currentSelectedDate);
-    dataController('donut', 'refTraffic', '/api/1.0/analyticsGlobal/refTraffic', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsGlobal'});
+    dataController('stats', 'overview', '/api/1.0/googleanalytics/Global/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsGlobal'});
+    analyticsTableController('/api/1.0/googleanalytics/Global/topCountries', $('#analytics-table'), currentSelectedDate);
+    dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/Global/sources', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsGlobal'});
 
   }
   if ($('body.analytics-us')[0]){
     globalDebug('   Route: Analytics-Us', 'color:gray;');
 
-    dataController('stats', 'overview', '/api/1.0/analyticsUs/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsUs'});
-    analyticsTableController('/api/1.0/analyticsUs/topCountries', $('#analytics-table'), currentSelectedDate);
-    dataController('donut', 'refTraffic', '/api/1.0/analyticsUs/refTraffic', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsUs'});
+    dataController('stats', 'overview', '/api/1.0/googleanalytics/US/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsUs'});
+    analyticsTableController('/api/1.0/googleanalytics/US/topCountries', $('#analytics-table'), currentSelectedDate);
+    dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/US/sources', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsUs'});
 
   }
   if ($('body.events')[0] && !resizeOnce){
