@@ -13,7 +13,8 @@ exports = module.exports = function(req, res) {
     engagement: "",
     acquisition: "",
     refTraffic: "Referring Traffic",
-    topCountries: "Top Countries"
+    analyticsTopCountries: "Top Countries",
+    overview: ""
   };
 
   view.render('account/analytics');
