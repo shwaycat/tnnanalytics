@@ -1,7 +1,5 @@
-var // keystone = require('keystone'),
-    moment = require('moment'),
+var moment = require('moment'),
     debug = require('debug')('cadence:api:googleanalytics:sources'),
-    // _ = require('underscore'),
     googleAnalyticsMetrics = require('../../../lib/metrics/googleanalytics');
 
 module.exports = function(req, res) {
