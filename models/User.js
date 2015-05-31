@@ -220,6 +220,7 @@ User.schema.virtual('services.google.analyticsProfilesKeys').set(function(val) {
 
     this.services.google.analyticsProfiles = newProfiles;
   }
+  debug("services.google.analyticsProfiles=%j", this.services.google.analyticsProfiles);
 });
 
 User.schema.virtual('services.google.analyticsProfilesValues').set(function(val) {
@@ -249,6 +250,7 @@ User.schema.virtual('services.google.analyticsProfilesValues').set(function(val)
 
     this.services.google.analyticsProfiles = newProfiles;
   }
+  debug("services.google.analyticsProfiles=%j", this.services.google.analyticsProfiles);
 });
 
 /**

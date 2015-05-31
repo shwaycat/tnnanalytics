@@ -16,17 +16,19 @@ block content
           input(type='hidden', name='analyticsProfilesKeys', value='')
           input(type='hidden', name='analyticsProfilesValues', value='')
           .form-group(class=validationErrors.name ? 'has-error' : null)
-            label.col-sm-2.control-label(for='analyticsProfilesValues1') Profile 1
-            .col-sm-10
-              input.form-control(type='text' name='analyticsProfilesKeys' value='Global' disabled=true)
+            label.col-sm-4.control-label(for='analyticsProfilesValues1') Profile 1
+            .col-sm-8
+              input.form-control(type='text' name='analyticsProfilesKeys-vis' value='Global' disabled=true)
+              input(type='hidden' name='analyticsProfilesKeys' value='Global')
             select.form-control(id='analyticsProfilesValues1' name='analyticsProfilesValues')
               each profile in setupOptions.analyticsProfiles
                 option(value=profile.id)= profile.name
 
           .form-group(class=validationErrors.name ? 'has-error' : null)
-            label.col-sm-2.control-label(for='analyticsProfilesValues2') Profile 2
-            .col-sm-10
-              input.form-control(type='text' name='analyticsProfilesKeys' value='US' disabled=true)
+            label.col-sm-4.control-label(for='analyticsProfilesValues2') Profile 2
+            .col-sm-8
+              input.form-control(type='text' name='analyticsProfilesKeys-vis' value='US' disabled=true)
+              input(type='hidden' name='analyticsProfilesKeys' value='US')
             select.form-control(id='analyticsProfilesValues2' name='analyticsProfilesValues')
               each profile in setupOptions.analyticsProfiles
                 option(value=profile.id)= profile.name
