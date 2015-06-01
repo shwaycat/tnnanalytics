@@ -865,6 +865,7 @@ function dataController(sectionType, type, apiString, dateObj, options){
 
         if (type == 'topCountries'){
           apiObj.data = simplifyData(apiObj.data, apiObj.map);
+          console.log(apiObj);
           cachedData[type] = apiObj;
         } else if (type == 'topTweet'){
           $(options.selector).prev(loadingGifClass).remove();
