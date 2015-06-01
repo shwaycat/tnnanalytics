@@ -667,11 +667,11 @@ function statsDelegation(summary, options){
 
     if (options.selector == '#engagement'){
 
-      if (summary.totalLikes != undefined) {
+      if (summary.totalPlusOners != undefined) {
         statsString += statStringOpen;
         statsString += "Plus 1's"
         statsString += statStringMid;
-        statsString += numberWithCommas(summary.totalLikes);
+        statsString += numberWithCommas(summary.totalPlusOners);
         statsString += statStringClose;
       }
 
@@ -683,29 +683,29 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
-      if (summary.totalShares != undefined) {
+      if (summary.totalResharers != undefined) {
         statsString += statStringOpen;
         statsString += "Shares"
         statsString += statStringMid;
-        statsString += numberWithCommas(summary.totalShares);
+        statsString += numberWithCommas(summary.totalResharers);
         statsString += statStringClose;
       }
 
     } else if (options.selector == '#acquisition'){
 
-      if (summary.totalLikes != undefined) {
+      if (summary.totalCircledBy != undefined) {
         statsString += statStringOpen;
-        statsString += "Added to Circles"
+        statsString += "Total Circled By"
         statsString += statStringMid;
-        statsString += numberWithCommas(summary.totalCircles);
+        statsString += numberWithCommas(summary.totalCircledBy);
         statsString += statStringClose;
       }
 
-      if (summary.changeInLikes != undefined) {
+      if (summary.changeInCircledBy != undefined) {
         statsString += statStringOpen;
-        statsString += "Change in Circle Additions"
+        statsString += "Change in Circled By"
         statsString += statStringMid;
-        statsString += numberWithCommas(summary.changeInSubscribers);
+        statsString += numberWithCommas(summary.changeInCircledBy);
         statsString += statStringClose;
       }
 
