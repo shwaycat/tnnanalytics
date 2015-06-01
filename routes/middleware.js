@@ -53,7 +53,7 @@ exports.initLocals = function(req, res, next) {
     "topInstagramPost": "Top Instagram Post",
     "topGooglePost": "Top Google Post",
     "topYoutubeVideo": "Top Youtube Video",
-    "refTraffic": "Referring Traffic",
+    "refTraffic": "Sources",
     "analyticsTopCountries": "Top Countries",
     "overview": "Overview"
   }

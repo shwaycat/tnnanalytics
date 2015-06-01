@@ -15,6 +15,7 @@ function analyticsTableController(apiString, type, table, dateObj){
     $.get(apiString, timeObj)
     .done(function( data ) {
       apiObj.data = data.data;
+      apiObj.map = data.map;
       apiObj.success = data.success;
       globalDebug(data);
       globalDebug('   Ajax SUCCESS!: '+apiString, 'color:green;');
@@ -26,6 +27,8 @@ function analyticsTableController(apiString, type, table, dateObj){
       table.remove();
     })
     .always(function( data ) {
+      apiObj.data = simplifyDataAnalyticsMapOnly(apiObj.data, apiObj.map);
+
       cachedData[type] = apiObj;
       analyticsTableData(apiObj, table);
 
@@ -55,16 +58,19 @@ function analyticsTableData(apiObj, table){
 
     for (var i = 0; i < apiObj.data.length; i++){
 
-      var currentAnalytic;
+      var currentAnalytic,
+          bounceRate = '';
 
       // Get the Current Analytic Data
       currentAnalytic = apiObj.data[i];
+
+      bounceRate =  Math.round( (currentAnalytic.bounceRate*100) *100 )/100 + '%';
 
       // Create the table row with the given data
       tableHTML += '<tr>';
       tableHTML += '<td class="analytic-item-country"><span class="analytic-item-robot">'+currentAnalytic.label+'</span>'+currentAnalytic.label+'</td>';
       tableHTML += '<td class="analytic-item-sessions"><span class="analytic-item-robot">'+currentAnalytic.sessions+'</span>'+currentAnalytic.sessions+'</td>';
-      tableHTML += '<td class="analytic-item-bounce-rate"><span class="analytic-item-robot">'+currentAnalytic.bounceRate+'</span>'+currentAnalytic.bounceRate+'</td>';
+      tableHTML += '<td class="analytic-item-bounce-rate"><span class="analytic-item-robot">'+currentAnalytic.bounceRate+'</span>'+bounceRate+'</td>';
       tableHTML += '</tr>';
 
     }
