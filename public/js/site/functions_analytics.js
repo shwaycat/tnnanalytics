@@ -29,10 +29,6 @@ function analyticsTableController(apiString, type, table, dateObj){
 
       table.before(dataErrorHTML);
       table.remove();
-    })
-    .always(function( data ) {
-
-      console.log('hit empty analytics always call');
     });
   } else {
     analyticsTableData(cachedData[type], table);
