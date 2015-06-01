@@ -663,7 +663,7 @@ function statsDelegation(summary, options){
 
     }
 
-  } else if (options.source == 'google'){
+  } else if (options.source == 'googleplus'){
 
     if (options.selector == '#engagement'){
 

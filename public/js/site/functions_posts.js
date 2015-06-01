@@ -214,7 +214,7 @@ function topGooglePost(data, options, success){
     options.admin_options = false;
   }
 
-  if(options.source == 'google'){
+  if(options.source == 'googleplus'){
 
     var post = $(options.selector);
 
