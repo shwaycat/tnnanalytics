@@ -21,6 +21,8 @@ require('../lib/keystone-script')(function(done) {
       User.model.findAccountRoots(function(err, users) {
         if (err) return callback(err);
 
+        users = _.filter(users, function(u) { return u.services[key].isConfigured; });
+
         async.eachSeries(users, function(user, nextUser) {
           if (user.services[key].tokenExpiresAt) {
             var expiresAt = user._.services[key].tokenExpiresAt.moment().clone();
