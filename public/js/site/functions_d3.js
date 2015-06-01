@@ -71,7 +71,10 @@ function lineGraph(data, options, success){
     d = type(d); return d.value;
   });
 
-  if (yMin >= yMax) {
+  if (yMin == 0 && yMax == 0){
+    yMin = -10;
+    yMax = 10;
+  } else if (yMin >= yMax) {
     // If min and max are even, give it a bit a room to breathe.
     yMin = yMin * 0.8;
     yMax = yMax * 1.2;

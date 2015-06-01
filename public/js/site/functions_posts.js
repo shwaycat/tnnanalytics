@@ -262,6 +262,10 @@ function topGooglePost(data, options, success){
       post.find('.post-creation')
         .append(newDate);
     }
+    if (theData.data.url){
+      post.find('.post-link')
+        .attr('href', theData.data.url);
+    }
 
     $.getScript("https://apis.google.com/js/plusone.js");
 
