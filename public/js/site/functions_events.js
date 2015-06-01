@@ -25,8 +25,6 @@ var STRING_STATUS_NEW = 'new',
 function eventsTableController(apiString, table){
   globalDebug('   Events Get Data', 'color:purple;');
 
-
-
   var	apiObj = {
         "data": [],
         "page": 0,
