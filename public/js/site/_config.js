@@ -5,6 +5,9 @@ var eventsCheckStatusOnInterval = true;
 var dataErrorClass = '.data-error-container';
 var dataErrorHTML = '<div class="data-error-container"><p>There was an error loading the data for this section.</p></div>';
 
+var noDataClass = '.no-data-container';
+var noDataHTML = '<div class="data-error-container no-data-container"><p>There is no data for this time period.</p></div>';
+
 var loadingGifClass = '.loading-container';
 var loadingGifHTML = '<div class="loading-container"><img src="/images/loader.gif" /></div>';
 
@@ -20,7 +23,9 @@ var cachedData = {
       'topGooglePost': false,
       'topYoutubeVideo': false,
       'topCountries': false,
-      'refTraffic': false
+      'refTraffic': false,
+      'overview': false,
+      'analyticsTopCountries': false
     };
 var cachedSummary = {
       'engagement': false,

@@ -1,42 +1,54 @@
-function analyticsTableController(apiString, table, dateObj){
-  globalDebug('   Analytics Get Data', 'color:purple;');
+function analyticsTableController(apiString, type, table, dateObj){
+  if (!cachedData[type]){
+    globalDebug('   Analytics Get Data', 'color:purple;');
 
-  var	apiObj = {
-        "data": [],
-        "success": false
-      };
-  var timeObj = {};
-  if (dateObj){
-    apiObj.startTime = dateObj.startTime;
-    apiObj.endTime = dateObj.endTime;
-    timeObj = dateObj;
-  }
-  $.get(apiString, timeObj)
-  .done(function( data ) {
-    apiObj.data = data.data;
-    apiObj.success = data.success;
-
-    globalDebug('   Ajax SUCCESS!: '+apiString, 'color:green;');
-  })
-  .fail(function( data ) {
-    globalDebug('   Ajax FAILED!: '+apiString, 'color:red;');
-
-    table.before(dataErrorHTML);
-    table.remove();
-  })
-  .always(function( data ) {
-    if (apiObj.success && apiObj.data.length){
-
-      // apiObj.success = true;
-      // apiObj.data = fakeAnalyticsTable;
-      analyticsTableData(apiObj, table)
-
+    var	apiObj = {
+          "data": [],
+          "success": false
+        };
+    var timeObj = {};
+    if (dateObj){
+      apiObj.startTime = dateObj.startTime;
+      apiObj.endTime = dateObj.endTime;
+      timeObj = dateObj;
     }
-  });
+    $.get(apiString, timeObj)
+    .done(function( data ) {
+      apiObj.data = data.data;
+      apiObj.success = data.success;
+      globalDebug(data);
+      globalDebug('   Ajax SUCCESS!: '+apiString, 'color:green;');
+    })
+    .fail(function( data ) {
+      globalDebug('   Ajax FAILED!: '+apiString, 'color:red;');
+
+      table.before(dataErrorHTML);
+      table.remove();
+    })
+    .always(function( data ) {
+      cachedData[type] = apiObj;
+      analyticsTableData(apiObj, table);
+
+    });
+  } else {
+    analyticsTableData(cachedData[type], table);
+  }
 }
 
 function analyticsTableData(apiObj, table){
-  globalDebug('   Analytics Setup Table Data', 'color:purple;');
+  // Preload Checks
+  if (!table[0]) return;
+  if (!apiObj.data || !apiObj.data == undefined || !apiObj.data == null || !apiObj.success){
+    $(table).before(dataErrorHTML);
+    $(table).remove();
+    return;
+  } else if (apiObj.data && apiObj.data.length == 0){
+    $(table).before(noDataHTML);
+    $(table).remove();
+    return;
+  } else {
+    $(table).before(loadingGifHTML);
+  }
 
   if(table != undefined && table[0]){
     var tableHTML = '';
@@ -75,6 +87,7 @@ function analyticsTableDraw(table){
     "order": [[ 1, 'desc' ]],
   });
 
+  $('#analytics-table_wrapper').prev(loadingGifClass).remove();
   $('.analytics-container').sectionLoad(false);
 
 }
