@@ -122,8 +122,8 @@ function buildSeries() {
         series.push(deleteDeltasBySource('instagram'));
       }
 
-      if(argv['youtube-subscriberCounts'] || argv['youtube-all']) {
-        series.push(deleteDocsByType('youtube', 'subscribercount'));
+      if(argv['youtube-channel'] || argv['youtube-all']) {
+        series.push(deleteDocsByType('youtube', 'channel'));
       }
 
       if(argv['youtube-videos'] || argv['youtube-all']) {
@@ -383,7 +383,7 @@ function showHelp() {
   console.log('--instagram-deltas               Delete all Instagram deltas');
   console.log('');
   console.log('--youtube-all                    Delete all YouTube objects');
-  console.log('--youtube-followerCounts         Delete all YouTube SubscriberCounts');
+  console.log('--youtube-channels               Delete all YouTube Channels');
   console.log('--youtube-media                  Delete all YouTube videos');
   console.log('--youtube-comments               Delete all YouTube comments');
   console.log('--youtube-deltas                 Delete all YouTube deltas');

@@ -53,9 +53,9 @@ User.add({
    * @typedef {Object} UserServices
    * @member {UserServices~Facebook} facebook - Facebook
    * @member {UserServices~Twitter} twitter - Twitter
-   * @member {UserServices~Google} google - Google TODO
-   * @member {UserServices~Instagram} instagram - Instagram TODO
-   * @member {UserServices~Youtube} youtube - Youtube TODO
+   * @member {UserServices~GooglePlus} google - Google Plus
+   * @member {UserServices~Google} google - Google
+   * @member {UserServices~Instagram} instagram - Instagram
    */
   services: {
     /**
@@ -94,9 +94,7 @@ User.add({
       accessToken: { type: String, label: 'Access Token', dependsOn: deps.google },
       refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.google },
       tokenExpiresAt: { type: Types.Datetime, label: 'Token Expiration', dependsOn: deps.google },
-      analyticsProfiles_str: { type: String, label: 'Analytics Profiles', dependsOn: deps.google },
-      youtubeChannelID: { type: String, label: 'Youtube Channel ID', dependsOn: deps.google },
-      youtubeChannelUploadPlaylistID: { type: String, label: 'Youtube Channel ID', dependsOn: deps.google }
+      analyticsProfiles_str: { type: String, label: 'Analytics Profiles', dependsOn: deps.google }
     },
     /**
      * Google+ & Youtube Service
@@ -108,7 +106,7 @@ User.add({
      * @member {String} refreshToken - OAuth refresh token
      * @member {Date} tokenExpiresAt - Datetime that the accessToken expires
      * @member {String} youtubeChannelID - youtube Channel ID
-     * @member {string} youtubeChannelUploadPlaylistID - TODO
+     * @member {string} youtubePlaylistID - youtube Playlist ID
     */
     googleplus: {
       isConfigured: { type: Boolean, label: 'Google+ has been authenticated' },
@@ -118,7 +116,7 @@ User.add({
       refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.googleplus },
       tokenExpiresAt: { type: Types.Datetime, label: 'Token Expiration', dependsOn: deps.google },
       youtubeChannelID: { type: String, label: 'Youtube Channel ID', dependsOn: deps.googleplus },
-      youtubeChannelUploadPlaylistID: { type: String, label: 'Youtube Channel ID', dependsOn: deps.googleplus }
+      youtubePlaylistID: { type: String, label: 'Youtube Playlist ID', dependsOn: deps.googleplus }
     },
     /**
      * Twitter Service
@@ -252,6 +250,39 @@ User.schema.virtual('services.google.analyticsProfilesValues').set(function(val)
   }
   debug("services.google.analyticsProfiles=%j", this.services.google.analyticsProfiles);
 });
+
+User.schema.virtual('services.googleplus.youtubeChannel').get(function() {
+  if (!this.services.googleplus || !this.services.googleplus.youtubeChannelID) {
+    return {};
+  }
+
+  return {
+    id: this.services.googleplus.youtubeChannelID,
+    playlistID: this.services.googleplus.youtubePlaylistID
+  };
+});
+
+User.schema.virtual('services.googleplus.youtubeChannel').set(function(val) {
+  if (!val) {
+    this.services.googleplus.youtubeChannelID = null;
+    this.services.googleplus.youtubePlaylistID = null;
+  } else {
+    this.services.googleplus.youtubeChannelID = val.id;
+    this.services.googleplus.youtubePlaylistID = val.playlistID;
+  }
+});
+
+User.schema.virtual('services.googleplus.youtubeChannel_s').set(function(val) {
+  if (!val) {
+    this.services.googleplus.youtubeChannelID = null;
+    this.services.googleplus.youtubePlaylistID = null;
+  } else {
+    val = val.split(',');
+    this.services.googleplus.youtubeChannelID = val[0];
+    this.services.googleplus.youtubePlaylistID = val[1];
+  }
+});
+
 
 /**
  * Methods
