@@ -4,7 +4,7 @@ function usage () {
   cat <<EOF
 Usage: $PROGNAME ENVIRONMENT
 Deploys the application to the given ENVIRONMENT
-  ENVIRONMENT   dev
+  ENVIRONMENT   dev|prod
 EOF
   exit $( [ $# -ne 0 ] && echo $1 || echo 0 )
 }
