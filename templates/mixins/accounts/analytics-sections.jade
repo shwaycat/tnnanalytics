@@ -5,7 +5,7 @@ mixin analytics-section(type, options)
       .inner-content
         h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.refTraffic)
           =sectionTitles.refTraffic
-        section#refTraffic(data-admin-options=options)
+        section.novo-graph.novo-donut-graph#refTraffic(data-admin-options=options)
           
   if type == 'topCountries'
     .col-xs-12.col-md-12.col-lg-6.content-block.equal-height-block-1.analytics-container
@@ -31,4 +31,4 @@ mixin analytics-section(type, options)
       .inner-content
         h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.overview)
           =sectionTitles.overview
-        section.novo-graph.novo-donut-graph#overview(data-admin-options=options)
+        section#overview(data-admin-options=options)
