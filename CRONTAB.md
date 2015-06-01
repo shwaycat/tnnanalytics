@@ -23,6 +23,9 @@
 # Google Analytics pulls every 6 hours.
 * */6 * * *         cd current && node scripts/pull-google-analytics.js &>>log/pull-google-analytics.log
 
+# Refresh OAuth tokens every 5 minutes.
+*/5 * * * *         cd current && node scripts/oauth-refresh.js &>>log/oauth-refresh.log
+
 # Run Notify every 3 min.
 */3 * * * *         cd current && node scripts/notify.js &>>log/notify.log
 
