@@ -15,6 +15,7 @@ function analyticsTableController(apiString, type, table, dateObj){
     $.get(apiString, timeObj)
     .done(function( data ) {
       apiObj.data = data.data;
+      apiObj.map = data.map;
       apiObj.success = data.success;
       globalDebug(data);
       globalDebug('   Ajax SUCCESS!: '+apiString, 'color:green;');
@@ -26,6 +27,8 @@ function analyticsTableController(apiString, type, table, dateObj){
       table.remove();
     })
     .always(function( data ) {
+      apiObj.data = simplifyDataAnalyticsMapOnly(apiObj.data, apiObj.map);
+
       cachedData[type] = apiObj;
       analyticsTableData(apiObj, table);
 

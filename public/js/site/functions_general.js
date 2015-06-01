@@ -243,6 +243,26 @@ $.fn.sectionLoad = function(reload, eh){
 
 };
 
+function simplifyDataAnalyticsMapOnly(data, map){
+  var theData = data;
+  var newData = {
+    "data": []
+  };
+
+  _.each(theData, function(datum, index){
+    if (datum.key == "US"){
+      datum.label = "USA";
+    } else if (datum.key == "UK") {
+      datum.label = "UK";
+    } else {
+      datum.label = map[datum.key];
+    }
+    newData.data.push(datum);
+  });
+
+  return newData;
+}
+
 function simplifyDataPercentsOnly(data){
   var theData = data;
   var newData = {
