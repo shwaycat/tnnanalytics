@@ -59,16 +59,19 @@ function analyticsTableData(apiObj, table){
     for (var i = 0; i < apiObj.data.length; i++){
 
       var currentAnalytic,
-          bounceRate = '';
+          bounceRate = '',
+          label = '';
 
       // Get the Current Analytic Data
       currentAnalytic = apiObj.data[i];
 
       bounceRate =  Math.round( (currentAnalytic.bounceRate*100) *100 )/100 + '%';
 
+      label = apiObj.map[currentAnalytic.key];
+
       // Create the table row with the given data
       tableHTML += '<tr>';
-      tableHTML += '<td class="analytic-item-country"><span class="analytic-item-robot">'+currentAnalytic.label+'</span>'+currentAnalytic.label+'</td>';
+      tableHTML += '<td class="analytic-item-country"><span class="analytic-item-robot">'+label+'</span>'+label+'</td>';
       tableHTML += '<td class="analytic-item-sessions"><span class="analytic-item-robot">'+currentAnalytic.sessions+'</span>'+currentAnalytic.sessions+'</td>';
       tableHTML += '<td class="analytic-item-bounce-rate"><span class="analytic-item-robot">'+currentAnalytic.bounceRate+'</span>'+bounceRate+'</td>';
       tableHTML += '</tr>';
