@@ -609,21 +609,21 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
-      if (summary.totalPosts != undefined) {
-        statsString += statStringOpen;
-        statsString += "Replies"
-        statsString += statStringMid;
-        statsString += numberWithCommas(summary.totalReplies);
-        statsString += statStringClose;
-      }
+      // if (summary.totalPosts != undefined) {
+      //   statsString += statStringOpen;
+      //   statsString += "Replies"
+      //   statsString += statStringMid;
+      //   statsString += numberWithCommas(summary.totalReplies);
+      //   statsString += statStringClose;
+      // }
 
-      if (summary.totalMentions != undefined) {
-        statsString += statStringOpen;
-        statsString += "Mentions"
-        statsString += statStringMid;
-        statsString += numberWithCommas(summary.totalMentions);
-        statsString += statStringClose;
-      }
+      // if (summary.totalMentions != undefined) {
+      //   statsString += statStringOpen;
+      //   statsString += "Mentions"
+      //   statsString += statStringMid;
+      //   statsString += numberWithCommas(summary.totalMentions);
+      //   statsString += statStringClose;
+      // }
 
       if (summary.totalComments != undefined) {
         statsString += statStringOpen;
@@ -633,7 +633,7 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
-      if (summary.totalMessages != undefined) {
+      if (summary.totalViews != undefined) {
         statsString += statStringOpen;
         statsString += "Views"
         statsString += statStringMid;
@@ -645,7 +645,7 @@ function statsDelegation(summary, options){
 
     } else if (options.selector == '#acquisition'){
 
-      if (summary.totalLikes != undefined) {
+      if (summary.totalSubscribers != undefined) {
         statsString += statStringOpen;
         statsString += "Subscribers"
         statsString += statStringMid;
@@ -653,7 +653,7 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
-      if (summary.changeInLikes != undefined) {
+      if (summary.changeInSubscribers != undefined) {
         statsString += statStringOpen;
         statsString += "Change in Subscribers"
         statsString += statStringMid;
