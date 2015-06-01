@@ -12,7 +12,7 @@ exports = module.exports = function(req, res) {
     reach: "",
     engagement: "",
     acquisition: "",
-    refTraffic: "Referring Traffic",
+    refTraffic: "Sources",
     analyticsTopCountries: "Top Countries",
     overview: ""
   };

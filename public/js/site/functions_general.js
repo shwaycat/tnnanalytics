@@ -232,6 +232,7 @@ $.fn.sectionLoad = function(reload, eh){
     el.removeClass('loaded');
   }
   el.prev(loadingGifClass).remove();
+  el.prev(noDataClass).remove();
 
   setTimeout(function(){
     el.addClass('loaded');
@@ -389,33 +390,22 @@ function statsDelegation(summary, options){
       statStringMid,
       statStringClose,
       columnSize,
-      statsElement = '';
+      statsElement = '',
+      listClass = '';
 
   if (options.selector == '#overview'){
     statsElement = '.novo-overview-stats';
+    listClass = 'novo-overview-stats';
+    $(options.selector).find(statsElement).remove();
   } else {
     statsElement = '.novo-graph-stats';
+    listClass = 'novo-graph-stats';
+    $(options.selector).next(statsElement).remove();
   }
 
-  $(options.selector).next(statsElement).remove();
+  columnSize = 'col-lg-6';
 
-  if(options.source == 'twitter'){
-    if(options.selector == '#engagement'){
-      columnSize = 'col-lg-6';
-    } else if (options.selector == '#acquisition'){
-      columnSize = 'col-lg-6';
-    }
-  } else if(options.source == 'facebook'){
-    if(options.selector == '#engagement'){
-      columnSize = 'col-lg-6';
-    } else if (options.selector == '#acquisition'){
-      columnSize = 'col-lg-6';
-    } else if (options.selector == '#reach'){
-      columnSize = 'col-lg-6';
-    }
-  }
-
-  statsStringOpen = '<ul class="novo-graph-stats">';
+  statsStringOpen = '<ul class="'+listClass+'">';
   statStringOpen = '<li class="col-xs-12 '+columnSize+' col-md-6"><div class="stat"><span>';
   statStringMid = '</span><span>';
   statStringClose = '</span></li>';
@@ -767,10 +757,9 @@ function statsDelegation(summary, options){
 
   statsString += statsStringClose;
 
-
   if (options.selector == '#overview'){
     $(options.selector).append(statsString);
-    $(options.selector).sectionLoad(false);
+    $(options.selector).find(statsElement).sectionLoad(false);
   } else {
     $(options.selector).after(statsString);
     $(options.selector).next(statsElement).sectionLoad(false);

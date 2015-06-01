@@ -68,7 +68,7 @@ function routesInit(resizeOnce){
     globalDebug('   Route: Analytics-All', 'color:gray;');
 
     dataController('stats', 'overview', '/api/1.0/googleanalytics/all/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsAll'});
-    analyticsTableController('/api/1.0/googleanalytics/all/topCountries', $('#analytics-table'), currentSelectedDate);
+    analyticsTableController('/api/1.0/googleanalytics/all/topCountries', 'analyticsTopCountries', $('#analytics-table'), currentSelectedDate);
     dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/all/sources', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsAll'});
 
   }
@@ -76,7 +76,7 @@ function routesInit(resizeOnce){
     globalDebug('   Route: Analytics-Global', 'color:gray;');
 
     dataController('stats', 'overview', '/api/1.0/googleanalytics/Global/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsGlobal'});
-    analyticsTableController('/api/1.0/googleanalytics/Global/topCountries', $('#analytics-table'), currentSelectedDate);
+    analyticsTableController('/api/1.0/googleanalytics/Global/topCountries', 'analyticsTopCountries', $('#analytics-table'), currentSelectedDate);
     dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/Global/sources', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsGlobal'});
 
   }
@@ -84,7 +84,7 @@ function routesInit(resizeOnce){
     globalDebug('   Route: Analytics-Us', 'color:gray;');
 
     dataController('stats', 'overview', '/api/1.0/googleanalytics/US/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsUs'});
-    analyticsTableController('/api/1.0/googleanalytics/US/topCountries', $('#analytics-table'), currentSelectedDate);
+    analyticsTableController('/api/1.0/googleanalytics/US/topCountries', 'analyticsTopCountries', $('#analytics-table'), currentSelectedDate);
     dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/US/sources', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsUs'});
 
   }
