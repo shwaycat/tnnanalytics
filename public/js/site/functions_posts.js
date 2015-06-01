@@ -238,7 +238,10 @@ function topGooglePost(data, options, success){
     newDetails[1][1] = numberWithCommas(theData.data.comments);
     newDetails[2] = [];
     newDetails[2][0] = 'Shares';
-    newDetails[2][1] = numberWithCommas(theData.data.shares);
+    newDetails[2][1] = numberWithCommas(theData.data.resharers);
+    newDetails[3] = [];
+    newDetails[3][0] = "Plus 1's";
+    newDetails[3][1] = numberWithCommas(theData.data.plusoners);
 
     for (var i = 0; i < newDetails.length; i++){
       newDetailsHTML += '<li><span>';

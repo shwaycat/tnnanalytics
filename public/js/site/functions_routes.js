@@ -46,7 +46,6 @@ function routesInit(resizeOnce){
   if ($('body.google-plus')[0]){
     globalDebug('   Route: Google-Plus', 'color:gray;');
 
-    dataController('line',  'reach', '/api/1.0/googleplus/reach',               currentSelectedDate, {selector: '#reach', source: 'googleplus'});
     dataController('line',  'engagement', '/api/1.0/googleplus/engagement',     currentSelectedDate, {selector: '#engagement', source: 'googleplus'});
     dataController('line',  'acquisition', '/api/1.0/googleplus/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'googleplus'});
     if (!resizeOnce){
