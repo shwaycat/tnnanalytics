@@ -1,9 +1,16 @@
 var keystone = require('keystone'),
+    Country = keystone.list('Country'),
     moment = require('moment'),
     debug = require('debug')('cadence:api:facebook:topCountries'),
-    _ = require('underscore'),
     facebookMetrics = require('../../../lib/metrics/facebook');
 
+function addCountriesMap(response, callback) {
+  Country.model.getMap(function(err, map) {
+    if(err) return callback(err);
+    response.map = map;
+    callback(null, response);
+  });
+}
 
 module.exports = function(req, res) {
   var startTime = moment().subtract(1, 'month').toDate(),
@@ -19,13 +26,16 @@ module.exports = function(req, res) {
   facebookMetrics.topCountries(req.user, startTime, endTime, function(err, response) {
     debug(response);
 
-    if(err) return res.apiResponse({error: err});  
+    if(err) return res.apiResponse({error: err});
 
-    response.success = true;
-    response.type = 'topCountries';
-    response.source = 'facebook';
-    response.queryString = req.queryString;
-    return res.apiResponse(response);
-    
-  });   
+    addCountriesMap(response, function(err, response) {
+      if(err) return res.apiResponse({error: err});
+
+      response.success = true;
+      response.type = 'topCountries';
+      response.source = 'facebook';
+      response.queryString = req.queryString;
+      return res.apiResponse(response);
+    });
+  });
 };
