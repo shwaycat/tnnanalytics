@@ -10,7 +10,7 @@ function routesInit(resizeOnce){
     dataController('line',  'reach', '/api/1.0/dashboard/reach',               currentSelectedDate, {selector: '#reach', source: 'dashboard'});
     dataController('line',  'engagement', '/api/1.0/dashboard/engagement',     currentSelectedDate, {selector: '#engagement', source: 'dashboard'});
     dataController('line',  'acquisition', '/api/1.0/dashboard/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'dashboard'});
-    dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/all/refTraffic', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsAll'});
+    dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/all/sources', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsAll'});
 
   }
   if ($('body.facebook')[0]){

@@ -356,7 +356,7 @@ function donutList(data, options, success){
         newDetailsHTML += '</span></li>';
       }
 
-      newDetails += '</ul></section>';
+      newDetailsHTML += '</ul></section>';
 
     }
   }
@@ -609,21 +609,21 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
-      if (summary.totalPosts != undefined) {
-        statsString += statStringOpen;
-        statsString += "Replies"
-        statsString += statStringMid;
-        statsString += numberWithCommas(summary.totalReplies);
-        statsString += statStringClose;
-      }
+      // if (summary.totalPosts != undefined) {
+      //   statsString += statStringOpen;
+      //   statsString += "Replies"
+      //   statsString += statStringMid;
+      //   statsString += numberWithCommas(summary.totalReplies);
+      //   statsString += statStringClose;
+      // }
 
-      if (summary.totalMentions != undefined) {
-        statsString += statStringOpen;
-        statsString += "Mentions"
-        statsString += statStringMid;
-        statsString += numberWithCommas(summary.totalMentions);
-        statsString += statStringClose;
-      }
+      // if (summary.totalMentions != undefined) {
+      //   statsString += statStringOpen;
+      //   statsString += "Mentions"
+      //   statsString += statStringMid;
+      //   statsString += numberWithCommas(summary.totalMentions);
+      //   statsString += statStringClose;
+      // }
 
       if (summary.totalComments != undefined) {
         statsString += statStringOpen;
@@ -633,7 +633,7 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
-      if (summary.totalMessages != undefined) {
+      if (summary.totalViews != undefined) {
         statsString += statStringOpen;
         statsString += "Views"
         statsString += statStringMid;
@@ -645,7 +645,7 @@ function statsDelegation(summary, options){
 
     } else if (options.selector == '#acquisition'){
 
-      if (summary.totalLikes != undefined) {
+      if (summary.totalSubscribers != undefined) {
         statsString += statStringOpen;
         statsString += "Subscribers"
         statsString += statStringMid;
@@ -653,7 +653,7 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
-      if (summary.changeInLikes != undefined) {
+      if (summary.changeInSubscribers != undefined) {
         statsString += statStringOpen;
         statsString += "Change in Subscribers"
         statsString += statStringMid;
@@ -695,7 +695,7 @@ function statsDelegation(summary, options){
 
       if (summary.totalCircledBy != undefined) {
         statsString += statStringOpen;
-        statsString += "Total Circled By"
+        statsString += "Added"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.totalCircledBy);
         statsString += statStringClose;
@@ -703,7 +703,7 @@ function statsDelegation(summary, options){
 
       if (summary.changeInCircledBy != undefined) {
         statsString += statStringOpen;
-        statsString += "Change in Circled By"
+        statsString += "Changed"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.changeInCircledBy);
         statsString += statStringClose;
@@ -751,6 +751,60 @@ function statsDelegation(summary, options){
       statsString += statStringMid;
       statsString += numberWithCommas(summary.totalAverageSessionDuration);
       statsString += statStringClose;
+    }
+
+  } else if (options.source == 'dashboard') {
+
+    if (options.selector == '#acquisition'){
+
+      if (summary.totalFacebook != undefined) {
+        statsString += statStringOpen;
+        statsString += "Facebook"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalFacebook);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalTwitter != undefined) {
+        statsString += statStringOpen;
+        statsString += "Twitter"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalTwitter);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalInstagram != undefined) {
+        statsString += statStringOpen;
+        statsString += "Instagram"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalInstagram);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalYouTube != undefined) {
+        statsString += statStringOpen;
+        statsString += "Youtube"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalYouTube);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalGooglePlus != undefined) {
+        statsString += statStringOpen;
+        statsString += "Google+"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalGooglePlus);
+        statsString += statStringClose;
+      }
+
+      if (summary.changeInAcquisition != undefined) {
+        statsString += statStringOpen;
+        statsString += "Change in Acquisition"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.changeInAcquisition);
+        statsString += statStringClose;
+      }
+
     }
 
   }
