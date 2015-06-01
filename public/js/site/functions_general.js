@@ -260,6 +260,7 @@ function simplifyDataAnalyticsMapOnly(data, map){
     newData.data.push(datum);
   });
 
+  console.log('finish simplifyDataAnalyticsMapOnly');
   return newData;
 }
 

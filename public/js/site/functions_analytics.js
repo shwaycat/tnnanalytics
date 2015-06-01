@@ -18,6 +18,10 @@ function analyticsTableController(apiString, type, table, dateObj){
       apiObj.success = data.success;
       globalDebug(data);
       globalDebug('   Ajax SUCCESS!: '+apiString, 'color:green;');
+
+      cachedData[type] = apiObj;
+      analyticsTableData(apiObj, table);
+
     })
     .fail(function( data ) {
       globalDebug('   Ajax FAILED!: '+apiString, 'color:red;');
@@ -27,9 +31,7 @@ function analyticsTableController(apiString, type, table, dateObj){
     })
     .always(function( data ) {
 
-      cachedData[type] = apiObj;
-      analyticsTableData(apiObj, table);
-
+      console.log('hit empty analytics always call');
     });
   } else {
     analyticsTableData(cachedData[type], table);
