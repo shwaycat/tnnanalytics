@@ -21,7 +21,7 @@ function type(d) {
 function lineGraph(data, options, success){
   // Preload Checks
   if (!$(options.selector)[0]) return;
-  if !success){
+  if (!success){
     $(options.selector).before(dataErrorHTML);
     $(options.selector).remove();
     return;
