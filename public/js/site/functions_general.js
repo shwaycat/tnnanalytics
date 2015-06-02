@@ -358,6 +358,8 @@ function donutList(data, options, success){
 
       newDetailsHTML += '</ul></section>';
 
+      $(options.selector).after(newDetailsHTML);
+
     }
   }
 }
