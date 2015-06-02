@@ -27,7 +27,7 @@ function topFacebookPost(data, options, success){
 
     var post = $(options.selector);
 
-    var fbPost = '<div data-href="'+theData.data.url+'" class="fb-post"></div>'
+    var fbPost = '<div data-href="'+theData.data.url+'" class="fb-post"></div><a target="_blank" title="Post Link" href="'+theData.data.url+'" class="btn btn-default post-cta-btn">See Post<span class="entypo entypo-chevron-thin-right"></span></a>'
 
     var newDetailsHTML = '';
     var newDetails = [];
@@ -45,10 +45,6 @@ function topFacebookPost(data, options, success){
     }
     post.find('.post')
       .append(fbPost);
-    if (theData.data.url){
-      post.find('.post-cta-btn')
-        .attr('href', theData.data.url);
-    }
     post.find('.post-details-list')
       .children().remove();
     post.find('.post-details-list')
