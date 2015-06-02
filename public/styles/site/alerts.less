@@ -94,9 +94,11 @@
 
 // Tooltip Alerts
 .tooltip {
-
-  &.right .tooltip-arrow {
-    border-right-color:@tooltip_bg !important;
+  &.right {
+    top: 22px !important;
+    .tooltip-arrow {
+      border-right-color:@tooltip_bg !important;
+    }
   }
   &.top .tooltip-arrow {
     border-top-color:@tooltip_bg !important;
