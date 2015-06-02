@@ -13,11 +13,11 @@ exports = module.exports = function(req, res) {
   locals.showDates = true;
   locals.title = 'Dashboard';
   locals.tooltip = {
-    reach: "empty",
-    engagement: "Facebook, Twitter, Instagram, Google+ and Youtube",
-    acquisition: "Facebook, Twitter, Instagram, Google+ and Youtube",
+    reach: "Facebook + Youtube",
+    engagement: "Facebook + Twitter + Instagram + Google+ + Youtube",
+    acquisition: "Facebook + Twitter + Instagram + Google+ + Youtube",
     top_post: "empty",
-    top_countries: "empty"
+    refTraffic: "Sources"
   };
 
   view.render('account/index');
