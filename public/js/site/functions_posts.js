@@ -27,7 +27,7 @@ function topFacebookPost(data, options, success){
 
     var post = $(options.selector);
 
-    var fbPost = '<div data-href="'+theData.data.url+'" class="fb-post"></div>'
+    var fbPost = '<div data-href="'+theData.data.url+'" class="fb-post"></div><a target="_blank" title="Post Link" href="'+theData.data.url+'" class="btn btn-default post-cta-btn">See Post<span class="entypo entypo-chevron-thin-right"></span></a>'
 
     var newDetailsHTML = '';
     var newDetails = [];
@@ -121,6 +121,10 @@ function topTweet(data, options, success){
 
     post.find('.twitter-container')
       .append(theData.oembed.html);
+    if (theData.oembed.url){
+      post.find('.post-cta-btn')
+        .attr('href', theData.oembed.url);
+    }
     post.find('.post-details-list')
       .children().remove();
     post.find('.post-details-list')
@@ -189,6 +193,10 @@ function topInstagramPost(data, options, success){
     }
     post.find('.instagram-container')
       .append(oembedHTML);
+    if (theData.data.url){
+      post.find('.post-cta-btn')
+        .attr('href', theData.data.url);
+    }
     post.find('.post-details-list')
       .children().remove();
     post.find('.post-details-list')
@@ -279,7 +287,7 @@ function topGooglePost(data, options, success){
         .append(newDate);
     }
     if (theData.data.url){
-      post.find('.post-link')
+      post.find('.post-cta-btn')
         .attr('href', theData.data.url);
     }
 
@@ -368,7 +376,7 @@ function topYoutubeVideo(data, options, success){
     if (theData.data.url){
       post.find('.post-title a')
         .attr('href', theData.data.url);
-      post.find('.post-link')
+      post.find('.post-cta-btn')
         .attr('href', theData.data.url);
     }
     if (theData.data.createdAt){
