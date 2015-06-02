@@ -21,11 +21,11 @@ function type(d) {
 function lineGraph(data, options, success){
   // Preload Checks
   if (!$(options.selector)[0]) return;
-  if (!data || !success){
+  if !success){
     $(options.selector).before(dataErrorHTML);
     $(options.selector).remove();
     return;
-  } else if (data == null || data.length == 0){
+  } else if (success && data == null || data.length == 0){
     $(options.selector).before(noDataHTML);
     $(options.selector).remove();
     return;
