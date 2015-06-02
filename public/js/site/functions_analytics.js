@@ -81,6 +81,7 @@ function analyticsTableData(apiObj, table){
     analyticsTableDraw($('#analytics-table'));
 
     compensateFooter();
+    equalHeightPairs(1200);
 
   }
 }
