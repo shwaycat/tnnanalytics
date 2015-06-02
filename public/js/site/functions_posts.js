@@ -53,7 +53,7 @@ function topFacebookPost(data, options, success){
 
   $(options.selector).sectionLoad(true, true);
   setTimeout(function(){
-     equalHeightPairs();
+     equalHeightPairs(1200);
   },1000);
 
 }
@@ -61,7 +61,7 @@ function topFacebookPost(data, options, success){
 
 
 
-function topTweet(data, options){
+function topTweet(data, options, success){
 
   // Preload Checks
   if (!$(options.selector)[0]) return;
@@ -141,7 +141,7 @@ function topInstagramPost(data, options, success){
 
   // Preload Checks
   if (!$(options.selector)[0]) return;
-  if (!data || !success || !data.data.oembed || data.data.oembed == undefined){
+  if (!data || !success || !data.oembed || data.oembed == undefined){
     $(options.selector).before(dataErrorHTML);
     $(options.selector).remove();
     return;
