@@ -30,7 +30,7 @@ exports.initLocals = function(req, res, next) {
     { label: 'Web Analytics',     type: 'navigation',       key: 'view-analytics',  href: false },
     { label: 'All',               type: 'sub-link',         key: 'analytics-all',   href: 'analytics-all' },
     { label: 'Global',            type: 'sub-link',         key: 'analytics-global',href: 'analytics-global' },
-    { label: 'US',                type: 'sub-link',         key: 'analytics-us',    href: 'analytics-us' },
+    { label: 'USA',               type: 'sub-link',         key: 'analytics-us',    href: 'analytics-us' },
     { label: 'Keyword Alerts',    type: 'link',             key: 'events',          href: 'events' }
   ]
 
