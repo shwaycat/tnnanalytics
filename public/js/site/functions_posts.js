@@ -149,7 +149,7 @@ function topInstagramPost(data, options, success){
     $(options.selector).before(dataErrorHTML);
     $(options.selector).remove();
     return;
-  } else if (data == null || data.length == 0){
+  } else if (data.data == null || data.length == 0 || data.oembed == null){
     $(options.selector).before(noDataHTML);
     $(options.selector).remove();
     return;
@@ -264,7 +264,7 @@ function topGooglePost(data, options, success){
     newDetails[2][0] = 'Shares';
     newDetails[2][1] = numberWithCommas(theData.data.resharers);
     newDetails[3] = [];
-    newDetails[3][0] = "Plus 1's";
+    newDetails[3][0] = "Plus 1s";
     newDetails[3][1] = numberWithCommas(theData.data.plusoners);
 
     for (var i = 0; i < newDetails.length; i++){
