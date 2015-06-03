@@ -697,7 +697,7 @@ function statsDelegation(summary, options){
 
       if (summary.changeInCircledBy != undefined) {
         statsString += statStringOpen;
-        statsString += "Changed"
+        statsString += "Change"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.changeInCircledBy);
         statsString += statStringClose;
@@ -715,11 +715,19 @@ function statsDelegation(summary, options){
       statsString += statStringClose;
     }
 
+    if (summary.totalAverageSessionDuration != undefined) {
+      statsString += statStringOpen;
+      statsString += "Session Duration"
+      statsString += statStringMid;
+      statsString += (numberWithCommas(summary.totalAverageSessionDuration) + 'sec');
+      statsString += statStringClose;
+    }
+
     if (summary.totalBounceRate != undefined) {
       statsString += statStringOpen;
       statsString += "Bounce Rate"
       statsString += statStringMid;
-      statsString += numberWithCommas(summary.totalBounceRate);
+      statsString += (numberWithCommas(summary.totalBounceRate) + '%');
       statsString += statStringClose;
     }
 
@@ -737,15 +745,7 @@ function statsDelegation(summary, options){
       statsString += statStringMid;
       statsString += numberWithCommas(summary.totalUsers);
       statsString += statStringClose;
-    }
-
-    if (summary.totalAverageSessionDuration != undefined) {
-      statsString += statStringOpen;
-      statsString += "Session Duration"
-      statsString += statStringMid;
-      statsString += numberWithCommas(summary.totalAverageSessionDuration);
-      statsString += statStringClose;
-    }
+    }    
 
   } else if (options.source == 'dashboard') {
 

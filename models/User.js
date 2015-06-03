@@ -99,7 +99,7 @@ User.add({
       youtubeChannelUploadPlaylistID: { type: String, label: 'Youtube Channel ID', dependsOn: deps.google }
     },
     /**
-     * Google Plus & Youtube Service
+     * Google+ & Youtube Service
      * @typedef {Object} UserServices~Googleplus
      * @member {Boolean} isConfigured - `true` if configured
      * @member {String} profileId - Google+ page ID

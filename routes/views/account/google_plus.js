@@ -7,7 +7,7 @@ exports = module.exports = function(req, res) {
 
   locals.section = 'google-plus';
   locals.showDates = true;
-  locals.title = 'Google Plus';
+  locals.title = 'Google+';
   locals.tooltip = {
     reach: "",
     engagement: "Plus 1s + Comments + Shares",
