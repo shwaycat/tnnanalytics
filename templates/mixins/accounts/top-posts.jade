@@ -61,12 +61,9 @@ mixin topYoutubeVideo(options)
         =sectionTitles.topYoutubeVideo
       section.top-posts.top-youtube-video#topYoutubeVideo(data-admin-options=options)
         article.post
-          h3.post-title: a(target="_blank")
-          p.post-content
-          span.post-creation
+          section.youtube-container
           a.btn.btn-default.post-cta-btn(target="_blank" title="Post Link" href="") See Post
             span.entypo.entypo-chevron-thin-right
-        section.post-media
         section.post-details
           h3.post-title-details Details
           ul.post-details-list
