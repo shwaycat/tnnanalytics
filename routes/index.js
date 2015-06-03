@@ -1,12 +1,12 @@
-var keystone = require('keystone')
-  , User = keystone.list('User')
-  , middleware = require('./middleware')
-  , importRoutes = keystone.importer(__dirname)
+var keystone = require('keystone'),
+    User = keystone.list('User'),
+    middleware = require('./middleware'),
+    importRoutes = keystone.importer(__dirname);
 
 // Common Middleware
-keystone.pre('routes', middleware.initErrorHandlers)
-keystone.pre('routes', middleware.initLocals)
-keystone.pre('render', middleware.flashMessages)
+keystone.pre('routes', middleware.initErrorHandlers);
+keystone.pre('routes', middleware.initLocals);
+keystone.pre('render', middleware.flashMessages);
 
 keystone.set('404', function(req, res) {
   res.notfound();
@@ -31,22 +31,22 @@ var routes = {
   views: importRoutes('./views'),
   auth: importRoutes('./auth'),
   api: importRoutes('./api')
-}
+};
 
 // Setup Route Bindings
 exports = module.exports = function(app) {
   app.param('account_name', function(req, res, next, accountName) {
     User.model.findOne({ accountName: accountName, isAccountRoot: true }, function(err, user) {
       if (err) {
-        next(err)
+        next(err);
       } else if (user) {
-        req.account = user
-        next()
+        req.account = user;
+        next();
       } else {
         next(new Error('Failed to load account user'));
       }
     });
-  })
+  });
 
   // Unrestricted/General
   app.get('/', routes.views.index);
