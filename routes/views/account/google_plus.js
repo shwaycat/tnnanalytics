@@ -10,7 +10,7 @@ exports = module.exports = function(req, res) {
   locals.title = 'Google Plus';
   locals.tooltip = {
     reach: "",
-    engagement: "Plus 1 + Comments + Shares",
+    engagement: "Plus 1s + Comments + Shares",
     acquisition: 'Total "Add to Circles"',
     topGooglePost: "Comments + Shares",
     topCountries: ""

@@ -408,7 +408,7 @@ function statsDelegation(summary, options){
   columnSize = 'col-lg-6';
 
   statsStringOpen = '<ul class="'+listClass+'">';
-  statStringOpen = '<li class="col-xs-12 '+columnSize+' col-md-6"><div class="stat"><span>';
+  statStringOpen = '<li class="col-xs-12 col-sm-12 col-md-12 '+columnSize+'"><div class="stat"><span>';
   statStringMid = '</span><span>';
   statStringClose = '</span></li>';
   statsStringClose = '</ul>';
@@ -603,6 +603,14 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
+      if (summary.totalDislikes != undefined) {
+        statsString += statStringOpen;
+        statsString += "Dislikes"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalDislikes);
+        statsString += statStringClose;
+      }
+
       if (summary.totalShares != undefined) {
         statsString += statStringOpen;
         statsString += "Shares"
@@ -610,22 +618,6 @@ function statsDelegation(summary, options){
         statsString += numberWithCommas(summary.totalShares);
         statsString += statStringClose;
       }
-
-      // if (summary.totalPosts != undefined) {
-      //   statsString += statStringOpen;
-      //   statsString += "Replies"
-      //   statsString += statStringMid;
-      //   statsString += numberWithCommas(summary.totalReplies);
-      //   statsString += statStringClose;
-      // }
-
-      // if (summary.totalMentions != undefined) {
-      //   statsString += statStringOpen;
-      //   statsString += "Mentions"
-      //   statsString += statStringMid;
-      //   statsString += numberWithCommas(summary.totalMentions);
-      //   statsString += statStringClose;
-      // }
 
       if (summary.totalComments != undefined) {
         statsString += statStringOpen;
@@ -671,7 +663,7 @@ function statsDelegation(summary, options){
 
       if (summary.totalPlusOners != undefined) {
         statsString += statStringOpen;
-        statsString += "Plus 1's"
+        statsString += "Plus 1s"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.totalPlusOners);
         statsString += statStringClose;

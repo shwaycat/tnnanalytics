@@ -2,7 +2,7 @@ function topFacebookPost(data, options, success){
 
   // Preload Checks
   if (!$(options.selector)[0]) return;
-  if (!data || !success || !data.data.url || data.data.url == undefined){
+  if (!data || !success){
     $(options.selector).before(dataErrorHTML);
     $(options.selector).remove();
     return;
@@ -145,7 +145,7 @@ function topInstagramPost(data, options, success){
 
   // Preload Checks
   if (!$(options.selector)[0]) return;
-  if (!data || !success || !data.oembed || data.oembed == undefined){
+  if (!data || !success){
     $(options.selector).before(dataErrorHTML);
     $(options.selector).remove();
     return;
@@ -217,7 +217,7 @@ function topGooglePost(data, options, success){
 
   // Preload Checks
   if (!$(options.selector)[0]) return;
-  if (!data || !success || !data.data.url || data.data.url == undefined){
+  if (!data || !success){
     $(options.selector).before(dataErrorHTML);
     $(options.selector).remove();
     return;
@@ -309,7 +309,7 @@ function topYoutubeVideo(data, options, success){
 
   // Preload Checks
   if (!$(options.selector)[0]) return;
-  if (!data || !success || !data.data.id || data.data.id == undefined){
+  if (!data || !success){
     $(options.selector).before(dataErrorHTML);
     $(options.selector).remove();
     return;
