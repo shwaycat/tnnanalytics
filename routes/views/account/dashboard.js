@@ -16,8 +16,7 @@ exports = module.exports = function(req, res) {
     reach: "Facebook + Youtube",
     engagement: "Facebook + Twitter + Instagram + Google+ + Youtube",
     acquisition: "Facebook + Twitter + Instagram + Google+ + Youtube",
-    top_post: "empty",
-    refTraffic: "Sources"
+    refTraffic: "Sources for USA and Global Site"
   };
 
   view.render('account/index');
