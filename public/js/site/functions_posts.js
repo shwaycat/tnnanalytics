@@ -335,26 +335,27 @@ function topYoutubeVideo(data, options, success){
     var post = $(options.selector);
 
     var youtube_id = theData.data.id;
-    var youtubeHTML = '<iframe src="https://www.youtube.com/embed/'+youtube_id+'" frameborder="0" allowfullscreen></iframe>';
+    var youtubeHTML = '<iframe src="https://www.youtube.com/embed/'+youtube_id+'" frameborder="0" allowfullscreen></iframe><a target="_blank" title="Post Link" href="https://www.youtube.com/watch?v='+youtube_id+'" class="btn btn-default post-cta-btn">See Post<span class="entypo entypo-chevron-thin-right"></span></a>';
     var newDate = new Date(theData.data.createdAt);
     newDate = (newDate.getMonth() < 10 ? ('0'+newDate.getMonth()) : newDate.getMonth() )+ '/' + (newDate.getDate() < 10 ? ('0'+newDate.getDate()) : newDate.getDate() ) + '/' + newDate.getFullYear();
 
     var newDetailsHTML = '';
-    var newDetails = [[]];
+    var newDetails = [];
+    newDetails[0] = [];
     newDetails[0][0] = 'Total Engagement';
     newDetails[0][1] = numberWithCommas(theData.data.score);
+    newDetails[1] = [];
     newDetails[1][0] = 'Likes';
-    newDetails[1][1] = numberWithCommas(theData.data.likes);
+    newDetails[1][1] = numberWithCommas(theData.data.likeCount);
+    newDetails[2] = [];
     newDetails[2][0] = 'Shares';
-    newDetails[2][1] = numberWithCommas(theData.data.shares);
-    newDetails[3][0] = 'Replies';
-    newDetails[3][1] = numberWithCommas(theData.data.replies);
-    newDetails[4][0] = 'Mentions';
-    newDetails[4][1] = numberWithCommas(theData.data.mentions);
-    newDetails[5][0] = 'Comments';
-    newDetails[5][1] = numberWithCommas(theData.data.comments);
-    newDetails[6][0] = 'View';
-    newDetails[6][1] = numberWithCommas(theData.data.views);
+    newDetails[2][1] = numberWithCommas(theData.data.shareCount);
+    newDetails[3] = [];
+    newDetails[3][0] = 'Views';
+    newDetails[3][1] = numberWithCommas(theData.data.viewCount);
+    newDetails[4] = [];
+    newDetails[4][0] = 'Comments';
+    newDetails[4][1] = numberWithCommas(theData.data.commentCount);
 
     for (var i = 0; i < newDetails.length; i++){
       newDetailsHTML += '<li><span>';
@@ -363,29 +364,15 @@ function topYoutubeVideo(data, options, success){
       newDetailsHTML += newDetails[i][1];
       newDetailsHTML += '</span></li>';
     }
-    post.find('.post-media')
+    post.find('.youtube-container')
       .append(youtubeHTML);
     post.find('.post-details-list')
       .children().remove();
     post.find('.post-details-list')
       .append(newDetailsHTML);
-    if (theData.data.title){
-      post.find('.post-title a')
-        .append(theData.data.title);
-    }
     if (theData.data.url){
-      post.find('.post-title a')
-        .attr('href', theData.data.url);
       post.find('.post-cta-btn')
         .attr('href', theData.data.url);
-    }
-    if (theData.data.createdAt){
-      post.find('.post-creation')
-        .append(newDate);
-    }
-    if (theData.data.content){
-      post.find('.post-content')
-        .append(theData.data.content);
     }
 
   }
