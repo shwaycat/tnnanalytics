@@ -8,20 +8,22 @@ keystone.pre('routes', middleware.initErrorHandlers)
 keystone.pre('routes', middleware.initLocals)
 keystone.pre('render', middleware.flashMessages)
 
-keystone.set('404', function(req, res, next) {
-  res.notfound()
-})
+keystone.set('404', function(req, res) {
+  res.notfound();
+});
 
-keystone.set('500', function(err, req, res, next) {
-  console.error(err)
-  var title, message
+keystone.set('500', function(err, req, res) {
+  var message = err;
 
-  if (err instanceof Error){
-    message = err.message
-    err = err.stack
+  if (err instanceof Error) {
+    message = err.message;
+    err = err.stack;
+    console.error("%s: %s\n    Stack: %s", err.name, err.message, err.stack);
+  } else {
+    console.error(err);
   }
 
-  res.err(err, title, message)
+  res.err(err, null, message);
 });
 
 // Import Route Controllers
