@@ -1,27 +1,29 @@
-var keystone = require('keystone')
-  , User = keystone.list('User')
-  , middleware = require('./middleware')
-  , importRoutes = keystone.importer(__dirname)
+var keystone = require('keystone'),
+    User = keystone.list('User'),
+    middleware = require('./middleware'),
+    importRoutes = keystone.importer(__dirname);
 
 // Common Middleware
-keystone.pre('routes', middleware.initErrorHandlers)
-keystone.pre('routes', middleware.initLocals)
-keystone.pre('render', middleware.flashMessages)
+keystone.pre('routes', middleware.initErrorHandlers);
+keystone.pre('routes', middleware.initLocals);
+keystone.pre('render', middleware.flashMessages);
 
-keystone.set('404', function(req, res, next) {
-  res.notfound()
-})
+keystone.set('404', function(req, res) {
+  res.notfound();
+});
 
-keystone.set('500', function(err, req, res, next) {
-  console.error(err)
-  var title, message
+keystone.set('500', function(err, req, res) {
+  var message = err;
 
-  if (err instanceof Error){
-    message = err.message
-    err = err.stack
+  if (err instanceof Error) {
+    message = err.message;
+    err = err.stack;
+    console.error("%s: %s\n    Stack: %s", err.name, err.message, err.stack);
+  } else {
+    console.error(err);
   }
 
-  res.err(err, title, message)
+  res.err(err, null, message);
 });
 
 // Import Route Controllers
@@ -29,22 +31,22 @@ var routes = {
   views: importRoutes('./views'),
   auth: importRoutes('./auth'),
   api: importRoutes('./api')
-}
+};
 
 // Setup Route Bindings
 exports = module.exports = function(app) {
   app.param('account_name', function(req, res, next, accountName) {
     User.model.findOne({ accountName: accountName, isAccountRoot: true }, function(err, user) {
       if (err) {
-        next(err)
+        next(err);
       } else if (user) {
-        req.account = user
-        next()
+        req.account = user;
+        next();
       } else {
         next(new Error('Failed to load account user'));
       }
     });
-  })
+  });
 
   // Unrestricted/General
   app.get('/', routes.views.index);
