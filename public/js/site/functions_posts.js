@@ -221,7 +221,7 @@ function topGooglePost(data, options, success){
     $(options.selector).before(dataErrorHTML);
     $(options.selector).remove();
     return;
-  } else if (data == null || data.length == 0){
+  } else if (data.data == null || data.data.length == 0){
     $(options.selector).before(noDataHTML);
     $(options.selector).remove();
     return;
