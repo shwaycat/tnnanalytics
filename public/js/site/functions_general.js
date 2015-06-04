@@ -346,9 +346,6 @@ function simplifyData(data, map){
   newData.data_list = _.sortBy(newData.data_list, 'value');
   newData.data_list.reverse();
 
-  console.log('SimplifyData ---');
-  console.log(newData);
-  console.log('---------');
   return newData;
 }
 
@@ -362,10 +359,6 @@ function donutList(data, options, success){
   if (success) {
 
     if (theData.length) {
-
-      console.log('Donut List ----');
-      console.log(theData);
-      console.log('----');
 
       newDetailsHTML += '<section class="novo-data-list"><h3 class="data-list-title">'+options.listTitle+'</h3><ul class="data-list">';
 
