@@ -669,6 +669,16 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
+    } else if (options.selector == '#reach'){
+
+      if (summary.totalViews != undefined) {
+        statsString += statStringOpen;
+        statsString += "Views"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalViews);
+        statsString += statStringClose;
+      }
+
     }
 
   } else if (options.source == 'googleplus'){
