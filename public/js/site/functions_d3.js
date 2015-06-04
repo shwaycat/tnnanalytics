@@ -100,7 +100,7 @@ function lineGraph(data, options, success, dateObj){
     if (diffYear) {
       return d3.time.format("%m.%d.%y");
     } else if (diffMonth){
-      return d3.time.format("%m.%d");
+      return d3.time.format("%m.%d.%y");
     } else {
       return null;
     }
