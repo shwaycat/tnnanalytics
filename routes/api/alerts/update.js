@@ -1,125 +1,120 @@
 var keystone = require('keystone'),
+    debug = require('debug')('cadence:api:alerts:update'),
     _ = require('underscore'),
     async = require('async'),
     mxm = require('../../../lib/mxm-utils');
 
+function getAllAlertDocs(callback) {
+  var PAGE_SIZE = 200,
+      results = [],
+      resultsTotal = 0;
 
-exports = module.exports = function(req, res) {
-  var locals = res.locals,
-      args = req.body,
-      docs;
-
-  if(args && args.alertState && (args.docs || args.all)) {
-    docs = args.docs;
-    
-    if(!_.isArray(docs)) {
-      docs = [docs];
-    }
-
-    if(args.all) {
-      var size = 100,
-          from = 0,
-          total = 0,
-          docs = [];
-
-      async.doWhilst(function(callback) {
-        keystone.elasticsearch.search({
-          index: keystone.get('elasticsearch index'),
-          size: size,
-          from: from,
-          body: {
-            "query": {
-              "filtered": {
-                "filter": {
-                  "or": {
-                    "filters": [
-                      { "term": { "alertState": "open"} },
-                      { "term": { "alertState": "new" } }
-                    ]
-                  }
-                }
-              }
-            }
+  async.doWhilst(function(next) {
+    keystone.elasticsearch.search({
+      index: keystone.get('elasticsearch index'),
+      size: PAGE_SIZE,
+      from: results.length,
+      _source: false,
+      body: {
+        "query": {
+          "terms": {
+            "alertState": [ "new", "open" ],
+            "minimum_should_match": 1
           }
-        }, function(err, response) {
-          if(err) return res.apiResponse({"error": err});
-          var hits = mxm.objTry(response, 'hits', 'hits');
-          if(hits && hits.length) {
-            docs = docs.concat(hits);
+        }
+      }
+    }, function(err, response) {
+      if(err) return next(err);
 
-            total = response.hits.total;
-            from += size;
-            callback();
-          } else {
-            callback(new Error('No Hits in ES'));
-          }
-        });
-      },
-      function() {
-        return (from + size) <= total;
-      },
-      function(err) {
-        if(err) return res.apiResponse({"error": err});
- 
-        bulkUpdate(args, docs, function(err) {
-          if(err) return res.apiResponse({"error": err});
+      resultsTotal = response.hits.total;
 
-          return res.apiResponse({
-            success: true,
-            type: "alerts update",
-            ids: _.pluck(docs,'_id'),
-            all: true
-          });
-        });
+      _.each(mxm.objTry(response, 'hits', 'hits'), function(hit) {
+        results.push(_.pick(hit, '_type', '_id'));
       });
 
+      next();
+    });
+  },
+  function() {
+    return results.length < resultsTotal;
+  },
+  function(err) {
+    if(err) return callback(err);
 
-    } else {
-      console.log(from);
-      bulkUpdate(args, docs, function(err) {
-        if(err) return res.apiResponse({"error": err});
+    callback(null, results);
+  });
+}
+
+function updateAlertDocs(alertState, docs, callback) {
+  var bulkUpdater = new mxm.ElasticsearchBulkManager();
+
+  async.each(docs, function(doc, nextDoc) {
+    bulkUpdater.add({
+      update: {
+        _index: keystone.get('elasticsearch index'),
+        _type: doc._type,
+        _id: doc._id
+      }
+    }, {
+      doc: {
+        alertState: alertState,
+        alertStateUpdatedAt: new Date()
+      }
+    });
+    bulkUpdater.flushIfFull(nextDoc);
+  }, function(err) {
+    if (err) return callback(err);
+
+    bulkUpdater.flush(function(err) {
+      if (err) return callback(err);
+
+      callback(null, _.pluck(docs,'_id'));
+    });
+  });
+}
+
+module.exports = function(req, res, next) {
+  if (req.body && !_.isEmpty(req.body)) {
+    debug("Body: %j", req.body);
+  }
+
+  if (!req.body || _.isEmpty(req.body)) return next(new Error("Bad data: no request body"));
+  if (!req.body.alertState) return next(new Error("Bad data: missing alertState"));
+  if (!req.body.docs && !req.body.all) return next(new Error("Bad data: missing docs and all"));
+
+  var docs = req.body.docs || [];
+
+  if (!_.isArray(docs)) {
+    docs = [docs];
+  }
+
+  if (req.body.all) {
+    getAllAlertDocs(function(err, foundDocs) {
+      if (err) return next(err);
+
+      docs = docs.concat(foundDocs);
+
+      updateAlertDocs(req.body.alertState, docs, function(err) {
+        if (err) return next(err);
 
         return res.apiResponse({
           success: true,
           type: "alerts update",
-          ids: _.pluck(docs,'_id')
+          ids: docs,
+          all: true
         });
       });
-    }
-
+    });
   } else {
-    return res.apiResponse({error: "Bad data"});
-  }
-  
-}
+    updateAlertDocs(req.body.alertState, docs, function(err) {
+      if (err) return next(err);
 
-function bulkUpdate(args, docs, callback) {
-  var bulkUpdates = [];
-
-  for(i=0;i<docs.length;i++) {
-    doc = docs[i];
-
-    bulkUpdates.push({ 
-        update: {
-          _index: keystone.get('elasticsearch index'),
-          _type: doc._type,
-          _id: doc._id
-        }
-      },
-      {
-        doc: {
-          alertState: args.alertState,
-          alertStateUpdatedAt: new Date()
-        }
+      return res.apiResponse({
+        success: true,
+        type: "alerts update",
+        ids: docs,
+        all: false
       });
+    });
   }
-
-  keystone.elasticsearch.bulk({
-    body: bulkUpdates
-  }, function(err, response) {
-    if (err) return callback(err);
-    
-    callback();
-  });
-}
-
+};

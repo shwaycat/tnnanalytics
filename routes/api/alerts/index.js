@@ -1,6 +1,5 @@
 var keystone = require('keystone'),
     _ = require('underscore'),
-    async = require('async'),
     mxm = require('../../../lib/mxm-utils'),
     User = keystone.list('User'),
     sources = {
@@ -12,20 +11,12 @@ var keystone = require('keystone'),
     };
 
 
-exports = module.exports = function(req, res) {
-
-  var view = new keystone.View(req, res),
-      locals = res.locals,
-      page = req.query.page,
-      size = 15,
-      total = 0;
+module.exports = function(req, res, next) {
+  var page = req.query.page || 1,
+      size = 15;
 
   User.model.getAccountRootInfo(req.user.accountName, function(err, accountRoot) {
-    if (err) return apiResponse({'error': err});
-
-    if(!page) {
-      page = 1;
-    }
+    if (err) return next(err);
 
     keystone.elasticsearch.search({
       index: keystone.get('elasticsearch index'),
@@ -38,14 +29,10 @@ exports = module.exports = function(req, res) {
               "and": {
                 "filters": [
                   {
-                    "exists": {
-                      "field": "alertState"
-                    }
+                    "exists": { "field": "alertState" }
                   },
                   {
-                    "term": {
-                      "cadence_user_id": accountRoot.id
-                    }
+                    "term": { "cadence_user_id": accountRoot.id }
                   }
                 ]
               }
@@ -53,25 +40,19 @@ exports = module.exports = function(req, res) {
             "functions": [
               {
                 "filter": {
-                  "term": {
-                    "alertState": "new"
-                  }
+                  "term": { "alertState": "new" }
                 },
                 "weight": 3
               },
               {
                 "filter": {
-                  "term": {
-                    "alertState": "open"
-                  }
+                  "term": { "alertState": "open" }
                 },
                 "weight": 2
               },
               {
                 "filter": {
-                  "term": {
-                    "alertState": "closed"
-                  }
+                  "term": { "alertState": "closed" }
                 },
                 "weight": 1.5
               }
@@ -80,44 +61,31 @@ exports = module.exports = function(req, res) {
         },
         "sort": [
           {
-            "_score": {
-              "order": "desc"
-            }
+            "_score": { "order": "desc" }
           },
           {
-            "timestamp": {
-              "order": "desc"
-            }
+            "timestamp": { "order": "desc" }
           }
         ],
         "track_scores": true
       }
     }, function(err, response){
-      if(err) return res.apiResponse({"error": err});
+      if(err) return next(err);
 
-      var alerts = mxm.objTry(response, 'hits', 'hits');
-      var data = [];
+      var hits = mxm.objTry(response, 'hits', 'hits'),
+          total = response.hits.total,
+          data = [];
 
-      if(_.isArray(alerts)) {
-        for(i=0;i<alerts.length;i++) {
+      data = _.map(hits, function(hit) {
+        var alertType = sources[hit._source.doc_source][hit._source.doc_type],
+            alert = new alertType(hit._id, hit._source);
 
-          _source = _.pick(alerts[i]['_source'], "sourceName", "doc_source", "doc_type", "cadence_user_id", "user_id", "timestamp", "alertState", "alertStateUpdatedAt")
-          alert = _.pick(alerts[i], "_id", "_type");
-          alert = _.extend(alert, _source);
+        alert._type = alert.doc_source;
+        alert._id = alert.id;
+        alert.url = alert.emailLinkObject({ user: accountRoot }).href;
 
-          DOCTYPE = sources[alert.doc_source][alert.doc_type];
-          DOC = new DOCTYPE(alert._id, alerts[i]['_source']);
-
-          emailLinkObject = DOC.emailLinkObject({user: user});
-
-          alert.url = emailLinkObject.href;
-          total = response.hits.total;
-
-          data.push(alert);
-        }
-      } else {
-        return res.apiResponse({"error": "Error with ES results."});
-      }
+        return alert;
+      });
 
       return res.apiResponse({
         success: true,
@@ -128,8 +96,6 @@ exports = module.exports = function(req, res) {
         total: total,
         data: data
       });
-
     });
   });
-
-}
+};
