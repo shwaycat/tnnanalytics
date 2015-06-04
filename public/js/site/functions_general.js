@@ -894,16 +894,16 @@ function dataController(sectionType, type, apiString, dateObj, options){
         } else {
           cachedData[type] = apiObj;
         }
-        dataControllerDelegation(sectionType, type, apiObj);
+        dataControllerDelegation(sectionType, type, apiObj, timeObj);
       });
   } else {
-    dataControllerDelegation(sectionType, type, cachedData[type]);
+    dataControllerDelegation(sectionType, type, cachedData[type], dateObj);
   }
 }
 
-function dataControllerDelegation(sectionType, type, apiObj){
+function dataControllerDelegation(sectionType, type, apiObj, dateObj){
   if (sectionType == 'line'){
-    lineGraph(apiObj.data, apiObj.options, apiObj.success);
+    lineGraph(apiObj.data, apiObj.options, apiObj.success, dateObj);
     statsDelegation(apiObj.summary, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'donut'){
