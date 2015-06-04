@@ -10,7 +10,7 @@ function routesInit(resizeOnce){
     dataController('line',  'reach', '/api/1.0/dashboard/reach',               currentSelectedDate, {selector: '#reach', source: 'dashboard'});
     dataController('line',  'engagement', '/api/1.0/dashboard/engagement',     currentSelectedDate, {selector: '#engagement', source: 'dashboard'});
     dataController('line',  'acquisition', '/api/1.0/dashboard/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'dashboard'});
-    dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/all/sources', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsAll'});
+    dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/all/sources', currentSelectedDate, {rotation: "135", listTitle:'Sources List', listSelector: '.novo-data-list', selector: '#refTraffic', source: 'analyticsAll'});
 
   }
   if ($('body.facebook')[0]){
@@ -69,7 +69,7 @@ function routesInit(resizeOnce){
       dataController('stats', 'overview', '/api/1.0/googleanalytics/all/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsAll'});
       analyticsTableController('/api/1.0/googleanalytics/all/topCountries', 'analyticsTopCountries', $('#analytics-table'), currentSelectedDate);
     }
-    dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/all/sources', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsAll'});
+    dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/all/sources', currentSelectedDate, {rotation: "135", listTitle:'Sources List', listSelector: '.novo-data-list', selector: '#refTraffic', source: 'analyticsAll'});
 
   }
   if ($('body.analytics-global')[0]){
@@ -78,7 +78,7 @@ function routesInit(resizeOnce){
       dataController('stats', 'overview', '/api/1.0/googleanalytics/Global/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsGlobal'});
       analyticsTableController('/api/1.0/googleanalytics/Global/topCountries', 'analyticsTopCountries', $('#analytics-table'), currentSelectedDate);
     }
-    dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/Global/sources', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsGlobal'});
+    dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/Global/sources', currentSelectedDate, {rotation: "135", listTitle:'Sources List', listSelector: '.novo-data-list', selector: '#refTraffic', source: 'analyticsGlobal'});
 
   }
   if ($('body.analytics-us')[0]){
@@ -88,7 +88,7 @@ function routesInit(resizeOnce){
       dataController('stats', 'overview', '/api/1.0/googleanalytics/US/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsUs'});
       analyticsTableController('/api/1.0/googleanalytics/US/topCountries', 'analyticsTopCountries', $('#analytics-table'), currentSelectedDate);
     }
-    dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/US/sources', currentSelectedDate, {rotation: "135", selector: '#refTraffic', source: 'analyticsUs'});
+    dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/US/sources', currentSelectedDate, {rotation: "135", listTitle:'Sources List', listSelector: '.novo-data-list', selector: '#refTraffic', source: 'analyticsUs'});
 
   }
   if ($('body.events')[0] && !resizeOnce){
