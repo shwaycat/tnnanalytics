@@ -51,9 +51,9 @@ exports.initLocals = function(req, res, next) {
     "topFacebookPost": "Top Post",
     "topCountries": "Top Countries - Engagement",
     "topTweet": "Top Tweet",
-    "topInstagramPost": "Top Instagram Post",
-    "topGooglePost": "Top Google Post",
-    "topYoutubeVideo": "Top Youtube Video",
+    "topInstagramPost": "Top Post",
+    "topGooglePost": "Top Post",
+    "topYoutubeVideo": "Top Video",
     "refTraffic": "Sources",
     "analyticsTopCountries": "Top Countries",
     "overview": "Overview"
