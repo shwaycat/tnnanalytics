@@ -346,9 +346,6 @@ function simplifyData(data, map){
   newData.data_list = _.sortBy(newData.data_list, 'value');
   newData.data_list.reverse();
 
-  console.log('SimplifyData ---');
-  console.log(newData);
-  console.log('---------');
   return newData;
 }
 
@@ -362,10 +359,6 @@ function donutList(data, options, success){
   if (success) {
 
     if (theData.length) {
-
-      console.log('Donut List ----');
-      console.log(theData);
-      console.log('----');
 
       newDetailsHTML += '<section class="novo-data-list"><h3 class="data-list-title">'+options.listTitle+'</h3><ul class="data-list">';
 
@@ -676,6 +669,16 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
+    } else if (options.selector == '#reach'){
+
+      if (summary.totalViews != undefined) {
+        statsString += statStringOpen;
+        statsString += "Views"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalViews);
+        statsString += statStringClose;
+      }
+
     }
 
   } else if (options.source == 'googleplus'){
@@ -891,16 +894,16 @@ function dataController(sectionType, type, apiString, dateObj, options){
         } else {
           cachedData[type] = apiObj;
         }
-        dataControllerDelegation(sectionType, type, apiObj);
+        dataControllerDelegation(sectionType, type, apiObj, timeObj);
       });
   } else {
-    dataControllerDelegation(sectionType, type, cachedData[type]);
+    dataControllerDelegation(sectionType, type, cachedData[type], dateObj);
   }
 }
 
-function dataControllerDelegation(sectionType, type, apiObj){
+function dataControllerDelegation(sectionType, type, apiObj, dateObj){
   if (sectionType == 'line'){
-    lineGraph(apiObj.data, apiObj.options, apiObj.success);
+    lineGraph(apiObj.data, apiObj.options, apiObj.success, dateObj);
     statsDelegation(apiObj.summary, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'donut'){

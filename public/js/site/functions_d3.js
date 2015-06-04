@@ -18,7 +18,7 @@ function type(d) {
 //       LINE GRAPH      //
 ///////////////////////////
 
-function lineGraph(data, options, success){
+function lineGraph(data, options, success, dateObj){
   // Preload Checks
   if (!$(options.selector)[0]) return;
   if (!success){
@@ -88,6 +88,24 @@ function lineGraph(data, options, success){
     yMax = yMax * 1.001;
   }
 
+  var startTimeObj = new Date(dateObj.startTime);
+  var endTimeObj = new Date(dateObj.endTime);
+
+  function timeRange(startTimeObj, endTimeObj){
+    var diffYear = 0;
+    var diffMonth = 0;
+
+    diffYear = (endTimeObj.getFullYear() - startTimeObj.getFullYear()) > 0 ? true : false;
+    diffMonth = (endTimeObj.getMonth() - startTimeObj.getMonth()) > 2 ? true : false;
+    if (diffYear) {
+      return d3.time.format("%m.%d.%y");
+    } else if (diffMonth){
+      return d3.time.format("%m.%d");
+    } else {
+      return null;
+    }
+  }
+
    // Setup our x/y d3 functions and axes.
   x = d3.time.scale()
         .domain([d3.min(theData, function(d) {
@@ -99,9 +117,9 @@ function lineGraph(data, options, success){
   y = d3.scale.linear()
       .domain([yMin, yMax])
       .range([height - padding*2, padding/2]);
-  xAxis = d3.svg.axis().scale(x).ticks(13).tickSize(-height+padding).tickSubdivide(true).orient("bottom");
-  yAxis = d3.svg.axis().scale(y).ticks(7).tickSubdivide(true).orient("left").tickFormat(function(d) { return abbreviateNumber(d); });
-  xAxisTicks = d3.svg.axis().scale(x).ticks(9).tickFormat('').tickSize(-height+padding).tickSubdivide(true).orient("bottom");
+  xAxis = d3.svg.axis().scale(x).ticks(6).tickSize(-height+padding).orient("bottom").tickFormat(timeRange(startTimeObj, endTimeObj));
+  yAxis = d3.svg.axis().scale(y).ticks(7).orient("left").tickFormat(function(d) { return abbreviateNumber(d); });
+  xAxisTicks = d3.svg.axis().scale(x).ticks(6).tickFormat('').tickSize(-height+padding).orient("bottom");
 
   // Alternative tick format: tickFormat(options.admin_options ? d3.time.format(options.admin_options.timeFormat) : d3.time.format("%d/%m/%y"))
 
