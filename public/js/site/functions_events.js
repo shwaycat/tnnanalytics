@@ -163,7 +163,7 @@ function eventsTableData(apiObj, table){
       }
 
       // Create the table row with the given data
-      tableHTML += '<tr data-status="'+statusText+'" data-type="'+currentEvent.sourceName+'" data-id="'+currentEvent._id+'"" class="'+statusClass+'">';
+      tableHTML += '<tr data-status="'+statusText+'" data-type="'+currentEvent._type+'" data-id="'+currentEvent._id+'"" class="'+statusClass+'">';
       tableHTML += '<td class="event-item-status"><span class="event-item-robot">'+statusOrder+'</span>'+statusText.capitalizeFirstLetter()+'</td>';
       tableHTML += '<td class="event-item-creation"><span class="event-item-robot">'+currentEvent_creation+'</span>'+currentEvent_creation_human+'</td>';
       tableHTML += '<td>'+currentEvent.sourceName+'</td>';

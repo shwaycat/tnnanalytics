@@ -1,18 +1,11 @@
 var keystone = require('keystone'),
     _ = require('underscore'),
-    async = require('async'),
     User = keystone.list('User'),
     mxm = require('../../../lib/mxm-utils');
 
-
-exports = module.exports = function(req, res) {
- 
-  var view = new keystone.View(req, res),
-      locals = res.locals
-      user = req.user;
-
+module.exports = function(req, res, next) {
   User.model.getAccountRootInfo(req.user.accountName, function(err, accountRoot) {
-    if (err) return apiResponse({'error': err});
+    if (err) return next(err);
 
     keystone.elasticsearch.search({
       index: keystone.get('elasticsearch index'),
@@ -39,28 +32,21 @@ exports = module.exports = function(req, res) {
         }
       }
     }, function(err, response){
-      if(err) return res.apiResponse({"error": err});
-      
-      var buckets = mxm.objTry(response, 'aggregations', 'alertStates', 'buckets');
-      var data = {};
+      if(err) return next(err);
 
-      if(_.isArray(buckets)) {
-        for(i=0;i<buckets.length;i++) {
-          bucket = buckets[i];
-          data[bucket.key] = bucket.doc_count;
-        }
-      } else {
-        return res.apiResponse({"error": "Error with ES results."});
-      }
-      
+      var buckets = mxm.objTry(response, 'aggregations', 'alertStates', 'buckets'),
+          data = {};
+
+      _.each(buckets, function(bucket) {
+        data[bucket.key] = bucket.doc_count;
+      });
+
       return res.apiResponse({
         success: true,
         type: 'alert summary',
         source: 'all',
         data: data
       });
-
     });
   });
-  
-}
+};
