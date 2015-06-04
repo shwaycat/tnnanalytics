@@ -283,10 +283,11 @@ function simplifyData(data, map){
 
   _.each(theData, function(datum, index){
     if (datum.value/totalValues < threshold && datum.value/totalValues > lowest){
-      otherObj.percent = Math.round( (otherObj.value*100/totalValues) *100 )/100 + '%';
+
       datum.percent = Math.round( (datum.value*100/totalValues) *100 )/100 + '%';
 
       otherObj.value += datum.value;
+      otherObj.percent = Math.round( (otherObj.value*100/totalValues) *100 )/100 + '%';
 
       if (map){
         if (datum.key == "US"){
@@ -563,6 +564,16 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
+    } else if (options.selector == '#reach'){
+
+      if (summary.impressions != undefined) {
+        statsString += statStringOpen;
+        statsString += "Impressions"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.impressions);
+        statsString += statStringClose;
+      }
+
     }
 
   } else if (options.source == 'instagram'){
@@ -747,11 +758,49 @@ function statsDelegation(summary, options){
       statsString += statStringClose;
     }
 
+    if (summary.totalSessionDuration != undefined) {
+      var resultSessionDuration = 0;
+      var abr = 'sec';
+      if (summary.totalSessionDuration/60 > 0){
+        if (summary.totalSessionDuration/60/60 > 0){
+          if (summary.totalSessionDuration/60/60/24 > 0){
+            resultSessionDuration = summary.totalSessionDuration/60/60/24;
+            resultSessionDuration = Math.round(resultSessionDuration);
+            abr = ' days';
+          } else {
+            resultSessionDuration = summary.totalSessionDuration/60/60;
+            resultSessionDuration = Math.round(resultSessionDuration);
+            abr = ' hours';
+          }
+        } else {
+          resultSessionDuration = summary.totalSessionDuration/60;
+          resultSessionDuration = Math.round(resultSessionDuration);
+          abr = 'min';
+        }
+      } else {
+        resultSessionDuration = summary.totalSessionDuration;
+      }
+
+      statsString += statStringOpen;
+      statsString += "Total Session Duration"
+      statsString += statStringMid;
+      statsString += (numberWithCommas(resultSessionDuration) + abr);
+      statsString += statStringClose;
+    }
+
     if (summary.totalBounceRate != undefined) {
       statsString += statStringOpen;
       statsString += "Bounce Rate"
       statsString += statStringMid;
       statsString += (numberWithCommas(summary.totalBounceRate) + '%');
+      statsString += statStringClose;
+    }
+
+    if (summary.totalBounces != undefined) {
+      statsString += statStringOpen;
+      statsString += "Bounces"
+      statsString += statStringMid;
+      statsString += numberWithCommas(summary.totalBounces);
       statsString += statStringClose;
     }
 

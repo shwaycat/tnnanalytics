@@ -35,6 +35,13 @@ function topFacebookPost(data, options, success){
     newDetails[0] = [];
     newDetails[0][0] = 'Total Engagement';
     newDetails[0][1] = numberWithCommas(theData.data.score);
+    newDetails[1] = [];
+    newDetails[1][0] = 'Likes';
+    newDetails[1][1] = numberWithCommas(theData.likes);
+    newDetails[2] = [];
+    newDetails[2][0] = 'Shares';
+    newDetails[2][1] = numberWithCommas(theData.shares);
+
 
     for (var i = 0; i < newDetails.length; i++){
       newDetailsHTML += '<li><span>';
