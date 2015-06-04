@@ -1,7 +1,8 @@
 var keystone = require('keystone'),
     User = keystone.list('User'),
     middleware = require('./middleware'),
-    importRoutes = keystone.importer(__dirname);
+    importRoutes = keystone.importer(__dirname),
+    apiRouteBuilder = require('./api/builder');
 
 // Common Middleware
 keystone.pre('routes', middleware.initErrorHandlers);
@@ -13,17 +14,13 @@ keystone.set('404', function(req, res) {
 });
 
 keystone.set('500', function(err, req, res) {
-  var message = err;
-
   if (err instanceof Error) {
-    message = err.message;
-    err = err.stack;
-    console.error("%s: %s\n    Stack: %s", err.name, err.message, err.stack);
+    console.error("%s\n    Stack: %s", err, err.stack);
   } else {
     console.error(err);
   }
 
-  res.err(err, null, message);
+  res.err(err);
 });
 
 // Import Route Controllers
@@ -105,11 +102,11 @@ exports = module.exports = function(app) {
 
   // YouTube Endpoints
   // They all expect query strings with startTime endTime
-  app.get('/api/1.0/youtube/engagement', routes.api.youtube.engagement);
-  app.get('/api/1.0/youtube/acquisition', routes.api.youtube.acquisition);
-  // app.get('/api/1.0/youtube/reach', routes.api.youtube.reach);
-  app.get('/api/1.0/youtube/topVideo', routes.api.youtube.topVideo);
-  // app.get('/api/1.0/youtube/topCountries', routes.api.youtube.topCountries);
+  app.get('/api/1.0/youtube/engagement', apiRouteBuilder('youtube', 'engagement'));
+  app.get('/api/1.0/youtube/acquisition', apiRouteBuilder('youtube', 'acquisition'));
+  app.get('/api/1.0/youtube/reach', apiRouteBuilder('youtube', 'reach'));
+  app.get('/api/1.0/youtube/topVideo', apiRouteBuilder('youtube', 'topVideo'));
+  app.get('/api/1.0/youtube/topCountries', apiRouteBuilder('youtube', 'topCountries'));
 
   // Google+ Endpoints
   // They all expect query strings with startTime endTime
@@ -125,9 +122,9 @@ exports = module.exports = function(app) {
 
   // Dashboard Endpoints
   // They all expect query strings with startTime endTime
-  app.get('/api/1.0/dashboard/engagement', routes.api.dashboard.engagement);
-  app.get('/api/1.0/dashboard/acquisition', routes.api.dashboard.acquisition);
-  app.get('/api/1.0/dashboard/reach', routes.api.dashboard.reach);
+  app.get('/api/1.0/dashboard/engagement', apiRouteBuilder('dashboard', 'engagement'));
+  app.get('/api/1.0/dashboard/acquisition', apiRouteBuilder('dashboard', 'acquisition'));
+  app.get('/api/1.0/dashboard/reach', apiRouteBuilder('dashboard', 'reach'));
 
   // Keyword Alerts
   // /alerts expects query strings with page
