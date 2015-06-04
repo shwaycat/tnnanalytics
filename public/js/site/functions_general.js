@@ -272,34 +272,49 @@ function simplifyData(data, map){
   };
 
   var totalValues = _.reduce(theData, function(memo, num){ return memo + num.value; }, 0),
-      otherObj = { "label": "Other", "value": 0, "percent": 0 };
+      otherObj = { "label": "Other", "value": 0, "percent": 0 },
+      threshold = 0.09,
+      lowest = 0.01;
+
+  if (!map){
+    threshold = 0.07;
+    lowest = 0;
+  }
 
   _.each(theData, function(datum, index){
-    if (datum.value/totalValues < 0.09 && datum.value/totalValues > 0.01){
+    if (datum.value/totalValues < threshold && datum.value/totalValues > lowest){
       otherObj.percent = Math.round( (otherObj.value*100/totalValues) *100 )/100 + '%';
       datum.percent = Math.round( (datum.value*100/totalValues) *100 )/100 + '%';
 
       otherObj.value += datum.value;
 
-      if (datum.key == "US"){
-        datum.label = "USA";
-      } else if (datum.key == "UK") {
-        datum.label = "UK";
+      if (map){
+        if (datum.key == "US"){
+          datum.label = "USA";
+        } else if (datum.key == "UK") {
+          datum.label = "UK";
+        } else {
+          datum.label = map[datum.key];
+        }
       } else {
-        datum.label = map[datum.key];
+        datum.label = datum.key;
       }
 
       newData.data_list.push(datum);
 
-    } else if (datum.value/totalValues > 0.01) {
+    } else if (datum.value/totalValues > lowest) {
       datum.percent = Math.round( (datum.value*100/totalValues) *100 )/100 + '%';
 
-      if (datum.key == "US"){
-        datum.label = "USA";
-      } else if (datum.key == "UK") {
-        datum.label = "UK";
+      if (map){
+        if (datum.key == "US"){
+          datum.label = "USA";
+        } else if (datum.key == "UK") {
+          datum.label = "UK";
+        } else {
+          datum.label = map[datum.key];
+        }
       } else {
-        datum.label = map[datum.key];
+        datum.label = datum.key;
       }
 
       newData.data.push(datum);
@@ -331,7 +346,9 @@ function simplifyData(data, map){
   newData.data_list = _.sortBy(newData.data_list, 'value');
   newData.data_list.reverse();
 
-
+  console.log('SimplifyData ---');
+  console.log(newData);
+  console.log('---------');
   return newData;
 }
 
@@ -345,6 +362,10 @@ function donutList(data, options, success){
   if (success) {
 
     if (theData.length) {
+
+      console.log('Donut List ----');
+      console.log(theData);
+      console.log('----');
 
       newDetailsHTML += '<section class="novo-data-list"><h3 class="data-list-title">'+options.listTitle+'</h3><ul class="data-list">';
 
@@ -745,7 +766,7 @@ function statsDelegation(summary, options){
       statsString += statStringMid;
       statsString += numberWithCommas(summary.totalUsers);
       statsString += statStringClose;
-    }    
+    }
 
   } else if (options.source == 'dashboard') {
 
@@ -864,7 +885,7 @@ function dataController(sectionType, type, apiString, dateObj, options){
           $(options.selector).prev(loadingGifClass).remove();
           cachedData[type] = apiObj;
         } else if (type == 'refTraffic'){
-          apiObj.data = simplifyDataPercentsOnly(apiObj.data);
+          apiObj.data = simplifyData(apiObj.data);
           cachedData[type] = apiObj;
 
         } else {
@@ -883,7 +904,7 @@ function dataControllerDelegation(sectionType, type, apiObj){
     statsDelegation(apiObj.summary, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'donut'){
-    if (type == 'topCountries'){
+    if (type == 'topCountries' || type == 'refTraffic'){
       donutList(apiObj.data.data_list, apiObj.options, apiObj.success);
     }
     donutGraph(apiObj.data.data, apiObj.options, apiObj.success);
