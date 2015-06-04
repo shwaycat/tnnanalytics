@@ -14,17 +14,13 @@ keystone.set('404', function(req, res) {
 });
 
 keystone.set('500', function(err, req, res) {
-  var message = err;
-
   if (err instanceof Error) {
-    message = err.message;
-    err = err.stack;
-    console.error("%s: %s\n    Stack: %s", err.name, err.message, err.stack);
+    console.error("%s\n    Stack: %s", err, err.stack);
   } else {
     console.error(err);
   }
 
-  res.err(err, null, message);
+  res.err(err);
 });
 
 // Import Route Controllers

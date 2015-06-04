@@ -1,5 +1,6 @@
-var _ = require('underscore')
-  , keystone = require('keystone')
+var util = require('util'),
+    _ = require('underscore'),
+    keystone = require('keystone');
 
 
 /**
@@ -81,29 +82,76 @@ exports.initLocals = function(req, res, next) {
 
 }
 
-/**
-  Initialize error handlers
-*/
-
+/*
+ * Initialize error handlers
+ */
 exports.initErrorHandlers = function(req, res, next) {
-
-  res.err = function(err, title, message){
-    res.status(500).render('errors/500',{
-      err: err,
-      errorTitle: title,
-      errorMsg: message
-    })
-  }
+  res.err = function(err, title, message) {
+    res.format({
+      html: function() {
+        if (err instanceof Error && keystone.get('env') == 'development') {
+          res.status(500).render('errors/500', {
+            err: err.stack,
+            errorTitle: title || err.name,
+            errorMsg: message || err.message
+          });
+        } else if(err instanceof Error) {
+          res.status(500).render('errors/500', {
+            errorTitle: title || err.name,
+            errorMsg: message || err.message
+          });
+        } else if ('string' === typeof err) {
+          res.status(500).render('errors/500', {
+            errorTitle: title || err,
+            errorMsg: message || err
+          });
+        } else {
+          res.status(500).render('errors/500', {
+            err: err,
+            errorTitle: title,
+            errorMsg: message
+          });
+        }
+      },
+      json: function() {
+        if (err instanceof Error && keystone.get('env') == 'development') {
+          res.status(200).send({
+            error: err.toString(),
+            errorStack: err.stack
+          });
+        } else if(err instanceof Error) {
+          res.status(200).send({ error: err.message || err.name });
+        } else if ('string' === typeof err) {
+          res.status(200).send({ error: err });
+        } else {
+          res.status(200).send({ error: err });
+        }
+      }
+    });
+  };
 
   res.notfound = function(title, message) {
-    res.status(404).render('errors/404', {
-      errorTitle: title,
-      errorMsg: message
-    })
-  }
+    res.format({
+      html: function() {
+        res.status(404).render('errors/404', {
+          errorTitle: title,
+          errorMsg: message
+        });
+      },
+      json: function() {
+        if (title && message) {
+          res.status(404).send({ error: util.format("%s: %s", title, message) });
+        } else if (title || message) {
+          res.status(404).send({ error: title || message });
+        } else {
+          res.status(404).send({ error: "Not Found" });
+        }
+      }
+    });
+  };
 
-  next()
-}
+  next();
+};
 
 /**
   Fetches and clears the flashMessages before a view is rendered
