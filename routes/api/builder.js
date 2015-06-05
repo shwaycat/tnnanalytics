@@ -1,43 +1,8 @@
-var keystone = require('keystone'),
-    moment = require('moment'),
-    debug = require('debug')('cadence:api:builder'),
+var debug = require('debug'),
     _ = require('underscore'),
+    async = require('async'),
+    mxm = require('../../lib/mxm-utils'),
     metrics = require('../../lib/metrics');
-
-/**
- * Get the start time from the query object or default to 1 month ago
- * @param {Object} query - request query object
- * @param {string} query.startTime - start time in ISO8601 format (or falsy)
- * @returns {Date} parsed start time or 1 month ago
- */
-function getStartTime(query) {
-  if (query.startTime) {
-    return new Date(query.startTime);
-  } else {
-    return moment().subtract(1, 'month').toDate();
-  }
-}
-
-/**
- * Get the end time from the query object or default to now
- * @param {Object} query - request query object
- * @param {string} query.endTime - end time in ISO8601 format (or falsy)
- * @returns {Date} parsed end time or now
- */
-function getEndTime(query) {
-  if (query.endTime) {
-    return new Date(query.endTime);
-  } else {
-    return new Date();
-  }
-}
-
-function getMetric(metricSource, metricType) {
-  if (!metrics[metricSource]) throw new Error("Invalid metricSource: "+metricSource);
-  if (!metrics[metricSource][metricType]) throw new Error("Invalid metricType: "+metricType);
-
-  return metrics[metricSource][metricType];
-}
 
 /**
  * Build an api route based on the given metric function
@@ -46,27 +11,41 @@ function getMetric(metricSource, metricType) {
  * @return {Function} route
  */
 module.exports = function(metricSource, metricType) {
-  var metric = getMetric(metricSource, metricType);
+  if (!metrics[metricSource]) throw new Error("Invalid metricSource: "+metricSource);
+  if (!metrics[metricSource][metricType]) throw new Error("Invalid metricType: "+metricType);
+
+  var metric = metrics[metricSource][metricType],
+      _debug = debug('cadence:api:builder:'+metricSource+':'+metricType);
 
   return function(req, res, next) {
     if (req.body && !_.isEmpty(req.body)) {
-      debug("%s:%s Body: %j", metricSource, metricType, req.body);
+      _debug("Body: %j", req.body);
     }
 
-    var startTime = getStartTime(req.query),
-        endTime = getEndTime(req.query);
+    var startTime = mxm.getStartTime(req.query),
+        endTime = mxm.getEndTime(req.query),
+        tasks = {};
 
-    metric(req.user, startTime, endTime, function(err, response) {
-      debug(response);
+    tasks.data = function(callback) {
+      metric(req.user, startTime, endTime, function(err, response) {
+        _debug("Data: %j", response);
+        return callback(err, response);
+      });
+    };
 
+    if (metricType == 'topCountries') {
+      tasks.map = mxm.getCountriesMap;
+    }
+
+    async.parallel(tasks, function(err, results) {
       if(err) return next(err);
 
-      res.apiResponse(_.extend(response, {
+      res.apiResponse(_.extend(results.data, {
         success: true,
         source: metricSource,
         type: metricType,
         query: req.query
-      }));
+      }, results.map || {}));
     });
   };
 };

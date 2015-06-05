@@ -1,0 +1,33 @@
+[
+  {
+    "label": "Terms/Privacy",
+    "type": "view",
+    "key": "privacy",
+    "href": "/privacy"
+  },
+  {
+    "label": "Facebook",
+    "type": "social",
+    "key": "facebook"
+  },
+  {
+    "label": "Twitter",
+    "type": "social",
+    "key": "twitter"
+  },
+  {
+    "label": "Instagram",
+    "type": "social",
+    "key": "instagram"
+  },
+  {
+    "label": "Youtube",
+    "type": "social",
+    "key": "youtube"
+  },
+  {
+    "label": "Google+",
+    "type": "social",
+    "key": "google-plus"
+  }
+]
