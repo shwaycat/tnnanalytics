@@ -1,5 +1,5 @@
 module.exports = function() {
-  var keystone = require('keystone')
+  var keystone = require('keystone');
 
   keystone.init({
     'name': 'Cadence',
@@ -28,19 +28,23 @@ module.exports = function() {
     'elasticsearch log': process.env.ELASTICSEARCH_LOG,
 
     'basedir': __dirname
-  })
+  });
 
   if (keystone.get('env') == 'production') {
-    keystone.set('brand host', 'http://cadence.maxmedia.com')
+    keystone.set('brand host', 'http://cadence.maxmedia.com');
+  }
+
+  if (keystone.get('env') == 'development' && !keystone.get('elasticsearch log')) {
+    keystone.set('elasticsearch log', 'debug');
   }
 
   if (process.env.REDIS_URI) {
-    keystone.set('session store', 'connect-redis')
-    keystone.set('session store options', { url: process.env.REDIS_URI })
+    keystone.set('session store', 'connect-redis');
+    keystone.set('session store options', { url: process.env.REDIS_URI });
   }
 
   if (process.env.COOKIE_SECRET) {
-    keystone.set('cookie secret', process.env.COOKIE_SECRET)
+    keystone.set('cookie secret', process.env.COOKIE_SECRET);
   }
 
   keystone.import('models');
@@ -61,9 +65,9 @@ module.exports = function() {
         border_color: '#1a7cb7'
       }
     }
-  })
+  });
 
-  keystone.set('email tests', require('./routes/emails'))
+  keystone.set('email tests', require('./routes/emails'));
 
-  return keystone
-}
+  return keystone;
+};
