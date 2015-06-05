@@ -783,7 +783,7 @@ function statsDelegation(summary, options){
       statsString += statStringOpen;
       statsString += "Session Duration"
       statsString += statStringMid;
-      statsString += (numberWithCommas(summary.totalAverageSessionDuration) + 'sec');
+      statsString += (numberWithCommas(summary.totalAverageSessionDuration) + ' sec');
       statsString += statStringClose;
     }
 
@@ -898,6 +898,57 @@ function statsDelegation(summary, options){
         statsString += "Change in Acquisition"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.changeInAcquisition);
+        statsString += statStringClose;
+      }
+
+    } else if (options.selector == '#engagement') {
+      console.log('yo');
+
+      if (summary.totalFacebook != undefined) {
+        statsString += statStringOpen;
+        statsString += "Facebook"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalFacebook);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalTwitter != undefined) {
+        statsString += statStringOpen;
+        statsString += "Twitter"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalTwitter);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalInstagram != undefined) {
+        statsString += statStringOpen;
+        statsString += "Instagram"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalInstagram);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalYouTube != undefined) {
+        statsString += statStringOpen;
+        statsString += "Youtube"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalYouTube);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalGooglePlus != undefined) {
+        statsString += statStringOpen;
+        statsString += "Google+"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalGooglePlus);
+        statsString += statStringClose;
+      }
+
+      if (summary.changeInEngagement != undefined) {
+        statsString += statStringOpen;
+        statsString += "Change in Engagement"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.changeInEngagement);
         statsString += statStringClose;
       }
 
