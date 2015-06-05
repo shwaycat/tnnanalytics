@@ -98,23 +98,22 @@ function equalHeightPairs(breakpoint){
 
 function printClick(){
   $('.print-new-window').on('click', function(){
-    window.open(window.location.href+'?print=true',
-      "",
-      "width=768, height=400"
-    );
-  });
-}
-
-function printFunction(){
-  if (getParameterByName('print') == 'true'){
     $('html').addClass('pre-print');
     routesInit();
     attachBrowserVersion();
     compensateFooter();
     setTimeout(function(){
       window.print();
-    },7000);
-  }
+      setTimeout(function(){
+        $('html').removeClass('pre-print');
+        setTimeout(function(){
+          routesInit();
+          attachBrowserVersion();
+          compensateFooter();
+        },100);
+      },1000);
+    },5000);
+  });
 }
 
 function getParameterByName(name) {
