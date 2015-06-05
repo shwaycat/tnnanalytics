@@ -98,34 +98,31 @@ function equalHeightPairs(breakpoint){
 
 function printClick(){
   $('.print-new-window').on('click', function(){
-    window.open(window.location.href,
+    window.open(window.location.href+'?print=true',
       "",
       "width=768, height=400"
     );
   });
 }
 
-// function printFunction(){
-//   var print = window.location.search;
-//   if (print != '' && print != null && print != undefined && print){
-//     if (print.indexOf("?print=") != -1){
-//
-//     }
-//   }
-// }
-//
-//
-// var query = window.location.search;
-// if (query != '' && query != null && query != undefined && query){
-//   if (query.indexOf("?page=") != -1 && (query.split("?page=").length == 2)){
-//     return query;
-//   } else {
-//     return '';
-//   }
-// } else {
-//   return '';
-// }
+function printFunction(){
+  if (getParameterByName('print') == 'true'){
+    $('html').addClass('pre-print');
+    routesInit();
+    attachBrowserVersion();
+    compensateFooter();
+    setTimeout(function(){
+      window.print();
+    },7000);
+  }
+}
 
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
 
 
 

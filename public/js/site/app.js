@@ -37,5 +37,6 @@ $(function() {
   compensateFooter();
   elementReveal();
   printClick();
+  printFunction();
 
 });

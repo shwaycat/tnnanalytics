@@ -32,6 +32,10 @@ html
     block css
     block head
   body(class=section)
+    
+    .pre-print-loading
+      span.loading Waiting for page to finish loading before printing..
+      span.complete Load Complete.
 
     if user
       +fb-js
