@@ -99,17 +99,15 @@ function equalHeightPairs(breakpoint){
 function printClick(){
   $('.print-new-window').on('click', function(){
     $('html').addClass('pre-print');
-    routesInit();
-    attachBrowserVersion();
     compensateFooter();
+    routesInit(true);
     setTimeout(function(){
       window.print();
       setTimeout(function(){
         $('html').removeClass('pre-print');
         setTimeout(function(){
-          routesInit();
-          attachBrowserVersion();
           compensateFooter();
+          routesInit(true);
         },100);
       },1000);
     },5000);
