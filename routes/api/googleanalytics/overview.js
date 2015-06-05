@@ -1,27 +1,23 @@
-var moment = require('moment'),
+var _ = require('underscore'),
     debug = require('debug')('cadence:api:googleanalytics:overview'),
-    googleAnalyticsMetrics = require('../../../lib/metrics/googleanalytics');
+    metrics = require('../../../lib/metrics/googleanalytics'),
+    mxm = require('../../../lib/mxm-utils');
 
-module.exports = function(req, res) {
-  var startTime = moment().subtract(1, 'month').toDate(),
-      endTime = new Date();
+module.exports = function(req, res, next) {
+  var profileName = req.params.profileName,
+      startTime = mxm.getStartTime(req.query),
+      endTime = mxm.getEndTime(req.query);
 
-  if(req.query.startTime) {
-    startTime = new Date(req.query.startTime);
-  }
-  if(req.query.endTime) {
-    endTime = new Date(req.query.endTime);
-  }
-
-  googleAnalyticsMetrics.overview(req.user, req.params.profileName, startTime, endTime, function(err, response) {
+  metrics.overview(req.user, profileName, startTime, endTime, function(err, response) {
     debug(response);
 
-    if(err) return res.apiResponse({error: err});
+    if(err) return next(err);
 
-    response.success = true;
-    response.type = 'google-analytics';
-    response.source = 'overview';
-    response.queryString = req.queryString;
-    return res.apiResponse(response);
+    res.apiResponse(_.extend(response, {
+      success: true,
+      source: 'google-analytics',
+      type: 'overview',
+      query: req.query
+    }));
   });
 };

@@ -79,10 +79,10 @@ exports = module.exports = function(app) {
 
   // Twitter Endpoints
   // They all expect query strings with startTime endTime
-  app.get('/api/1.0/twitter/engagement', routes.api.twitter.engagement);
-  app.get('/api/1.0/twitter/acquisition', routes.api.twitter.acquisition);
-  app.get('/api/1.0/twitter/topTweet', routes.api.twitter.topTweet);
-  app.get('/api/1.0/twitter/topCountries', routes.api.twitter.topCountries);
+  app.get('/api/1.0/twitter/engagement', apiRouteBuilder('twitter', 'engagement'));
+  app.get('/api/1.0/twitter/acquisition', apiRouteBuilder('twitter', 'acquisition'));
+  app.get('/api/1.0/twitter/topTweet', apiRouteBuilder('twitter', 'topTweet'));
+  app.get('/api/1.0/twitter/topCountries', apiRouteBuilder('twitter', 'topCountries'));
 
   // Facebook Endpoints
   // They all expect query strings with startTime endTime
@@ -94,10 +94,9 @@ exports = module.exports = function(app) {
 
   // Instagram Endpoints
   // They all expect query strings with startTime endTime
-  app.get('/api/1.0/instagram/engagement', routes.api.instagram.engagement);
-  app.get('/api/1.0/instagram/acquisition', routes.api.instagram.acquisition);
-  app.get('/api/1.0/instagram/topPost', routes.api.instagram.topPost);
-  // app.get('/api/1.0/instagram/topCountries', routes.api.instagram.topCountries);
+  app.get('/api/1.0/instagram/engagement', apiRouteBuilder('instagram', 'engagement'));
+  app.get('/api/1.0/instagram/acquisition', apiRouteBuilder('instagram', 'acquisition'));
+  app.get('/api/1.0/instagram/topPost', apiRouteBuilder('instagram', 'topPost'));
 
 
   // YouTube Endpoints
@@ -110,9 +109,9 @@ exports = module.exports = function(app) {
 
   // Google+ Endpoints
   // They all expect query strings with startTime endTime
-  app.get('/api/1.0/googleplus/engagement', routes.api.googleplus.engagement);
-  app.get('/api/1.0/googleplus/acquisition', routes.api.googleplus.acquisition);
-  app.get('/api/1.0/googleplus/topPost', routes.api.googleplus.topPost);
+  app.get('/api/1.0/googleplus/engagement', apiRouteBuilder('googleplus', 'engagement'));
+  app.get('/api/1.0/googleplus/acquisition', apiRouteBuilder('googleplus', 'acquisition'));
+  app.get('/api/1.0/googleplus/topPost', apiRouteBuilder('googleplus', 'topPost'));
 
   // Google+ Endpoints
   // They all expect query strings with startTime endTime
