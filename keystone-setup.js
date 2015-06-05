@@ -25,6 +25,7 @@ module.exports = function() {
 
     'elasticsearch': process.env.ELASTICSEARCH_URI,
     'elasticsearch index': process.env.ELASTICSEARCH_INDEX,
+    'elasticsearch log': process.env.ELASTICSEARCH_LOG,
 
     'basedir': __dirname
   })
