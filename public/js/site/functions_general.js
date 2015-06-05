@@ -589,11 +589,11 @@ function statsDelegation(summary, options){
 
     } else if (options.selector == '#reach'){
 
-      if (summary.impressions != undefined) {
+      if (summary.totalImpressions != undefined) {
         statsString += statStringOpen;
         statsString += "Impressions"
         statsString += statStringMid;
-        statsString += numberWithCommas(summary.impressions);
+        statsString += numberWithCommas(summary.totalImpressions);
         statsString += statStringClose;
       }
 
@@ -896,7 +896,6 @@ function statsDelegation(summary, options){
       }
 
     } else if (options.selector == '#engagement') {
-      console.log('yo');
 
       if (summary.totalFacebook != undefined) {
         statsString += statStringOpen;
@@ -943,6 +942,32 @@ function statsDelegation(summary, options){
         statsString += "Change in Engagement"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.changeInEngagement);
+        statsString += statStringClose;
+      }
+
+    } else if (options.selector == '#reach') {
+
+      if (summary.totalFacebook != undefined) {
+        statsString += statStringOpen;
+        statsString += "Facebook"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalFacebook);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalYouTube != undefined) {
+        statsString += statStringOpen;
+        statsString += "Twitter"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalYouTube);
+        statsString += statStringClose;
+      }
+
+      if (summary.changeInReach != undefined) {
+        statsString += statStringOpen;
+        statsString += "Change in Reach"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.changeInReach);
         statsString += statStringClose;
       }
 
