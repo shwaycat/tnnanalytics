@@ -58,6 +58,7 @@ function topFacebookPost(data, options, success){
       .append(newDetailsHTML);
   }
 
+  equalHeightPairs(1200);
   $(options.selector).sectionLoad(true, true);
   setTimeout(function(){
      equalHeightPairs(1200);
@@ -76,7 +77,7 @@ function topTweet(data, options, success){
     $(options.selector).before(dataErrorHTML);
     $(options.selector).remove();
     return;
-  } else if (data == null || data.length == 0){
+  } else if (data.data == null || data.oembed == null || data.length == 0){
     $(options.selector).before(noDataHTML);
     $(options.selector).remove();
     return;

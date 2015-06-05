@@ -783,7 +783,7 @@ function statsDelegation(summary, options){
       statsString += statStringOpen;
       statsString += "Session Duration"
       statsString += statStringMid;
-      statsString += (numberWithCommas(summary.totalAverageSessionDuration) + 'sec');
+      statsString += (numberWithCommas(summary.totalAverageSessionDuration) + ' sec');
       statsString += statStringClose;
     }
 
@@ -898,6 +898,57 @@ function statsDelegation(summary, options){
         statsString += "Change in Acquisition"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.changeInAcquisition);
+        statsString += statStringClose;
+      }
+
+    } else if (options.selector == '#engagement') {
+      console.log('yo');
+
+      if (summary.totalFacebook != undefined) {
+        statsString += statStringOpen;
+        statsString += "Facebook"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalFacebook);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalTwitter != undefined) {
+        statsString += statStringOpen;
+        statsString += "Twitter"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalTwitter);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalInstagram != undefined) {
+        statsString += statStringOpen;
+        statsString += "Instagram"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalInstagram);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalYouTube != undefined) {
+        statsString += statStringOpen;
+        statsString += "Youtube"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalYouTube);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalGooglePlus != undefined) {
+        statsString += statStringOpen;
+        statsString += "Google+"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalGooglePlus);
+        statsString += statStringClose;
+      }
+
+      if (summary.changeInEngagement != undefined) {
+        statsString += statStringOpen;
+        statsString += "Change in Engagement"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.changeInEngagement);
         statsString += statStringClose;
       }
 
@@ -1100,9 +1151,12 @@ $.fn.dateDelegate = function(startTime, endTime){
 function dateController(){
 
   var dateObj = currentSelectedDate,
+      twentyfourago,
       now,
+      endOfDay,
       today,
       yesterday,
+      yesterdayEnd,
       lastWeek,
       lastMonth,
       startTime,
@@ -1125,11 +1179,17 @@ function dateController(){
   endTime_human += ', ';
   endTime_human += endTime.getFullYear();
 
+  twentyfourago = new Date();
+  twentyfourago.setDate(twentyfourago.getDate() - 1);
+  twentyfourago = twentyfourago.toJSON();
+
   now = new Date();
-  now.setMinutes(0,0,0);
-  now.setHours(23,59,59);
   now = now.toJSON();
 
+  endOfDay = new Date();
+  endOfDay.setMinutes(0,0,0);
+  endOfDay.setHours(23,59,59);
+  endOfDay = endOfDay.toJSON();
 
   today = new Date();
   today.setHours(0,0,0);
@@ -1139,6 +1199,11 @@ function dateController(){
   yesterday.setDate(yesterday.getDate() - 1);
   yesterday.setHours(0,0,0,0);
   yesterday = yesterday.toJSON();
+
+  yesterdayEnd = new Date();
+  yesterdayEnd.setDate(yesterdayEnd.getDate() - 1);
+  yesterdayEnd.setHours(23,59,59);
+  yesterdayEnd = yesterdayEnd.toJSON();
 
   lastWeek = new Date();
   lastWeek.setDate(lastWeek.getDate() - 7);
@@ -1150,10 +1215,11 @@ function dateController(){
   lastMonth.setHours(0,0,0,0);
   lastMonth = lastMonth.toJSON();
 
-  $('[data-date-selector="today"]').dateDelegate(today, now);
-  $('[data-date-selector="yesterday"]').dateDelegate(yesterday, now);
-  $('[data-date-selector="lastWeek"]').dateDelegate(lastWeek, now);
-  $('[data-date-selector="lastMonth"]').dateDelegate(lastMonth, now);
+  // $('[data-date-selector="today"]').dateDelegate(today, endOfDay);
+  $('[data-date-selector="24"]').dateDelegate(twentyfourago, now);
+  $('[data-date-selector="yesterday"]').dateDelegate(yesterday, yesterdayEnd);
+  $('[data-date-selector="lastWeek"]').dateDelegate(lastWeek, endOfDay);
+  $('[data-date-selector="lastMonth"]').dateDelegate(lastMonth, endOfDay);
 
   $('#dateDropdown').find('span').first().html(startTime_human);
   $('#dateDropdown').find('span').last().html(endTime_human);
