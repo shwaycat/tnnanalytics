@@ -86,11 +86,11 @@ exports = module.exports = function(app) {
 
   // Facebook Endpoints
   // They all expect query strings with startTime endTime
-  app.get('/api/1.0/facebook/engagement', routes.api.facebook.engagement);
-  app.get('/api/1.0/facebook/acquisition', routes.api.facebook.acquisition);
-  app.get('/api/1.0/facebook/reach', routes.api.facebook.reach);
-  app.get('/api/1.0/facebook/topPost', routes.api.facebook.topPost);
-  app.get('/api/1.0/facebook/topCountries', routes.api.facebook.topCountries);
+  app.get('/api/1.0/facebook/engagement', apiRouteBuilder('facebook', 'engagement'));
+  app.get('/api/1.0/facebook/acquisition', apiRouteBuilder('facebook', 'acquisition'));
+  app.get('/api/1.0/facebook/reach', apiRouteBuilder('facebook', 'reach'));
+  app.get('/api/1.0/facebook/topPost', apiRouteBuilder('facebook', 'topPost'));
+  app.get('/api/1.0/facebook/topCountries', apiRouteBuilder('facebook', 'topCountries'));
 
   // Instagram Endpoints
   // They all expect query strings with startTime endTime
