@@ -40,12 +40,15 @@ module.exports = function(metricSource, metricType) {
     async.parallel(tasks, function(err, results) {
       if(err) return next(err);
 
+      var theMap = results.map || {};
+
       res.apiResponse(_.extend(results.data, {
         success: true,
         source: metricSource,
         type: metricType,
-        query: req.query
-      }, results.map || {}));
+        query: req.query,
+        map: theMap
+      }));
     });
   };
 };
