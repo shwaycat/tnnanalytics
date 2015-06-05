@@ -760,7 +760,7 @@ function statsDelegation(summary, options){
 
     if (summary.totalSessionDuration != undefined) {
       var resultSessionDuration = 0;
-      var abr = 'sec';
+      var abr = ' sec';
       if (summary.totalSessionDuration/60 > 0){
         if (summary.totalSessionDuration/60/60 > 0){
           if (summary.totalSessionDuration/60/60/24 > 0){
@@ -775,7 +775,7 @@ function statsDelegation(summary, options){
         } else {
           resultSessionDuration = summary.totalSessionDuration/60;
           resultSessionDuration = Math.round(resultSessionDuration);
-          abr = 'min';
+          abr = ' min';
         }
       } else {
         resultSessionDuration = summary.totalSessionDuration;
