@@ -64,8 +64,22 @@ function lineGraph(data, options, success, dateObj){
   var padding = 45;
   var interpolateType = 'linear';
 
+  var xMin = 0;
+  var xMax = 0;
   var yMin = 0;
   var yMax = 0;
+
+
+
+  console.log(dateObj.startTime);
+  console.log(d3.min(theData, function(d) { d = type(d); return d.key; }));
+
+  // Original x min and max by start and end
+  // [d3.min(theData, function(d) {
+  //   d = type(d); return d.key;
+  // }), d3.max(theData, function(d) {
+  //   d = type(d); return d.key;
+  // })]
 
   yMin = d3.min(theData, function(d) {
     d = type(d); return d.value;
@@ -91,6 +105,9 @@ function lineGraph(data, options, success, dateObj){
   var startTimeObj = new Date(dateObj.startTime);
   var endTimeObj = new Date(dateObj.endTime);
 
+  xMin = startTimeObj;
+  xMax = endTimeObj;
+
   function timeRange(startTimeObj, endTimeObj){
     var diffYear = 0;
     var diffMonth = 0;
@@ -108,11 +125,7 @@ function lineGraph(data, options, success, dateObj){
 
    // Setup our x/y d3 functions and axes.
   x = d3.time.scale()
-        .domain([d3.min(theData, function(d) {
-          d = type(d); return d.key;
-        }), d3.max(theData, function(d) {
-          d = type(d); return d.key;
-        })])
+        .domain([xMin, xMax])
         .range([padding*2, width - padding*2]);
   y = d3.scale.linear()
       .domain([yMin, yMax])
