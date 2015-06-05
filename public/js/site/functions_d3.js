@@ -117,9 +117,9 @@ function lineGraph(data, options, success, dateObj){
   y = d3.scale.linear()
       .domain([yMin, yMax])
       .range([height - padding*2, padding/2]);
-  xAxis = d3.svg.axis().scale(x).ticks(6).tickSize(-height+padding).orient("bottom").tickFormat(timeRange(startTimeObj, endTimeObj));
+  xAxis = d3.svg.axis().scale(x).ticks(7).tickSize(-height+padding).orient("bottom").tickFormat(timeRange(startTimeObj, endTimeObj));
   yAxis = d3.svg.axis().scale(y).ticks(7).orient("left").tickFormat(function(d) { return abbreviateNumber(d); });
-  xAxisTicks = d3.svg.axis().scale(x).ticks(6).tickFormat('').tickSize(-height+padding).orient("bottom");
+  xAxisTicks = d3.svg.axis().scale(x).ticks(7).tickFormat('').tickSize(-height+padding).orient("bottom");
 
   // Alternative tick format: tickFormat(options.admin_options ? d3.time.format(options.admin_options.timeFormat) : d3.time.format("%d/%m/%y"))
 
