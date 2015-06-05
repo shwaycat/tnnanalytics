@@ -96,6 +96,35 @@ function equalHeightPairs(breakpoint){
   });
 }
 
+function printClick(){
+  $('.print-new-window').on('click', function(){
+    window.open(window.location.href,
+      "",
+      "width=768, height=400"
+    );
+  });
+}
+
+// function printFunction(){
+//   var print = window.location.search;
+//   if (print != '' && print != null && print != undefined && print){
+//     if (print.indexOf("?print=") != -1){
+//
+//     }
+//   }
+// }
+//
+//
+// var query = window.location.search;
+// if (query != '' && query != null && query != undefined && query){
+//   if (query.indexOf("?page=") != -1 && (query.split("?page=").length == 2)){
+//     return query;
+//   } else {
+//     return '';
+//   }
+// } else {
+//   return '';
+// }
 
 
 

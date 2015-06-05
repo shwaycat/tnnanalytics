@@ -36,5 +36,6 @@ $(function() {
   attachBrowserVersion();
   compensateFooter();
   elementReveal();
+  printClick();
 
 });

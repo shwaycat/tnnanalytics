@@ -12,6 +12,8 @@ mixin header
               .glyphicon.glyphicon-bell
                 .event-alert
                   span 10
+            li: a.print-new-window
+              .glyphicon.glyphicon-print
             if user.canAccessKeystone
               li: a(href='/keystone') Keystone
             li: a(href='/user/'+user.key).user
