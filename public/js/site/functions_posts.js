@@ -50,20 +50,33 @@ function topFacebookPost(data, options, success){
       newDetailsHTML += newDetails[i][1];
       newDetailsHTML += '</span></li>';
     }
-    setTimeout(function(){
-      post.find('.post')
-        .append(fbPost);
-    },10000);
-
+    post.find('.post')
+      .append(fbPost);
     post.find('.post-details-list')
       .children().remove();
     post.find('.post-details-list')
       .append(newDetailsHTML);
 
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '1586083438316048',
+        xfbml      : true,
+        version    : 'v2.3'
+      });
+    };
+
+    (function(d, s, id){
+      setTimeout(function(){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "http://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      },1);
+     }(document, 'script', 'facebook-jssdk'));
 
   }
 
-  equalHeightPairs(1200);
   $(options.selector).sectionLoad(true, true);
   setTimeout(function(){
      equalHeightPairs(1200);
