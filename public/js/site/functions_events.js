@@ -502,6 +502,8 @@ function eventsStatusUpdate(postObj, row, clicked, statusItem, accessedItem, pos
     }
   })
   .fail(function( data ) {
+    alert('There was an error with your request.');
+
     globalDebug('   Ajax FAILED!: '+apiString, 'color:red;');
   })
   .always(function( data ) {

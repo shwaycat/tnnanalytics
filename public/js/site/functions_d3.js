@@ -69,11 +69,6 @@ function lineGraph(data, options, success, dateObj){
   var yMin = 0;
   var yMax = 0;
 
-
-
-  console.log(dateObj.startTime);
-  console.log(d3.min(theData, function(d) { d = type(d); return d.key; }));
-
   // Original x min and max by start and end
   // [d3.min(theData, function(d) {
   //   d = type(d); return d.key;
