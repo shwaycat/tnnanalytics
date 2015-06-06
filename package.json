@@ -20,7 +20,8 @@
     "passport-google-oauth": "~0.2.0",
     "passport-instagram": "maxmedia/passport-instagram#v0.2.0-mxm.2",
     "passport-twitter": "^1.0.3",
-    "request": "^2.56.0",
+    "request": "^2.57.0",
+    "request-debug": "^0.2.0",
     "twitter": "^1.2.5",
     "underscore": "^1.8.3",
     "underscore.string": "^3.0.3"
