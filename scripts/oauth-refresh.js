@@ -26,7 +26,7 @@ require('../lib/keystone-script')(function(done) {
         async.eachSeries(users, function(user, nextUser) {
           if (user.services[key].tokenExpiresAt) {
             var expiresAt = user._.services[key].tokenExpiresAt.moment().clone();
-            if (expiresAt.subtract(5, 'minutes').isAfter(new Date())) {
+            if (expiresAt.subtract(7, 'minutes').isAfter(new Date())) {
               return nextUser();
             }
           }

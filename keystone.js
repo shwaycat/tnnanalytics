@@ -1,6 +1,6 @@
 // Simulate config options from your production environment by
 // customising the .env file in your project's root folder.
-require('dotenv').load()
+require('dotenv').load();
 
 var keystone = require('./keystone-setup')(),
     connectES = require('./lib/connect_es');
@@ -14,7 +14,7 @@ keystone.set('locals', {
 
 connectES(function(err) {
   if (err) throw err;
-})
+});
 
 keystone.set('routes', require('./routes'));
 
