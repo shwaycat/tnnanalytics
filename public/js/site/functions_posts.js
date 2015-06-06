@@ -50,12 +50,17 @@ function topFacebookPost(data, options, success){
       newDetailsHTML += newDetails[i][1];
       newDetailsHTML += '</span></li>';
     }
-    post.find('.post')
-      .append(fbPost);
+    setTimeout(function(){
+      post.find('.post')
+        .append(fbPost);
+    },10000);
+
     post.find('.post-details-list')
       .children().remove();
     post.find('.post-details-list')
       .append(newDetailsHTML);
+
+
   }
 
   equalHeightPairs(1200);
