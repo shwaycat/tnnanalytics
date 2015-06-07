@@ -59,11 +59,11 @@ schedule(d(13, 'm'), function() {
   }
 });
 
-schedule(d(17, 'm'), 50, 'node', [ 'scripts/pull-google-facebook.js' ]);
+schedule(d(17, 'm'), 50, 'node', [ 'scripts/pull-facebook.js' ]);
 
-schedule(d(23, 'm'), 50, 'node', [ 'scripts/pull-google-youtube.js' ]);
+schedule(d(23, 'm'), 50, 'node', [ 'scripts/pull-youtube.js' ]);
 
-schedule(d(29, 'm'), 50, 'node', [ 'scripts/pull-google-googleplus.js' ]);
+schedule(d(29, 'm'), 50, 'node', [ 'scripts/pull-googleplus.js' ]);
 
 var instagramCount = 0;
 schedule(d(31, 'm'), function() {
