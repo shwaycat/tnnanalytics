@@ -72,6 +72,8 @@ run ln -s "$APP_ROOT/releases/$rel_tag" current
 
 ###
 # Restart
+run kill "current/pids/scheduler.pid"
 run sudo /opt/passenger/bin/passenger-config restart-app "$APP_ROOT/current"
+run "cd current ; nohup node scheduler.js &>log/scheduler.log </dev/null &"
 
 notify_slack "Finished deployment: $rel_tag to $ENVIRONMENT"
