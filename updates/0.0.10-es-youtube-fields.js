@@ -17,6 +17,7 @@ module.exports = function(done) {
               likeCount: { type: 'integer' },
               dislikeCount: { type: 'integer' },
               favoriteCount: { type: 'integer'},
+              shareCount: { type: 'integer'},
               commentCount: { type: 'integer'},
               subscriberCount: { type: 'integer'}
             }
@@ -39,6 +40,7 @@ module.exports = function(done) {
               likeCount: { type: 'integer' },
               dislikeCount: { type: 'integer' },
               favoriteCount: { type: 'integer'},
+              shareCount: { type: 'integer'},
               commentCount: { type: 'integer'},
               subscriberCount: { type: 'integer'}
             }
