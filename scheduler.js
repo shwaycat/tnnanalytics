@@ -63,8 +63,6 @@ schedule(d(17, 'm'), 50, 'node', [ 'scripts/pull-facebook.js' ]);
 
 schedule(d(23, 'm'), 50, 'node', [ 'scripts/pull-youtube.js' ]);
 
-schedule(d(29, 'm'), 50, 'node', [ 'scripts/pull-googleplus.js' ]);
-
 var instagramCount = 0;
 schedule(d(31, 'm'), function() {
   if (++instagramCount == 7) {
@@ -74,6 +72,8 @@ schedule(d(31, 'm'), function() {
     queue.push({ cmd: 'node', args: [ 'scripts/pull-instagram.js' ] }, 50);
   }
 });
+
+schedule(d(113, 'm'), 50, 'node', [ 'scripts/pull-googleplus.js' ]);
 
 schedule(d(6, 'h'), 50, 'node', [ 'scripts/pull-google-analytics.js' ]);
 
