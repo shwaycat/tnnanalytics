@@ -6,7 +6,7 @@ function topFacebookPost(data, options, success){
     $(options.selector).before(dataErrorHTML);
     $(options.selector).remove();
     return;
-  } else if (data == null || data.length == 0){
+  } else if (data.data == null || data.data.length == 0){
     $(options.selector).before(noDataHTML);
     $(options.selector).remove();
     return;
@@ -27,20 +27,20 @@ function topFacebookPost(data, options, success){
 
     var post = $(options.selector);
 
-    var fbPost = '<div data-href="'+theData.data.url+'" class="fb-post"></div><a target="_blank" title="Post Link" href="'+theData.data.url+'" class="btn btn-default post-cta-btn">See Post<span class="entypo entypo-chevron-thin-right"></span></a>'
+    var fbPost = '<div data-href="'+theData.data.data.url+'" class="fb-post"></div><a target="_blank" title="Post Link" href="'+theData.data.data.url+'" class="btn btn-default post-cta-btn">See Post<span class="entypo entypo-chevron-thin-right"></span></a>'
 
     var newDetailsHTML = '';
     var newDetails = [];
 
     newDetails[0] = [];
     newDetails[0][0] = 'Total Engagement';
-    newDetails[0][1] = numberWithCommas(theData.data.score);
+    newDetails[0][1] = numberWithCommas(theData.data.data.score);
     newDetails[1] = [];
     newDetails[1][0] = 'Likes';
-    newDetails[1][1] = numberWithCommas(theData.likes);
+    newDetails[1][1] = numberWithCommas(theData.data.likes);
     newDetails[2] = [];
     newDetails[2][0] = 'Shares';
-    newDetails[2][1] = numberWithCommas(theData.shares);
+    newDetails[2][1] = numberWithCommas(theData.data.shares);
 
 
     for (var i = 0; i < newDetails.length; i++){

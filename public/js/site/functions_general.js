@@ -1064,7 +1064,7 @@ function dataControllerDelegation(sectionType, type, apiObj, dateObj){
     statsDelegation(apiObj.summary, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'topFacebookPost'){
-    topFacebookPost(apiObj.data, apiObj.options, apiObj.success);
+    topFacebookPost(apiObj, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'topTweet'){
     topTweet(apiObj, apiObj.options, apiObj.success);
