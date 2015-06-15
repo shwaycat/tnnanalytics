@@ -113,7 +113,7 @@ function eventsTableData(apiObj, table){
       if (currentEvent.alertStateUpdatedAt) {
         // Last Accessed Date
         currentEvent_accessed = new Date(currentEvent.alertStateUpdatedAt);
-        currentEvent_accessed_human = $.timeago(currentEvent_accessed);
+        currentEvent_accessed_human = (currentEvent_accessed.getMonth()+1 < 10 ? ('0'+(currentEvent_accessed.getMonth()+1)) : currentEvent_accessed.getMonth()+1 )+ '/' + (currentEvent_accessed.getDate() < 10 ? ('0'+currentEvent_accessed.getDate()) : currentEvent_accessed.getDate() ) + '/' + currentEvent_accessed.getFullYear();
         currentEvent_accessed = currentEvent_accessed.getFullYear() + '/' + (currentEvent_accessed.getMonth()+1 < 10 ? ('0'+(currentEvent_accessed.getMonth()+1)) : currentEvent_accessed.getMonth()+1 ) + '/' + (currentEvent_accessed.getDate() < 10 ? ('0'+currentEvent_accessed.getDate()) : currentEvent_accessed.getDate() );
 
         // Last Accessed Date in TimeAgo format
@@ -171,7 +171,7 @@ function eventsTableData(apiObj, table){
       tableHTML += '<td class="event-item-creation"><span class="event-item-robot">'+currentEvent_creation+'</span>'+currentEvent_creation_human+'</td>';
       tableHTML += '<td>'+currentEvent.sourceName+'</td>';
       tableHTML += '<td><span class="event-item-robot">'+currentEvent._id+'</span><span class="event-item-human" data-toggle="tooltip" data-trigger="click" data-placement="top" title='+currentEvent._id+'>'+currentEvent_id_short+'</span></td>';
-      tableHTML += '<td class="event-item-accessed"><span class="event-item-robot">'+currentEvent_accessed+'</span><span class="event-item-human">'+currentEvent_accessed_human.capitalizeFirstLetter()+'</span></td>';
+      tableHTML += '<td class="event-item-accessed"><span class="event-item-robot">'+currentEvent_accessed+'</span><span class="event-item-human">'+currentEvent_accessed_human+'</span></td>';
       tableHTML += '<td class="event-item-action-buttons">'+actionButtonHtml+'</td>';
       tableHTML += '<td class="event-item-link event-link-cell">'+urlHtml+'<span class="entypo entypo-chevron-right"></span></td>';
       tableHTML += '</tr>';
