@@ -1,18 +1,21 @@
 var STRING_STATUS_NEW = 'new',
+    STRING_STATUS_NEW_FRONT = 'New',
     STRING_STATUS_NEW_CLASS = 'status-new',
-    STRING_STATUS_NEW_BUTTON = 'Complete',
+    STRING_STATUS_NEW_BUTTON = 'Reported',
     STRING_STATUS_OPEN = 'open',
+    STRING_STATUS_OPEN_FRONT = 'Open',
     STRING_STATUS_OPEN_CLASS = 'status-open',
-    STRING_STATUS_OPEN_BUTTON = 'Complete',
+    STRING_STATUS_OPEN_BUTTON = 'Reported',
     STRING_STATUS_CLOSED = 'closed',
+    STRING_STATUS_CLOSED_FRONT = 'Reported',
     STRING_STATUS_CLOSED_CLASS = 'status-closed',
-    STRING_STATUS_CLOSED_BUTTON = 'Incomplete',
+    STRING_STATUS_CLOSED_BUTTON = 'N/A',
     STRING_STATUS_FALSE = 'benign',
-    STRING_STATUS_FALSE_FRONT = 'false',
+    STRING_STATUS_FALSE_FRONT = 'No Action',
     STRING_STATUS_FALSE_CLASS = 'status-false',
     STRING_STATUS_FALSE_ACTION_CLASS = 'status-false-action',
-    STRING_STATUS_FALSE_BUTTON = 'Incomplete',
-    STRING_STATUS_FALSE_ACTION_BUTTON = 'False',
+    STRING_STATUS_FALSE_BUTTON = 'N/A',
+    STRING_STATUS_FALSE_ACTION_BUTTON = 'No Action',
     statusClass = '',
     statusOrder = 0,
     statusText = '',
@@ -124,7 +127,7 @@ function eventsTableData(apiObj, table){
       // Delegates whether an event is new or open
       if (currentEvent.alertState == STRING_STATUS_NEW){
 
-        statusText = STRING_STATUS_NEW;
+        statusText = STRING_STATUS_NEW_FRONT;
         statusClass = STRING_STATUS_NEW_CLASS;
         actionText = STRING_STATUS_NEW_BUTTON;
         statusOrder = 0;
@@ -132,7 +135,7 @@ function eventsTableData(apiObj, table){
 
       } else if (currentEvent.alertState == STRING_STATUS_OPEN){
 
-        statusText = STRING_STATUS_OPEN;
+        statusText = STRING_STATUS_OPEN_FRONT;
         statusClass = STRING_STATUS_OPEN_CLASS;
         actionText = STRING_STATUS_OPEN_BUTTON;
         statusOrder = 1;
@@ -140,11 +143,11 @@ function eventsTableData(apiObj, table){
 
       } else if (currentEvent.alertState == STRING_STATUS_CLOSED){
 
-        statusText = STRING_STATUS_CLOSED;
+        statusText = STRING_STATUS_CLOSED_FRONT;
         statusClass = STRING_STATUS_CLOSED_CLASS;
         actionText = STRING_STATUS_CLOSED_BUTTON;
         statusOrder = 2;
-        actionButtonHtml = '<button class="btn btn-default event-action-btn '+statusClass+'">'+actionText+'</button><button class="btn btn-default event-false-action-btn '+STRING_STATUS_FALSE_ACTION_CLASS+'">'+STRING_STATUS_FALSE_ACTION_BUTTON+'</button>';
+        actionButtonHtml = '';//'<button class="btn btn-default event-action-btn '+statusClass+'">'+actionText+'</button><button class="btn btn-default event-false-action-btn '+STRING_STATUS_FALSE_ACTION_CLASS+'">'+STRING_STATUS_FALSE_ACTION_BUTTON+'</button>';
 
       } else if (currentEvent.alertState == STRING_STATUS_FALSE){
 
@@ -152,7 +155,7 @@ function eventsTableData(apiObj, table){
         statusClass = STRING_STATUS_FALSE_CLASS;
         actionText = STRING_STATUS_FALSE_BUTTON;
         statusOrder = 3;
-        actionButtonHtml = '<button class="btn btn-default event-action-btn '+statusClass+'">'+actionText+'</button><button style="display:none;" class="btn btn-default event-false-action-btn '+STRING_STATUS_FALSE_ACTION_CLASS+'">'+STRING_STATUS_FALSE_ACTION_BUTTON+'</button>';
+        actionButtonHtml = '';//'<button class="btn btn-default event-action-btn '+statusClass+'">'+actionText+'</button><button style="display:none;" class="btn btn-default event-false-action-btn '+STRING_STATUS_FALSE_ACTION_CLASS+'">'+STRING_STATUS_FALSE_ACTION_BUTTON+'</button>';
 
       }
 
@@ -164,7 +167,7 @@ function eventsTableData(apiObj, table){
 
       // Create the table row with the given data
       tableHTML += '<tr data-status="'+statusText+'" data-type="'+currentEvent._type+'" data-id="'+currentEvent._id+'"" class="'+statusClass+'">';
-      tableHTML += '<td class="event-item-status"><span class="event-item-robot">'+statusOrder+'</span>'+statusText.capitalizeFirstLetter()+'</td>';
+      tableHTML += '<td class="event-item-status"><span class="event-item-robot">'+statusOrder+'</span>'+statusText+'</td>';
       tableHTML += '<td class="event-item-creation"><span class="event-item-robot">'+currentEvent_creation+'</span>'+currentEvent_creation_human+'</td>';
       tableHTML += '<td>'+currentEvent.sourceName+'</td>';
       tableHTML += '<td><span class="event-item-robot">'+currentEvent._id+'</span><span class="event-item-human" data-toggle="tooltip" data-trigger="click" data-placement="top" title='+currentEvent._id+'>'+currentEvent_id_short+'</span></td>';
