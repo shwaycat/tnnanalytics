@@ -509,9 +509,12 @@ function statsDelegation(summary, options){
 
       if (summary.changeInFollowers != undefined) {
         statsString += statStringOpen;
-        statsString += "Change in Followers"
+        statsString += "Growth "
         statsString += statStringMid;
         statsString += numberWithCommas(summary.changeInFollowers);
+        if (summary.changeInFollowersPercent != undefined){
+          statsString += ' ('+summary.changeInFollowersPercent + '%)';
+        }
         statsString += statStringClose;
       }
 
@@ -581,9 +584,12 @@ function statsDelegation(summary, options){
 
       if (summary.changeInLikes != undefined) {
         statsString += statStringOpen;
-        statsString += "Change in Likes"
+        statsString += "Growth "
         statsString += statStringMid;
         statsString += numberWithCommas(summary.changeInLikes);
+        if (summary.changeInLikesPercent != undefined){
+          statsString += ' ('+summary.changeInLikesPercent + '%)';
+        }
         statsString += statStringClose;
       }
 
@@ -631,9 +637,12 @@ function statsDelegation(summary, options){
 
       if (summary.changeInFollowers != undefined) {
         statsString += statStringOpen;
-        statsString += "Change in Followers"
+        statsString += "Growth "
         statsString += statStringMid;
         statsString += numberWithCommas(summary.changeInFollowers);
+        if (summary.changeInFollowersPercent != undefined){
+          statsString += ' ('+summary.changeInFollowersPercent + '%)';
+        }
         statsString += statStringClose;
       }
 
@@ -697,9 +706,12 @@ function statsDelegation(summary, options){
 
       if (summary.changeInSubscribers != undefined) {
         statsString += statStringOpen;
-        statsString += "Change in Subscribers"
+        statsString += "Growth "
         statsString += statStringMid;
         statsString += numberWithCommas(summary.changeInSubscribers);
+        if (summary.changeInSubscribersPercent != undefined){
+          statsString += ' ('+summary.changeInSubscribersPercent + '%)';
+        }
         statsString += statStringClose;
       }
 
@@ -758,6 +770,9 @@ function statsDelegation(summary, options){
         statsString += "Change"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.changeInCircledBy);
+        if (summary.changeInCircledByPercent != undefined){
+          statsString += ' ('+summary.changeInCircledByPercent + '%)';
+        }
         statsString += statStringClose;
       }
 
@@ -889,9 +904,12 @@ function statsDelegation(summary, options){
 
       if (summary.changeInAcquisition != undefined) {
         statsString += statStringOpen;
-        statsString += "Change in Acquisition"
+        statsString += "Growth "
         statsString += statStringMid;
         statsString += numberWithCommas(summary.changeInAcquisition);
+        if (summary.changeInAcquisitionPercent != undefined){
+          statsString += ' ('+summary.changeInAcquisitionPercent + '%)';
+        }
         statsString += statStringClose;
       }
 
@@ -939,9 +957,12 @@ function statsDelegation(summary, options){
 
       if (summary.changeInEngagement != undefined) {
         statsString += statStringOpen;
-        statsString += "Change in Engagement"
+        statsString += "Growth "
         statsString += statStringMid;
         statsString += numberWithCommas(summary.changeInEngagement);
+        if (summary.changeInEngagementPercent != undefined){
+          statsString += ' ('+summary.changeInEngagementPercent + '%)';
+        }
         statsString += statStringClose;
       }
 
@@ -965,9 +986,12 @@ function statsDelegation(summary, options){
 
       if (summary.changeInReach != undefined) {
         statsString += statStringOpen;
-        statsString += "Change in Reach"
+        statsString += "Growth "
         statsString += statStringMid;
         statsString += numberWithCommas(summary.changeInReach);
+        if (summary.changeInReachPercent != undefined){
+          statsString += ' ('+summary.changeInReachPercent + '%)';
+        }
         statsString += statStringClose;
       }
 
