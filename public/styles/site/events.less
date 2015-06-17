@@ -93,6 +93,14 @@
       .event-item-status {
         .transition(@events_transition);
       }
+      .event-action-btn {
+        width: 100px;
+        .transition(@events_transition);
+        background-color:@element_alternate_active;
+        &:first-child {
+          margin-right:10px;
+        }
+      }
       .transition(@events_transition);
       &.status-new {
 
@@ -100,9 +108,6 @@
           .transition(@events_transition);
           background-color:@element_alert;
         }
-        // td {
-        //   font-weight: normal;
-        // }
         &:hover {
           .event-item-status {
             background-color:@element_alert_light;
@@ -124,11 +129,17 @@
         }
       }
       &.status-closed {
+        .event-action-btn {
+          width:210px;
+        }
       }
       &.status-false {
         .event-item-status {
           .transition(@events_transition);
           background-color:@event_false_background;
+        }
+        .event-action-btn {
+          width:210px;
         }
       }
     }
@@ -178,50 +189,7 @@
     .event-item-robot {
       display:none;
     }
-    .event-item-action-buttons {
 
-    }
-    .event-action-btn {
-      width: 100px;
-      .transition(@events_transition);
-      background-color:@element_alternate_active;
-      &:first-child {
-        margin-right:10px;
-      }
-
-      // &.status-new {
-      //   background-color:@element_alert_lighter;
-      //   .transition(@events_transition);
-      //   &:hover {
-      //     background-color:@element_alert_lighter;
-      //     .transition(@events_transition);
-      //   }
-      // }
-      // &.status-open {
-      //   background-color:@lightBlue;
-      //   .transition(@events_transition);
-      //   &:hover {
-      //     background-color:@lightBlue;
-      //     .transition(@events_transition);
-      //   }
-      // }
-      // &.status-closed {
-      //   background-color:@background_element_lighter;
-      //   .transition(@events_transition);
-      // }
-      &.status-false {
-        // background-color:@background_element_lighter;
-        width:210px;
-        // .transition(@events_transition);
-      }
-      // &.status-false-action {
-      //   background-color:@background_element_lighter;
-      //   .transition(@events_transition);
-      // }
-    }
-    .event-false-action-btn {
-      .event-action-btn();
-    }
   }
   thead {
     tr {

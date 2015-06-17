@@ -1,29 +1,30 @@
 var STRING_STATUS_NEW = 'new',
-    STRING_STATUS_NEW_FRONT = 'New',
-    STRING_STATUS_NEW_CLASS = 'status-new',
-    STRING_STATUS_NEW_BUTTON = 'Reported',
-    STRING_STATUS_OPEN = 'open',
-    STRING_STATUS_OPEN_FRONT = 'Open',
-    STRING_STATUS_OPEN_CLASS = 'status-open',
-    STRING_STATUS_OPEN_BUTTON = 'Reported',
-    STRING_STATUS_CLOSED = 'closed',
-    STRING_STATUS_CLOSED_FRONT = 'Reported',
+    STRING_STATUS_NEW_NAME = 'New',
+    STRING_STATUS_NEW_CLASS = 'status-new';
+
+var STRING_STATUS_OPEN = 'open',
+    STRING_STATUS_OPEN_NAME = 'Open',
+    STRING_STATUS_OPEN_CLASS = 'status-open';
+
+var STRING_STATUS_CLOSED = 'closed',
+    STRING_STATUS_CLOSED_NAME = 'Reported',
     STRING_STATUS_CLOSED_CLASS = 'status-closed',
-    STRING_STATUS_CLOSED_BUTTON = 'N/A',
-    STRING_STATUS_FALSE = 'benign',
-    STRING_STATUS_FALSE_FRONT = 'No Action',
+    STRING_STATUS_CLOSED_BUTTON_CLASS = 'status-closed-no-action';
+
+var STRING_STATUS_FALSE = 'benign',
+    STRING_STATUS_FALSE_NAME = 'No Action',
     STRING_STATUS_FALSE_CLASS = 'status-false',
-    STRING_STATUS_FALSE_ACTION_CLASS = 'status-false-action',
-    STRING_STATUS_FALSE_BUTTON = 'N/A',
-    STRING_STATUS_FALSE_ACTION_BUTTON = 'No Action',
-    statusClass = '',
+    STRING_STATUS_FALSE_BUTTON_CLASS = 'status-false-no-action';
+
+var STRING_ALERTS_MESSAGE = ' New or Open Keyword Alert',
+    STRING_ALERTS_MESSAGE_PLURAL = ' New or Open Keyword Alerts',
+    STRING_CLOSEALL_ERROR = 'There was a error with the request.';
+
+var statusClass = '',
     statusOrder = 0,
     statusText = '',
     urlHtml = '',
-    actionButtonHtml =  '',
-    STRING_ALERTS_MESSAGE = ' New or Open Keyword Alert',
-    STRING_ALERTS_MESSAGE_PLURAL = ' New or Open Keyword Alerts';
-    STRING_CLOSEALL_ERROR = 'There was a error with the request.'
+    actionButtonHtml =  '';
 
 function eventsTableController(apiString, table){
   globalDebug('   Events Get Data', 'color:purple;');
@@ -123,39 +124,37 @@ function eventsTableData(apiObj, table){
         currentEvent_accessed_human = '';
       }
 
+      var BUTTON_CLOSED = '<button class="btn btn-default event-action-btn '+STRING_STATUS_CLOSED_CLASS+'">'+STRING_STATUS_CLOSED_NAME+'</button>';
+      var BUTTON_FALSE = '<button class="btn btn-default event-action-btn '+STRING_STATUS_FALSE_CLASS+'">'+STRING_STATUS_FALSE_NAME+'</button>';
 
       // Delegates whether an event is new or open
       if (currentEvent.alertState == STRING_STATUS_NEW){
 
-        statusText = STRING_STATUS_NEW_FRONT;
+        statusText = STRING_STATUS_NEW_NAME;
         statusClass = STRING_STATUS_NEW_CLASS;
-        actionText = STRING_STATUS_NEW_BUTTON;
         statusOrder = 0;
-        actionButtonHtml = '<button class="btn btn-default event-action-btn '+statusClass+'">'+actionText+'</button><button class="btn btn-default event-false-action-btn '+STRING_STATUS_FALSE_ACTION_CLASS+'">'+STRING_STATUS_FALSE_ACTION_BUTTON+'</button>';
+        actionButtonHtml = BUTTON_CLOSED + BUTTON_FALSE;
 
       } else if (currentEvent.alertState == STRING_STATUS_OPEN){
 
-        statusText = STRING_STATUS_OPEN_FRONT;
+        statusText = STRING_STATUS_OPEN_NAME;
         statusClass = STRING_STATUS_OPEN_CLASS;
-        actionText = STRING_STATUS_OPEN_BUTTON;
         statusOrder = 1;
-        actionButtonHtml = '<button class="btn btn-default event-action-btn '+statusClass+'">'+actionText+'</button><button class="btn btn-default event-false-action-btn '+STRING_STATUS_FALSE_ACTION_CLASS+'">'+STRING_STATUS_FALSE_ACTION_BUTTON+'</button>';
+        actionButtonHtml = BUTTON_CLOSED + BUTTON_FALSE;
 
       } else if (currentEvent.alertState == STRING_STATUS_CLOSED){
 
-        statusText = STRING_STATUS_CLOSED_FRONT;
+        statusText = STRING_STATUS_CLOSED_NAME;
         statusClass = STRING_STATUS_CLOSED_CLASS;
-        actionText = STRING_STATUS_CLOSED_BUTTON;
         statusOrder = 2;
-        actionButtonHtml = '';//'<button class="btn btn-default event-action-btn '+statusClass+'">'+actionText+'</button><button class="btn btn-default event-false-action-btn '+STRING_STATUS_FALSE_ACTION_CLASS+'">'+STRING_STATUS_FALSE_ACTION_BUTTON+'</button>';
+        actionButtonHtml = BUTTON_FALSE;
 
       } else if (currentEvent.alertState == STRING_STATUS_FALSE){
 
-        statusText = STRING_STATUS_FALSE_FRONT;
+        statusText = STRING_STATUS_FALSE_NAME;
         statusClass = STRING_STATUS_FALSE_CLASS;
-        actionText = STRING_STATUS_FALSE_BUTTON;
         statusOrder = 3;
-        actionButtonHtml = '';//'<button class="btn btn-default event-action-btn '+statusClass+'">'+actionText+'</button><button style="display:none;" class="btn btn-default event-false-action-btn '+STRING_STATUS_FALSE_ACTION_CLASS+'">'+STRING_STATUS_FALSE_ACTION_BUTTON+'</button>';
+        actionButtonHtml = BUTTON_CLOSED;
 
       }
 
@@ -299,7 +298,7 @@ function eventsDirectMessage(){
 }
 
 function eventsTableUpdateController(){
-  $('.event-action-btn, .event-false-action-btn, .event-item-link').on('click',function(){
+  $('.event-action-btn, .event-item-link').on('click',function(){
     var clicked = $(this),
         row = clicked.parents('tr'),
         statusItem = row.find('.event-item-status'),
@@ -308,7 +307,6 @@ function eventsTableUpdateController(){
         eventType = row.data('type'),
         eventStatus = row.data('status'),
         eventStatusButton = row.find('.event-action-btn'),
-        eventFalseButton = row.find('.event-false-action-btn'),
         alertState,
         postObj = {};
 
@@ -332,16 +330,10 @@ function eventsTableUpdateController(){
 
     } else {
 
-      if (clicked.hasClass(STRING_STATUS_NEW_CLASS)){
-        alertState = STRING_STATUS_CLOSED;
-      } else if (clicked.hasClass(STRING_STATUS_OPEN_CLASS)) {
-        alertState = STRING_STATUS_CLOSED;
-      } else if (clicked.hasClass(STRING_STATUS_CLOSED_CLASS)) {
-        alertState = STRING_STATUS_OPEN;
-      } else if (clicked.hasClass(STRING_STATUS_FALSE_CLASS)) {
-        alertState = STRING_STATUS_OPEN;
-      } else if (clicked.hasClass(STRING_STATUS_FALSE_ACTION_CLASS)) {
+      if (clicked.hasClass(STRING_STATUS_CLOSED_CLASS)) {
         alertState = STRING_STATUS_FALSE;
+      } else if (clicked.hasClass(STRING_STATUS_FALSE_CLASS)) {
+        alertState = STRING_STATUS_CLOSED;
       }
 
       postObj = {
@@ -396,96 +388,111 @@ function eventsStatusUpdate(postObj, row, clicked, statusItem, accessedItem, pos
             .removeClass(STRING_STATUS_NEW_CLASS)
             .addClass(STRING_STATUS_OPEN_CLASS)
             .data('status') = STRING_STATUS_OPEN;
-          clicked
-            .removeClass(STRING_STATUS_NEW_CLASS)
-            .addClass(STRING_STATUS_OPEN_CLASS);
-          clicked
-            .html(STRING_STATUS_OPEN_BUTTON);
+          // clicked
+          //   .removeClass(STRING_STATUS_NEW_CLASS)
+          //   .addClass(STRING_STATUS_OPEN_CLASS);
+          // clicked
+          //   .html(STRING_STATUS_OPEN_BUTTON);
           statusItem
-            .html('<span class="event-item-robot">'+1+'</span>'+STRING_STATUS_OPEN.capitalizeFirstLetter());
+            .html('<span class="event-item-robot">'+1+'</span>'+STRING_STATUS_OPEN_NAME);
 
         } else {
 
-          if (clicked.hasClass(STRING_STATUS_NEW_CLASS)) {
+          // if (clicked.hasClass(STRING_STATUS_NEW_CLASS)) {
+          //
+          //   row
+          //     .removeClass(STRING_STATUS_NEW_CLASS)
+          //     .addClass(STRING_STATUS_CLOSED_CLASS)
+          //     .data.status = STRING_STATUS_CLOSED;
+          //   clicked
+          //     .removeClass(STRING_STATUS_NEW_CLASS)
+          //     .addClass(STRING_STATUS_CLOSED_CLASS);
+          //   clicked
+          //     .html(STRING_STATUS_CLOSED_BUTTON);
+          //   statusItem
+          //     .html('<span class="event-item-robot">'+2+'</span>'+STRING_STATUS_CLOSED_NAME);
+          //
+          //
+          //
+          //
+          //
+          // } else if (clicked.hasClass(STRING_STATUS_OPEN_CLASS)) {
+          //
+          //   row
+          //     .removeClass(STRING_STATUS_OPEN_CLASS)
+          //     .addClass(STRING_STATUS_CLOSED_CLASS)
+          //     .data.status = STRING_STATUS_CLOSED;
+          //   clicked
+          //     .removeClass(STRING_STATUS_OPEN_CLASS)
+          //     .addClass(STRING_STATUS_CLOSED_CLASS);
+          //   clicked
+          //     .html(STRING_STATUS_CLOSED_BUTTON);
+          //   statusItem
+          //     .html('<span class="event-item-robot">'+2+'</span>'+STRING_STATUS_CLOSED_NAME);
+          //
+          //
 
-            row
-              .removeClass(STRING_STATUS_NEW_CLASS)
-              .addClass(STRING_STATUS_CLOSED_CLASS)
-              .data.status = STRING_STATUS_CLOSED;
+          if (row.hasClass(STRING_STATUS_NEW_CLASS) || row.hasClass(STRING_STATUS_OPEN_CLASS)){
             clicked
-              .removeClass(STRING_STATUS_NEW_CLASS)
-              .addClass(STRING_STATUS_CLOSED_CLASS);
-            clicked
-              .html(STRING_STATUS_CLOSED_BUTTON);
-            statusItem
-              .html('<span class="event-item-robot">'+2+'</span>'+STRING_STATUS_CLOSED.capitalizeFirstLetter());
+              .siblings()
+              .remove();
+          }
 
-          } else if (clicked.hasClass(STRING_STATUS_OPEN_CLASS)) {
-
-            row
-              .removeClass(STRING_STATUS_OPEN_CLASS)
-              .addClass(STRING_STATUS_CLOSED_CLASS)
-              .data.status = STRING_STATUS_CLOSED;
-            clicked
-              .removeClass(STRING_STATUS_OPEN_CLASS)
-              .addClass(STRING_STATUS_CLOSED_CLASS);
-            clicked
-              .html(STRING_STATUS_CLOSED_BUTTON);
-            statusItem
-              .html('<span class="event-item-robot">'+2+'</span>'+STRING_STATUS_CLOSED.capitalizeFirstLetter());
-
-          } else if (clicked.hasClass(STRING_STATUS_CLOSED_CLASS)) {
-
-            row
-              .removeClass(STRING_STATUS_CLOSED_CLASS)
-              .addClass(STRING_STATUS_OPEN_CLASS)
-              .data.status = STRING_STATUS_OPEN;
-            clicked
-              .removeClass(STRING_STATUS_CLOSED_CLASS)
-              .addClass(STRING_STATUS_OPEN_CLASS);
-            clicked
-              .html(STRING_STATUS_OPEN_BUTTON);
-            statusItem
-              .html('<span class="event-item-robot">'+1+'</span>'+STRING_STATUS_OPEN.capitalizeFirstLetter());
-
-          } else if (clicked.hasClass(STRING_STATUS_FALSE_CLASS)) {
+          if (clicked.hasClass(STRING_STATUS_CLOSED_CLASS)) {
 
             row
               .removeClass(STRING_STATUS_FALSE_CLASS)
-              .addClass(STRING_STATUS_OPEN_CLASS)
-              .data.status = STRING_STATUS_OPEN;
-            clicked
-              .removeClass(STRING_STATUS_FALSE_CLASS)
-              .addClass(STRING_STATUS_OPEN_CLASS);
-            clicked
-              .html(STRING_STATUS_OPEN_BUTTON);
-            statusItem
-              .html('<span class="event-item-robot">'+1+'</span>'+STRING_STATUS_OPEN.capitalizeFirstLetter());
-            clicked
-              .next('.event-false-action-btn').show();
-
-          } else if (clicked.hasClass(STRING_STATUS_FALSE_ACTION_CLASS)) {
-
-            row
               .removeClass(STRING_STATUS_NEW_CLASS)
               .removeClass(STRING_STATUS_OPEN_CLASS)
-              .removeClass(STRING_STATUS_CLOSED_CLASS)
-              .addClass(STRING_STATUS_FALSE_CLASS)
-              .data.status = STRING_STATUS_FALSE_FRONT;
+              .addClass(STRING_STATUS_CLOSED_CLASS)
+              .data.status = STRING_STATUS_CLOSED;
             clicked
-              .siblings('.event-action-btn')
-              .removeClass(STRING_STATUS_NEW_CLASS)
-              .removeClass(STRING_STATUS_OPEN_CLASS)
               .removeClass(STRING_STATUS_CLOSED_CLASS)
               .addClass(STRING_STATUS_FALSE_CLASS);
             clicked
-              .siblings('.event-action-btn')
-              .html(STRING_STATUS_FALSE_BUTTON);
+              .html(STRING_STATUS_FALSE_NAME);
             statusItem
-              .html('<span class="event-item-robot">'+3+'</span>'+STRING_STATUS_FALSE_FRONT.capitalizeFirstLetter());
-            clicked.hide();
+              .html('<span class="event-item-robot">'+3+'</span>'+STRING_STATUS_CLOSED_NAME);
+
+          } else if (clicked.hasClass(STRING_STATUS_FALSE_CLASS)) {
+
+            console.log('current');
+            row
+              .removeClass(STRING_STATUS_CLOSED_CLASS)
+              .removeClass(STRING_STATUS_NEW_CLASS)
+              .removeClass(STRING_STATUS_OPEN_CLASS)
+              .addClass(STRING_STATUS_FALSE_CLASS)
+              .data.status = STRING_STATUS_FALSE;
+            clicked
+              .removeClass(STRING_STATUS_FALSE_CLASS)
+              .addClass(STRING_STATUS_CLOSED_CLASS);
+            clicked
+              .html(STRING_STATUS_CLOSED_NAME);
+            statusItem
+              .html('<span class="event-item-robot">'+2+'</span>'+STRING_STATUS_FALSE_NAME);
 
           }
+          // } else if (clicked.hasClass(STRING_STATUS_FALSE_ACTION_CLASS)) {
+          //
+          //   row
+          //     .removeClass(STRING_STATUS_NEW_CLASS)
+          //     .removeClass(STRING_STATUS_OPEN_CLASS)
+          //     .removeClass(STRING_STATUS_CLOSED_CLASS)
+          //     .addClass(STRING_STATUS_FALSE_CLASS)
+          //     .data.status = STRING_STATUS_FALSE_NAME;
+          //   clicked
+          //     .siblings('.event-action-btn')
+          //     .removeClass(STRING_STATUS_NEW_CLASS)
+          //     .removeClass(STRING_STATUS_OPEN_CLASS)
+          //     .removeClass(STRING_STATUS_CLOSED_CLASS)
+          //     .addClass(STRING_STATUS_FALSE_CLASS);
+          //   clicked
+          //     .siblings('.event-action-btn')
+          //     .html(STRING_STATUS_FALSE_BUTTON);
+          //   statusItem
+          //     .html('<span class="event-item-robot">'+3+'</span>'+STRING_STATUS_FALSE_NAME.capitalizeFirstLetter());
+          //
+          // }
 
         }
 
@@ -498,7 +505,7 @@ function eventsStatusUpdate(postObj, row, clicked, statusItem, accessedItem, pos
 
 
         var newTime = new Date();
-        newTime = $.timeago(newTime);
+        newTime = (newTime.getMonth()+1 < 10 ? ('0'+(newTime.getMonth()+1)) : newTime.getMonth()+1 )+ '/' + (newTime.getDate() < 10 ? ('0'+newTime.getDate()) : newTime.getDate() ) + '/' + newTime.getFullYear();
         accessedItem.children('.event-item-human').html(newTime);
 
       }

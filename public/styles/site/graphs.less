@@ -107,6 +107,25 @@
           }
         }
       }
+      .line-point-tooltip {
+        text {
+          stroke:white;
+        }
+        .line-point-value {
+          font-size:1.2em;
+          text-anchor: middle;
+        }
+        .line-point-date {
+          font-size:0.85em;
+          text-anchor: middle;
+          font-weight:200;
+        }
+        .line-point-year {
+          font-size:1.2em;
+          text-anchor: middle;
+          font-weight:200;
+        }
+      }
 
 
       path {
@@ -124,6 +143,9 @@
     .line {
       stroke:@reach_line;
     }
+    .line-point-bg, .line-point-caret {
+      fill:@reach_line_tooltip;
+    }
   }
   &.engagement {
     .area {
@@ -132,6 +154,9 @@
     .line {
       stroke:@engagement_line;
     }
+    .line-point-bg, .line-point-caret {
+      fill:@engagement_line_tooltip;
+    }
   }
   &.acquisition {
     .area {
@@ -139,6 +164,9 @@
     }
     .line {
       stroke:@acquisition_line;
+    }
+    .line-point-bg, .line-point-caret {
+      fill:@acquisition_line_tooltip;
     }
   }
   &.novo-donut-graph {
