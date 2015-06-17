@@ -215,6 +215,83 @@ function lineGraph(data, options, success, dateObj){
     .attr("clip-path", "url("+options.selector+"_clip)")
     .attr("d", line(theData));
 
+
+  var focus = svg.append("g")
+    .attr('class', 'line-point-tooltip')
+    .style("display", "none");
+  var bisectDate = d3.bisector(function(d) { d = type(d); return d.key; }).left;
+
+  // append the circle at the intersection
+  focus.append("rect")
+    .attr("class", "line-point-caret")
+    .attr("width", "1em")
+    .attr("height", "1em")
+    .attr("y", "-1.75em")
+    .attr("x", ".73em")
+    .style("text-anchor", "middle");
+  focus.append("rect")
+    .attr("class", "line-point-bg")
+    .attr("width", "10em")
+    .attr("height", "4em")
+    .attr("x", "-5em")
+    .attr("y", "-5.75em")
+    .style("text-anchor", "middle");
+  focus.append("circle")
+    .attr("class", "y")
+    .style("fill", "white")
+    .style("stroke", "white")
+    .attr("r", 3);
+  focus.append("text")
+    .attr("class", "line-point-value")
+    .attr("dy", "-3.3em")
+    .attr("dx", "0em");
+  focus.append("text")
+    .attr("class", "line-point-date")
+    .attr("dy", "-3em")
+    .attr("dx", "0");
+  // focus.append("text")
+  //   .attr("class", "line-point-year")
+  //   .attr("dy", "-2.1em")
+  //   .attr("dx", "2.5em");
+
+  svg.append("rect")
+    .attr("width", width - padding*4)
+    .attr("height", height - padding)
+    .attr("transform", "translate("+padding*2+",0)")
+    .style("fill", "none")
+    .style("pointer-events", "all")
+    .on("mouseover", function() { focus.style("display", null); })
+    .on("mouseout", function() { focus.style("display", 'none'); })
+    .on("mousemove", mousemove);
+
+
+  function mousemove() {
+    var x0 = x.invert(d3.mouse(this)[0]+padding*2.5),
+      i = bisectDate(theData, x0, 1);
+      d0 = data[i - 1],
+      d1 = data[i],
+      d = x0 - d0.key > d1.key - x0 ? d1 : d0;
+
+    var theDate = new Date(d.key);
+    var pointDate = theDate.getShortMonthName() + ' ' + theDate.getDate() + ', ' + theDate.getFullYear();
+    //var pointYear = theDate.getFullYear();
+
+    focus.selectAll("circle.y, text, .line-point-bg")
+      .transition()
+      .duration(50)
+      .attr("transform", "translate(" + x(new Date(d.key)) + "," + y(d.value) + ")");
+    focus.select(".line-point-caret")
+      .transition()
+      .duration(50)
+      .attr("transform", "translate(" + x(new Date(d.key)) + "," + y(d.value) + ") rotate(-45)");
+    focus.select(".line-point-value")
+      .text(numberWithCommas(d.value));
+    focus.select(".line-point-date")
+      .text(pointDate);
+    // focus.select(".line-point-year")
+    //   .text(pointYear);
+  }
+
   if($(options.selector).find('svg').find('path.area').attr("d").indexOf("NaN") != -1){
     $(options.selector).before(dataErrorHTML);
     $(options.selector).siblings(loadingGifClass).remove();

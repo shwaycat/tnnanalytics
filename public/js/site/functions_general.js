@@ -767,7 +767,7 @@ function statsDelegation(summary, options){
 
       if (summary.changeInCircledBy != undefined) {
         statsString += statStringOpen;
-        statsString += "Change"
+        statsString += "Growth "
         statsString += statStringMid;
         statsString += numberWithCommas(summary.changeInCircledBy);
         if (summary.changeInCircledByPercent != undefined){
@@ -978,7 +978,7 @@ function statsDelegation(summary, options){
 
       if (summary.totalYouTube != undefined) {
         statsString += statStringOpen;
-        statsString += "Twitter"
+        statsString += "Youtube"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.totalYouTube);
         statsString += statStringClose;
