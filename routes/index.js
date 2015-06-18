@@ -121,9 +121,15 @@ exports = module.exports = function(app) {
 
   // Dashboard Endpoints
   // They all expect query strings with startTime endTime
-  app.get('/api/1.0/dashboard/engagement', apiRouteBuilder('dashboard', 'engagement'));
-  app.get('/api/1.0/dashboard/acquisition', apiRouteBuilder('dashboard', 'acquisition'));
-  app.get('/api/1.0/dashboard/reach', apiRouteBuilder('dashboard', 'reach'));
+  app.get('/api/1.0/dashboard/engagement', apiRouteBuilder('dashboard_v1', 'engagement'));
+  app.get('/api/1.0/dashboard/acquisition', apiRouteBuilder('dashboard_v1', 'acquisition'));
+  app.get('/api/1.0/dashboard/reach', apiRouteBuilder('dashboard_v1', 'reach'));
+
+  // Dashboard Endpoints
+  // They all expect query strings with startTime endTime
+  app.get('/api/2.0/dashboard/engagement', apiRouteBuilder('dashboard_v2', 'engagement'));
+  app.get('/api/2.0/dashboard/acquisition', apiRouteBuilder('dashboard_v2', 'acquisition'));
+  app.get('/api/2.0/dashboard/reach', apiRouteBuilder('dashboard_v2', 'reach'));
 
   // Keyword Alerts
   // /alerts expects query strings with page
