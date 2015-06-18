@@ -30,10 +30,32 @@
       }
       span {
         display: table-cell;
-        vertical-align: bottom;
+        vertical-align: top;
         width: 50%;
         text-align: left;
         font-size: 1.25em;
+        .graph-tooltip-selector {
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          vertical-align: middle;
+          margin-right: 10px;
+          border: 1px solid #6D6E70;
+          background-color:transparent;
+          cursor:pointer;
+          &.active {
+            border: 2px solid white;
+          }
+          &.selector-facebook {
+            background-color: @social_fb_main;
+          }
+          &.selector-twitter {
+            background-color: @social_twitter_main;
+          }
+          &.selector-instagram {
+            background-color: @social_instagram_main;
+          }
+        }
       }
       span:last-child {
         vertical-align: top;
@@ -168,6 +190,70 @@
     .line-point-bg, .line-point-caret {
       fill:@acquisition_line_tooltip;
     }
+  }
+
+  .area_color_facebook, .area_color_twitter, .area_color_instagram {
+    fill:none !important;
+  }
+  .line-point-tooltip-facebook {
+    [class^="-twitter"], [class*="-twitter"] {
+      display:none;
+      fill:none;
+      stroke:none;
+      color:transparent;
+    }
+    [class^="-instagram"], [class*="-instagram"] {
+      display:none;
+      fill:none;
+      stroke:none;
+      color:transparent;
+    }
+  }
+  .line-point-tooltip-twitter {
+    [class^="-facebook"], [class*="-facebook"] {
+      display:none;
+      fill:none;
+      stroke:none;
+      color:transparent;
+    }
+    [class^="-instagram"], [class*="-instagram"] {
+      display:none;
+      fill:none;
+      stroke:none;
+      color:transparent;
+    }
+  }
+  .line-point-tooltip-instagram {
+    [class^="-twitter"], [class*="-twitter"] {
+      display:none;
+      fill:none;
+      stroke:none;
+      color:transparent;
+    }
+    [class^="-facebook"], [class*="-facebook"] {
+      display:none;
+      fill:none;
+      stroke:none;
+      color:transparent;
+    }
+  }
+  .line_color_facebook {
+    stroke: @social_fb_main !important;
+  }
+  .line_color_twitter {
+    stroke: @social_twitter_main !important;
+  }
+  .line_color_instagram {
+    stroke: @social_instagram_main !important;
+  }
+  .line-point-bg-facebook, .line-point-caret-facebook {
+    fill: @social_fb_main !important;
+  }
+  .line-point-bg-twitter, .line-point-caret-twitter {
+    fill: @social_twitter_main !important;
+  }
+  .line-point-bg-instagram, .line-point-caret-instagram {
+    fill: @social_instagram_main !important;
   }
   &.novo-donut-graph {
     padding-top:100%;

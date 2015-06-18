@@ -501,7 +501,7 @@ function statsDelegation(summary, options){
 
       if (summary.totalFollowers != undefined) {
         statsString += statStringOpen;
-        statsString += "Followers"
+        statsString += "Total Followers"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.totalFollowers);
         statsString += statStringClose;
@@ -576,7 +576,7 @@ function statsDelegation(summary, options){
 
       if (summary.totalLikes != undefined) {
         statsString += statStringOpen;
-        statsString += "Likes"
+        statsString += "Total Likes"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.totalLikes);
         statsString += statStringClose;
@@ -629,7 +629,7 @@ function statsDelegation(summary, options){
 
       if (summary.totalFollowers != undefined) {
         statsString += statStringOpen;
-        statsString += "Followers"
+        statsString += "Total Followers"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.totalFollowers);
         statsString += statStringClose;
@@ -698,7 +698,7 @@ function statsDelegation(summary, options){
 
       if (summary.totalSubscribers != undefined) {
         statsString += statStringOpen;
-        statsString += "Subscribers"
+        statsString += "Total Subscribers"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.totalSubscribers);
         statsString += statStringClose;
@@ -759,7 +759,7 @@ function statsDelegation(summary, options){
 
       if (summary.totalCircledBy != undefined) {
         statsString += statStringOpen;
-        statsString += "Added"
+        statsString += "Total Added"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.totalCircledBy);
         statsString += statStringClose;
@@ -864,7 +864,8 @@ function statsDelegation(summary, options){
 
       if (summary.totalFacebook != undefined) {
         statsString += statStringOpen;
-        statsString += "Facebook"
+        statsString += "<div class='graph-tooltip-selector selector-facebook'></div>";
+        statsString += "Facebook";
         statsString += statStringMid;
         statsString += numberWithCommas(summary.totalFacebook);
         statsString += statStringClose;
@@ -872,6 +873,7 @@ function statsDelegation(summary, options){
 
       if (summary.totalTwitter != undefined) {
         statsString += statStringOpen;
+        statsString += "<div class='graph-tooltip-selector selector-twitter'></div>";
         statsString += "Twitter"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.totalTwitter);
@@ -880,6 +882,7 @@ function statsDelegation(summary, options){
 
       if (summary.totalInstagram != undefined) {
         statsString += statStringOpen;
+        statsString += "<div class='graph-tooltip-selector selector-instagram'></div>";
         statsString += "Instagram"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.totalInstagram);
@@ -917,6 +920,7 @@ function statsDelegation(summary, options){
 
       if (summary.totalFacebook != undefined) {
         statsString += statStringOpen;
+        statsString += "<div class='graph-tooltip-selector selector-facebook'></div>";
         statsString += "Facebook"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.totalFacebook);
@@ -925,6 +929,7 @@ function statsDelegation(summary, options){
 
       if (summary.totalTwitter != undefined) {
         statsString += statStringOpen;
+        statsString += "<div class='graph-tooltip-selector selector-twitter'></div>";
         statsString += "Twitter"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.totalTwitter);
@@ -933,6 +938,7 @@ function statsDelegation(summary, options){
 
       if (summary.totalInstagram != undefined) {
         statsString += statStringOpen;
+        statsString += "<div class='graph-tooltip-selector selector-instagram'></div>";
         statsString += "Instagram"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.totalInstagram);
@@ -970,6 +976,7 @@ function statsDelegation(summary, options){
 
       if (summary.totalFacebook != undefined) {
         statsString += statStringOpen;
+        statsString += "<div class='graph-tooltip-selector selector-facebook'></div>";
         statsString += "Facebook"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.totalFacebook);
@@ -1006,9 +1013,34 @@ function statsDelegation(summary, options){
     $(options.selector).find(statsElement).sectionLoad(false);
   } else {
     $(options.selector).after(statsString);
+    if (options.source == 'dashboard') {
+      multiLineGraphTooltips();
+    }
     $(options.selector).next(statsElement).sectionLoad(false);
   }
 
+}
+
+function multiLineGraphTooltips(){
+  $('.graph-tooltip-selector').on('click',function(){
+    var tooltip = $(this);
+    var type = $('#'+tooltip.parents('.novo-graph-stats').prev().attr('id'));
+
+    tooltip.parents('ul').find('.graph-tooltip-selector').removeClass('active');
+    tooltip.addClass('active');
+
+    if (tooltip.hasClass('selector-facebook')){
+      type.find('.line-point-tooltip').attr('class', 'line-point-tooltip line-point-tooltip-facebook');
+    } else if (tooltip.hasClass('selector-twitter')){
+      type.find('.line-point-tooltip').attr('class', 'line-point-tooltip line-point-tooltip-twitter');
+    } else if (tooltip.hasClass('selector-instagram')){
+      type.find('.line-point-tooltip').attr('class', 'line-point-tooltip line-point-tooltip-instagram');
+    }
+  });
+
+  $('.novo-graph-stats').each(function(){
+    $(this).find('.graph-tooltip-selector').first().trigger('click');
+  })
 }
 
 // i.e. graphController('line', '/api/1.0/twitter/engagement', {startTime: '2015-04-17T21:45:04.000Z', endTime:'2015-04-17T21:45:04.000Z'}, {selector: '#engagement'});
@@ -1076,6 +1108,10 @@ function dataController(sectionType, type, apiString, dateObj, options){
 function dataControllerDelegation(sectionType, type, apiObj, dateObj){
   if (sectionType == 'line'){
     lineGraph(apiObj.data, apiObj.options, apiObj.success, dateObj);
+    statsDelegation(apiObj.summary, apiObj.options, apiObj.success);
+
+  } else if (sectionType == 'multiLine'){
+    multiLineGraph(apiObj.data, apiObj.options, apiObj.success, dateObj);
     statsDelegation(apiObj.summary, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'donut'){

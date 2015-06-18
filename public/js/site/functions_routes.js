@@ -7,9 +7,9 @@ function routesInit(resizeOnce){
   if ($('body.dashboard')[0]){
     globalDebug('   Route: Dashboard', 'color:gray;');
 
-    dataController('line',  'reach', '/api/1.0/dashboard/reach',               currentSelectedDate, {selector: '#reach', source: 'dashboard'});
-    dataController('line',  'engagement', '/api/1.0/dashboard/engagement',     currentSelectedDate, {selector: '#engagement', source: 'dashboard'});
-    dataController('line',  'acquisition', '/api/1.0/dashboard/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'dashboard'});
+    dataController('multiLine',  'reach', '/api/1.0/dashboard/reach',               currentSelectedDate, {selector: '#reach', source: 'dashboard'});
+    dataController('multiLine',  'engagement', '/api/1.0/dashboard/engagement',     currentSelectedDate, {selector: '#engagement', source: 'dashboard'});
+    dataController('multiLine',  'acquisition', '/api/1.0/dashboard/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'dashboard'});
     dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/all/sources', currentSelectedDate, {rotation: "135", listTitle:'All Sources', listSelector: '.novo-data-list', selector: '#refTraffic', source: 'analyticsAll'});
 
   }
