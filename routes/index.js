@@ -116,6 +116,7 @@ exports = module.exports = function(app) {
   // Google+ Endpoints
   // They all expect query strings with startTime endTime
   app.get('/api/1.0/googleanalytics/:profileName/overview', routes.api.googleanalytics.overview);
+  app.get('/api/1.0/googleanalytics/:profileName/sessions', routes.api.googleanalytics.sessions);
   app.get('/api/1.0/googleanalytics/:profileName/sources', routes.api.googleanalytics.sources);
   app.get('/api/1.0/googleanalytics/:profileName/topCountries', routes.api.googleanalytics.topCountries);
 
