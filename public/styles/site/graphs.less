@@ -169,7 +169,7 @@
       fill:@reach_line_tooltip;
     }
   }
-  &.engagement, &.overviewGraph {
+  &.engagement {
     .area {
       fill:@engagement_area;
     }
@@ -189,6 +189,17 @@
     }
     .line-point-bg, .line-point-caret {
       fill:@acquisition_line_tooltip;
+    }
+  }
+  &.overviewGraph {
+    .area {
+      fill:@analytics_area;
+    }
+    .line {
+      stroke:@analytics_line;
+    }
+    .line-point-bg, .line-point-caret {
+      fill:@analytics_line_tooltip;
     }
   }
 

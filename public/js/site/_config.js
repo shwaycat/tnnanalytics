@@ -1,5 +1,5 @@
 // Global Vars
-var globalDebugBool = true;
+var globalDebugBool = false;
 var eventsCheckStatusOnInterval = true;
 
 var dataErrorClass = '.data-error-container';

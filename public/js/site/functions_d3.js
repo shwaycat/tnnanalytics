@@ -219,7 +219,7 @@ function lineGraph(data, options, success, dateObj){
   var focus = svg.append("g")
     .attr('class', 'line-point-tooltip')
     .style("display", "none");
-  var bisectDate = d3.bisector(function(d) { d = type(d); return d.key; }).left;
+  var bisectDate = d3.bisector(function(d) { d = type(d); return d.key; }).right;
 
   // append the circle at the intersection
   focus.append("rect")
@@ -364,14 +364,6 @@ function multiLineGraph(data, options, success, dateObj){
   var yMax = 0;
 
   var totalData = [];
-
-  // For testing, before api was created.
-  // theData = {
-  //   facebook: theData,
-  //   twitter: theData,
-  //   instagram: theData
-  // };
-  console.log(theData);
 
   _.each(theData, function(datum, key){
     totalData = totalData.concat(datum);
