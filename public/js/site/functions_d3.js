@@ -266,11 +266,12 @@ function lineGraph(data, options, success, dateObj){
 
 
   function mousemove() {
-    var x0 = x.invert(d3.mouse(this)[0]+padding*2.5),
-      i = bisectDate(theData, x0, 1);
-      d0 = data[i - 1],
-      d1 = data[i],
-      d = x0 - d0.key > d1.key - x0 ? d1 : d0;
+    var x0 = x.invert(d3.mouse(this)[0]+padding*2.5);
+    var i = bisectDate(theData, x0, 1);
+    var d0 = data[i - 1];
+    var d1 = data[i];
+    if(d0 == undefined || d1 == undefined) { return; }
+    var d = x0 - d0.key > d1.key - x0 ? d1 : d0;
 
     var theDate = new Date(d.key);
     var pointDate = theDate.getShortMonthName() + ' ' + theDate.getDate() + ', ' + theDate.getFullYear();
@@ -370,6 +371,7 @@ function multiLineGraph(data, options, success, dateObj){
   //   twitter: theData,
   //   instagram: theData
   // };
+  console.log(theData);
 
   _.each(theData, function(datum, key){
     totalData = totalData.concat(datum);
@@ -592,20 +594,17 @@ function multiLineGraph(data, options, success, dateObj){
     .on("mousemove", mousemove_instagram);
 
   function mousemove_facebook() {
-    var x0 = x.invert(d3.mouse(this)[0]+padding*2.5),
-      i = bisectDate(theData.facebook, x0, 1);
-      d0 = data[i - 1],
-      d1 = data[i],
-      d = x0 - d0.key > d1.key - x0 ? d1 : d0;
+    var x0 = x.invert(d3.mouse(this)[0]+padding*2.5);
+    var i = bisectDate(theData.facebook, x0, 1);
+    var d0 = theData.facebook[i - 1];
+    var d1 = theData.facebook[i];
+    if(d0 == undefined || d1 == undefined) { return; }
+    var d = x0 - d0.key > d1.key - x0 ? d1 : d0;
 
     var theDate = new Date(d.key);
     var pointDate = theDate.getShortMonthName() + ' ' + theDate.getDate() + ', ' + theDate.getFullYear();
 
-    focus.selectAll("circle.y, text")
-      .transition()
-      .duration(50)
-      .attr("transform", "translate(" + x(new Date(d.key)) + "," + y(d.value) + ")");
-    focus.select(".line-point-bg")
+    focus.selectAll("circle.y, text, .line-point-bg")
       .transition()
       .duration(50)
       .attr("transform", "translate(" + x(new Date(d.key)) + "," + y(d.value) + ")");
@@ -619,11 +618,12 @@ function multiLineGraph(data, options, success, dateObj){
       .text(pointDate);
   }
   function mousemove_twitter() {
-    var x0 = x.invert(d3.mouse(this)[0]+padding*2.5),
-      i = bisectDate(theData.twitter, x0, 1);
-      d0 = data[i - 1],
-      d1 = data[i],
-      d = x0 - d0.key > d1.key - x0 ? d1 : d0;
+    var x0 = x.invert(d3.mouse(this)[0]+padding*2.5);
+    var i = bisectDate(theData.twitter, x0, 1);
+    var d0 = theData.twitter[i - 1];
+    var d1 = theData.twitter[i];
+    if(d0 == undefined || d1 == undefined) { return; }
+    var d = x0 - d0.key > d1.key - x0 ? d1 : d0;
 
     var theDate = new Date(d.key);
     var pointDate = theDate.getShortMonthName() + ' ' + theDate.getDate() + ', ' + theDate.getFullYear();
@@ -642,11 +642,14 @@ function multiLineGraph(data, options, success, dateObj){
       .text(pointDate);
   }
   function mousemove_instagram() {
-    var x0 = x.invert(d3.mouse(this)[0]+padding*2.5),
-      i = bisectDate(theData.instagram, x0, 1);
-      d0 = data[i - 1],
-      d1 = data[i],
-      d = x0 - d0.key > d1.key - x0 ? d1 : d0;
+
+
+    var x0 = x.invert(d3.mouse(this)[0]+padding*2.5);
+    var i = bisectDate(theData.instagram, x0, 1);
+    var d0 = theData.instagram[i - 1];
+    var d1 = theData.instagram[i];
+    if(d0 == undefined || d1 == undefined) { return; }
+    var d = x0 - d0.key > d1.key - x0 ? d1 : d0;
 
     var theDate = new Date(d.key);
     var pointDate = theDate.getShortMonthName() + ' ' + theDate.getDate() + ', ' + theDate.getFullYear();

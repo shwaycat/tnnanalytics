@@ -1031,10 +1031,19 @@ function multiLineGraphTooltips(){
 
     if (tooltip.hasClass('selector-facebook')){
       type.find('.line-point-tooltip').attr('class', 'line-point-tooltip line-point-tooltip-facebook');
+      type.find('.line-point-rect-facebook').show();
+      type.find('.line-point-rect-twitter').hide();
+      type.find('.line-point-rect-instagram').hide();
     } else if (tooltip.hasClass('selector-twitter')){
       type.find('.line-point-tooltip').attr('class', 'line-point-tooltip line-point-tooltip-twitter');
+      type.find('.line-point-rect-facebook').hide();
+      type.find('.line-point-rect-twitter').show();
+      type.find('.line-point-rect-instagram').hide();
     } else if (tooltip.hasClass('selector-instagram')){
       type.find('.line-point-tooltip').attr('class', 'line-point-tooltip line-point-tooltip-instagram');
+      type.find('.line-point-rect-facebook').hide();
+      type.find('.line-point-rect-twitter').hide();
+      type.find('.line-point-rect-instagram').show();
     }
   });
 
