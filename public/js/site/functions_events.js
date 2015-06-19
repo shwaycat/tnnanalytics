@@ -312,7 +312,7 @@ function eventsTableUpdateController(){
 
     if (clicked.hasClass('event-item-link')){
 
-      if (eventStatus == STRING_STATUS_NEW){
+      if (eventStatus == STRING_STATUS_NEW_NAME){
 
         postObj = {
           "docs": [
@@ -331,9 +331,9 @@ function eventsTableUpdateController(){
     } else {
 
       if (clicked.hasClass(STRING_STATUS_CLOSED_CLASS)) {
-        alertState = STRING_STATUS_FALSE;
-      } else if (clicked.hasClass(STRING_STATUS_FALSE_CLASS)) {
         alertState = STRING_STATUS_CLOSED;
+      } else if (clicked.hasClass(STRING_STATUS_FALSE_CLASS)) {
+        alertState = STRING_STATUS_FALSE;
       }
 
       postObj = {
@@ -388,11 +388,7 @@ function eventsStatusUpdate(postObj, row, clicked, statusItem, accessedItem, pos
             .removeClass(STRING_STATUS_NEW_CLASS)
             .addClass(STRING_STATUS_OPEN_CLASS)
             .data('status') = STRING_STATUS_OPEN;
-          // clicked
-          //   .removeClass(STRING_STATUS_NEW_CLASS)
-          //   .addClass(STRING_STATUS_OPEN_CLASS);
-          // clicked
-          //   .html(STRING_STATUS_OPEN_BUTTON);
+
           statusItem
             .html('<span class="event-item-robot">'+1+'</span>'+STRING_STATUS_OPEN_NAME);
 
