@@ -7,9 +7,14 @@ function routesInit(resizeOnce){
   if ($('body.dashboard')[0]){
     globalDebug('   Route: Dashboard', 'color:gray;');
 
-    dataController('multiLine',  'reach', '/api/1.0/dashboard/reach',               currentSelectedDate, {selector: '#reach', source: 'dashboard'});
-    dataController('multiLine',  'engagement', '/api/1.0/dashboard/engagement',     currentSelectedDate, {selector: '#engagement', source: 'dashboard'});
-    dataController('multiLine',  'acquisition', '/api/1.0/dashboard/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'dashboard'});
+    // Old Single Line Dashboard graphs with 1.0 api calls.
+    // dataController('line',  'reach', '/api/1.0/dashboard/reach',               currentSelectedDate, {selector: '#reach', source: 'dashboard'});
+    // dataController('line',  'engagement', '/api/1.0/dashboard/engagement',     currentSelectedDate, {selector: '#engagement', source: 'dashboard'});
+    // dataController('line',  'acquisition', '/api/1.0/dashboard/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'dashboard'});
+
+    dataController('multiLine',  'reach', '/api/2.0/dashboard/reach',               currentSelectedDate, {selector: '#reach', source: 'dashboard'});
+    dataController('multiLine',  'engagement', '/api/2.0/dashboard/engagement',     currentSelectedDate, {selector: '#engagement', source: 'dashboard'});
+    dataController('multiLine',  'acquisition', '/api/2.0/dashboard/acquisition',   currentSelectedDate, {selector: '#acquisition', source: 'dashboard'});
     dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/all/sources', currentSelectedDate, {rotation: "135", listTitle:'All Sources', listSelector: '.novo-data-list', selector: '#refTraffic', source: 'analyticsAll'});
 
   }
@@ -66,18 +71,20 @@ function routesInit(resizeOnce){
   if ($('body.analytics-all')[0]){
     globalDebug('   Route: Analytics-All', 'color:gray;');
     if (!resizeOnce){
-      dataController('stats', 'overview', '/api/1.0/googleanalytics/all/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsAll'});
+      // dataController('stats', 'overview', '/api/1.0/googleanalytics/all/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsAll'});
       analyticsTableController('/api/1.0/googleanalytics/all/topCountries', 'analyticsTopCountries', $('#analytics-table'), currentSelectedDate);
     }
+    dataController('line',  'overviewGraph', '/api/1.0/googleanalytics/all/overviewGraph', currentSelectedDate, {selector: '#overviewGraph', source: 'analyticsAll'});
     dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/all/sources', currentSelectedDate, {rotation: "135", listTitle:'All Sources', listSelector: '.novo-data-list', selector: '#refTraffic', source: 'analyticsAll'});
 
   }
   if ($('body.analytics-global')[0]){
     globalDebug('   Route: Analytics-Global', 'color:gray;');
     if (!resizeOnce){
-      dataController('stats', 'overview', '/api/1.0/googleanalytics/Global/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsGlobal'});
+      // dataController('stats', 'overview', '/api/1.0/googleanalytics/Global/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsGlobal'});
       analyticsTableController('/api/1.0/googleanalytics/Global/topCountries', 'analyticsTopCountries', $('#analytics-table'), currentSelectedDate);
     }
+    dataController('line',  'overviewGraph', '/api/1.0/googleanalytics/all/overviewGraph', currentSelectedDate, {selector: '#overviewGraph', source: 'analyticsGlobal'});
     dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/Global/sources', currentSelectedDate, {rotation: "135", listTitle:'All Sources', listSelector: '.novo-data-list', selector: '#refTraffic', source: 'analyticsGlobal'});
 
   }
@@ -85,9 +92,10 @@ function routesInit(resizeOnce){
     globalDebug('   Route: Analytics-Us', 'color:gray;');
 
     if (!resizeOnce){
-      dataController('stats', 'overview', '/api/1.0/googleanalytics/US/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsUs'});
+      // dataController('stats', 'overview', '/api/1.0/googleanalytics/US/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsUs'});
       analyticsTableController('/api/1.0/googleanalytics/US/topCountries', 'analyticsTopCountries', $('#analytics-table'), currentSelectedDate);
     }
+    dataController('line',  'overviewGraph', '/api/1.0/googleanalytics/all/overviewGraph', currentSelectedDate, {selector: '#overviewGraph', source: 'analyticsUs'});
     dataController('donut', 'refTraffic', '/api/1.0/googleanalytics/US/sources', currentSelectedDate, {rotation: "135", listTitle:'All Sources', listSelector: '.novo-data-list', selector: '#refTraffic', source: 'analyticsUs'});
 
   }
