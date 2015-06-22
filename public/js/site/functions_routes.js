@@ -71,7 +71,7 @@ function routesInit(resizeOnce){
   if ($('body.analytics-all')[0]){
     globalDebug('   Route: Analytics-All', 'color:gray;');
     if (!resizeOnce){
-      // dataController('stats', 'overview', '/api/1.0/googleanalytics/all/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsAll'});
+      dataController('stats', 'overview', '/api/1.0/googleanalytics/all/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsAll'});
       analyticsTableController('/api/1.0/googleanalytics/all/topCountries', 'analyticsTopCountries', $('#analytics-table'), currentSelectedDate);
     }
     dataController('line',  'overviewGraph', '/api/1.0/googleanalytics/all/overviewGraph', currentSelectedDate, {selector: '#overviewGraph', source: 'analyticsAll'});
@@ -81,7 +81,7 @@ function routesInit(resizeOnce){
   if ($('body.analytics-global')[0]){
     globalDebug('   Route: Analytics-Global', 'color:gray;');
     if (!resizeOnce){
-      // dataController('stats', 'overview', '/api/1.0/googleanalytics/Global/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsGlobal'});
+      dataController('stats', 'overview', '/api/1.0/googleanalytics/Global/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsGlobal'});
       analyticsTableController('/api/1.0/googleanalytics/Global/topCountries', 'analyticsTopCountries', $('#analytics-table'), currentSelectedDate);
     }
     dataController('line',  'overviewGraph', '/api/1.0/googleanalytics/all/overviewGraph', currentSelectedDate, {selector: '#overviewGraph', source: 'analyticsGlobal'});
@@ -92,7 +92,7 @@ function routesInit(resizeOnce){
     globalDebug('   Route: Analytics-Us', 'color:gray;');
 
     if (!resizeOnce){
-      // dataController('stats', 'overview', '/api/1.0/googleanalytics/US/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsUs'});
+      dataController('stats', 'overview', '/api/1.0/googleanalytics/US/overview', currentSelectedDate, {selector: '#overview', source: 'analyticsUs'});
       analyticsTableController('/api/1.0/googleanalytics/US/topCountries', 'analyticsTopCountries', $('#analytics-table'), currentSelectedDate);
     }
     dataController('line',  'overviewGraph', '/api/1.0/googleanalytics/all/overviewGraph', currentSelectedDate, {selector: '#overviewGraph', source: 'analyticsUs'});
