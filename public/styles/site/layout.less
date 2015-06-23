@@ -53,7 +53,7 @@ a, a:hover, a:visited, a:active, a:focus {
 .btn-large  {
   width: 100%;
   font-size: 1.25em;
-  padding: 1em;
+  padding: 0.75em;
 }
 
 .element-reveal {
@@ -106,7 +106,7 @@ a, a:hover, a:visited, a:active, a:focus {
   .data-error-container {
     height: 22em;
     width: 100%;
-    z-index: 9000;    
+    z-index: 9000;
   }
 }
 
@@ -171,21 +171,49 @@ a, a:hover, a:visited, a:active, a:focus {
       top: -10px;
       right: 0px;
       z-index: 1;
-      width: 0; 
-      height: 0; 
+      width: 0;
+      height: 0;
       border-top: 10px solid transparent;
-      border-bottom: 10px solid transparent; 
-      border-right:10px solid @background_element_lighter; 
+      border-bottom: 10px solid transparent;
+      border-right:10px solid @background_element_lighter;
     }
   }
 }
 
+.pre-print-loading {
+  display:none;
+  opacity:0;
+  visibility: hidden;
+}
+
 @preprint_width: 8in;
 .pre-print {
+  .pre-print-loading {
+    opacity: 1;
+    display: block;
+    color: #FFF;
+    font-size: 2em;
+    visibility: visible;
+    z-index: 9000;
+    margin: auto;
+    margin-top: 5%;
+    text-align: center;
+    width: 100%;
+    position: fixed;
+  }
+  .event-item-action-buttons, .event-action-cell, .event-link-cell {
+    display:none !important;
+  }
   body {
     width:@preprint_width !important;
     max-width:@preprint_width !important;
     min-width:@preprint_width !important;
+    > div, > a, > iframe {
+      opacity:0;
+    }
+  }
+  #twitter-widget-1 {
+    display:none !important;
   }
   .alerts-block {
     display:none;

@@ -96,7 +96,30 @@ function equalHeightPairs(breakpoint){
   });
 }
 
+function printClick(){
+  $('.print-new-window').on('click', function(){
+    $('html').addClass('pre-print');
+    compensateFooter();
+    routesInit(true);
+    setTimeout(function(){
+      window.print();
+      setTimeout(function(){
+        $('html').removeClass('pre-print');
+        setTimeout(function(){
+          compensateFooter();
+          routesInit(true);
+        },100);
+      },1000);
+    },5000);
+  });
+}
 
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
 
 
 
@@ -150,10 +173,10 @@ function abbreviateNumber(value) {
   var newValue = value;
   if (value >= 1000) {
     var suffixes = ["", "k", "m", "b","t"];
-    var suffixNum = Math.floor( (""+value).length/3 );
+    var suffixNum = Math.floor( (""+value).length/4 );
     var shortValue = '';
     for (var precision = 2; precision >= 1; precision--) {
-      shortValue = parseFloat( (suffixNum != 0 ? (value / Math.pow(1000,suffixNum) ) : value).toPrecision(precision));
+      shortValue = parseFloat( (suffixNum != 0 ? (value / Math.pow(1000,suffixNum) ) : value));//.toPrecision(precision));
       var dotLessShortValue = (shortValue + '').replace(/[^a-zA-Z 0-9]+/g,'');
       if (dotLessShortValue.length <= 2) { break; }
     }
@@ -232,6 +255,7 @@ $.fn.sectionLoad = function(reload, eh){
     el.removeClass('loaded');
   }
   el.prev(loadingGifClass).remove();
+  el.prev(noDataClass).remove();
 
   setTimeout(function(){
     el.addClass('loaded');
@@ -242,6 +266,27 @@ $.fn.sectionLoad = function(reload, eh){
 
 };
 
+function simplifyDataPercentsOnly(data){
+  var theData = data;
+  var newData = {
+    "data": []
+  };
+
+  var totalValues = _.reduce(theData, function(memo, num){ return memo + num.value; }, 0);
+
+  _.each(theData, function(datum, index){
+    datum.percent = Math.round( (datum.value*100/totalValues) *100 )/100 + '%';
+    datum.label = datum.key;
+    newData.data.push(datum);
+
+  });
+
+  newData.data = _.sortBy(newData.data, 'value');
+  newData.data.reverse();
+
+  return newData;
+}
+
 function simplifyData(data, map){
   var theData = data;
   var newData = {
@@ -250,34 +295,50 @@ function simplifyData(data, map){
   };
 
   var totalValues = _.reduce(theData, function(memo, num){ return memo + num.value; }, 0),
-      otherObj = { "label": "Other", "value": 0, "percent": 0 };
+      otherObj = { "label": "Other", "value": 0, "percent": 0 },
+      threshold = 0.09,
+      lowest = 0.01;
+
+  if (!map){
+    threshold = 0.07;
+    lowest = 0;
+  }
 
   _.each(theData, function(datum, index){
-    if (datum.value/totalValues < 0.09 && datum.value/totalValues > 0.01){
-      otherObj.percent = Math.round( (otherObj.value*100/totalValues) *100 )/100 + '%';
+    if (datum.value/totalValues < threshold && datum.value/totalValues > lowest){
+
       datum.percent = Math.round( (datum.value*100/totalValues) *100 )/100 + '%';
 
       otherObj.value += datum.value;
+      otherObj.percent = Math.round( (otherObj.value*100/totalValues) *100 )/100 + '%';
 
-      if (datum.key == "US"){
-        datum.label = "USA";
-      } else if (datum.key == "UK") {
-        datum.label = "UK";
+      if (map){
+        if (datum.key == "US"){
+          datum.label = "USA";
+        } else if (datum.key == "UK") {
+          datum.label = "UK";
+        } else {
+          datum.label = map[datum.key];
+        }
       } else {
-        datum.label = map[datum.key];
+        datum.label = datum.key;
       }
 
       newData.data_list.push(datum);
 
-    } else if (datum.value/totalValues > 0.01) {
+    } else if (datum.value/totalValues > lowest) {
       datum.percent = Math.round( (datum.value*100/totalValues) *100 )/100 + '%';
 
-      if (datum.key == "US"){
-        datum.label = "USA";
-      } else if (datum.key == "UK") {
-        datum.label = "UK";
+      if (map){
+        if (datum.key == "US"){
+          datum.label = "USA";
+        } else if (datum.key == "UK") {
+          datum.label = "UK";
+        } else {
+          datum.label = map[datum.key];
+        }
       } else {
-        datum.label = map[datum.key];
+        datum.label = datum.key;
       }
 
       newData.data.push(datum);
@@ -309,21 +370,22 @@ function simplifyData(data, map){
   newData.data_list = _.sortBy(newData.data_list, 'value');
   newData.data_list.reverse();
 
-
   return newData;
 }
 
 function donutList(data, options, success){
 
   var theData = data;
-  var post;
   var newDetailsHTML = '';
 
-  post = $(options.selector).siblings('.novo-data-list');
+  $(options.listSelector).remove();
 
   if (success) {
 
     if (theData.length) {
+
+      newDetailsHTML += '<section class="novo-data-list"><h3 class="data-list-title">'+options.listTitle+'</h3><ul class="data-list">';
+
       for (var i = 0; i < theData.length; i++){
         newDetailsHTML += '<li><span>';
         newDetailsHTML += theData[i].label;
@@ -332,19 +394,12 @@ function donutList(data, options, success){
         newDetailsHTML += '</span></li>';
       }
 
-      post.find('.data-list')
-        .children().remove();
-      post.find('.data-list')
-        .append(newDetailsHTML);
-    } else {
-      post.remove();
-    }
-  } else {
-    post.prev('.data-list-title').remove();
-    post.remove();
-    return;
-  }
+      newDetailsHTML += '</ul></section>';
 
+      $(options.selector).after(newDetailsHTML);
+
+    }
+  }
 }
 
 function numberWithCommas(x) {
@@ -364,11 +419,9 @@ function donutPercents(){
 }
 
 function statsDelegation(summary, options){
-  if (!summary || summary == undefined || summary == null || options.selector == '#reach'){
+  if (!summary || summary == undefined || summary == null){
     return;
   }
-
-  $(options.selector).next('.novo-graph-stats').remove();
 
   var statsString = '',
       statsStringOpen,
@@ -376,26 +429,24 @@ function statsDelegation(summary, options){
       statStringOpen,
       statStringMid,
       statStringClose,
-      columnSize;
+      columnSize,
+      statsElement = '',
+      listClass = '';
 
-  if(options.source == 'twitter'){
-    if(options.selector == '#engagement'){
-      columnSize = 'col-lg-6';
-    } else if (options.selector == '#acquisition'){
-      columnSize = 'col-lg-6';
-    }
-  } else if(options.source == 'facebook'){
-    if(options.selector == '#engagement'){
-      columnSize = 'col-lg-6';
-    } else if (options.selector == '#acquisition'){
-      columnSize = 'col-lg-6';
-    } else if (options.selector == '#reach'){
-      columnSize = 'col-lg-6';
-    }
+  if (options.selector == '#overview'){
+    statsElement = '.novo-overview-stats';
+    listClass = 'novo-overview-stats';
+    $(options.selector).find(statsElement).remove();
+  } else {
+    statsElement = '.novo-graph-stats';
+    listClass = 'novo-graph-stats';
+    $(options.selector).next(statsElement).remove();
   }
 
-  statsStringOpen = '<ul class="novo-graph-stats">';
-  statStringOpen = '<li class="col-xs-12 '+columnSize+' col-md-6"><div class="stat"><span>';
+  columnSize = 'col-lg-6';
+
+  statsStringOpen = '<ul class="'+listClass+'">';
+  statStringOpen = '<li class="col-xs-12 col-sm-12 col-md-12 '+columnSize+'"><div class="stat"><span>';
   statStringMid = '</span><span>';
   statStringClose = '</span></li>';
   statsStringClose = '</ul>';
@@ -406,7 +457,7 @@ function statsDelegation(summary, options){
 
     if (options.selector == '#engagement'){
 
-      if (summary.totalFavorites) {
+      if (summary.totalFavorites != undefined) {
         statsString += statStringOpen;
         statsString += "Favorites"
         statsString += statStringMid;
@@ -414,7 +465,7 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
-      if (summary.totalRetweets) {
+      if (summary.totalRetweets != undefined) {
         statsString += statStringOpen;
         statsString += "Retweets"
         statsString += statStringMid;
@@ -422,7 +473,7 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
-      if (summary.totalMentions) {
+      if (summary.totalMentions != undefined) {
         statsString += statStringOpen;
         statsString += "Mentions"
         statsString += statStringMid;
@@ -430,7 +481,7 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
-      if (summary.totalReplies) {
+      if (summary.totalReplies != undefined) {
         statsString += statStringOpen;
         statsString += "Replies"
         statsString += statStringMid;
@@ -438,7 +489,7 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
-      if (summary.totalDirectMessages) {
+      if (summary.totalDirectMessages != undefined) {
         statsString += statStringOpen;
         statsString += "Direct Messages"
         statsString += statStringMid;
@@ -448,11 +499,22 @@ function statsDelegation(summary, options){
 
     } else if (options.selector == '#acquisition'){
 
-      if (summary.totalFollowers) {
+      if (summary.totalFollowers != undefined) {
         statsString += statStringOpen;
-        statsString += "Followers"
+        statsString += "Total Followers"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.totalFollowers);
+        statsString += statStringClose;
+      }
+
+      if (summary.changeInFollowers != undefined) {
+        statsString += statStringOpen;
+        statsString += "Growth "
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.changeInFollowers);
+        if (summary.changeInFollowersPercent != undefined){
+          statsString += ' ('+summary.changeInFollowersPercent + '%)';
+        }
         statsString += statStringClose;
       }
 
@@ -462,7 +524,7 @@ function statsDelegation(summary, options){
 
     if (options.selector == '#engagement'){
 
-      if (summary.totalLikes) {
+      if (summary.totalLikes != undefined) {
         statsString += statStringOpen;
         statsString += "Likes"
         statsString += statStringMid;
@@ -470,7 +532,7 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
-      if (summary.totalShares) {
+      if (summary.totalShares != undefined) {
         statsString += statStringOpen;
         statsString += "Shares"
         statsString += statStringMid;
@@ -478,7 +540,7 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
-      if (summary.totalComments) {
+      if (summary.totalComments != undefined) {
         statsString += statStringOpen;
         statsString += "Comments"
         statsString += statStringMid;
@@ -486,7 +548,7 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
-      if (summary.totalMentions) {
+      if (summary.totalMentions != undefined) {
         statsString += statStringOpen;
         statsString += "Mentions"
         statsString += statStringMid;
@@ -494,7 +556,7 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
-      if (summary.totalMessages) {
+      if (summary.totalMessages != undefined) {
         statsString += statStringOpen;
         statsString += "Messages"
         statsString += statStringMid;
@@ -502,7 +564,7 @@ function statsDelegation(summary, options){
         statsString += statStringClose;
       }
 
-      if (summary.totalPosts) {
+      if (summary.totalPosts != undefined) {
         statsString += statStringOpen;
         statsString += "Posts"
         statsString += statStringMid;
@@ -512,11 +574,431 @@ function statsDelegation(summary, options){
 
     } else if (options.selector == '#acquisition'){
 
-      if (summary.totalLikes) {
+      if (summary.totalLikes != undefined) {
+        statsString += statStringOpen;
+        statsString += "Total Likes"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalLikes);
+        statsString += statStringClose;
+      }
+
+      if (summary.changeInLikes != undefined) {
+        statsString += statStringOpen;
+        statsString += "Growth "
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.changeInLikes);
+        if (summary.changeInLikesPercent != undefined){
+          statsString += ' ('+summary.changeInLikesPercent + '%)';
+        }
+        statsString += statStringClose;
+      }
+
+    } else if (options.selector == '#reach'){
+
+      if (summary.totalImpressions != undefined) {
+        statsString += statStringOpen;
+        statsString += "Impressions"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalImpressions);
+        statsString += statStringClose;
+      }
+
+    }
+
+  } else if (options.source == 'instagram'){
+
+    if (options.selector == '#engagement'){
+
+      if (summary.totalLikes != undefined) {
         statsString += statStringOpen;
         statsString += "Likes"
         statsString += statStringMid;
         statsString += numberWithCommas(summary.totalLikes);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalComments != undefined) {
+        statsString += statStringOpen;
+        statsString += "Comments"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalComments);
+        statsString += statStringClose;
+      }
+
+    } else if (options.selector == '#acquisition'){
+
+      if (summary.totalFollowers != undefined) {
+        statsString += statStringOpen;
+        statsString += "Total Followers"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalFollowers);
+        statsString += statStringClose;
+      }
+
+      if (summary.changeInFollowers != undefined) {
+        statsString += statStringOpen;
+        statsString += "Growth "
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.changeInFollowers);
+        if (summary.changeInFollowersPercent != undefined){
+          statsString += ' ('+summary.changeInFollowersPercent + '%)';
+        }
+        statsString += statStringClose;
+      }
+
+    }
+
+  } else if (options.source == 'youtube'){
+
+    if (options.selector == '#engagement'){
+
+      if (summary.totalLikes != undefined) {
+        statsString += statStringOpen;
+        statsString += "Likes"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalLikes);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalDislikes != undefined) {
+        statsString += statStringOpen;
+        statsString += "Dislikes"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalDislikes);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalShares != undefined) {
+        statsString += statStringOpen;
+        statsString += "Shares"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalShares);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalComments != undefined) {
+        statsString += statStringOpen;
+        statsString += "Comments"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalComments);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalViews != undefined) {
+        statsString += statStringOpen;
+        statsString += "Views"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalViews);
+        statsString += statStringClose;
+      }
+
+
+
+    } else if (options.selector == '#acquisition'){
+
+      if (summary.totalSubscribers != undefined) {
+        statsString += statStringOpen;
+        statsString += "Total Subscribers"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalSubscribers);
+        statsString += statStringClose;
+      }
+
+      if (summary.changeInSubscribers != undefined) {
+        statsString += statStringOpen;
+        statsString += "Growth "
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.changeInSubscribers);
+        if (summary.changeInSubscribersPercent != undefined){
+          statsString += ' ('+summary.changeInSubscribersPercent + '%)';
+        }
+        statsString += statStringClose;
+      }
+
+    } else if (options.selector == '#reach'){
+
+      if (summary.totalViews != undefined) {
+        statsString += statStringOpen;
+        statsString += "Views"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalViews);
+        statsString += statStringClose;
+      }
+
+    }
+
+  } else if (options.source == 'googleplus'){
+
+    if (options.selector == '#engagement'){
+
+      if (summary.totalPlusOners != undefined) {
+        statsString += statStringOpen;
+        statsString += "Plus 1s"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalPlusOners);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalComments != undefined) {
+        statsString += statStringOpen;
+        statsString += "Comments"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalComments);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalResharers != undefined) {
+        statsString += statStringOpen;
+        statsString += "Shares"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalResharers);
+        statsString += statStringClose;
+      }
+
+    } else if (options.selector == '#acquisition'){
+
+      if (summary.totalCircledBy != undefined) {
+        statsString += statStringOpen;
+        statsString += "Total Added"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalCircledBy);
+        statsString += statStringClose;
+      }
+
+      if (summary.changeInCircledBy != undefined) {
+        statsString += statStringOpen;
+        statsString += "Growth "
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.changeInCircledBy);
+        if (summary.changeInCircledByPercent != undefined){
+          statsString += ' ('+summary.changeInCircledByPercent + '%)';
+        }
+        statsString += statStringClose;
+      }
+
+    }
+
+  } else if (options.source == 'analyticsGlobal' || options.source == 'analyticsAll' || options.source == 'analyticsUs') {
+
+    if (summary.totalSessions != undefined) {
+      statsString += statStringOpen;
+      statsString += "Sessions"
+      statsString += statStringMid;
+      statsString += numberWithCommas(summary.totalSessions);
+      statsString += statStringClose;
+    }
+
+    if (summary.totalAverageSessionDuration != undefined) {
+      statsString += statStringOpen;
+      statsString += "Session Duration"
+      statsString += statStringMid;
+      statsString += (numberWithCommas(summary.totalAverageSessionDuration) + ' sec');
+      statsString += statStringClose;
+    }
+
+    if (summary.totalSessionDuration != undefined) {
+      var resultSessionDuration = 0;
+      var abr = ' sec';
+      if (summary.totalSessionDuration/60 > 0){
+        if (summary.totalSessionDuration/60/60 > 0){
+          if (summary.totalSessionDuration/60/60/24 > 0){
+            resultSessionDuration = summary.totalSessionDuration/60/60/24;
+            resultSessionDuration = Math.round(resultSessionDuration);
+            abr = ' days';
+          } else {
+            resultSessionDuration = summary.totalSessionDuration/60/60;
+            resultSessionDuration = Math.round(resultSessionDuration);
+            abr = ' hours';
+          }
+        } else {
+          resultSessionDuration = summary.totalSessionDuration/60;
+          resultSessionDuration = Math.round(resultSessionDuration);
+          abr = ' min';
+        }
+      } else {
+        resultSessionDuration = summary.totalSessionDuration;
+      }
+
+      statsString += statStringOpen;
+      statsString += "Total Session Duration"
+      statsString += statStringMid;
+      statsString += (numberWithCommas(resultSessionDuration) + abr);
+      statsString += statStringClose;
+    }
+
+    if (summary.totalBounceRate != undefined) {
+      statsString += statStringOpen;
+      statsString += "Bounce Rate"
+      statsString += statStringMid;
+      statsString += (numberWithCommas(summary.totalBounceRate) + '%');
+      statsString += statStringClose;
+    }
+
+    if (summary.totalBounces != undefined) {
+      statsString += statStringOpen;
+      statsString += "Bounces"
+      statsString += statStringMid;
+      statsString += numberWithCommas(summary.totalBounces);
+      statsString += statStringClose;
+    }
+
+    if (summary.totalPageViews != undefined) {
+      statsString += statStringOpen;
+      statsString += "Page Views"
+      statsString += statStringMid;
+      statsString += numberWithCommas(summary.totalPageViews);
+      statsString += statStringClose;
+    }
+
+    if (summary.totalUsers != undefined) {
+      statsString += statStringOpen;
+      statsString += "Unique Users"
+      statsString += statStringMid;
+      statsString += numberWithCommas(summary.totalUsers);
+      statsString += statStringClose;
+    }
+
+  } else if (options.source == 'dashboard') {
+
+    if (options.selector == '#acquisition'){
+
+      if (summary.totalFacebook != undefined) {
+        statsString += statStringOpen;
+        statsString += "<div class='graph-tooltip-selector selector-facebook'></div>";
+        statsString += "Facebook";
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalFacebook);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalTwitter != undefined) {
+        statsString += statStringOpen;
+        statsString += "<div class='graph-tooltip-selector selector-twitter'></div>";
+        statsString += "Twitter"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalTwitter);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalInstagram != undefined) {
+        statsString += statStringOpen;
+        statsString += "<div class='graph-tooltip-selector selector-instagram'></div>";
+        statsString += "Instagram"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalInstagram);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalYouTube != undefined) {
+        statsString += statStringOpen;
+        statsString += "Youtube"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalYouTube);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalGooglePlus != undefined) {
+        statsString += statStringOpen;
+        statsString += "Google+"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalGooglePlus);
+        statsString += statStringClose;
+      }
+
+      if (summary.changeInAcquisition != undefined) {
+        statsString += statStringOpen;
+        statsString += "Growth "
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.changeInAcquisition);
+        if (summary.changeInAcquisitionPercent != undefined){
+          statsString += ' ('+summary.changeInAcquisitionPercent + '%)';
+        }
+        statsString += statStringClose;
+      }
+
+    } else if (options.selector == '#engagement') {
+
+      if (summary.totalFacebook != undefined) {
+        statsString += statStringOpen;
+        statsString += "<div class='graph-tooltip-selector selector-facebook'></div>";
+        statsString += "Facebook"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalFacebook);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalTwitter != undefined) {
+        statsString += statStringOpen;
+        statsString += "<div class='graph-tooltip-selector selector-twitter'></div>";
+        statsString += "Twitter"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalTwitter);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalInstagram != undefined) {
+        statsString += statStringOpen;
+        statsString += "<div class='graph-tooltip-selector selector-instagram'></div>";
+        statsString += "Instagram"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalInstagram);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalYouTube != undefined) {
+        statsString += statStringOpen;
+        statsString += "Youtube"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalYouTube);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalGooglePlus != undefined) {
+        statsString += statStringOpen;
+        statsString += "Google+"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalGooglePlus);
+        statsString += statStringClose;
+      }
+
+      if (summary.changeInEngagement != undefined) {
+        statsString += statStringOpen;
+        statsString += "Growth "
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.changeInEngagement);
+        if (summary.changeInEngagementPercent != undefined){
+          statsString += ' ('+summary.changeInEngagementPercent + '%)';
+        }
+        statsString += statStringClose;
+      }
+
+    } else if (options.selector == '#reach') {
+
+      if (summary.totalFacebook != undefined) {
+        statsString += statStringOpen;
+        statsString += "<div class='graph-tooltip-selector selector-facebook'></div>";
+        statsString += "Facebook"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalFacebook);
+        statsString += statStringClose;
+      }
+
+      if (summary.totalYouTube != undefined) {
+        statsString += statStringOpen;
+        statsString += "Youtube"
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.totalYouTube);
+        statsString += statStringClose;
+      }
+
+      if (summary.changeInReach != undefined) {
+        statsString += statStringOpen;
+        statsString += "Growth "
+        statsString += statStringMid;
+        statsString += numberWithCommas(summary.changeInReach);
+        if (summary.changeInReachPercent != undefined){
+          statsString += ' ('+summary.changeInReachPercent + '%)';
+        }
         statsString += statStringClose;
       }
 
@@ -526,9 +1008,48 @@ function statsDelegation(summary, options){
 
   statsString += statsStringClose;
 
+  if (options.selector == '#overview'){
+    $(options.selector).append(statsString);
+    $(options.selector).find(statsElement).sectionLoad(false);
+  } else {
+    $(options.selector).after(statsString);
+    if (options.source == 'dashboard') {
+      multiLineGraphTooltips();
+    }
+    $(options.selector).next(statsElement).sectionLoad(false);
+  }
 
-  $(options.selector).after(statsString);
-  $(options.selector).next('.novo-graph-stats').sectionLoad(false);
+}
+
+function multiLineGraphTooltips(){
+  $('.graph-tooltip-selector').on('click',function(){
+    var tooltip = $(this);
+    var type = $('#'+tooltip.parents('.novo-graph-stats').prev().attr('id'));
+
+    tooltip.parents('ul').find('.graph-tooltip-selector').removeClass('active');
+    tooltip.addClass('active');
+
+    if (tooltip.hasClass('selector-facebook')){
+      type.find('.line-point-tooltip').attr('class', 'line-point-tooltip line-point-tooltip-facebook');
+      type.find('.line-point-rect-facebook').show();
+      type.find('.line-point-rect-twitter').hide();
+      type.find('.line-point-rect-instagram').hide();
+    } else if (tooltip.hasClass('selector-twitter')){
+      type.find('.line-point-tooltip').attr('class', 'line-point-tooltip line-point-tooltip-twitter');
+      type.find('.line-point-rect-facebook').hide();
+      type.find('.line-point-rect-twitter').show();
+      type.find('.line-point-rect-instagram').hide();
+    } else if (tooltip.hasClass('selector-instagram')){
+      type.find('.line-point-tooltip').attr('class', 'line-point-tooltip line-point-tooltip-instagram');
+      type.find('.line-point-rect-facebook').hide();
+      type.find('.line-point-rect-twitter').hide();
+      type.find('.line-point-rect-instagram').show();
+    }
+  });
+
+  $('.novo-graph-stats').each(function(){
+    $(this).find('.graph-tooltip-selector').first().trigger('click');
+  })
 }
 
 // i.e. graphController('line', '/api/1.0/twitter/engagement', {startTime: '2015-04-17T21:45:04.000Z', endTime:'2015-04-17T21:45:04.000Z'}, {selector: '#engagement'});
@@ -575,47 +1096,56 @@ function dataController(sectionType, type, apiString, dateObj, options){
 
         if (type == 'topCountries'){
           apiObj.data = simplifyData(apiObj.data, apiObj.map);
-          //apiObj.data = simplifyData(fakeTopCountryData, apiObj.map );
-
           cachedData[type] = apiObj;
         } else if (type == 'topTweet'){
           $(options.selector).prev(loadingGifClass).remove();
           cachedData[type] = apiObj;
+        } else if (type == 'refTraffic'){
+          apiObj.data = simplifyData(apiObj.data);
+          cachedData[type] = apiObj;
+
         } else {
           cachedData[type] = apiObj;
         }
-        dataControllerDelegation(sectionType, apiObj);
+        dataControllerDelegation(sectionType, type, apiObj, timeObj);
       });
   } else {
-    dataControllerDelegation(sectionType, cachedData[type]);
+    dataControllerDelegation(sectionType, type, cachedData[type], dateObj);
   }
 }
 
-function dataControllerDelegation(sectionType, apiObj){
+function dataControllerDelegation(sectionType, type, apiObj, dateObj){
   if (sectionType == 'line'){
-    lineGraph(apiObj.data, apiObj.options, apiObj.success);
+    lineGraph(apiObj.data, apiObj.options, apiObj.success, dateObj);
     statsDelegation(apiObj.summary, apiObj.options, apiObj.success);
-    //statsDelegation(fakeSummaryFacebook, apiObj.options, apiObj.success);
+
+  } else if (sectionType == 'multiLine'){
+    multiLineGraph(apiObj.data, apiObj.options, apiObj.success, dateObj);
+    statsDelegation(apiObj.summary, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'donut'){
-    donutList(apiObj.data.data_list, apiObj.options, apiObj.success);
+    if (type == 'topCountries' || type == 'refTraffic'){
+      donutList(apiObj.data.data_list, apiObj.options, apiObj.success);
+    }
     donutGraph(apiObj.data.data, apiObj.options, apiObj.success);
 
+  } else if (sectionType == 'stats'){
+    statsDelegation(apiObj.summary, apiObj.options, apiObj.success);
+
   } else if (sectionType == 'topFacebookPost'){
-    topFacebookPost(apiObj.data, apiObj.options, apiObj.success);
+    topFacebookPost(apiObj, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'topTweet'){
-    topTweet(apiObj, apiObj.options);
+    topTweet(apiObj, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'topInstagramPost'){
-    topInstagramPost(apiObj, apiObj.options);
+    topInstagramPost(apiObj, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'topGooglePost'){
-    topGooglePost(apiObj, apiObj.options);
+    topGooglePost(apiObj, apiObj.options, apiObj.success);
 
   } else if (sectionType == 'topYoutubeVideo'){
-    topYoutubeVideo(apiObj, apiObj.options);
-
+    topYoutubeVideo(apiObj, apiObj.options, apiObj.success);
 
   } else {
     globalDebug('   GraphController Error: Wrong sectionType entered! Type: '+sectionType+' is not a valid sectionType!', 'color:red;');
@@ -709,9 +1239,12 @@ $.fn.dateDelegate = function(startTime, endTime){
 function dateController(){
 
   var dateObj = currentSelectedDate,
+      twentyfourago,
       now,
+      endOfDay,
       today,
       yesterday,
+      yesterdayEnd,
       lastWeek,
       lastMonth,
       startTime,
@@ -734,11 +1267,17 @@ function dateController(){
   endTime_human += ', ';
   endTime_human += endTime.getFullYear();
 
+  twentyfourago = new Date();
+  twentyfourago.setDate(twentyfourago.getDate() - 1);
+  twentyfourago = twentyfourago.toJSON();
+
   now = new Date();
-  now.setMinutes(0,0,0);
-  now.setHours(23,59,59);
   now = now.toJSON();
 
+  endOfDay = new Date();
+  endOfDay.setMinutes(0,0,0);
+  endOfDay.setHours(23,59,59);
+  endOfDay = endOfDay.toJSON();
 
   today = new Date();
   today.setHours(0,0,0);
@@ -748,6 +1287,11 @@ function dateController(){
   yesterday.setDate(yesterday.getDate() - 1);
   yesterday.setHours(0,0,0,0);
   yesterday = yesterday.toJSON();
+
+  yesterdayEnd = new Date();
+  yesterdayEnd.setDate(yesterdayEnd.getDate() - 1);
+  yesterdayEnd.setHours(23,59,59);
+  yesterdayEnd = yesterdayEnd.toJSON();
 
   lastWeek = new Date();
   lastWeek.setDate(lastWeek.getDate() - 7);
@@ -759,10 +1303,11 @@ function dateController(){
   lastMonth.setHours(0,0,0,0);
   lastMonth = lastMonth.toJSON();
 
-  $('[data-date-selector="today"]').dateDelegate(today, now);
-  $('[data-date-selector="yesterday"]').dateDelegate(yesterday, now);
-  $('[data-date-selector="lastWeek"]').dateDelegate(lastWeek, now);
-  $('[data-date-selector="lastMonth"]').dateDelegate(lastMonth, now);
+  // $('[data-date-selector="today"]').dateDelegate(today, endOfDay);
+  $('[data-date-selector="24"]').dateDelegate(twentyfourago, now);
+  $('[data-date-selector="yesterday"]').dateDelegate(yesterday, yesterdayEnd);
+  $('[data-date-selector="lastWeek"]').dateDelegate(lastWeek, endOfDay);
+  $('[data-date-selector="lastMonth"]').dateDelegate(lastMonth, endOfDay);
 
   $('#dateDropdown').find('span').first().html(startTime_human);
   $('#dateDropdown').find('span').last().html(endTime_human);

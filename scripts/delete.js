@@ -53,18 +53,17 @@ function buildSeries() {
 
       if(argv['twitter-direct_messages'] || argv['twitter-all']) {
         series.push(deleteDocsByType('twitter', 'direct_message'));
+        series.push(resetUsersLastTime('services.twitter.direct_messageSinceID'));
       }
 
       if(argv['twitter-mentions'] || argv['twitter-all']) {
         series.push(deleteDocsByType('twitter', 'mention'));
+        series.push(resetUsersLastTime('services.twitter.mentionSinceID'));
       }
 
       if(argv['twitter-tweets'] || argv['twitter-all']) {
         series.push(deleteDocsByType('twitter', 'tweet'));
-      }
-
-      if(argv['twitter-followers'] || argv['twitter-all']) {
-        series.push(deleteDocsByType('twitter', 'followerCount'));
+        series.push(resetUsersLastTime('services.twitter.tweetSinceID'));
       }
 
       if(argv['twitter-deltas'] || argv['twitter-all']) {
@@ -72,7 +71,7 @@ function buildSeries() {
       }
 
       if(argv['twitter-followerCounts'] || argv['twitter-all']) {
-        series.push(deleteDocsByType('twitter', 'followerCount'));
+        series.push(deleteDocsByType('twitter', 'followercount'));
       }
 
       if(argv['twitter-replies'] || argv['twitter-all']) {
@@ -107,8 +106,63 @@ function buildSeries() {
         series.push(deleteDeltasBySource('facebook'));
       }
 
-    return series;
+      if(argv['instagram-followerCounts'] || argv['instagram-all']) {
+        series.push(deleteDocsByType('instagram', 'followercount'));
+      }
 
+      if(argv['instagram-media'] || argv['instagram-all']) {
+        series.push(deleteDocsByType('instagram', 'media'));
+      }
+
+      if(argv['instagram-comments'] || argv['instagram-all']) {
+        series.push(deleteDocsByType('instagram', 'comment'));
+      }
+
+      if(argv['instagram-deltas'] || argv['instagram-all']) {
+        series.push(deleteDeltasBySource('instagram'));
+      }
+
+      if(argv['youtube-channel'] || argv['youtube-all']) {
+        series.push(deleteDocsByType('youtube', 'channel'));
+      }
+
+      if(argv['youtube-videos'] || argv['youtube-all']) {
+        series.push(deleteDocsByType('youtube', 'video'));
+      }
+
+      if(argv['youtube-comments'] || argv['youtube-all']) {
+        series.push(deleteDocsByType('youtube', 'comment'));
+      }
+
+      if(argv['youtube-deltas'] || argv['youtube-all']) {
+        series.push(deleteDeltasBySource('youtube'));
+      }
+
+      if(argv['googleplus-pages'] || argv['googleplus-all']) {
+        series.push(deleteDocsByType('googleplus', 'page'));
+      }
+
+      if(argv['googleplus-posts'] || argv['googleplus-all']) {
+        series.push(deleteDocsByType('googleplus', 'post'));
+      }
+
+      if(argv['googleplus-comments'] || argv['googleplus-all']) {
+        series.push(deleteDocsByType('googleplus', 'comment'));
+      }
+
+      if(argv['googleplus-deltas'] || argv['googleplus-all']) {
+        series.push(deleteDeltasBySource('googleplus'));
+      }
+
+      if(argv['google-analytics'] || argv['google-analytics-all']) {
+        series.push(deleteDocsByType('googleAnalytics', 'profile'));
+      }
+
+      if(argv['google-analytics-deltas'] || argv['google-analytics-all']) {
+        series.push(deleteDeltasBySource('googleAnalytics'));
+      }
+
+    return series;
   } else {
     return false;
   }
@@ -127,27 +181,28 @@ function hasArgs() {
   }
 }
 
-// function resetUsersLastTime(path) {
-//   return function(users, callback) {
-//     debug("resetting %s for users", path);
+function resetUsersLastTime(path) {
+  return function(users, callback) {
+    debug("resetting %s for users", path);
 
-//     var resetQuery = {};
-//     resetQuery[path] = null;
+    var resetQuery = {};
+    resetQuery[path] = null;
 
-//     User.model.update({
-//       '_id': {'$in': _.pluck(users, '_id')}
-//       },
-//       { '$set': resetQuery },
-//       { multi : true },
-//       callback);
-//   }
+    User.model.update({
+      '_id': {'$in': _.pluck(users, '_id')}
+      },
+      { '$set': resetQuery },
+      { multi : true },
+      callback);
+  }
 
-// }
+}
 
 function deleteDocsByType(source, doc_type) {
   return function(users, callback) {
     keystone.elasticsearch.deleteByQuery({
       index: keystone.get('elasticsearch index'),
+      type: source,
       body: {
         query: {
           filtered: {
@@ -305,10 +360,39 @@ function showHelp() {
   console.log('--twitter-direct_messages        Delete all Twitter direct_messages');
   console.log('--twitter-mentions               Delete all Twitter mentions');
   console.log('--twitter-tweets                 Delete all Twitter tweets');
-  console.log('--twitter-followers              Delete Twitter followers');
+  console.log('--twitter-followers              Delete all Twitter followers');
   console.log('--twitter-deltas                 Delete all Twitter deltas');
   console.log('--twitter-followerCounts         Delete all Twitter FollowerCounts');
   console.log('');
+  console.log('--facebook-all                   Delete all Facebook objects');
+  console.log('--facebook-pages                 Delete all Facebook pages');
+  console.log('--facebook-posts                 Delete all Facebook posts');
+  console.log('--facebook-statuses              Delete all Facebook statuses');
+  console.log('--facebook-mentions              Delete all Facebook mentions');
+  console.log('--facebook-comments              Delete all Facebook comments');
+  console.log('--facebook-messages              Delete all Facebook messages');
+  console.log('--facebook-deltas                Delete all Facebook deltas');
+  console.log('');
+  console.log('--google-analytics[-all]         Delete all Google Analytics objects');
+  console.log('--google-analytics-deltas        Delete all Google Analytics deltas');
+  console.log('');
+  console.log('--instagram-all                  Delete all Instagram objects');
+  console.log('--instagram-followerCounts       Delete all Instagram FollowerCounts');
+  console.log('--instagram-media                Delete all Instagram media');
+  console.log('--instagram-comments             Delete all Instagram comments');
+  console.log('--instagram-deltas               Delete all Instagram deltas');
+  console.log('');
+  console.log('--youtube-all                    Delete all YouTube objects');
+  console.log('--youtube-channels               Delete all YouTube Channels');
+  console.log('--youtube-media                  Delete all YouTube videos');
+  console.log('--youtube-comments               Delete all YouTube comments');
+  console.log('--youtube-deltas                 Delete all YouTube deltas');
+  console.log('');
+  console.log('--googleplus-all                 Delete all Google+ objects');
+  console.log('--googleplus-followerCounts      Delete all Google+ pages');
+  console.log('--googleplus-media               Delete all Google+ posts');
+  console.log('--googleplus-comments            Delete all Google+ comments');
+  console.log('--googleplus-deltas              Delete all Google+ deltas');
   console.log('<options>');
   console.log('--u <user email>                 Perform actions on specified user.')
   console.log('');

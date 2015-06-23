@@ -4,7 +4,7 @@ function usage () {
   cat <<EOF
 Usage: $PROGNAME ENVIRONMENT
 Deploys the application to the given ENVIRONMENT
-  ENVIRONMENT   dev
+  ENVIRONMENT   dev|prod
 EOF
   exit $( [ $# -ne 0 ] && echo $1 || echo 0 )
 }
@@ -72,6 +72,8 @@ run ln -s "$APP_ROOT/releases/$rel_tag" current
 
 ###
 # Restart
+run pkill scheduler
 run sudo /opt/passenger/bin/passenger-config restart-app "$APP_ROOT/current"
+run "cd current ; nohup node scheduler.js &>>log/scheduler.log </dev/null &"
 
 notify_slack "Finished deployment: $rel_tag to $ENVIRONMENT"

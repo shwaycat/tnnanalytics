@@ -8,9 +8,12 @@ mixin date
         .entypo.entypo-chevron-thin-down
       ul.dropdown-menu.dropdown-menu-right(role="menu" aria-labelledby="dateDropdown")
         .arrow-left
+        //- li
+        //-   a.date-selector(role="menuitem" tabindex="-1" data-date-selector='today')
+        //-     | Today
         li
-          a.date-selector(role="menuitem" tabindex="-1" data-date-selector='today')
-            | Today
+          a.date-selector(role="menuitem" tabindex="-1" data-date-selector='24')
+            | Last 24 Hours
         li
           a.date-selector(role="menuitem" tabindex="-1" data-date-selector='yesterday')
             | Yesterday
@@ -48,5 +51,5 @@ mixin dateModal
               span.date-selection-warning(data-date-selection="mismatch")
                 | Invalid dates. Please choose dates in chronological order. 
         .modal-footer
-          button.btn.btn-default(type="button" data-dismiss="modal") Close
+          button.btn.btn-default(type="button" data-dismiss="modal") Cancel
           button#dateCustomSubmit.btn.btn-default(type="button") Submit

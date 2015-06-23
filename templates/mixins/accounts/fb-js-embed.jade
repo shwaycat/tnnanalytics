@@ -1,23 +1,23 @@
 mixin fb-js
   #fb-root
-  script.
-    window.fbAsyncInit = function() {
-            FB.init({
-              appId      : '1586083438316048',
-              xfbml      : true,
-              version    : 'v2.3'
-            });
-          };
-
-          (function(d, s, id){
-            setTimeout(function(){
-              var js, fjs = d.getElementsByTagName(s)[0];
-              if (d.getElementById(id)) {return;}
-              js = d.createElement(s); js.id = id;
-              js.src = "http://connect.facebook.net/en_US/sdk.js";
-              fjs.parentNode.insertBefore(js, fjs);
-            },1000);
-           }(document, 'script', 'facebook-jssdk'));
+  //- script.
+  //-   window.fbAsyncInit = function() {
+  //-           FB.init({
+  //-             appId      : '1586083438316048',
+  //-             xfbml      : true,
+  //-             version    : 'v2.3'
+  //-           });
+  //-         };
+  //- 
+  //-         (function(d, s, id){
+  //-           setTimeout(function(){
+  //-             var js, fjs = d.getElementsByTagName(s)[0];
+  //-             if (d.getElementById(id)) {return;}
+  //-             js = d.createElement(s); js.id = id;
+  //-             js.src = "http://connect.facebook.net/en_US/sdk.js";
+  //-             fjs.parentNode.insertBefore(js, fjs);
+  //-           },4000);
+  //-          }(document, 'script', 'facebook-jssdk'));
   
 mixin fb-jquery
   script.

@@ -2,7 +2,7 @@ extends ../../layouts/default
 
 
 block content
-  .row.content-row
+  .row.content-row.content-row-title
     .col-xs-12
       h1.view-title User Management
   .row.content-row
@@ -24,7 +24,7 @@ block content
             input(id='lastName' type='text', name='name.last', value=user.name.last, placeholder='Last Name').form-control
             span.error-message Enter your Last Name
           .form-group(class=validationErrors.email ? 'has-error' : null).never-error
-            label(for='email') Email
+            label.has-disabled(for='email') Email
             input(id='email' type='email', name='email', value=user.email, placeholder='Email' disabled="disabled").form-control
           
           if user.isAccountRoot
@@ -59,18 +59,44 @@ block content
                   a(href='?disconnect=facebook', title='Revoke authorization of your Facebook account').btn.btn-social-connect.btn-facebook
                     span.connection-text Disconnect
 
-              //- .form-group
-              //-   label.sr-only Google    
-              //-   if !user.services.google.isConfigured
-              //-     a(href='/auth/google', title='Connect your Google account').btn.btn-social-connect.btn-google
-              //-       span.connection-icon.entypo-social.entypo-google-circles
-              //-       span.connection-text Connect your Google account
-              //-   if user.services.google.isConfigured
-              //-     .social-connect
-              //-       span.connection-icon.entypo-social.entypo-google-circles
-              //-       span.connection-text Your account is connected.
-              //-     a(href='?disconnect=google' title='Revoke authorization of your Google account').btn.btn-social-connect.btn-google
-              //-       span.connection-text Disconnect
+              .form-group
+                label.sr-only Instagram
+                if !user.services.instagram.isConfigured
+                  a(href='/auth/instagram', title='Connect your Instagram account').btn.btn-social-connect.btn-instagram
+                    span.connection-icon.entypo-social.entypo-instagram
+                    span.connection-text Connect your Instagram account
+                if user.services.instagram.isConfigured
+                  .social-connect
+                    span.connection-icon.entypo-social.entypo-instagram
+                    span.connection-text Your account is connected.
+                  a(href='?disconnect=instagram', title='Revoke authorization of your Instagram account').btn.btn-social-connect.btn-instagram
+                    span.connection-text Disconnect
+
+              .form-group
+                label.sr-only Google    
+                if !user.services.google.isConfigured
+                  a(href='/auth/google', title='Connect your Google account').btn.btn-social-connect.btn-google
+                    span.connection-icon.entypo-social.entypo-google-circles
+                    span.connection-text Connect your Google account
+                if user.services.google.isConfigured
+                  .social-connect
+                    span.connection-icon.entypo-social.entypo-google-circles
+                    span.connection-text Your account is connected.
+                  a(href='?disconnect=google' title='Revoke authorization of your Google account').btn.btn-social-connect.btn-google
+                    span.connection-text Disconnect
+
+              .form-group
+                label.sr-only Google+
+                if !user.services.googleplus.isConfigured
+                  a(href='/auth/googleplus', title='Connect your Google+ & Youtube account').btn.btn-social-connect.btn-googleplus
+                    span.connection-icon.entypo-social.entypo-google-plus
+                    span.connection-text Connect your Google+ account
+                if user.services.googleplus.isConfigured
+                  .social-connect
+                    span.connection-icon.entypo-social.entypo-google-plus
+                    span.connection-text Your account is connected.
+                  a(href='?disconnect=googleplus' title='Revoke authorization of your Google+ account').btn.btn-social-connect.btn-googleplus
+                    span.connection-text Disconnect
 
           .form-actions
             button(type='submit', data-loading-text="Saving...").btn.btn-default.btn-large Save Profile

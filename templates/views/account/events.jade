@@ -1,10 +1,10 @@
 extends ../../layouts/default
 
 block content
-  .row.content-row
+  .row.content-row.content-row-title
     .col-xs-12
       h1.view-title=title
-      a.btn.btn-default.page-cta-btn(data-toggle="modal" data-target="#eventsCloseAllModal") Mark all Complete
+      //- a.btn.btn-default.page-cta-btn(data-toggle="modal" data-target="#eventsCloseAllModal") Mark all Complete
   .row
     .col-xs-12.events-container
       table#events-table.table.events-table
@@ -28,6 +28,6 @@ block content
             th.event-action-cell Actions
             th.event-link-cell Link
         tbody
-      p.events-no-data-warning There is no data for this page of Keyword Events. Please click 
+      p.events-no-data-warning There is no data for this page of Keyword Alerts. Please click 
         a(href="/accounts/"+user.accountName+"/events") here
         |  to go back.

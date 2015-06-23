@@ -1,5 +1,6 @@
 var keystone = require('keystone'),
     _ = require('underscore'),
+    debug = require('debug')('cadence:User'),
     request = require('request'),
     async = require('async'),
     Types = keystone.Field.Types;
@@ -30,7 +31,9 @@ var User = new keystone.List('User', {
 var deps = {
   facebook: { 'services.facebook.isConfigured': true },
   google: { 'services.google.isConfigured': true },
-  twitter: { 'services.twitter.isConfigured': true }
+  googleplus: { 'services.google.isConfigured': true },
+  twitter: { 'services.twitter.isConfigured': true },
+  instagram: { 'services.instagram.isConfigured': true }
 };
 
 User.add({
@@ -40,7 +43,7 @@ User.add({
   resetPasswordKey: { type: String, hidden: true },
   accountName: { type: String, required: true, index: true, initial: true },
   isAccountRoot: { type: Boolean, "default": false },
-  wasNew: { type: Boolean, default: true, hidden: true },
+  wasNew: { type: Boolean, 'default': true, hidden: true },
   keywords: { type: Types.Textarea, label: 'Keywords'}
 }, 'Permissions', {
   isAdmin: { type: Boolean, label: 'Can Admin ' + keystone.get('brand') }
@@ -50,9 +53,9 @@ User.add({
    * @typedef {Object} UserServices
    * @member {UserServices~Facebook} facebook - Facebook
    * @member {UserServices~Twitter} twitter - Twitter
-   * @member {UserServices~Google} google - Google TODO
-   * @member {UserServices~Instagram} instagram - Instagram TODO
-   * @member {UserServices~Youtube} youtube - Youtube TODO
+   * @member {UserServices~GooglePlus} google - Google Plus
+   * @member {UserServices~Google} google - Google
+   * @member {UserServices~Instagram} instagram - Instagram
    */
   services: {
     /**
@@ -78,9 +81,11 @@ User.add({
      * @typedef {Object} UserServices~Google
      * @member {Boolean} isConfigured - `true` if configured
      * @member {String} profileId - Google user profile ID
-     * @member {String} username - Google username
+     * @member {String} username - Google username/email address
      * @member {String} accessToken - OAuth access token
      * @member {String} refreshToken - OAuth refresh token
+     * @member {Date} tokenExpiresAt - Datetime that the accessToken expires
+     * @member {String} analyticsProfiles_str - serialized profile labels & IDs
     */
     google: {
       isConfigured: { type: Boolean, label: 'Google has been authenticated' },
@@ -88,6 +93,30 @@ User.add({
       username: { type: String, label: 'Username', dependsOn: deps.google },
       accessToken: { type: String, label: 'Access Token', dependsOn: deps.google },
       refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.google },
+      tokenExpiresAt: { type: Types.Datetime, label: 'Token Expiration', dependsOn: deps.google },
+      analyticsProfiles_str: { type: String, label: 'Analytics Profiles', dependsOn: deps.google }
+    },
+    /**
+     * Google+ & Youtube Service
+     * @typedef {Object} UserServices~Googleplus
+     * @member {Boolean} isConfigured - `true` if configured
+     * @member {String} profileId - Google+ page ID
+     * @member {String} username - Google username/email address
+     * @member {String} accessToken - OAuth access token
+     * @member {String} refreshToken - OAuth refresh token
+     * @member {Date} tokenExpiresAt - Datetime that the accessToken expires
+     * @member {String} youtubeChannelID - youtube Channel ID
+     * @member {string} youtubePlaylistID - youtube Playlist ID
+    */
+    googleplus: {
+      isConfigured: { type: Boolean, label: 'Google+ has been authenticated' },
+      profileId: { type: String, label: 'Profile ID', dependsOn: deps.googleplus },
+      username: { type: String, label: 'Username', dependsOn: deps.googleplus },
+      accessToken: { type: String, label: 'Access Token', dependsOn: deps.googleplus },
+      refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.googleplus },
+      tokenExpiresAt: { type: Types.Datetime, label: 'Token Expiration', dependsOn: deps.google },
+      youtubeChannelID: { type: String, label: 'Youtube Channel ID', dependsOn: deps.googleplus },
+      youtubePlaylistID: { type: String, label: 'Youtube Playlist ID', dependsOn: deps.googleplus }
     },
     /**
      * Twitter Service
@@ -96,6 +125,8 @@ User.add({
      * @member {String} profileId - Twitter user profile ID
      * @member {String} username - Twitter username
      * @member {String} accessToken - OAuth access token
+     * @member {String} tweetSinceId - last DirectMessage
+     * @member {String} mentionSinceId - last DirectMessage
      * @member {String} direct_messageSinceId - last DirectMessage
     */
     twitter: {
@@ -106,7 +137,22 @@ User.add({
       refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.twitter },
       tweetSinceID: { type: String, label: 'Tweet Since ID', dependsOn: deps.twitter },
       mentionSinceID: { type: String, label: 'Mention Since ID', dependsOn: deps.twitter },
-      direct_messageSinceID: { type: String, label: 'Direct Message Since ID', dependsOn: deps.twitter },
+      direct_messageSinceID: { type: String, label: 'Direct Message Since ID', dependsOn: deps.twitter }
+    },
+    /**
+     * Instagram Service
+     * @typedef {Object} UserServices~Instagram
+     * @member {Boolean} isConfigured - `true` if configured
+     * @member {String} profileId - Instagram user profile ID
+     * @member {String} username - Instagram username
+     * @member {String} accessToken - OAuth access token
+    */
+    instagram: {
+      isConfigured: { type: Boolean, label: 'Instagram has been authenticated' },
+      profileId: { type: String, label: 'Profile ID', dependsOn: deps.instagram },
+      username: { type: String, label: 'Username', dependsOn: deps.instagram },
+      accessToken: { type: String, label: 'Access Token', dependsOn: deps.instagram },
+      refreshToken: { type: String, label: 'Refresh Token', dependsOn: deps.instagram }
     }
   }
 });
@@ -120,7 +166,122 @@ User.schema.virtual('canAccessKeystone').get(function() {
   return this.isAdmin;
 });
 
+User.schema.virtual('services.google.analyticsProfiles_a').get(function() {
+  if (!this.services.google || !this.services.google.analyticsProfiles_str) {
+    return [];
+  }
+  return JSON.parse(this.services.google.analyticsProfiles_str);
+});
 
+User.schema.virtual('services.google.analyticsProfiles').get(function() {
+  if (!this.services.google || !this.services.google.analyticsProfiles_str) {
+    return {};
+  }
+  return _.object(this.services.google.analyticsProfiles_a);
+});
+
+User.schema.virtual('services.google.analyticsProfiles').set(function(val) {
+  if (!val) {
+    this.services.google.analyticsProfiles_str = null;
+  } else {
+    if (!(val instanceof Array)) {
+      val = _.pairs(val);
+    }
+    this.services.google.analyticsProfiles_str = JSON.stringify(val);
+  }
+});
+
+User.schema.virtual('services.google.analyticsProfilesKeys').set(function(val) {
+  debug("services.google.analyticsProfilesKeys=%j", val);
+
+  if (!val) {
+    this.services.google.analyticsProfiles = null;
+  } else {
+    if (val.length && !val[0]) {
+      val = _.clone(val);
+      val.shift();
+    }
+
+    var newProfiles = this.services.google.analyticsProfiles_a;
+
+    if (val.length < newProfiles) {
+      newProfiles = _.first(newProfiles, val.length);
+    }
+
+    val.forEach(function(v, i) {
+      if (!newProfiles[i]) {
+        newProfiles[i] = [v, null];
+      } else {
+        newProfiles[i][0] = v;
+      }
+    });
+
+    this.services.google.analyticsProfiles = newProfiles;
+  }
+  debug("services.google.analyticsProfiles=%j", this.services.google.analyticsProfiles);
+});
+
+User.schema.virtual('services.google.analyticsProfilesValues').set(function(val) {
+  debug("services.google.analyticsProfilesValues=%j", val);
+
+  if (!val) {
+    this.services.google.analyticsProfiles = null;
+  } else {
+    if (val.length && !val[0]) {
+      val = _.clone(val);
+      val.shift();
+    }
+
+    var newProfiles = this.services.google.analyticsProfiles_a;
+
+    if (val.length < newProfiles) {
+      newProfiles = _.first(newProfiles, val.length);
+    }
+
+    val.forEach(function(v, i) {
+      if (!newProfiles[i]) {
+        newProfiles[i] = [i, v];
+      } else {
+        newProfiles[i][1] = v;
+      }
+    });
+
+    this.services.google.analyticsProfiles = newProfiles;
+  }
+  debug("services.google.analyticsProfiles=%j", this.services.google.analyticsProfiles);
+});
+
+User.schema.virtual('services.googleplus.youtubeChannel').get(function() {
+  if (!this.services.googleplus || !this.services.googleplus.youtubeChannelID) {
+    return {};
+  }
+
+  return {
+    id: this.services.googleplus.youtubeChannelID,
+    playlistID: this.services.googleplus.youtubePlaylistID
+  };
+});
+
+User.schema.virtual('services.googleplus.youtubeChannel').set(function(val) {
+  if (!val) {
+    this.services.googleplus.youtubeChannelID = null;
+    this.services.googleplus.youtubePlaylistID = null;
+  } else {
+    this.services.googleplus.youtubeChannelID = val.id;
+    this.services.googleplus.youtubePlaylistID = val.playlistID;
+  }
+});
+
+User.schema.virtual('services.googleplus.youtubeChannel_s').set(function(val) {
+  if (!val) {
+    this.services.googleplus.youtubeChannelID = null;
+    this.services.googleplus.youtubePlaylistID = null;
+  } else {
+    val = val.split(',');
+    this.services.googleplus.youtubeChannelID = val[0];
+    this.services.googleplus.youtubePlaylistID = val[1];
+  }
+});
 
 
 /**

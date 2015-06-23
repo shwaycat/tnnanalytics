@@ -9,7 +9,10 @@ var keystone = require('../keystone-setup')(),
     errorHandling = require('../lib/errorHandling'),
     sources = {
       facebook: require('../lib/sources/facebook'),
-      twitter: require('../lib/sources/twitter')
+      twitter: require('../lib/sources/twitter'),
+      instagram: require('../lib/sources/instagram'),
+      youtube: require('../lib/sources/youtube'),
+      googleplus: require('../lib/sources/googleplus')
     };
 
 require('../lib/keystone-script')(connectES, function(done) {

@@ -2,7 +2,7 @@ require('dotenv').load();
 
 var argv = require('minimist')(process.argv.slice(2)),
     keystone = require('../keystone-setup')(),
-    debug = require('debug')('cadence:pull'),
+    debug = require('debug')('cadence:pull:twitter'),
     User = keystone.list('User'),
     async = require('async'),
     errorHandling = require('../lib/errorHandling'),

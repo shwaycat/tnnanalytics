@@ -1,28 +1,22 @@
 var keystone = require('keystone'),
     _ = require('underscore'),
-    async = require('async'),
     mxm = require('../../../lib/mxm-utils'),
     User = keystone.list('User'),
     sources = {
       facebook: require('../../../lib/sources/facebook'),
-      twitter: require('../../../lib/sources/twitter')
+      twitter: require('../../../lib/sources/twitter'),
+      instagram: require('../../../lib/sources/instagram'),
+      youtube: require('../../../lib/sources/youtube'),
+      googleplus: require('../../../lib/sources/googleplus')
     };
 
 
-exports = module.exports = function(req, res) {
- 
-  var view = new keystone.View(req, res),
-      locals = res.locals,
-      page = req.query.page,
-      size = 15,
-      total = 0;
+module.exports = function(req, res, next) {
+  var page = req.query.page || 1,
+      size = 15;
 
   User.model.getAccountRootInfo(req.user.accountName, function(err, accountRoot) {
-    if (err) return apiResponse({'error': err});
-    
-    if(!page) {
-      page = 1;
-    }
+    if (err) return next(err);
 
     keystone.elasticsearch.search({
       index: keystone.get('elasticsearch index'),
@@ -30,88 +24,69 @@ exports = module.exports = function(req, res) {
       from: (page-1) * size,
       body: {
         "query": {
-          "filtered": {
-            "query": {
-              "bool": {
-                "must": [
+          "function_score": {
+            "filter": {
+              "and": {
+                "filters": [
                   {
-                    "terms": {
-                      "alertState": [
-                        "new",
-                        "open",
-                        "closed"
-                      ]
-                    }
-                  }
-                ],
-                "should": [
-                  {
-                    "term": {
-                      "alertState": {
-                        "value": "new"
-                      }
-                    }
+                    "exists": { "field": "alertState" }
                   },
                   {
-                    "term": {
-                      "alertState": {
-                        "value": "new"
-                      }
-                    }
-                  },
-                  {
-                    "term": {
-                      "alertState": {
-                        "value": "open"
-                      }
-                    }
+                    "term": { "cadence_user_id": accountRoot.id }
                   }
-                ],
-                "boost": 1.2
+                ]
               }
             },
-            "filter": {
-              "term": {
-                "cadence_user_id": accountRoot.id
+            "functions": [
+              {
+                "filter": {
+                  "term": { "alertState": "new" }
+                },
+                "weight": 3
+              },
+              {
+                "filter": {
+                  "term": { "alertState": "open" }
+                },
+                "weight": 2
+              },
+              {
+                "filter": {
+                  "term": { "alertState": "closed" }
+                },
+                "weight": 1.5
               }
-            }
+            ]
           }
         },
         "sort": [
           {
-            "timestamp": {
-              "order": "asc"
-            }
+            "_score": { "order": "desc" }
+          },
+          {
+            "timestamp": { "order": "desc" }
           }
-        ]
+        ],
+        "track_scores": true
       }
     }, function(err, response){
-      if(err) return res.apiResponse({"error": err});
-      
-      var alerts = mxm.objTry(response, 'hits', 'hits');
-      var data = [];
+      if(err) return next(err);
 
-      if(_.isArray(alerts)) {
-        for(i=0;i<alerts.length;i++) {
+      var hits = mxm.objTry(response, 'hits', 'hits'),
+          total = response.hits.total,
+          data = [];
 
-          _source = _.pick(alerts[i]['_source'], "sourceName", "doc_source", "doc_type", "cadence_user_id", "user_id", "timestamp", "alertState", "alertStateUpdatedAt")
-          alert = _.pick(alerts[i], "_id", "_type");
-          alert = _.extend(alert, _source);
+      data = _.map(hits, function(hit) {
+        var alertType = sources[hit._source.doc_source][hit._source.doc_type],
+            alert = new alertType(hit._id, hit._source);
 
-          DOCTYPE = sources[alert.doc_source][alert.doc_type];
-          DOC = new DOCTYPE(alert._id, alerts[i]['_source']);
+        alert._type = alert.doc_source;
+        alert._id = alert.id;
+        alert.url = alert.emailLinkObject({ user: accountRoot }).href;
 
-          emailLinkObject = DOC.emailLinkObject({user: user});
+        return alert;
+      });
 
-          alert.url = emailLinkObject.href;
-          total = response.hits.total;
-
-          data.push(alert);
-        }
-      } else {
-        return res.apiResponse({"error": "Error with ES results."});
-      }
-      
       return res.apiResponse({
         success: true,
         type: 'alerts',
@@ -121,8 +96,6 @@ exports = module.exports = function(req, res) {
         total: total,
         data: data
       });
-
     });
   });
-  
-}
+};

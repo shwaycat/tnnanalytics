@@ -1,9 +1,12 @@
 // Global Vars
-var globalDebugBool = true;
+var globalDebugBool = false;
 var eventsCheckStatusOnInterval = true;
 
 var dataErrorClass = '.data-error-container';
 var dataErrorHTML = '<div class="data-error-container"><p>There was an error loading the data for this section.</p></div>';
+
+var noDataClass = '.no-data-container';
+var noDataHTML = '<div class="data-error-container no-data-container"><p>There is no data for this time period.</p></div>';
 
 var loadingGifClass = '.loading-container';
 var loadingGifHTML = '<div class="loading-container"><img src="/images/loader.gif" /></div>';
@@ -19,7 +22,10 @@ var cachedData = {
       'topInstagramPost': false,
       'topGooglePost': false,
       'topYoutubeVideo': false,
-      'topCountries': false
+      'topCountries': false,
+      'refTraffic': false,
+      'overview': false,
+      'analyticsTopCountries': false
     };
 var cachedSummary = {
       'engagement': false,
@@ -297,6 +303,61 @@ var fakeMapping = {
   ZW: 'Zimbabwe'
 }
 
+var fakeAnalyticsTable = [
+
+      {
+        "label": "USA",
+        "sessions": "45",
+        "bounce_rate": "34"
+      },
+      {
+        "label": "Tibet",
+        "sessions": "34352",
+        "bounce_rate": "4"
+      },
+      {
+        "label": "Hawaii",
+        "sessions": "1",
+        "bounce_rate": "0"
+      },
+      {
+        "label": "Pumpkinland",
+        "sessions": "43",
+        "bounce_rate": "4"
+      },
+      {
+        "label": "Ireland",
+        "sessions": "23",
+        "bounce_rate": "43"
+      },
+      {
+        "label": "TaiLand",
+        "sessions": "12",
+        "bounce_rate": "2"
+      },
+      {
+        "label": "Jeremany",
+        "sessions": "54",
+        "bounce_rate": "34"
+      },
+      {
+        "label": "Travislovakia",
+        "sessions": "7",
+        "bounce_rate": "4"
+      },
+      {
+        "label": "Nickongolia",
+        "sessions": "87",
+        "bounce_rate": "54"
+      },
+      {
+        "label": "Nordiskotia",
+        "sessions": "66",
+        "bounce_rate": "77"
+      },
+    ];
+
+
 var fakeEvents = {
     "info": false,
     "events" : [
@@ -560,3 +621,27 @@ var fakeTopCountryData = [
       }
 
     ]
+
+
+var fakeRefTraffic = [
+      {
+        "key": "Referral",
+        "value": 101
+      },
+      {
+        "key": "Direct",
+        "value": 443
+      },
+      {
+        "key": "Organic Search",
+        "value": 112
+      },
+      {
+        "key": "Social",
+        "value": 435
+      },
+      {
+        "key": "Other",
+        "value": 34
+      }
+    ];

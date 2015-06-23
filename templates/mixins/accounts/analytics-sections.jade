@@ -1,0 +1,45 @@
+mixin analytics-section(type, options, columns)
+
+  if type == 'refTraffic'
+    - var largeColumn = 'col-lg-6 equal-height-block-2'
+    if columns == 'full-width'
+      - largeColumn = 'col-lg-12 donut-full-width'
+    .col-xs-12.col-md-12.content-block.donut-block(class=largeColumn)
+      .inner-content
+        h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.refTraffic)
+          =sectionTitles.refTraffic
+        section.novo-graph.novo-donut-graph#refTraffic(data-admin-options=options)
+          
+  if type == 'topCountries'
+    .col-xs-12.col-md-12.col-lg-6.content-block.equal-height-block-1.analytics-container
+      .inner-content
+        h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.analyticsTopCountries)
+          =sectionTitles.analyticsTopCountries
+        table#analytics-table.table.analytics-table
+          thead
+            tr
+              th.analytics-country-header Country
+                .span.entypo.entypo-chevron-up
+                .span.entypo.entypo-chevron-down
+              th.analytics-session-header Session
+                .span.entypo.entypo-chevron-up
+                .span.entypo.entypo-chevron-down
+              th.analytics-bounce-header Bounce Rate
+                .span.entypo.entypo-chevron-up
+                .span.entypo.entypo-chevron-down
+          tbody
+
+  if type == 'overview'
+    .col-xs-12.col-md-12.col-lg-12.content-block
+      .inner-content
+        h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.overview)
+          =sectionTitles.overview
+        section#overview(data-admin-options=options)
+
+  if type == 'overviewGraph'
+    .col-xs-12.col-md-12.col-lg-12.content-block
+      .inner-content
+        h4.section-title(data-toggle="tooltip" data-trigger="click hover" data-placement="right" title=tooltip.overview)
+          =sectionTitles.sessions
+        section.novo-graph.novo-line-graph.overviewGraph#overviewGraph(data-admin-options=options)
+          

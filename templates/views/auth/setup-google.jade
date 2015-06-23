@@ -1,0 +1,37 @@
+extends ../../layouts/default
+
+
+block content
+  .row.content-row.content-row-title
+    .col-xs-12
+      h1.view-title Service Setup
+  .row.content-row
+    .col-xs-12.col-md-12.col-lg-6.session-block
+      .session-content
+        h4.session-title Google Analytics
+      
+        form.form-horizontal(method='post', autocomplete='off', novalidate).session-form
+          input(type='hidden', name='action', value='auth.setup')
+          input(type='hidden', name=csrf_token_key, value=csrf_token_value)
+          input(type='hidden', name='analyticsProfilesKeys', value='')
+          input(type='hidden', name='analyticsProfilesValues', value='')
+          .form-group(class=validationErrors.name ? 'has-error' : null)
+            label.col-sm-4.control-label(for='analyticsProfilesValues1') Profile 1
+            .col-sm-8
+              input.form-control(type='text' name='analyticsProfilesKeys-vis' value='Global' disabled=true)
+              input(type='hidden' name='analyticsProfilesKeys' value='Global')
+            select.form-control(id='analyticsProfilesValues1' name='analyticsProfilesValues')
+              each profile in setupOptions.analyticsProfiles
+                option(value=profile.id)= profile.name
+
+          .form-group(class=validationErrors.name ? 'has-error' : null)
+            label.col-sm-4.control-label(for='analyticsProfilesValues2') Profile 2
+            .col-sm-8
+              input.form-control(type='text' name='analyticsProfilesKeys-vis' value='US' disabled=true)
+              input(type='hidden' name='analyticsProfilesKeys' value='US')
+            select.form-control(id='analyticsProfilesValues2' name='analyticsProfilesValues')
+              each profile in setupOptions.analyticsProfiles
+                option(value=profile.id)= profile.name
+
+          .form-actions
+            button(type='submit', data-loading-text="Saving...").btn.btn-default.btn-large Save Setup

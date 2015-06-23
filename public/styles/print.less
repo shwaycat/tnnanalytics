@@ -3,6 +3,20 @@
     color: #000;
     background: #fff;
     font-weight: normal;
+    > div, > a, > iframe {
+      opacity:1 !important;
+    }
+  }
+  #twitter-widget-1 {
+    display:none !important;
+  }
+  .pre-print-loading {
+    opacity:0 !important;
+    display:none !important;
+    height:0 !important;
+    position:absolute !important;
+    left:-9999px;
+    top:-9999px;
   }
   h1, h2, h3, h4 {
     font-weight: normal !important;
@@ -51,10 +65,10 @@
     opacity: 1;
   }
   .novo-data-list {
-    display:none !important;
+    display:block !important;
   }
   .novo-data-list-print {
-    display:block !important;
+
   }
   .alerts-block {
     display:none;
@@ -72,5 +86,11 @@
     width:100% !important;
     height:100% !important;
     page-break-after:always !important;
+  }
+  .event-item-action-buttons, .event-action-cell, .event-link-cell {
+    display:none !important;
+  }
+  .events-table {
+    min-width:100%;
   }
 }
