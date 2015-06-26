@@ -402,11 +402,9 @@ User.schema.methods.sendNotificationEmail = function(links, callback) {
           Data: 'Cadence Notification'
         }
       },
-      Source: 'no-reply@cadence.novo.mxmcloud.com',
-      ReplyToAddresses: [
-        'no-reply@cadence.novo.mxmcloud.com',
-      ],
-      ReturnPath: 'no-reply@cadence.novo.mxmcloud.com'
+      Source: process.env.EMAIL_FROM,
+      ReplyToAddresses: [ process.env.EMAIL_FROM ],
+      ReturnPath: process.env.EMAIL_FROM
     };
 
     ses.sendEmail(params, function(err, data) {
@@ -586,11 +584,11 @@ function sendAccountEmail(user, isNewUser, callback) {
           Data: 'Cadence Account Information'
         }
       },
-      Source: 'no-reply@cadence.novo.mxmcloud.com',
+      Source: process.env.EMAIL_FROM,
       ReplyToAddresses: [
-        'no-reply@cadence.novo.mxmcloud.com',
+        process.env.EMAIL_FROM,
       ],
-      ReturnPath: 'no-reply@cadence.novo.mxmcloud.com'
+      ReturnPath: process.env.EMAIL_FROM
     };
 
     ses.sendEmail(params, function(err, data) {

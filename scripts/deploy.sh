@@ -14,7 +14,7 @@ EOF
 ENVIRONMENT="$1" && shift 1 && [ "$1" ] && usage 1
 APP_NAME="cadence"
 [ "$ENVIRONMENT" != "prod" ] && APP_NAME="$APP_NAME-$ENVIRONMENT"
-TARGET_HOST="$ENVIRONMENT.cadence.novo.mxmcloud.com"
+TARGET_HOST="$ENVIRONMENT.tnnanalytics.net"
 APP_ROOT="/srv/$APP_NAME"
 
 run() {

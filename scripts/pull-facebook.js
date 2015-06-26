@@ -33,8 +33,8 @@ require('../lib/keystone-script')(connectES, function(done) {
   async.auto({
     pages: pullType(facebookSource.page),
     messages: [ 'pages', pullType(facebookSource.message) ],
-    posts: [ 'pages', pullType(facebookSource.post) ],
-    statuses: [ 'pages', pullType(facebookSource.status) ],
+    posts: [ 'messages', pullType(facebookSource.post) ],
+    statuses: [ 'posts', pullType(facebookSource.status) ],
     comments: [ 'posts', 'statuses', pullType(facebookSource.comment) ],
     mentions: [ 'comments', pullType(facebookSource.mention) ]
   }, function(err) {
