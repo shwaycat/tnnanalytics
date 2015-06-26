@@ -16,6 +16,7 @@ if (gutil.env.environment != 'dev' && gutil.env.environment != 'prod') {
 var APP_NAME = 'cadence' + (gutil.env.environment == 'dev' ? '-dev' : ''),
     HOST = gutil.env.environment + '.tnnanalytics.net',
     APP_ROOT = '/srv/' + APP_NAME,
+    HOMEDIR = process.env.HOME || process.env.USERPROFILE,
     lsData, sha, tarball, archive;
 
 var gulpSSH = require('gulp-ssh')({
@@ -23,7 +24,7 @@ var gulpSSH = require('gulp-ssh')({
         host: HOST,
         username: APP_NAME,
         agent: process.env.SSH_AUTH_SOCK,
-        privateKey: fs.readFileSync(path.join(process.env.HOME, '.ssh', 'id_rsa'))
+        privateKey: fs.readFileSync(path.join(HOMEDIR, '.ssh', 'id_rsa'))
       }
     });
 
