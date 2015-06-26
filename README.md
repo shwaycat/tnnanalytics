@@ -8,28 +8,31 @@ ELASTICSEARCH_URI=http://localhost:9200
 ELASTICSEARCH_INDEX=cadence-dev
 # REDIS_URI=redis://localhost:6379/0
 COOKIE_SECRET=b8f77nCvM3fSNXACkdrjMXVC5slCAYI2VOdCP5jIaY1v1Ov2k4wjSPmdBQTr23ug
-PDOMAIN=http://cadence.local.mxmcloud.com:3000
+PDOMAIN=http://cadence.local.tnnanalytics.net:3000
+EMAIL_FROM=no-reply@tnnanalytics.net
 
-TWITTER_API_KEY=0iPDxZ9GgozyedBSOJSWIkBL1
+TWITTER_API_KEY=
 TWITTER_API_SECRET=
-TWITTER_CALLBACK_URL=http://cadence.local.mxmcloud.com:3000/auth/twitter?cb
+TWITTER_CALLBACK_URL=http://cadence.local.tnnanalytics.net:3000/auth/twitter?cb
 
-FACEBOOK_APP_ID=1586083438316048
+FACEBOOK_APP_ID=
 FACEBOOK_APP_SECRET=
-FACEBOOK_CALLBACK_URL=http://cadence.local.mxmcloud.com:3000/auth/facebook?cb
+FACEBOOK_CALLBACK_URL=http://cadence.local.tnnanalytics.net:3000/auth/facebook?cb
 
-GOOGLE_CLIENT_ID=324072209681-do2v8q8e6okg7da0g3p13mbvjbf51ace.apps.googleusercontent.com
+INSTAGRAM_CLIENT_ID=
+INSTAGRAM_CLIENT_SECRET=
+INSTAGRAM_CALLBACK_URL=http://cadence.local.tnnanalytics.net:3000/auth/instagram?cb
+
+GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
-GOOGLE_CALLBACK_URL=http://cadence.local.mxmcloud.com:3000/auth/google?cb
-GOOGLEPLUS_CALLBACK_URL=http://cadence.local.mxmcloud.com:3000/auth/googleplus?cb
+GOOGLE_CALLBACK_URL=http://cadence.local.tnnanalytics.net:3000/auth/google?cb
+GOOGLEPLUS_CALLBACK_URL=http://cadence.local.tnnanalytics.net:3000/auth/googleplus?cb
 
 AWS_REGION=us-east-1
-AWS_ACCESS_KEY_ID=AKIAISHGGE7TMXOHUAXQ
-# AWS_ACCESS_KEY_ID=AKIAITGZ3GOCFBSYLSGQ # Production
+AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
 # don't use AWS_SNS_TOPIC_ARN for local development
-# AWS_SNS_TOPIC_ARN=arn:aws:sns:us-east-1:357664586544:novo-cadence-dev
-# AWS_SNS_TOPIC_ARN=arn:aws:sns:us-east-1:357664586544:novo-cadence # Production
+# AWS_SNS_TOPIC_ARN=
 AWS_SNS_SUBJECT_PREFIX=[Cadence-Dev]
 ```
 
@@ -42,16 +45,16 @@ Notes:
 
 Application errors, warnings, alerts, etc:
 
-* `arn:aws:sns:us-east-1:357664586544:novo-cadence-dev`
-* `arn:aws:sns:us-east-1:357664586544:novo-cadence`
+* `arn:aws:sns:us-east-1:616907631832:tnnanalytics-dev`
+* `arn:aws:sns:us-east-1:616907631832:tnnanalytics-prod`
 
 AWS SES notifications:
 
-* `arn:aws:sns:us-east-1:357664586544:novo-cadence-email`
+* `arn:aws:sns:us-east-1:616907631832:tnnanalytics-email`
 
 ### Amazon SES
 
-The domain `cadence.novo.mxmcloud.com` is configured for sending.
+The domain `tnnanalytics.net` is configured for sending.
 
 ### PDOMAIN
 
