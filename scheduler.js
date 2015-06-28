@@ -14,14 +14,20 @@ var queue = async.priorityQueue(function queueWorker(task, callback) {
 
       console.log('%s Running: %s', timestamp(), taskName);
 
-      var cp = spawn(task.cmd, task.args || [], { stdio: 'inherit' });
+      var cp = spawn(task.cmd, task.args || [], { stdio: 'inherit' }),
+          cpTimeout = setTimeout(function() {
+            console.error("%s Timeout for: %s", timestamp(), taskName);
+            cp.kill('SIGTERM');
+          }, 5*60*1000);
 
       cp.on('error', function(err) {
+        clearTimeout(cpTimeout);
         console.error("%s Error for: %s\n    %s\n%s", timestamp(), taskName, err, err.stack);
         callback();
       });
 
       cp.on('exit', function(code, signal) {
+        clearTimeout(cpTimeout);
         if (code) {
           console.info("%s Exited %s: %s", timestamp(), code, taskName);
         } else if (signal) {
