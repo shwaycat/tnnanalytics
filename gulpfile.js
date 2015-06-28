@@ -127,7 +127,7 @@ gulp.task('change-current', ['npm-install'], function() {
 
 // Deployment: restart passenger
 gulp.task('restart', ['change-current'], function() {
-  return gulpSSH.exec([
+  return gulpSSH.shell([
       'kill `cat shared/tmp/pids/scheduler.pid`',
       'sudo /opt/passenger/bin/passenger-config restart-app "' + APP_ROOT + '/current"',
       'sleep 2',
