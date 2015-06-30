@@ -1,5 +1,29 @@
 require('dotenv').load();
 
+var argv = require('minimist')(process.argv.slice(2));
+
+if (argv.help || argv.h) {
+  var w = console.log;
+  w("Usage: node scripts/notify.js [options]");
+  w("\nOptions:");
+  w("  -E,--no-email   Do not send keyword alert emails.");
+  w("  -s STATE,--alert-state=STATE");
+  w("                  Use the given initial STATE for un-notified objects.");
+  w("                  Possible values: new (default), open, closed");
+  w("  -h,--help       Show this help message.");
+  process.exit(0);
+}
+
+var argvAlertState = argv['alert-state'] || argv.s,
+    argvNoEmail = argv.email === false || argv.E === true,
+    ALERT_STATE = argvAlertState || "new",
+    SEND_EMAIL = !argvNoEmail;
+
+if (['new', 'open', 'closed'].indexOf(ALERT_STATE) == -1) {
+  console.error("Invalid alert-state: %s\n\tmust be new, open, or closed", argvAlertState);
+  process.exit(1);
+}
+
 var keystone = require('../keystone-setup')(),
     debug = require('debug')('notify'),
     User = keystone.list('User'),
@@ -40,7 +64,7 @@ require('../lib/keystone-script')(connectES, function(done) {
             { update: _.pick(hit, "_index", "_type", "_id") },
             { doc: {
                 isNotified: true,
-                alertState: "new"
+                alertState: ALERT_STATE
               }
             }
           );
@@ -52,18 +76,24 @@ require('../lib/keystone-script')(connectES, function(done) {
 
         debug("User %s - %s notifications", user.id, links.length);
 
-        user.sendNotificationEmail(links, function(err) {
-          if (err) return next(err);
+        var tasks = [
+              function(cb) {
+                user.sendNotificationEmail(links, cb);
+              },
+              function(cb) {
+                keystone.elasticsearch.bulk({ body: bulkUpdates }, cb);
+              }
+            ];
 
-          keystone.elasticsearch.bulk({
-            body: bulkUpdates
-          }, function (err) {
-            if (err) {
-              console.error("Error updating ES documents to notified state for user %s", user.id);
-              return next(err);
-            }
-            next();
-          });
+        if (!SEND_EMAIL) {
+          tasks.splice(0, 1); // remove the send-email function from tasks
+        }
+
+        async.series(tasks, function(err) {
+          if (err) {
+            console.error("Error for user %s", user.id);
+          }
+          next(err);
         });
       });
     }, function(err) {
