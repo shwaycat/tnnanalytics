@@ -1,0 +1,12 @@
+{
+  "dev": {
+    "host": "dev.cadence.novo.mxmcloud.com",
+    "appname": "cadence-dev",
+    "approot": "/srv/cadence-dev"
+  },
+  "prod": {
+    "host": "prod.cadence.novo.mxmcloud.com",
+    "appname": "cadence",
+    "approot": "/srv/cadence"
+  }
+}
