@@ -10,7 +10,7 @@ function timestamp() {
   return (new Date()).toISOString();
 }
 
-var childProcesses = [],
+var childProcesses = {},
     queue = async.priorityQueue(function queueWorker(task, callback) {
       var taskName = util.format("%s %j", task.cmd, task.args);
 
@@ -98,7 +98,9 @@ _.each(['SIGINT', 'SIGTERM', 'SIGHUP'], function(signal) {
     console.log("%s Terminating %s child processes...", timestamp(), _.keys(childProcesses).length);
 
     _.each(childProcesses, function(cp) {
-      cp.kill(signal);
+      if (cp) {
+        cp.kill(signal);
+      }
     });
 
     var endTime = new Date((new Date()).valueOf() + 10*1000);
@@ -126,7 +128,9 @@ process.on('exit', function(code) {
     console.log("%s Terminating %s child remaining processes forcefully...", timestamp(),
       _.keys(childProcesses).length);
     _.each(childProcesses, function(cp) {
-      cp.kill('SIGKILL');
+      if (cp) {
+        cp.kill('SIGKILL');
+      }
     });
   }
 
