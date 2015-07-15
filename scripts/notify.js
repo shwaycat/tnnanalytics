@@ -19,7 +19,7 @@ var argvAlertState = argv['alert-state'] || argv.s,
     ALERT_STATE = argvAlertState || "new",
     SEND_EMAIL = !argvNoEmail;
 
-if (['new', 'open', 'closed'].indexOf(ALERT_STATE) == -1) {
+if (['new', 'open', 'closed', 'benign'].indexOf(ALERT_STATE) == -1) {
   console.error("Invalid alert-state: %s\n\tmust be new, open, or closed", argvAlertState);
   process.exit(1);
 }
