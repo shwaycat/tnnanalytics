@@ -11,10 +11,10 @@ exports.create = {
   User: [
     { 'name.first': 'Admin',
       'name.last': 'User',
-      email: 'novo-cadence@maxmedia.com',
+      email: 'Team-Novo-Nordisk@tnnanalytics.net',
       password: 'password',
       isAdmin: true,
-      accountName: 'maxmedia',
+      accountName: 'Team-Novo-Nordisk',
       isAccountRoot: true }
   ]
 };
