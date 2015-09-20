@@ -827,11 +827,11 @@ function statsDelegation(summary, options){
     }
 
     if (summary.totalBounceRate != undefined) {
-      bounceRate =  Math.round( (summary.totalBounceRate*100) *100 )/100 + '%';
+      bounceRate =  Math.round((summary.totalBounceRate*100)*100)/100;
       statsString += statStringOpen;
       statsString += "Bounce Rate"
       statsString += statStringMid;
-      statsString += (numberWithCommas(bounceRate));
+      statsString += (numberWithCommas(bounceRate)) + '%';
       statsString += statStringClose;
     }
 
