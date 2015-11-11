@@ -18,7 +18,7 @@
     "passport": "~0.2.2",
     "passport-facebook": "^2.0.0",
     "passport-google-oauth": "~0.2.0",
-    "passport-instagram": "shwaycat/passport-instagram#v0.2.0-mxm.2",
+    "passport-instagram": "maxmedia/passport-instagram#v0.2.0-mxm.2",
     "passport-twitter": "^1.0.3",
     "request": "^2.57.0",
     "request-debug": "^0.2.0",
