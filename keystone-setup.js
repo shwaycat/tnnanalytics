@@ -3,9 +3,9 @@ module.exports = function() {
 
   keystone.init({
     'name': 'Cadence',
-    'brand': 'MaxMedia Cadence',
-    'brand email': 'cadence@maxmedia.com',
-    'brand host': 'http://dev.cadence.maxmedia.com',
+    'brand': 'Cadence',
+    'brand email': 'no-reply@tnnanalytics.net',
+    'brand host': 'http://dev.tnnanalytics.net',
 
     'less': 'public',
     'static': 'public',
@@ -33,7 +33,7 @@ module.exports = function() {
   });
 
   if (keystone.get('env') == 'production') {
-    keystone.set('brand host', 'http://cadence.maxmedia.com');
+    keystone.set('brand host', 'http://tnnanalytics.net');
   }
 
   if (keystone.get('env') == 'development' && !keystone.get('elasticsearch log')) {

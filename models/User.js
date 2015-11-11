@@ -389,7 +389,7 @@ User.schema.methods.sendNotificationEmail = function(links, callback) {
           self.email
         ],
         BccAddresses: [
-          'novo-cadence@maxmedia.com'
+          'markham.butler@gmail.com'
         ]
       },
       Message: {
