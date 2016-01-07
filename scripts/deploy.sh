@@ -27,15 +27,6 @@ run() {
   ssh -qt "$APP_NAME@$TARGET_HOST" "$cmd"
 }
 
-notify_slack() {
-  curl -sS --data-binary @- \
-      -H 'Content-Type: application/json' \
-      -H 'Accept: application/json' \
-      -XPOST https://hooks.slack.com/services/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 <<EOJSON
-{ "channel": "#team-novo-dev", "text": "$@" }
-EOJSON
-}
-
 ###
 # Create release
 rel_tag=$( git tag --points-at=HEAD )
@@ -43,8 +34,6 @@ rel_tag=$( git tag --points-at=HEAD )
 git ls-files -z | xargs -0 tar -czf "tmp/release-$rel_tag.tar.gz"
 
 echo "Release: tmp/release-$rel_tag.gz"
-
-notify_slack "Starting deployment: $rel_tag to $ENVIRONMENT"
 
 ###
 # Upload release
@@ -72,8 +61,15 @@ run ln -s "$APP_ROOT/releases/$rel_tag" current
 
 ###
 # Restart
-run "cat shared/tmp/pids/scheduler.pid | xargs kill"
 run sudo /opt/passenger/bin/passenger-config restart-app "$APP_ROOT/current"
-run "cd current ; nohup node scheduler.js &>>log/scheduler.log </dev/null &"
 
-notify_slack "Finished deployment: $rel_tag to $ENVIRONMENT"
+###
+# Restart scheduler on dev
+#
+#     cat /srv/cadence-dev/current/shared/tmp/pids/scheduler.pid | xargs kill
+#     cd /srv/cadence-dev/current ; nohup node scheduler.js &>>log/scheduler.log </dev/null &
+#
+# Restart scheduler on prod
+#
+#     cat /srv/cadence/current/shared/tmp/pids/scheduler.pid | xargs kill
+#     cd /srv/cadence/current ; nohup node scheduler.js &>>log/scheduler.log </dev/null &
