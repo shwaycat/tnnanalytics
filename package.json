@@ -1,6 +1,6 @@
 {
   "name": "cadence",
-  "version": "2.1.7",
+  "version": "2.1.8",
   "private": true,
   "dependencies": {
     "keystone": "= 0.3.10",
