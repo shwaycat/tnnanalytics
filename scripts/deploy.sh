@@ -72,7 +72,7 @@ run ln -s "$APP_ROOT/releases/$rel_tag" current
 
 ###
 # Restart
-run pkill scheduler
+run "cat shared/tmp/pids/scheduler.pid | xargs kill"
 run sudo /opt/passenger/bin/passenger-config restart-app "$APP_ROOT/current"
 run "cd current ; nohup node scheduler.js &>>log/scheduler.log </dev/null &"
 
